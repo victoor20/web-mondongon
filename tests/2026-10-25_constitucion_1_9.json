@@ -1,0 +1,172 @@
+{
+  "titulo": "Constitución Española · Artículos 1–9",
+  "tema": "Constitución",
+  "fecha": "2026-10-25",
+  "preguntas": [
+    {
+      "ref": "Artículo 1.1",
+      "q": "Según el artículo 1.1 de la Constitución Española, ¿cuáles son los valores superiores del ordenamiento jurídico?",
+      "opciones": [
+        "Libertad, justicia, igualdad y pluralismo político.",
+        "Libertad, solidaridad, igualdad y pluralismo político.",
+        "Libertad, justicia, seguridad y pluralismo político.",
+        "Libertad, justicia, igualdad y soberanía nacional."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 1.2",
+      "q": "¿Dónde reside la soberanía nacional según el artículo 1.2 de la Constitución?",
+      "opciones": [
+        "En las Cortes Generales.",
+        "En el pueblo español.",
+        "En el Estado español.",
+        "En el Rey como Jefe del Estado."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 1.3",
+      "q": "¿Cuál es la forma política del Estado español establecida en el artículo 1.3?",
+      "opciones": [
+        "Monarquía constitucional.",
+        "República parlamentaria.",
+        "Monarquía parlamentaria.",
+        "Monarquía presidencialista."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 2",
+      "q": "El artículo 2 reconoce y garantiza, junto con la unidad de la Nación española, ¿qué principios?",
+      "opciones": [
+        "La independencia y la soberanía de las Comunidades Autónomas.",
+        "La autonomía de las provincias y la igualdad de sus municipios.",
+        "La descentralización política y la libre federación territorial.",
+        "La autonomía de las nacionalidades y regiones y la solidaridad entre todas ellas."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 3.1",
+      "q": "Según el artículo 3.1, respecto al castellano, los españoles tienen:",
+      "opciones": [
+        "El derecho a conocerlo y el deber de utilizarlo.",
+        "El deber de conocerlo y el derecho a usarlo.",
+        "El deber de conocerlo y el deber de utilizarlo.",
+        "El derecho a conocerlo y el derecho a usarlo, sin deberes."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 3.2",
+      "q": "Conforme al artículo 3.2, las demás lenguas españolas serán oficiales en las respectivas Comunidades Autónomas:",
+      "opciones": [
+        "Cuando así lo acuerde el Gobierno de la Nación.",
+        "Cuando lo autorice el Congreso de los Diputados por mayoría absoluta.",
+        "De acuerdo con sus Estatutos.",
+        "Siempre que tengan más de una lengua tradicional."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 4.1",
+      "q": "De acuerdo con el artículo 4.1, la franja amarilla de la bandera española tiene:",
+      "opciones": [
+        "La misma anchura que cada franja roja.",
+        "El triple de anchura que cada franja roja.",
+        "La mitad de anchura que cada franja roja.",
+        "Doble anchura que cada franja roja."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 4.2",
+      "q": "Según el artículo 4.2, las banderas propias de las Comunidades Autónomas se utilizarán junto a la bandera española:",
+      "opciones": [
+        "En sus edificios públicos y actos oficiales.",
+        "Únicamente en las sedes de sus parlamentos.",
+        "Exclusivamente en los actos oficiales del Gobierno autonómico.",
+        "En los edificios municipales, cuando lo autorice el Estado."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 5",
+      "q": "¿Qué establece literalmente el artículo 5 de la Constitución Española?",
+      "opciones": [
+        "La capital de España es la ciudad de Madrid.",
+        "La capital de la Nación española es Madrid.",
+        "La capital del Estado es la villa de Madrid.",
+        "La sede del Gobierno del Estado es la villa de Madrid."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 6",
+      "q": "De acuerdo con el artículo 6, ¿qué función corresponde a los partidos políticos?",
+      "opciones": [
+        "Dirigir la Administración pública y ejercer la potestad ejecutiva.",
+        "Concurrir a la formación y manifestación de la voluntad popular.",
+        "Defender exclusivamente los intereses económicos y sociales de los trabajadores.",
+        "Representar institucionalmente a las Comunidades Autónomas."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 6",
+      "q": "Según el artículo 6, la creación y el ejercicio de la actividad de los partidos políticos son libres:",
+      "opciones": [
+        "Siempre que obtengan previamente la aprobación del Gobierno.",
+        "Sin ninguna limitación legal ni constitucional.",
+        "Si cuentan con representación en las Cortes Generales.",
+        "Dentro del respeto a la Constitución y a la ley."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 7",
+      "q": "Según el artículo 7, los sindicatos de trabajadores y las asociaciones empresariales contribuyen a:",
+      "opciones": [
+        "La defensa y promoción de sus intereses económicos y sociales.",
+        "La formación y manifestación de la voluntad popular.",
+        "La organización y dirección de las Administraciones públicas.",
+        "La elaboración y aprobación de los Presupuestos Generales del Estado."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 8.1",
+      "q": "Conforme al artículo 8.1, ¿cuál de las siguientes agrupaciones integra las Fuerzas Armadas?",
+      "opciones": [
+        "Ejército de Tierra, Armada y Guardia Civil.",
+        "Ejército de Tierra, Ejército del Aire y Policía Nacional.",
+        "Ejército de Tierra, Armada y Ejército del Aire.",
+        "Ejército de Tierra, Guardia Civil y Policía Nacional."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 9.1",
+      "q": "Según el artículo 9.1, ¿quiénes están sujetos a la Constitución y al resto del ordenamiento jurídico?",
+      "opciones": [
+        "Únicamente los ciudadanos españoles.",
+        "Los ciudadanos y los poderes públicos.",
+        "Únicamente los poderes públicos.",
+        "Los poderes legislativo y ejecutivo, exclusivamente."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 9.3",
+      "q": "¿Cuál de los siguientes principios aparece expresamente en el artículo 9.3 de la Constitución Española?",
+      "opciones": [
+        "La independencia judicial.",
+        "La autonomía universitaria.",
+        "La libertad de empresa.",
+        "La interdicción de la arbitrariedad de los poderes públicos."
+      ],
+      "correcta": 3
+    }
+  ]
+}
