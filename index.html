@@ -4,91 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mi Academia · Tests AGE C1</title>
-<style>
-  :root{--bg:#f4f6fb;--ink:#17243b;--muted:#66748b;--line:#e1e7ef;--blue:#2856d9;--blueLight:#eef3ff}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}
-  .shell{max-width:760px;margin:auto;padding:28px 18px 60px}
-  .logo{font-weight:850;font-size:21px;letter-spacing:-.6px;display:flex;gap:11px;align-items:center}
-  .mark{background:var(--blue);color:#fff;border-radius:12px;width:39px;height:39px;display:grid;place-items:center}
-  h1{font-size:clamp(26px,4vw,36px);letter-spacing:-1px;margin:26px 0 6px}
-  .muted{color:var(--muted)}
-  input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;margin:18px 0 8px}
-  input:focus-visible{outline:3px solid #8daeff}
-  .count{font-size:13px;color:var(--muted);margin-bottom:12px}
-  a.test{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:10px 0;color:inherit;text-decoration:none;transition:border-color .15s}
-  a.test:hover{border-color:var(--blue);background:var(--blueLight)}
-  a.test strong{font-weight:720}
-  .date{font-size:12px;color:var(--muted);white-space:nowrap}
-  .arrow{color:var(--blue);font-weight:800}
-  .msg{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;color:var(--muted)}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell">
-  <div class="logo"><span class="mark">✦</span> Mi Academia</div>
-  <h1>Tests · Administrativo AGE C1</h1>
-  <p class="muted">Todos tus tests en un solo sitio. Los más recientes aparecen primero.</p>
-  <input id="buscar" type="search" placeholder="Buscar test…" aria-label="Buscar test">
-  <div class="count" id="count"></div>
+<div class="shell narrow">
+  <header class="mast">
+    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia</a>
+    <a class="pill" href="nuevo.html">+ Añadir test</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Administrativo AGE · C1</div>
+    <h1>Tus tests</h1>
+    <p class="muted">Todo tu material de práctica en un solo sitio. Los más recientes aparecen primero.</p>
+  </section>
+
+  <section class="statgrid" aria-label="Resumen">
+    <div class="card stat"><strong id="s-intentos">0</strong><span>Intentos realizados</span></div>
+    <div class="card stat"><strong id="s-acierto">–</strong><span>Acierto medio</span></div>
+    <div class="card stat"><strong id="s-errores">0</strong><span>Preguntas por repasar</span></div>
+  </section>
+
+  <section class="card panel">
+    <h2>Practica</h2>
+    <p class="fine" style="margin:0 0 12px">El repaso de errores reúne las preguntas que has fallado en cualquier test. Si aciertas una ahí, sale de la lista.</p>
+    <div class="actions">
+      <a class="btn disabled" id="btn-errores" href="test.html?t=errores">Repasar mis errores</a>
+      <a class="btn secondary disabled" id="btn-mixto" href="test.html?t=mixto&n=20">Test mixto de 20 preguntas</a>
+    </div>
+  </section>
+
+  <section class="card panel hide" id="panel-temas">
+    <h2>Rendimiento por tema</h2>
+    <div id="temas"></div>
+  </section>
+
+  <div class="toolbar">
+    <input type="search" id="buscar" placeholder="Buscar test…" aria-label="Buscar test">
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="fine" id="count" style="margin-bottom:6px"></div>
   <div id="lista"><div class="msg">Cargando tests…</div></div>
+  <div id="avisos"></div>
+
+  <div class="foot">
+    <span class="fine">Tu progreso se guarda solo en este navegador:</span>
+    <button type="button" class="btn secondary" id="exp">Exportar</button>
+    <button type="button" class="btn secondary" id="imp">Importar</button>
+    <input type="file" id="impfile" accept="application/json,.json" class="hide">
+    <span class="fine" id="impmsg" aria-live="polite"></span>
+  </div>
 </div>
 
+<script src="app.js"></script>
 <script>
-// ===== CONFIGURACIÓN (cambia solo si tu repo se llama distinto) =====
-const GH_USER = 'victoor20';
-const GH_REPO = 'web-mondongon';
-const CARPETA = 'tests';
-// ====================================================================
-// Nombres recomendados: 2026-10-28_constitucion_1_9.html  (fecha_tema.html)
+let items = [], tema = 'Todos';
 
-const lista = document.getElementById('lista');
-const count = document.getElementById('count');
-let tests = [];
+function renderStats() {
+  const h = getHist(), err = Object.keys(getErr()).length;
+  const right = h.reduce((a, x) => a + x.right, 0), total = h.reduce((a, x) => a + x.total, 0);
+  $('s-intentos').textContent = h.length;
+  $('s-acierto').textContent = total ? Math.round(right / total * 100) + ' %' : '–';
+  $('s-errores').textContent = err;
+  $('btn-errores').classList.toggle('disabled', !err);
 
-function bonito(nombre) {
-  const m = nombre.match(/^(\d{4})-(\d{2})-(\d{2})[_-](.+)\.html$/i);
-  let fecha = '', base = nombre.replace(/\.html$/i, '');
-  if (m) { fecha = `${m[3]}/${m[2]}/${m[1]}`; base = m[4]; }
-  base = base.replace(/^test[_-]/i, '').replace(/[_-]+/g, ' ').trim();
-  return { fecha, titulo: base.charAt(0).toUpperCase() + base.slice(1) };
+  // rendimiento por tema (solo si hay datos)
+  const by = {};
+  h.forEach(x => Object.entries(x.byTema || {}).forEach(([t, v]) => {
+    by[t] = by[t] || { r: 0, t: 0 }; by[t].r += v.r; by[t].t += v.t;
+  }));
+  const rows = Object.entries(by).filter(([, v]) => v.t).sort((a, b) => a[1].r / a[1].t - b[1].r / b[1].t);
+  const box = $('temas'); box.replaceChildren();
+  rows.forEach(([t, v]) => {
+    const p = Math.round(v.r / v.t * 100);
+    const row = el('div', 'temabar');
+    const bar = el('div', 'bar'), fill = el('div', p < 60 ? 'low' : '');
+    fill.style.width = p + '%'; bar.append(fill);
+    row.append(el('span', '', t), bar, el('span', 'fine', p + ' %'));
+    box.append(row);
+  });
+  $('panel-temas').classList.toggle('hide', !rows.length);
 }
 
-function pintar(filtro = '') {
-  const f = filtro.toLowerCase();
-  const vis = tests.filter(t => (t.titulo + ' ' + t.fecha).toLowerCase().includes(f));
-  count.textContent = `${vis.length} test${vis.length === 1 ? '' : 's'}`;
-  lista.replaceChildren();
+function scoreBadge(it) {
+  const s = it.kind === 'json' ? statsFor(it.id) : null;
+  if (!s) return null;
+  const p = Math.round(s.mejor * 100);
+  return el('span', 'score ' + (p >= 80 ? 'good' : p >= 60 ? 'mid' : 'low'), `Mejor ${p} % · ${s.intentos}×`);
+}
+
+function render() {
+  const f = $('buscar').value.trim().toLowerCase();
+  const vis = items.filter(it => (tema === 'Todos' || it.tema === tema) && (it.titulo + ' ' + it.tema + ' ' + fmtDate(it.fecha)).toLowerCase().includes(f));
+  $('count').textContent = items.length ? `${vis.length} test${vis.length === 1 ? '' : 's'}` : '';
+  const list = $('lista'); list.replaceChildren();
   if (!vis.length) {
-    const d = document.createElement('div'); d.className = 'msg';
-    d.textContent = tests.length ? 'Ningún test coincide con la búsqueda.' : 'Aún no hay tests. Sube un archivo .html a la carpeta tests/.';
-    lista.append(d); return;
+    list.append(el('div', 'msg', items.length ? 'Ningún test coincide con el filtro.' : 'Aún no hay tests. Usa «+ Añadir test» para subir el primero.'));
+    return;
   }
-  vis.forEach(t => {
-    const a = document.createElement('a'); a.className = 'test'; a.href = t.url;
-    const s = document.createElement('strong'); s.textContent = t.titulo;
-    const r = document.createElement('span'); r.className = 'date';
-    r.textContent = (t.fecha ? t.fecha + '  ' : '') ;
-    const ar = document.createElement('span'); ar.className = 'arrow'; ar.textContent = '→';
-    r.append(ar);
-    a.append(s, r); lista.append(a);
+  vis.forEach(it => {
+    const a = el('a', 'test'); a.href = it.url;
+    const main = el('div', 't-main');
+    const meta = el('div', 't-meta');
+    meta.append(el('span', 'tag' + (it.kind === 'html' ? ' legacy' : ''), it.tema));
+    if (it.n) meta.append(el('span', '', it.n + ' preguntas'));
+    if (it.fecha) meta.append(el('span', '', fmtDate(it.fecha)));
+    main.append(el('strong', '', it.titulo), meta);
+    const side = el('div', 't-side'), b = scoreBadge(it);
+    if (b) side.append(b);
+    side.append(el('span', 'arrow', '→'));
+    a.append(main, side); list.append(a);
   });
 }
 
-fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${CARPETA}`)
-  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  .then(files => {
-    tests = files
-      .filter(f => f.type === 'file' && /\.html$/i.test(f.name))
-      .map(f => ({ name: f.name, url: `${CARPETA}/${encodeURIComponent(f.name)}`, ...bonito(f.name) }))
-      .sort((a, b) => b.name.localeCompare(a.name));
-    pintar();
-  })
-  .catch(() => {
-    lista.innerHTML = '<div class="msg">No se pudo cargar la lista de tests. Comprueba que el repositorio es público y que GH_USER / GH_REPO son correctos.</div>';
+function renderChips() {
+  const temas = ['Todos', ...new Set(items.map(i => i.tema))];
+  const box = $('chips'); box.replaceChildren();
+  if (temas.length <= 2) return;
+  temas.forEach(t => {
+    const b = el('button', 'chip' + (t === tema ? ' active' : ''), t); b.type = 'button';
+    b.addEventListener('click', () => { tema = t; renderChips(); render(); });
+    box.append(b);
   });
+}
 
-document.getElementById('buscar').addEventListener('input', e => pintar(e.target.value));
+async function init() {
+  renderStats();
+  try {
+    const { items: all, invalid } = await loadCatalog();
+    items = all;
+    const nJson = items.filter(i => i.kind === 'json').length;
+    $('btn-mixto').classList.toggle('disabled', !nJson);
+    renderChips(); render();
+    if (invalid.length) $('avisos').append(el('div', 'msg warn', 'Estos archivos tienen errores y no se muestran: ' + invalid.join(', ') + '. Valídalos en «+ Añadir test».'));
+  } catch (e) {
+    $('lista').replaceChildren(el('div', 'msg warn', 'No se pudo cargar la lista de tests (¿límite de la API de GitHub o repo privado?). Recarga en unos minutos.'));
+  }
+}
+
+$('buscar').addEventListener('input', render);
+$('exp').addEventListener('click', exportProgress);
+$('imp').addEventListener('click', () => $('impfile').click());
+$('impfile').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (!confirm('Esto reemplaza el progreso actual de este navegador. ¿Continuar?')) { e.target.value = ''; return; }
+  importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'Archivo no válido.'; if (ok) { renderStats(); render(); } e.target.value = ''; });
+});
+init();
 </script>
 </body>
 </html>

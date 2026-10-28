@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Test · Mi Academia</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+  <header class="mast">
+    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia</a>
+    <a class="pill" href="index.html">← Todos los tests</a>
+  </header>
+
+  <section id="loading" class="msg">Cargando…</section>
+
+  <section id="welcome" class="card intro hide">
+    <div class="eyebrow" id="w-eyebrow"></div>
+    <h2 id="w-title"></h2>
+    <p class="muted" id="w-desc"></p>
+    <div class="featuregrid">
+      <div class="feature"><strong id="w-n">0</strong><span>Preguntas</span></div>
+      <div class="feature"><strong id="w-opts">4</strong><span>Opciones por pregunta</span></div>
+      <div class="feature"><strong>∞</strong><span>Intentos sin límite</span></div>
+    </div>
+    <div class="modes" role="radiogroup" aria-label="Modo">
+      <label class="mode"><input type="radio" name="modo" value="examen" checked><b>Modo examen</b><span>Sin pistas. Corrección y explicaciones al terminar.</span></label>
+      <label class="mode"><input type="radio" name="modo" value="estudio"><b>Modo estudio</b><span>Corrección y explicación al instante, pregunta a pregunta.</span></label>
+    </div>
+    <div class="actions"><button type="button" class="btn" id="start">Empezar test</button><span id="history" class="fine" aria-live="polite"></span></div>
+  </section>
+
+  <section id="exam" class="hide">
+    <div class="exam-layout">
+      <div>
+        <div class="card test-top">
+          <div style="flex:1"><strong id="progress-label">0 de 0 respondidas</strong>
+            <div class="progress" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="progress-bar"><div id="progress-fill" style="width:0%"></div></div></div>
+          <span class="pill" id="mode-pill">Modo examen</span>
+        </div>
+        <div id="questions"></div>
+        <div class="foot-actions"><span id="pending-note" class="fine"></span><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div>
+      </div>
+      <aside class="card sidebar">
+        <div class="eyebrow">Tiempo transcurrido</div>
+        <div id="timer" class="time" role="timer">00:00</div>
+        <div class="fine" id="answered-count"></div>
+        <h3 style="margin-top:20px">Ir a la pregunta</h3>
+        <div class="numbers" id="question-nav"></div>
+        <button type="button" class="btn" id="finish-side">Finalizar test</button>
+        <div class="fine" style="margin-top:12px">Puedes terminar aunque dejes preguntas en blanco.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="results" class="hide">
+    <div class="card result-header">
+      <div class="eyebrow">Test finalizado</div>
+      <h2 id="result-title">Tus resultados</h2>
+      <p class="muted" style="margin:0">Las preguntas en blanco cuentan como no acertadas. Los fallos pasan a «Repasar mis errores».</p>
+      <div class="score-grid">
+        <div class="scorebox"><strong id="score-right">0</strong><span>Aciertos</span></div>
+        <div class="scorebox"><strong id="score-wrong">0</strong><span>Errores</span></div>
+        <div class="scorebox"><strong id="score-blank">0</strong><span>Sin responder</span></div>
+        <div class="scorebox"><strong id="score-time">00:00</strong><span>Tiempo empleado</span></div>
+      </div>
+      <div class="actions">
+        <button type="button" id="retry" class="btn">Repetir con nuevo orden</button>
+        <a class="btn secondary" href="index.html">Volver al inicio</a>
+        <a class="btn secondary hide" id="go-errores" href="test.html?t=errores">Repasar mis errores</a>
+      </div>
+      <p class="fine" id="summary" style="margin-bottom:0"></p>
+    </div>
+    <div class="filterbar" id="filters">
+      <button type="button" data-filter="all" class="chip active">Todas</button>
+      <button type="button" data-filter="wrong" class="chip">Errores</button>
+      <button type="button" data-filter="blank" class="chip">Sin responder</button>
+      <button type="button" data-filter="correct" class="chip">Aciertos</button>
+    </div>
+    <div id="review-list"></div>
+  </section>
+</div>
+
+<script src="app.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const T = params.get('t');
+let meta = { titulo: '', eyebrow: '', desc: '' }, pool = [], exam = [];
+let mode = 'examen', startAt = 0, elapsed = 0, ticker = null, completed = false, filtro = 'all';
+
+function show(id) {
+  ['loading', 'welcome', 'exam', 'results'].forEach(s => $(s).classList.toggle('hide', s !== id));
+  window.scrollTo(0, 0);
+}
+function fail(msg) { const b = $('loading'); b.className = 'msg warn'; b.textContent = msg; show('loading'); }
+
+/* ---------- preparar el conjunto de preguntas según el modo ---------- */
+async function prepTest(id) {
+  const { data, preguntas } = await loadTestData(id);
+  pool = preguntas;
+  document.title = data.titulo + ' · Mi Academia';
+  meta = { titulo: data.titulo, eyebrow: (data.tema || 'General') + (data.fecha ? ' · ' + fmtDate(data.fecha) : ''), desc: data.descripcion || 'El test mezcla de forma independiente las preguntas y las opciones. El cronómetro empieza al pulsar «Empezar test».' };
+}
+async function allJsonTests() {
+  const { items } = await loadCatalog();
+  const res = await Promise.allSettled(items.filter(i => i.kind === 'json').map(i => loadTestData(i.id)));
+  return res.filter(r => r.status === 'fulfilled').map(r => r.value.preguntas);
+}
+async function prepMixto() {
+  const n = Math.max(5, parseInt(params.get('n'), 10) || 20);
+  const all = (await allJsonTests()).flat();
+  if (!all.length) throw new Error('Aún no hay tests para mezclar.');
+  pool = shuffle(all).slice(0, n);
+  meta = { titulo: 'Test mixto', eyebrow: 'Preguntas de todos tus tests', desc: `${pool.length} preguntas al azar de todos los tests publicados.` };
+}
+async function prepErrores() {
+  const errs = getErr();
+  const keys = new Set(Object.keys(errs));
+  if (!keys.size) throw new Error('No tienes preguntas pendientes de repasar. ¡Bien!');
+  const all = (await allJsonTests()).flat().filter(q => keys.has(q.key));
+  if (!all.length) throw new Error('Las preguntas que fallaste ya no están en los tests publicados.');
+  pool = all;
+  meta = { titulo: 'Repaso de errores', eyebrow: 'Tus preguntas falladas', desc: 'Si aciertas una pregunta aquí, sale de tu lista de errores. Si la fallas, se queda.' };
+}
+
+/* ---------- pantalla de inicio ---------- */
+function showWelcome() {
+  $('w-eyebrow').textContent = meta.eyebrow;
+  $('w-title').textContent = meta.titulo;
+  $('w-desc').textContent = meta.desc;
+  $('w-n').textContent = pool.length;
+  $('w-opts').textContent = Math.max(...pool.map(q => q.opciones.length));
+  const s = statsFor(T);
+  const h = getHist().filter(x => x.id === T);
+  $('history').textContent = h.length
+    ? `Intentos: ${h.length} · Último: ${h[0].right}/${h[0].total}` + (s ? ` · Mejor: ${Math.round(s.mejor * 100)} %` : '')
+    : 'Tu primer intento está listo.';
+  show('welcome');
+}
+
+/* ---------- examen ---------- */
+function answeredCount() { return exam.filter(q => q.selected !== null).length; }
+function updateProgress() {
+  const n = answeredCount();
+  $('progress-label').textContent = `${n} de ${exam.length} respondidas`;
+  $('answered-count').textContent = `${n} de ${exam.length} respondidas`;
+  $('progress-fill').style.width = `${n / exam.length * 100}%`;
+  $('progress-bar').setAttribute('aria-valuenow', n);
+  $('pending-note').textContent = n === exam.length ? 'Todo respondido' : `${exam.length - n} sin responder`;
+  [...$('question-nav').children].forEach((b, i) => b.classList.toggle('answered', exam[i].selected !== null));
+}
+
+function lockStudy(item, optsBox, card) {
+  [...optsBox.children].forEach(label => {
+    const inp = label.querySelector('input'), orig = Number(inp.value);
+    inp.disabled = true; label.classList.add('locked');
+    if (orig === item.correcta) label.classList.add('right');
+    else if (orig === item.selected) label.classList.add('wrong');
+  });
+  const ok = item.selected === item.correcta;
+  const fb = el('div', 'feedback ' + (ok ? 'ok' : 'ko'));
+  fb.append(el('strong', '', ok ? '✔ Correcto' : '✘ Incorrecto · Respuesta: ' + LETTERS[item.opts.findIndex(o => o.orig === item.correcta)] + ') ' + item.opciones[item.correcta]));
+  if (item.explicacion) fb.append(el('p', '', item.explicacion));
+  if (item.ref) fb.append(el('p', 'fine', 'Referencia: ' + item.ref));
+  card.append(fb);
+}
+
+function renderQuestions() {
+  const box = $('questions'), nav = $('question-nav');
+  box.replaceChildren(); nav.replaceChildren();
+  exam.forEach((item, i) => {
+    const card = el('article', 'card question'); card.id = 'q-' + i;
+    const head = el('div', 'q-top');
+    head.append(el('span', 'q-number', `Pregunta ${i + 1} de ${exam.length}`), el('span', 'q-ref', item.ref));
+    card.append(head, el('h3', '', item.q));
+    const opts = el('div', 'options');
+    item.opts.forEach((o, j) => {
+      const label = el('label', 'option');
+      const input = el('input'); input.type = 'radio'; input.name = 'q' + i; input.value = String(o.orig);
+      input.setAttribute('aria-label', `Opción ${LETTERS[j]}: ${o.text}`);
+      label.append(input, el('span', 'letter', LETTERS[j]), el('span', 'option-text', o.text));
+      input.addEventListener('change', () => {
+        item.selected = o.orig;
+        [...opts.children].forEach(x => x.classList.toggle('selected', x.querySelector('input').checked));
+        updateProgress();
+        if (mode === 'estudio') lockStudy(item, opts, card);
+      });
+      opts.append(label);
+    });
+    card.append(opts); box.append(card);
+    const b = el('button', 'num', String(i + 1)); b.type = 'button';
+    b.setAttribute('aria-label', 'Ir a pregunta ' + (i + 1));
+    b.addEventListener('click', () => card.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    nav.append(b);
+  });
+  updateProgress();
+}
+
+function startExam() {
+  clearInterval(ticker); completed = false;
+  mode = document.querySelector('input[name=modo]:checked').value;
+  $('mode-pill').textContent = mode === 'estudio' ? 'Modo estudio' : 'Modo examen';
+  exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null }));
+  elapsed = 0; startAt = Date.now(); $('timer').textContent = '00:00';
+  renderQuestions(); show('exam');
+  ticker = setInterval(() => { elapsed = Math.floor((Date.now() - startAt) / 1000); $('timer').textContent = fmtTime(elapsed); }, 500);
+}
+
+/* ---------- resultados ---------- */
+function label(q, orig) {
+  const pos = q.opts.findIndex(o => o.orig === orig);
+  return `${LETTERS[pos]}) ${q.opciones[orig]}`;
+}
+function renderReview() {
+  const box = $('review-list'); box.replaceChildren(); let found = 0;
+  exam.forEach((q, i) => {
+    const st = q.selected === null ? 'blank' : q.selected === q.correcta ? 'correct' : 'wrong';
+    if (filtro !== 'all' && st !== filtro) return;
+    found++;
+    const card = el('article', 'card review'), head = el('div', 'review-head');
+    head.append(el('h3', '', `${i + 1}. ${q.q}`), el('span', 'status ' + st, st === 'correct' ? 'Acierto' : st === 'wrong' ? 'Error' : 'Sin responder'));
+    card.append(head);
+    if (st === 'wrong') { const p = el('p', 'answerline bad'); p.append(el('b', '', 'Tu respuesta: '), document.createTextNode(label(q, q.selected))); card.append(p); }
+    if (st === 'blank') card.append(el('p', 'answerline bad', 'Tu respuesta: Sin responder'));
+    const ok = el('p', 'answerline good'); ok.append(el('b', '', 'Respuesta correcta: '), document.createTextNode(label(q, q.correcta))); card.append(ok);
+    if (q.explicacion) card.append(el('div', 'expl', q.explicacion));
+    card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, T === 'mixto' || T === 'errores' ? 'Test: ' + q.testTitulo : ''].filter(Boolean).join(' · ')));
+    box.append(card);
+  });
+  if (!found) box.append(el('div', 'msg', 'No hay preguntas en esta categoría.'));
+}
+function updateFilters() {
+  document.querySelectorAll('#filters .chip').forEach(b => b.classList.toggle('active', b.dataset.filter === filtro));
+}
+
+function finishExam() {
+  if (completed) return;
+  const blank = exam.filter(q => q.selected === null).length;
+  if (blank && !confirm(`Quedan ${blank} pregunta(s) sin responder. ¿Quieres finalizar y corregir el test?`)) return;
+  completed = true; clearInterval(ticker);
+  elapsed = Math.floor((Date.now() - startAt) / 1000);
+  const right = exam.filter(q => q.selected === q.correcta).length;
+  const wrong = exam.filter(q => q.selected !== null && q.selected !== q.correcta).length;
+
+  // estadísticas por tema + banco de errores
+  const byTema = {}, errs = getErr();
+  exam.forEach(q => {
+    byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++;
+    if (q.selected === q.correcta) {
+      byTema[q.tema].r++;
+      if (T === 'errores') delete errs[q.key];                       // repasada: sale de la lista
+    } else if (q.selected !== null) {
+      errs[q.key] = { testId: q.testId, n: ((errs[q.key] || {}).n || 0) + 1 };
+    }
+  });
+  setErr(errs);
+  addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, total: exam.length, elapsed, mode, byTema });
+
+  $('score-right').textContent = right; $('score-wrong').textContent = wrong;
+  $('score-blank').textContent = blank; $('score-time').textContent = fmtTime(elapsed);
+  $('result-title').textContent = `${right} de ${exam.length} respuestas correctas`;
+  $('summary').textContent = `Porcentaje de acierto: ${Math.round(right / exam.length * 100)} %.`;
+  $('go-errores').classList.toggle('hide', !Object.keys(errs).length || T === 'errores');
+  filtro = wrong || blank ? 'wrong' : 'all';
+  renderReview(); updateFilters(); show('results');
+}
+
+$('start').addEventListener('click', startExam);
+$('retry').addEventListener('click', () => { if (T === 'mixto' || T === 'errores') location.reload(); else startExam(); });
+$('finish-side').addEventListener('click', finishExam);
+$('finish-bottom').addEventListener('click', finishExam);
+document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
+window.addEventListener('beforeunload', e => { if (!$('exam').classList.contains('hide') && !completed) { e.preventDefault(); e.returnValue = ''; } });
+
+(async function init() {
+  if (!T) { location.replace('index.html'); return; }
+  try {
+    if (T === 'mixto') await prepMixto();
+    else if (T === 'errores') await prepErrores();
+    else await prepTest(T);
+  } catch (e) { fail(e.message); return; }
+  showWelcome();
+})();
+</script>
+</body>
+</html>

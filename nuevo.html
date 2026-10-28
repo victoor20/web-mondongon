@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Añadir test · Mi Academia</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell narrow">
+  <header class="mast">
+    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia</a>
+    <a class="pill" href="index.html">← Todos los tests</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Añadir test</div>
+    <h1>Del PDF a la web en 3 pasos</h1>
+    <p class="muted">Pide el test a tu IA en formato JSON, valídalo aquí y súbelo a GitHub. No hay que tocar código.</p>
+  </section>
+
+  <section class="card panel">
+    <h2>1 · Pide el JSON a ChatGPT</h2>
+    <p class="fine" style="margin-top:0">Adjunta tu archivo de preguntas y pega este prompt (cambia los textos entre corchetes).</p>
+    <pre class="prompt" id="prompt">Convierte las preguntas del archivo adjunto en UN ÚNICO bloque JSON (sin texto antes ni después) con exactamente esta estructura:
+
+{
+  "titulo": "Constitución Española · Artículos 10–23",
+  "tema": "Constitución",
+  "fecha": "AAAA-MM-DD",
+  "preguntas": [
+    {
+      "ref": "Artículo 14",
+      "q": "Enunciado de la pregunta",
+      "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
+      "correcta": 0,
+      "explicacion": "1-2 frases que justifican la respuesta correcta."
+    }
+  ]
+}
+
+Reglas:
+- "correcta" es el índice de la opción correcta empezando en 0 (0 = primera, 3 = cuarta).
+- Las opciones NO llevan letras ni numeración ("A)", "1.").
+- Mantén el texto de preguntas y opciones tal como está en el archivo; no inventes preguntas.
+- "tema" debe ser una categoría corta y repetible (p. ej. "Constitución", "Ley 39/2015", "Ofimática").
+- "ref" es el artículo o apartado de referencia.
+- "fecha" es la fecha en que hice el test, formato AAAA-MM-DD.
+- Responde solo con el JSON válido.</pre>
+    <button type="button" class="btn secondary" id="copy">Copiar prompt</button> <span class="fine" id="copymsg" aria-live="polite"></span>
+  </section>
+
+  <section class="card panel">
+    <h2>2 · Pega el JSON y valídalo</h2>
+    <textarea id="json" spellcheck="false" placeholder="Pega aquí lo que te devuelva ChatGPT…"></textarea>
+    <div class="actions" style="margin-top:12px"><button type="button" class="btn" id="validar">Validar</button></div>
+    <div id="resultado"></div>
+  </section>
+
+  <section class="card panel hide" id="descarga">
+    <h2>3 · Descarga y sube a GitHub</h2>
+    <label class="fine" for="fname">Nombre del archivo (puedes cambiarlo):</label>
+    <input type="text" id="fname" style="margin:6px 0 12px">
+    <button type="button" class="btn" id="dl">Descargar archivo</button>
+    <ol class="steps">
+      <li>Entra en el repositorio de GitHub, abre la carpeta <b>tests</b>.</li>
+      <li><b>Add file → Upload files</b>, arrastra el archivo descargado y pulsa <b>Commit changes</b>.</li>
+      <li>En 1–2 minutos aparece en la portada. Si no, recarga con Ctrl+F5.</li>
+    </ol>
+  </section>
+</div>
+
+<script src="app.js"></script>
+<script>
+function slug(s) {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
+}
+function stripFences(t) { return t.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''); }
+
+$('copy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('prompt').textContent); $('copymsg').textContent = 'Copiado.'; }
+  catch (e) { $('copymsg').textContent = 'Selecciona el texto y copia con Ctrl+C.'; }
+});
+
+let current = null;
+$('validar').addEventListener('click', () => {
+  const box = $('resultado'); box.replaceChildren(); $('descarga').classList.add('hide'); current = null;
+  let d;
+  try { d = JSON.parse(stripFences($('json').value)); }
+  catch (e) { const m = el('div', 'msg warn'); m.textContent = 'No es un JSON válido: ' + e.message; box.append(m); return; }
+  const v = validateTest(d);
+  if (v.errors.length) {
+    box.append(el('p', '', 'Hay que corregir esto antes de subirlo:'));
+    const ul = el('ul', 'issues err'); v.errors.forEach(x => ul.append(el('li', '', x))); box.append(ul);
+  }
+  if (v.warnings.length) {
+    box.append(el('p', 'fine', 'Avisos (no impiden subirlo):'));
+    const ul = el('ul', 'issues wrn'); v.warnings.forEach(x => ul.append(el('li', '', x))); box.append(ul);
+  }
+  if (v.errors.length) return;
+  box.prepend(el('div', 'okbox', `✔ Válido · ${d.preguntas.length} preguntas · tema «${d.tema || 'General'}»`));
+  current = d;
+  const fecha = d.fecha || new Date().toISOString().slice(0, 10);
+  $('fname').value = `${fecha}_${slug(d.titulo)}.json`;
+  $('descarga').classList.remove('hide');
+});
+
+$('dl').addEventListener('click', () => {
+  if (!current) return;
+  let name = $('fname').value.trim() || 'test.json';
+  if (!/\.json$/i.test(name)) name += '.json';
+  const blob = new Blob([JSON.stringify(current, null, 2)], { type: 'application/json' });
+  const a = el('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+</script>
+</body>
+</html>
