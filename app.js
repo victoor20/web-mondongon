@@ -53,11 +53,13 @@ function shuffle(items) {
 }
 
 /* ---------- validación del formato de test ---------- */
-function validateTest(d) {
+function validateTest(d, temaIds) {
   const errors = [], warnings = [];
   if (!d || typeof d !== 'object' || Array.isArray(d)) return { errors: ['El contenido debe ser un objeto JSON { ... }.'], warnings };
+  const known = temaIds && temaIds.size ? temaIds : null;
   if (!d.titulo || typeof d.titulo !== 'string') errors.push('Falta "titulo".');
-  if (!d.tema) warnings.push('Falta "tema" (se usará "General").');
+  if (!d.tema) warnings.push('Falta "tema" (código del temario, p. ej. I-1).');
+  else if (known && !known.has(d.tema)) warnings.push(`"tema" «${d.tema}» no es un código del temario (p. ej. I-1, III-3, VI-5).`);
   if (!d.fecha) warnings.push('Falta "fecha" (AAAA-MM-DD).');
   else if (!/^\d{4}-\d{2}-\d{2}$/.test(d.fecha)) errors.push('"fecha" debe tener formato AAAA-MM-DD.');
   if (!Array.isArray(d.preguntas) || !d.preguntas.length) {
@@ -71,6 +73,7 @@ function validateTest(d) {
       errors.push(`Pregunta ${n}: "opciones" debe tener al menos 2 textos no vacíos.`); return;
     }
     if (p.opciones.length !== 4) warnings.push(`Pregunta ${n}: tiene ${p.opciones.length} opciones (lo habitual son 4).`);
+    if (p.tema && known && !known.has(p.tema)) warnings.push(`Pregunta ${n}: "tema" «${p.tema}» no es un código del temario.`);
     if (!Number.isInteger(p.correcta) || p.correcta < 0 || p.correcta >= p.opciones.length)
       errors.push(`Pregunta ${n}: "correcta" debe ser un número entre 0 y ${p.opciones.length - 1} (0 = primera opción).`);
     if (p.opciones.some(o => /^\s*[A-Da-d][\)\.]\s/.test(o)))
@@ -83,10 +86,33 @@ function validateTest(d) {
 
 function normalizeTest(id, d) {
   return d.preguntas.map(p => ({
-    key: qkey(id, p.q), testId: id, testTitulo: d.titulo, tema: d.tema || 'General',
+    key: qkey(id, p.q), testId: id, testTitulo: d.titulo, tema: p.tema || d.tema || 'General',
     ref: p.ref || '', q: p.q, opciones: p.opciones, correcta: p.correcta, explicacion: p.explicacion || ''
   }));
 }
+
+/* ---------- temario oficial (temario.json) ---------- */
+let _temario = { bloques: [], byId: {} }, _temarioLoaded = false;
+const BLOQUE_RE = /^(I|II|III|IV|V|VI)-\d+$/;
+const bloqueOf = temaId => (BLOQUE_RE.test(temaId || '') ? temaId.split('-')[0] : null);
+async function loadTemario() {
+  if (_temarioLoaded) return _temario;
+  try {
+    const r = await fetch('temario.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    _temario = { bloques: d.bloques || [], byId: {} };
+    _temario.bloques.forEach(b => b.temas.forEach(t => { _temario.byId[t.id] = t; }));
+  } catch (e) { _temario = { bloques: [], byId: {} }; }
+  _temarioLoaded = true;
+  return _temario;
+}
+const temaIdSet = () => new Set(Object.keys(_temario.byId));
+function temaLabel(id) {
+  const t = _temario.byId[id];
+  return t ? `${id} · ${t.corto}` : (id || 'General');
+}
+const bloqueInfo = id => _temario.bloques.find(b => b.id === id) || null;
 
 /* ---------- listado de tests (API de GitHub) y carga ---------- */
 async function listFiles() {
@@ -117,6 +143,7 @@ function prettyFromName(base) {
 
 // Devuelve { items, invalid }. items: {id, kind:'json'|'html', titulo, tema, fecha, n, url}
 async function loadCatalog() {
+  await loadTemario();
   const files = await listFiles();
   const jsons = files.filter(n => /\.json$/i.test(n));
   const jsonBases = new Set(jsons.map(baseName));
@@ -130,10 +157,13 @@ async function loadCatalog() {
       const d = await r.json();
       const v = validateTest(d);
       if (v.errors.length) { invalid.push(n); return null; }
-      return { id, kind: 'json', titulo: d.titulo, tema: d.tema || 'General', fecha: d.fecha || dateFromName(id), n: d.preguntas.length, url: `test.html?t=${encodeURIComponent(id)}` };
+      const temas = {};                                   // tema -> nº de preguntas (admite temas por pregunta)
+      d.preguntas.forEach(p => { const t = p.tema || d.tema || 'General'; temas[t] = (temas[t] || 0) + 1; });
+      const tema = d.tema || Object.keys(temas).sort((a, b) => temas[b] - temas[a])[0];
+      return { id, kind: 'json', titulo: d.titulo, tema, temas, fecha: d.fecha || dateFromName(id), n: d.preguntas.length, url: `test.html?t=${encodeURIComponent(id)}` };
     } catch (e) { invalid.push(n); return null; }
   }));
-  const old = legacy.map(n => ({ id: baseName(n), kind: 'html', titulo: prettyFromName(baseName(n)), tema: 'Sin clasificar', fecha: dateFromName(baseName(n)), n: null, url: `${CFG.dir}/${encodeURIComponent(n)}` }));
+  const old = legacy.map(n => ({ id: baseName(n), kind: 'html', titulo: prettyFromName(baseName(n)), tema: 'Sin clasificar', temas: {}, fecha: dateFromName(baseName(n)), n: null, url: `${CFG.dir}/${encodeURIComponent(n)}` }));
   const items = [...loaded.filter(Boolean), ...old]
     .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id));
   return { items, invalid };

@@ -101,28 +101,40 @@ async function prepTest(id) {
   const { data, preguntas } = await loadTestData(id);
   pool = preguntas;
   document.title = data.titulo + ' · Mi Academia';
-  meta = { titulo: data.titulo, eyebrow: (data.tema || 'General') + (data.fecha ? ' · ' + fmtDate(data.fecha) : ''), desc: data.descripcion || 'El test mezcla de forma independiente las preguntas y las opciones. El cronómetro empieza al pulsar «Empezar test».' };
+  const temas = [...new Set(preguntas.map(q => q.tema))];
+  meta = { titulo: data.titulo, eyebrow: temas.map(temaLabel).join(' + ') + (data.fecha ? ' · ' + fmtDate(data.fecha) : ''), desc: data.descripcion || 'El test mezcla de forma independiente las preguntas y las opciones. El cronómetro empieza al pulsar «Empezar test».' };
 }
 async function allJsonTests() {
   const { items } = await loadCatalog();
   const res = await Promise.allSettled(items.filter(i => i.kind === 'json').map(i => loadTestData(i.id)));
   return res.filter(r => r.status === 'fulfilled').map(r => r.value.preguntas);
 }
+const PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
+function scopeFilter(q) {
+  if (PTEMA) return q.tema === PTEMA;
+  if (PBLOQUE) return bloqueOf(q.tema) === PBLOQUE;
+  return true;
+}
+function scopeName() {
+  if (PTEMA) return temaLabel(PTEMA);
+  if (PBLOQUE) { const b = bloqueInfo(PBLOQUE); return `Bloque ${PBLOQUE}` + (b ? ' · ' + b.titulo : ''); }
+  return '';
+}
 async function prepMixto() {
   const n = Math.max(5, parseInt(params.get('n'), 10) || 20);
-  const all = (await allJsonTests()).flat();
-  if (!all.length) throw new Error('Aún no hay tests para mezclar.');
+  const all = (await allJsonTests()).flat().filter(scopeFilter);
+  if (!all.length) throw new Error(scopeName() ? `Aún no hay preguntas de ${scopeName()}.` : 'Aún no hay tests para mezclar.');
   pool = shuffle(all).slice(0, n);
-  meta = { titulo: 'Test mixto', eyebrow: 'Preguntas de todos tus tests', desc: `${pool.length} preguntas al azar de todos los tests publicados.` };
+  meta = { titulo: scopeName() ? 'Test mixto · ' + scopeName() : 'Test mixto', eyebrow: scopeName() ? 'Práctica por tema' : 'Preguntas de todos tus tests',
+    desc: `${pool.length} preguntas al azar${scopeName() ? ' de este ámbito' : ' de todos los tests publicados'}.` };
 }
 async function prepErrores() {
-  const errs = getErr();
-  const keys = new Set(Object.keys(errs));
+  const keys = new Set(Object.keys(getErr()));
   if (!keys.size) throw new Error('No tienes preguntas pendientes de repasar. ¡Bien!');
-  const all = (await allJsonTests()).flat().filter(q => keys.has(q.key));
-  if (!all.length) throw new Error('Las preguntas que fallaste ya no están en los tests publicados.');
+  const all = (await allJsonTests()).flat().filter(q => keys.has(q.key) && scopeFilter(q));
+  if (!all.length) throw new Error(scopeName() ? `No tienes errores pendientes en ${scopeName()}.` : 'Las preguntas que fallaste ya no están en los tests publicados.');
   pool = all;
-  meta = { titulo: 'Repaso de errores', eyebrow: 'Tus preguntas falladas', desc: 'Si aciertas una pregunta aquí, sale de tu lista de errores. Si la fallas, se queda.' };
+  meta = { titulo: scopeName() ? 'Repaso de errores · ' + scopeName() : 'Repaso de errores', eyebrow: 'Tus preguntas falladas', desc: 'Si aciertas una pregunta aquí, sale de tu lista de errores. Si la fallas, se queda.' };
 }
 
 /* ---------- pantalla de inicio ---------- */
@@ -226,7 +238,7 @@ function renderReview() {
     if (st === 'blank') card.append(el('p', 'answerline bad', 'Tu respuesta: Sin responder'));
     const ok = el('p', 'answerline good'); ok.append(el('b', '', 'Respuesta correcta: '), document.createTextNode(label(q, q.correcta))); card.append(ok);
     if (q.explicacion) card.append(el('div', 'expl', q.explicacion));
-    card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, T === 'mixto' || T === 'errores' ? 'Test: ' + q.testTitulo : ''].filter(Boolean).join(' · ')));
+    card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, 'Tema ' + temaLabel(q.tema), T === 'mixto' || T === 'errores' ? 'Test: ' + q.testTitulo : ''].filter(Boolean).join(' · ')));
     box.append(card);
   });
   if (!found) box.append(el('div', 'msg', 'No hay preguntas en esta categoría.'));
@@ -252,7 +264,7 @@ function finishExam() {
       byTema[q.tema].r++;
       if (T === 'errores') delete errs[q.key];                       // repasada: sale de la lista
     } else if (q.selected !== null) {
-      errs[q.key] = { testId: q.testId, n: ((errs[q.key] || {}).n || 0) + 1 };
+      errs[q.key] = { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 };
     }
   });
   setErr(errs);
@@ -276,6 +288,7 @@ window.addEventListener('beforeunload', e => { if (!$('exam').classList.contains
 
 (async function init() {
   if (!T) { location.replace('index.html'); return; }
+  await loadTemario();
   try {
     if (T === 'mixto') await prepMixto();
     else if (T === 'errores') await prepErrores();

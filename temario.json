@@ -1,0 +1,310 @@
+{
+ "bloques": [
+  {
+   "id": "I",
+   "titulo": "Organización del Estado y de la Administración pública",
+   "temas": [
+    {
+     "id": "I-1",
+     "n": 1,
+     "corto": "La Constitución Española de 1978",
+     "oficial": "La Constitución Española de 1978: estructura y contenido. Derechos y deberes fundamentales. Su garantía y suspensión. El Tribunal Constitucional. El Defensor del Pueblo. Reforma de la Constitución."
+    },
+    {
+     "id": "I-2",
+     "n": 2,
+     "corto": "La Jefatura del Estado: la Corona",
+     "oficial": "La Jefatura del Estado. La Corona: funciones constitucionales del Rey. Sucesión y regencia."
+    },
+    {
+     "id": "I-3",
+     "n": 3,
+     "corto": "Las Cortes Generales",
+     "oficial": "Las Cortes Generales: composición, atribuciones y funcionamiento del Congreso de los Diputados y del Senado."
+    },
+    {
+     "id": "I-4",
+     "n": 4,
+     "corto": "El Poder Judicial",
+     "oficial": "El Poder Judicial. El Consejo General del Poder Judicial. El Tribunal Supremo. La organización judicial española."
+    },
+    {
+     "id": "I-5",
+     "n": 5,
+     "corto": "El Gobierno y la Administración",
+     "oficial": "El Gobierno y la Administración. El Presidente del Gobierno. El Consejo de Ministros. Designación, causas de cese y responsabilidad del Gobierno. Las funciones del Gobierno. Relaciones entre el Gobierno y las Cortes Generales."
+    },
+    {
+     "id": "I-6",
+     "n": 6,
+     "corto": "Gobierno Abierto y Agenda 2030",
+     "oficial": "El Gobierno Abierto: concepto y principios informadores. La Agenda 2030 y los Objetivos de Desarrollo Sostenible."
+    },
+    {
+     "id": "I-7",
+     "n": 7,
+     "corto": "Ley 19/2013 de transparencia y buen gobierno",
+     "oficial": "La Ley 19/2013, de 9 de diciembre, de transparencia, acceso a la información pública y buen gobierno."
+    },
+    {
+     "id": "I-8",
+     "n": 8,
+     "corto": "La Administración General del Estado",
+     "oficial": "La Administración General del Estado. Órganos centrales. Órganos superiores y directivos. Órganos territoriales. La Administración del Estado en el Exterior."
+    },
+    {
+     "id": "I-9",
+     "n": 9,
+     "corto": "Organización territorial: Comunidades Autónomas",
+     "oficial": "La Organización territorial del Estado: las Comunidades Autónomas. Constitución y distribución de competencias entre el Estado y las Comunidades Autónomas. Estatutos de Autonomía."
+    },
+    {
+     "id": "I-10",
+     "n": 10,
+     "corto": "La Administración local",
+     "oficial": "La Administración local: entidades que la integran. La provincia, el municipio y la isla."
+    },
+    {
+     "id": "I-11",
+     "n": 11,
+     "corto": "La Unión Europea",
+     "oficial": "La organización de la Unión Europea. El Consejo Europeo, el Consejo, el Parlamento Europeo, la Comisión Europea y el Tribunal de Justicia de la Unión Europea. Efectos de la integración europea sobre la organización del Estado español."
+    }
+   ]
+  },
+  {
+   "id": "II",
+   "titulo": "Organización de oficinas públicas",
+   "temas": [
+    {
+     "id": "II-1",
+     "n": 1,
+     "corto": "Atención al público",
+     "oficial": "Atención al público. Atención de personas con discapacidad. Los servicios de información administrativa. Información general y particular al ciudadano. Iniciativas. Reclamaciones. Quejas. Peticiones."
+    },
+    {
+     "id": "II-2",
+     "n": 2,
+     "corto": "Documento, registro y archivo",
+     "oficial": "Concepto de documento, registro y archivo. Funciones del registro y del archivo. Clases de archivo y criterios de ordenación."
+    },
+    {
+     "id": "II-3",
+     "n": 3,
+     "corto": "Administración electrónica y servicios al ciudadano",
+     "oficial": "Administración electrónica y servicios al ciudadano. Análisis de principales páginas web de carácter público. Servicios telemáticos. Oficinas integradas de atención al ciudadano. Ventanilla única empresarial. El Punto de Acceso General de la Administración General del Estado."
+    },
+    {
+     "id": "II-4",
+     "n": 4,
+     "corto": "Protección de datos personales",
+     "oficial": "La protección de datos personales y su régimen Jurídico: principios, derechos, responsable y encargado del tratamiento, delegado y autoridades de protección de datos. Derechos digitales."
+    }
+   ]
+  },
+  {
+   "id": "III",
+   "titulo": "Derecho administrativo general",
+   "temas": [
+    {
+     "id": "III-1",
+     "n": 1,
+     "corto": "Fuentes del derecho administrativo",
+     "oficial": "Las fuentes del derecho administrativo. La jerarquía de las fuentes. La ley. Las disposiciones del Ejecutivo con fuerza de ley: decreto-ley y decreto legislativo. El reglamento: concepto, clases y límites. Otras fuentes del derecho administrativo."
+    },
+    {
+     "id": "III-2",
+     "n": 2,
+     "corto": "El acto administrativo",
+     "oficial": "El acto administrativo: concepto, clases y elementos. Eficacia y validez de los actos administrativos. Su motivación y notificación."
+    },
+    {
+     "id": "III-3",
+     "n": 3,
+     "corto": "Procedimiento administrativo común y recursos",
+     "oficial": "Las Leyes del Procedimiento Administrativo Común de las Administraciones Públicas y del Régimen Jurídico del Sector Público. Procedimiento administrativo común y su alcance: iniciación, ordenación, instrucción y terminación. La revisión de los actos en vía administrativa: revisión de oficio y recursos administrativos. El recurso contencioso-administrativo. Actividad administrativa impugnable. Las partes: capacidad, legitimación, representación y defensa."
+    },
+    {
+     "id": "III-4",
+     "n": 4,
+     "corto": "Contratos del sector público",
+     "oficial": "Los contratos del sector público: concepto y clases. Preparación, adjudicación, efectos, cumplimiento y extinción. La revisión de precios y otras alteraciones contractuales. Régimen de invalidez y recursos."
+    },
+    {
+     "id": "III-5",
+     "n": 5,
+     "corto": "Formas de la actividad administrativa",
+     "oficial": "Procedimientos y formas de la actividad administrativa. La actividad de limitación, arbitral, de servicio público y de fomento. Formas de gestión de los servicios públicos."
+    },
+    {
+     "id": "III-6",
+     "n": 6,
+     "corto": "Responsabilidad patrimonial",
+     "oficial": "La responsabilidad patrimonial de las Administraciones públicas. Concepto y clases. Requisitos generales. Efectos."
+    },
+    {
+     "id": "III-7",
+     "n": 7,
+     "corto": "Igualdad, discapacidad y dependencia",
+     "oficial": "Políticas de igualdad y contra la violencia de género. Políticas de igualdad de trato y no discriminación de las personas LGTBI. Discapacidad y dependencia: régimen jurídico."
+    }
+   ]
+  },
+  {
+   "id": "IV",
+   "titulo": "Gestión de personal",
+   "temas": [
+    {
+     "id": "IV-1",
+     "n": 1,
+     "corto": "El personal al servicio de las AAPP (EBEP)",
+     "oficial": "El personal al servicio de las Administraciones públicas: concepto y clases. El texto refundido del Estatuto Básico del Empleado Público y demás normativa de aplicación. Las competencias en materia de personal. El Registro Central de Personal."
+    },
+    {
+     "id": "IV-2",
+     "n": 2,
+     "corto": "Selección de personal",
+     "oficial": "Selección de personal. Los procesos selectivos en la Administración pública y su conexión con la Oferta de Empleo Público. Principios constitucionales. Acceso al empleo público y provisión de puestos de trabajo de las personas con discapacidad."
+    },
+    {
+     "id": "IV-3",
+     "n": 3,
+     "corto": "Personal funcionario",
+     "oficial": "El personal funcionario al servicio de las Administraciones públicas: funcionarios de carrera y funcionarios interinos. La selección de los funcionarios."
+    },
+    {
+     "id": "IV-4",
+     "n": 4,
+     "corto": "Condición de funcionario y situaciones administrativas",
+     "oficial": "Adquisición y pérdida de la condición de funcionario. Situaciones administrativas de los funcionarios. Supuestos y efectos de cada una de ellas."
+    },
+    {
+     "id": "IV-5",
+     "n": 5,
+     "corto": "Provisión de puestos, deberes y derechos",
+     "oficial": "Provisión de puestos de trabajo en la función pública. Los deberes y derechos de los funcionarios. La carrera administrativa. Promoción interna."
+    },
+    {
+     "id": "IV-6",
+     "n": 6,
+     "corto": "Incompatibilidades y régimen disciplinario",
+     "oficial": "Las incompatibilidades. Régimen disciplinario: faltas, sanciones y procedimiento."
+    },
+    {
+     "id": "IV-7",
+     "n": 7,
+     "corto": "Seguridad Social de los funcionarios (MUFACE, clases pasivas)",
+     "oficial": "El régimen de la Seguridad Social de los funcionarios. La MUFACE y las clases pasivas."
+    },
+    {
+     "id": "IV-8",
+     "n": 8,
+     "corto": "Personal laboral",
+     "oficial": "El personal laboral al servicio de las Administraciones públicas. Selección. Derechos, deberes e incompatibilidades. El IV Convenio único para el personal laboral de la Administración General del Estado: ámbito de aplicación y sistema de clasificación."
+    },
+    {
+     "id": "IV-9",
+     "n": 9,
+     "corto": "Seguridad Social del personal laboral",
+     "oficial": "El régimen de la Seguridad Social del personal laboral. La acción protectora. Tipos y características de las prestaciones."
+    }
+   ]
+  },
+  {
+   "id": "V",
+   "titulo": "Gestión financiera",
+   "temas": [
+    {
+     "id": "V-1",
+     "n": 1,
+     "corto": "El presupuesto y sus principios",
+     "oficial": "El presupuesto: concepto. Los principios presupuestarios. El ciclo presupuestario. El presupuesto por programas: concepto y fases. Terminología y desarrollo del proceso presupuestario."
+    },
+    {
+     "id": "V-2",
+     "n": 2,
+     "corto": "El presupuesto del Estado y sus modificaciones",
+     "oficial": "El presupuesto del Estado en España: concepto y estructura. Los créditos presupuestarios: clasificación. Gastos plurianuales. Las modificaciones presupuestarias: créditos extraordinarios y suplementos de crédito. Ampliaciones de crédito. Generaciones de crédito. Transferencias de crédito. Incorporaciones de crédito. Anticipos de tesorería."
+    },
+    {
+     "id": "V-3",
+     "n": 3,
+     "corto": "Ejecución del gasto y control",
+     "oficial": "El procedimiento administrativo de ejecución del presupuesto de gasto. Órganos competentes. Fases del procedimiento y sus documentos contables. Compromisos de gasto para ejercicios posteriores. La ordenación del pago: concepto y competencia. Realización del pago: modos y perceptores. Control del gasto público. Clases. Especial referencia al control de legalidad. El Tribunal de Cuentas."
+    },
+    {
+     "id": "V-4",
+     "n": 4,
+     "corto": "Retribuciones y nóminas",
+     "oficial": "Las retribuciones e indemnizaciones de los funcionarios públicos y del personal laboral al servicio de la Administración pública. Nóminas: estructura y normas de confección. Altas y bajas: su justificación. Retribuciones básicas: sueldos, trienios, pagas extraordinarias. Retribuciones complementarias y otras remuneraciones. Devengo y liquidación de derechos económicos. El pago de las retribuciones del personal en activo. Formas de pago."
+    },
+    {
+     "id": "V-5",
+     "n": 5,
+     "corto": "Gastos de bienes y servicios, pagos",
+     "oficial": "Gastos para la compra de bienes y servicios. Gastos de inversión. Gastos de transferencias: corrientes y de capital. Pagos: concepto y tipos. Pagos por obligaciones presupuestarias. Anticipos de caja fija. Pagos «a justificar». Justificación de libramientos."
+    },
+    {
+     "id": "V-6",
+     "n": 6,
+     "corto": "Gestión económica de contratos y subvenciones",
+     "oficial": "Gestión económica y financiera de los contratos del sector público. Gestión económica y financiera de subvenciones."
+    }
+   ]
+  },
+  {
+   "id": "VI",
+   "titulo": "Informática básica y ofimática",
+   "temas": [
+    {
+     "id": "VI-1",
+     "n": 1,
+     "corto": "Informática básica",
+     "oficial": "Informática básica: conceptos fundamentales sobre el hardware y el software. Sistemas de almacenamiento de datos. Sistemas operativos. Nociones básicas de seguridad informática."
+    },
+    {
+     "id": "VI-2",
+     "n": 2,
+     "corto": "Windows: entorno y escritorio",
+     "oficial": "Introducción al sistema operativo: el entorno Windows. Fundamentos. Trabajo en el entorno gráfico de Windows: ventanas, iconos, menús contextuales, cuadros de diálogo. El escritorio y sus elementos. El menú inicio. Copilot."
+    },
+    {
+     "id": "VI-3",
+     "n": 3,
+     "corto": "Explorador de Windows",
+     "oficial": "El explorador de Windows. Gestión de carpetas y archivos. Operaciones de búsqueda. Herramientas «Este equipo» y «Acceso rápido». Accesorios. Herramientas del sistema."
+    },
+    {
+     "id": "VI-4",
+     "n": 4,
+     "corto": "Word 365",
+     "oficial": "Procesadores de texto: Word 365. Principales funciones y utilidades. Creación y estructuración del documento. Gestión, grabación, recuperación e impresión de ficheros. Personalización del entorno de trabajo."
+    },
+    {
+     "id": "VI-5",
+     "n": 5,
+     "corto": "Excel 365",
+     "oficial": "Hojas de cálculo: Excel 365. Principales funciones y utilidades. Libros, hojas y celdas. Configuración. Introducción y edición de datos. Fórmulas y funciones. Gráficos. Gestión de datos. Personalización del entorno de trabajo."
+    },
+    {
+     "id": "VI-6",
+     "n": 6,
+     "corto": "Access 365",
+     "oficial": "Bases de datos: Access 365. Principales funciones y utilidades. Tablas. Consultas. Formularios. Informes. Relaciones. Importación, vinculación y exportación de datos."
+    },
+    {
+     "id": "VI-7",
+     "n": 7,
+     "corto": "Outlook 365",
+     "oficial": "Correo electrónico: Outlook 365. Conceptos elementales y funcionamiento. El entorno de trabajo. Enviar, recibir, responder y reenviar mensajes. Creación de mensajes. Reglas de mensaje. Libreta de direcciones."
+    },
+    {
+     "id": "VI-8",
+     "n": 8,
+     "corto": "Internet y navegadores",
+     "oficial": "La Red Internet: origen, evolución y estado actual. Conceptos elementales sobre protocolos y servicios en Internet. Funcionalidades básicas de los navegadores web."
+    }
+   ]
+  }
+ ]
+}

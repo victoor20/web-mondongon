@@ -33,7 +33,7 @@ a.pill:hover{border-color:var(--blue);color:var(--blue)}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
 /* portada */
-.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .stat{padding:16px 18px}
 .stat strong{display:block;font-size:28px;line-height:1.1;letter-spacing:-1px}
 .stat span{font-size:13px;color:var(--muted)}
@@ -61,6 +61,29 @@ a.test:hover{border-color:var(--blue);background:var(--blueLight)}
 .msg{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;color:var(--muted)}
 .msg.warn{background:var(--warnBg);border-color:#f1d9a5;color:var(--warn)}
 .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* temario */
+details.bloque{border:1px solid var(--line);border-radius:14px;margin:10px 0;background:#fff;overflow:hidden}
+details.bloque>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+details.bloque>summary::-webkit-details-marker{display:none}
+.bhead{display:flex;gap:10px;align-items:baseline;flex:1;min-width:0}
+.bhead::before{content:'▸';color:var(--blue);display:inline-block;transition:transform .15s}
+details.bloque[open] .bhead::before{transform:rotate(90deg)}
+.bnum{font-weight:850;color:var(--blue);white-space:nowrap}
+.btitle{font-weight:720}
+.bmeta{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--muted);flex-wrap:wrap;justify-content:flex-end}
+.trow{display:grid;grid-template-columns:minmax(0,1.8fr) 105px 150px auto;gap:10px;align-items:center;padding:9px 16px;border-top:1px solid var(--line);font-size:14px}
+.trow.empty .tname{color:var(--muted)}
+.tid{display:inline-block;min-width:42px;font-weight:800;color:var(--blue);font-size:12px}
+.trow.empty .tid{color:#9aa8bd}
+.tperf{display:flex;align-items:center;gap:8px;font-size:13px}
+.tperf .bar{flex:1}
+.tacts{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.mini{font:inherit;font-size:12px;font-weight:750;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);text-decoration:none;cursor:pointer}
+.mini:hover{border-color:var(--blue);color:var(--blue)}
+.mini.err{color:var(--bad);border-color:#f0c4c6}
+.callout{background:var(--warnBg);border:1px solid #f1d9a5;border-radius:12px;padding:10px 14px;font-size:14px;margin:0 0 12px;color:#6b4708}
+.chip .x{margin-left:6px;opacity:.7}
 
 /* pantalla de inicio de test */
 .intro{padding:28px}
@@ -149,7 +172,9 @@ ul.issues li{margin:3px 0}
   .sidebar{order:-1;position:static;width:100%}
   .sidebar .numbers{display:none}
   .featuregrid,.score-grid{grid-template-columns:1fr 1fr}
-  .statgrid{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .statgrid{grid-template-columns:1fr 1fr;gap:8px}
+  .trow{grid-template-columns:1fr!important;gap:6px!important}
+  .tacts{justify-content:flex-start!important}
   .stat strong{font-size:22px}
   .modes{grid-template-columns:1fr}
   .shell{padding:18px 14px 50px}
