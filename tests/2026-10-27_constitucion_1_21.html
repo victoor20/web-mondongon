@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Mi Academia · Test 3 · Constitución Española (artículos 9–21)</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#fff;--ink:#17243b;--muted:#66748b;--line:#e1e7ef;--blue:#2856d9;--blueLight:#eef3ff;--good:#18794e;--goodBg:#e9f8ef;--bad:#b83239;--badBg:#fff0f0;--warn:#95610d;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}button{font:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #8daeff;outline-offset:3px}.shell{max-width:1040px;margin:auto;padding:26px 20px 85px}.mast{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}.logo{font-weight:850;letter-spacing:-.6px;font-size:21px;display:flex;gap:11px;align-items:center}.logo-mark{background:var(--blue);color:white;border-radius:12px;width:39px;height:39px;display:grid;place-items:center;font-size:19px}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;font-size:12px;letter-spacing:1.5px;font-weight:800;color:var(--blue)}.hero{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:26px}.hero h1{font-size:clamp(27px,4vw,40px);line-height:1.15;letter-spacing:-1px;margin:7px 0 10px}.hero p{max-width:670px;margin:0}.pill{font-size:12px;border:1px solid #d9e0ec;background:#fff;border-radius:50px;padding:7px 13px;font-weight:750;white-space:nowrap}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 7px 30px rgba(29,49,90,.035)}.intro{padding:28px}.intro h2{font-size:22px;margin:0 0 12px}.intro p{color:var(--muted)}.featuregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}.feature{border:1px solid var(--line);border-radius:14px;padding:16px}.feature strong{display:block;font-size:22px}.feature span{font-size:13px;color:var(--muted)}.actions{display:flex;flex-wrap:wrap;gap:11px;align-items:center}.btn{background:var(--blue);border:1px solid var(--blue);border-radius:11px;color:white;padding:12px 20px;font-weight:750}.btn:hover{filter:brightness(.94)}.btn.secondary{background:white;color:var(--ink);border-color:var(--line)}.btn:disabled{opacity:.5;cursor:not-allowed}.fine{font-size:13px;color:var(--muted)}.exam-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:22px}.test-top{padding:19px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.progress{height:8px;border-radius:20px;background:#e8eef9;overflow:hidden;margin-top:11px}.progress>div{height:100%;background:var(--blue);transition:width .2s}.question{padding:25px 27px;margin-bottom:15px;scroll-margin-top:20px}.q-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:15px}.q-number{color:var(--blue);font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.5px}.q-ref{color:var(--muted);font-size:12px}.question h3{font-size:18px;line-height:1.45;margin:0 0 20px;font-weight:720}.options{display:grid;gap:10px}.option{position:relative;display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;transition:background .15s,border-color .15s}.option:hover{border-color:#9ab1f7;background:#f8faff}.option.selected{background:var(--blueLight);border-color:var(--blue)}.option input{position:absolute;opacity:0;width:1px;height:1px}.letter{flex:0 0 29px;height:29px;border:1px solid #d7deea;display:grid;place-items:center;border-radius:8px;font-weight:800;font-size:13px;background:white}.option.selected .letter{background:var(--blue);border-color:var(--blue);color:white}.option-text{padding-top:2px}.option:focus-within{outline:3px solid #a9bbf8;outline-offset:1px}.sidebar{align-self:start;position:sticky;top:18px;padding:19px}.sidebar h3{margin:0 0 10px;font-size:15px}.time{font-size:31px;font-weight:800;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}.numbers{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:16px 0}.num{width:100%;aspect-ratio:1;background:white;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:13px;font-weight:750}.num.answered{background:var(--blueLight);border-color:#a6bdf6;color:var(--blue)}.sidebar .btn{width:100%;margin-top:10px;padding:11px 8px}.foot-actions{margin-top:20px;display:flex;justify-content:flex-end;gap:10px;align-items:center}.result-header{padding:27px 30px;margin-bottom:17px}.result-header h2{font-size:29px;margin:7px 0}.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.score{border:1px solid var(--line);padding:15px;border-radius:13px}.score strong{display:block;font-size:26px;line-height:1.1}.score span{font-size:12px;color:var(--muted)}.review{padding:21px 25px;margin:13px 0}.review-head{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:9px}.review h3{font-size:16px;margin:0}.status{font-size:12px;font-weight:800;padding:5px 10px;border-radius:30px;white-space:nowrap}.status.correct{background:var(--goodBg);color:var(--good)}.status.wrong,.status.blank{background:var(--badBg);color:var(--bad)}.answerline{font-size:14px;margin:7px 0}.answerline b{font-weight:800}.answerline.good{color:var(--good)}.answerline.bad{color:var(--bad)}.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.filter{border:1px solid var(--line);padding:8px 15px;border-radius:20px;background:#fff;color:var(--ink);font-weight:700;font-size:13px}.filter.active{color:var(--blue);border-color:var(--blue);background:var(--blueLight)}.toast{font-size:13px;color:var(--warn)}.hide{display:none!important}.bottom-note{text-align:center;font-size:12px;color:var(--muted);margin-top:30px}@media(max-width:750px){.exam-layout{display:flex;flex-direction:column}.sidebar{order:-1;position:static;width:100%}.sidebar .numbers{display:none}.hero{display:block}.hero .pill{display:inline-block;margin-top:14px}.featuregrid{grid-template-columns:1fr 1fr}.score-grid{grid-template-columns:1fr 1fr}.shell{padding:19px 14px 50px}.question{padding:20px}.intro{padding:21px}.test-top{padding:17px}.review{padding:19px}}@media(max-width:460px){.featuregrid{grid-template-columns:1fr}.score-grid{gap:8px}.score{padding:11px}.score strong{font-size:23px}.mast .pill{display:none}.question h3{font-size:17px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="mast"><div class="logo"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia <span style="color:#a5b0c1">/</span> Tests</div><span class="pill">Preparación Administrativo AGE · C1</span></header>
+  <section class="hero"><div><div class="eyebrow">Banco de preguntas · Constitución</div><h1>Practica a tu ritmo.</h1><p class="muted">El orden cambia en cada intento. Responde sin pistas y descubre qué debes repasar al finalizar.</p></div><span class="pill">Modo examen</span></section>
+  <section id="welcome" class="card intro"><div class="eyebrow">Test disponible</div><h2>Constitución Española · Derechos y libertades (artículos 9–21)</h2><p>20 preguntas basadas en tu cuestionario. El test mezcla de forma independiente las preguntas y las cuatro opciones. El cronómetro comienza cuando pulsas «Empezar test».</p><div class="featuregrid"><div class="feature"><strong>20</strong><span>Preguntas</span></div><div class="feature"><strong>4</strong><span>Opciones por pregunta</span></div><div class="feature"><strong>∞</strong><span>Intentos sin límite</span></div></div><div class="actions"><button type="button" class="btn" id="start">Empezar test</button><span id="history" class="fine" aria-live="polite"></span></div><p class="fine" style="margin:22px 0 0">No se muestra la corrección mientras respondes. Tus estadísticas básicas se guardan únicamente en este navegador.</p></section>
+  <section id="exam" class="hide"><div class="exam-layout"><div><div class="card test-top"><div style="flex:1"><strong id="progress-label">0 de 20 respondidas</strong><div class="progress" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" id="progress-bar"><div id="progress-fill" style="width:0%"></div></div></div><span class="pill">Sin corrección inmediata</span></div><div id="questions"></div><div class="foot-actions"><span id="pending-note" class="fine"></span><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div></div><aside class="card sidebar"><div class="eyebrow">Tiempo transcurrido</div><div id="timer" class="time" role="timer">00:00</div><div class="fine" id="answered-count">0 de 20 respondidas</div><h3 style="margin-top:20px">Ir a la pregunta</h3><div class="numbers" id="question-nav"></div><button type="button" class="btn" id="finish-side">Finalizar test</button><div class="fine" style="margin-top:12px">Puedes terminar aunque dejes preguntas en blanco.</div></aside></div></section>
+  <section id="results" class="hide"><div class="card result-header"><div class="eyebrow">Test finalizado</div><h2 id="result-title">Tus resultados</h2><p class="muted" style="margin:0">Revisa las respuestas y las referencias constitucionales. Las preguntas en blanco cuentan como no acertadas.</p><div class="score-grid"><div class="score"><strong id="score-right">0</strong><span>Aciertos</span></div><div class="score"><strong id="score-wrong">0</strong><span>Errores</span></div><div class="score"><strong id="score-blank">0</strong><span>Sin responder</span></div><div class="score"><strong id="score-time">00:00</strong><span>Tiempo empleado</span></div></div><div class="actions"><button type="button" id="retry" class="btn">Repetir con nuevo orden</button><button type="button" id="home" class="btn secondary">Volver al inicio</button></div><p class="fine" id="summary" style="margin-bottom:0"></p></div><div class="filterbar" id="filters"><button type="button" data-filter="all" class="filter active">Todas</button><button type="button" data-filter="wrong" class="filter">Errores</button><button type="button" data-filter="blank" class="filter">Sin responder</button><button type="button" data-filter="correct" class="filter">Aciertos</button></div><div id="review-list"></div></section>
+  <footer class="bottom-note">Mi Academia · Material de práctica personal · Funciona sin conexión a Internet</footer>
+</div>
+<script>
+'use strict';
+// Para añadir tests en el futuro, incorporaremos nuevos conjuntos de preguntas a esta estructura.
+// correct = índice ORIGINAL (0=A, 1=B, 2=C, 3=D); el orden visible se decide por separado.
+const QUESTION_BANK = [
+ {
+  "id": 1,
+  "ref": "Artículo 17.2",
+  "q": "De acuerdo con el artículo 17 de la Constitución, señale la afirmación correcta sobre la duración de la detención preventiva.",
+  "a": [
+   "No podrá durar más del tiempo estrictamente necesario para las averiguaciones y, en todo caso, en el máximo de setenta y dos horas el detenido será puesto en libertad o a disposición judicial.",
+   "Podrá prolongarse hasta setenta y dos horas siempre que así lo estime oportuno la autoridad policial, aunque hayan concluido las averiguaciones.",
+   "Su límite será de cuarenta y ocho horas, prorrogables hasta setenta y dos mediante autorización administrativa.",
+   "Las setenta y dos horas constituyen un plazo mínimo para las averiguaciones antes de la puesta a disposición judicial."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 2,
+  "ref": "Artículo 18.2",
+  "q": "Con arreglo al artículo 18.2, ¿en cuál de estos supuestos contempla la Constitución la entrada en un domicilio sin consentimiento del titular ni resolución judicial?",
+  "a": [
+   "Cuando concurra un delito flagrante.",
+   "Cuando existan indicios policiales de cualquier infracción administrativa.",
+   "Cuando lo autorice el superior jerárquico del agente por razones de urgencia.",
+   "Cuando la autoridad gubernativa considere que la entrada facilitará una investigación."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 3,
+  "ref": "Artículo 20.1.d",
+  "q": "El derecho reconocido en el artículo 20.1.d de la Constitución se refiere a:",
+  "a": [
+   "Comunicar o recibir libremente información veraz por cualquier medio de difusión.",
+   "Difundir exclusivamente informaciones oficiales procedentes de los poderes públicos.",
+   "Recibir información objetivamente exacta en todos sus detalles como condición absoluta de protección constitucional.",
+   "Expresar opiniones personales, sin referencia al requisito de veracidad propio del derecho a la información."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 4,
+  "ref": "Artículo 16.3",
+  "q": "¿Cuál de las siguientes afirmaciones se ajusta al artículo 16.3 de la Constitución Española?",
+  "a": [
+   "Ninguna confesión tendrá carácter estatal, y los poderes públicos mantendrán las consiguientes relaciones de cooperación con la Iglesia Católica y las demás confesiones.",
+   "La Iglesia Católica tendrá carácter estatal, sin perjuicio de la libertad religiosa de las demás confesiones.",
+   "Los poderes públicos deberán abstenerse de toda relación de cooperación con confesiones religiosas.",
+   "La Constitución reconoce únicamente relaciones de cooperación con confesiones previamente declaradas oficiales."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 5,
+  "ref": "Artículo 21.2",
+  "q": "Respecto de las reuniones en lugares de tránsito público y las manifestaciones, señale la opción constitucionalmente correcta.",
+  "a": [
+   "Exigen comunicación previa a la autoridad, que solo podrá prohibirlas por razones fundadas de alteración del orden público con peligro para personas o bienes.",
+   "Exigen autorización previa, que podrá denegarse si las reuniones alteran la circulación ordinaria.",
+   "No requieren ni comunicación ni autorización, dado que su ejercicio es libre.",
+   "Pueden prohibirse por cualquier alteración prevista de la tranquilidad ciudadana, aunque no exista peligro para personas o bienes."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 6,
+  "ref": "Artículo 15",
+  "q": "En relación con el artículo 15 de la Constitución, ¿cuál de las siguientes formulaciones es la correcta?",
+  "a": [
+   "Todos tienen derecho a la vida y a la integridad física y moral, sin que, en ningún caso, puedan ser sometidos a tortura ni a penas o tratos inhumanos o degradantes.",
+   "Solo los españoles tienen derecho a la vida y a la integridad física y moral.",
+   "La prohibición de la tortura admite excepciones en los supuestos que determine la autoridad judicial.",
+   "La integridad física queda protegida, mientras que la integridad moral se reconoce exclusivamente a través de la legislación ordinaria."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 7,
+  "ref": "Artículo 17.3",
+  "q": "Según el artículo 17.3, ¿cuál de estas garantías está expresamente reconocida a toda persona detenida?",
+  "a": [
+   "Ser informada de forma inmediata y comprensible de sus derechos y de las razones de su detención, sin poder ser obligada a declarar.",
+   "Ser informada de los motivos exclusivamente cuando comparezca por primera vez ante el juez.",
+   "Disponer de asistencia letrada solo tras el comienzo de las diligencias judiciales, pero no en las policiales.",
+   "Ser informada de la detención únicamente cuando lo solicite expresamente."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 8,
+  "ref": "Artículo 20.3",
+  "q": "Sobre los medios de comunicación social dependientes del Estado o de cualquier ente público, el artículo 20.3 establece que la ley regulará:",
+  "a": [
+   "Su organización y control parlamentario, garantizando el acceso de los grupos sociales y políticos significativos y respetando el pluralismo de la sociedad y de las diversas lenguas de España.",
+   "Su dirección exclusiva por el Gobierno, garantizando acceso a los grupos políticos con representación en el Congreso únicamente.",
+   "Su control judicial permanente y el acceso de todas las asociaciones legalmente constituidas en idénticas condiciones.",
+   "Su organización por reglamento gubernamental, sin intervención parlamentaria."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 9,
+  "ref": "Artículo 16.2",
+  "q": "Conforme al artículo 16.2, en materia de ideología, religión o creencias:",
+  "a": [
+   "Nadie podrá ser obligado a declarar sobre su ideología, religión o creencias.",
+   "Todos deberán declarar sus creencias cuando una autoridad administrativa lo requiera motivadamente.",
+   "Solo podrá exigirse declarar sobre la religión, pero nunca sobre la ideología.",
+   "La declaración de creencias será obligatoria para el ejercicio de cualquier derecho político."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 10,
+  "ref": "Artículo 20.5",
+  "q": "Conforme al artículo 20.5 de la Constitución, el secuestro de publicaciones, grabaciones y otros medios de información:",
+  "a": [
+   "Solo podrá acordarse en virtud de resolución judicial.",
+   "Podrá acordarse por resolución administrativa motivada cuando exista un riesgo para el orden público.",
+   "Solo podrá acordarse por ley orgánica para cada publicación concreta.",
+   "Queda prohibido de forma absoluta, sin excepción alguna."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 11,
+  "ref": "Artículo 18.4",
+  "q": "El artículo 18.4 de la Constitución establece que la ley limitará el uso de la informática para:",
+  "a": [
+   "Garantizar el honor y la intimidad personal y familiar de los ciudadanos y el pleno ejercicio de sus derechos.",
+   "Impedir cualquier tratamiento automatizado de información personal por las empresas.",
+   "Garantizar únicamente la inviolabilidad del domicilio y el secreto de las comunicaciones telefónicas.",
+   "Regular exclusivamente el funcionamiento de los ordenadores empleados en las administraciones públicas."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 12,
+  "ref": "Artículo 19",
+  "q": "Respecto del derecho de los españoles a entrar y salir libremente de España, el artículo 19 señala que:",
+  "a": [
+   "Se ejercerá en los términos que la ley establezca y no podrá ser limitado por motivos políticos o ideológicos.",
+   "Podrá suspenderse por razones ideológicas mediante resolución administrativa motivada.",
+   "Está sujeto únicamente al reconocimiento recíproco por otros Estados.",
+   "Es absoluto y se ejercerá sin ninguna sujeción a los términos establecidos en la ley."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 13,
+  "ref": "Artículo 21.1",
+  "q": "¿Cuál de los siguientes enunciados reproduce adecuadamente la protección del derecho de reunión del artículo 21.1?",
+  "a": [
+   "Se reconoce el derecho de reunión pacífica y sin armas y su ejercicio no necesitará autorización previa.",
+   "El derecho de reunión solo se reconoce si ha sido autorizado previamente por la autoridad competente.",
+   "La Constitución reconoce el derecho de reunión pacífica, pero deja a la ley decidir si debe solicitarse siempre autorización.",
+   "Únicamente las reuniones de carácter político quedan exentas de autorización previa."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 14,
+  "ref": "Artículo 20.4",
+  "q": "Según el artículo 20.4, las libertades del artículo 20 tienen su límite, especialmente, en:",
+  "a": [
+   "El derecho al honor, a la intimidad, a la propia imagen y a la protección de la juventud y de la infancia.",
+   "La necesidad de obtener la aprobación previa de la autoridad competente para difundir cualquier opinión.",
+   "La protección del prestigio de todos los órganos constitucionales como único límite constitucional expreso.",
+   "La obligación de que todas las opiniones publicadas se ajusten a las posiciones oficiales de los poderes públicos."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 15,
+  "ref": "Artículo 17.4",
+  "q": "El procedimiento de habeas corpus previsto en el artículo 17.4 tiene por finalidad constitucional:",
+  "a": [
+   "Producir la inmediata puesta a disposición judicial de toda persona detenida ilegalmente.",
+   "Sustituir automáticamente toda detención preventiva por prisión provisional.",
+   "Garantizar la puesta en libertad automática de cualquier persona detenida, con independencia de la legalidad de la detención.",
+   "Permitir que la autoridad policial revise de oficio las sentencias judiciales privativas de libertad."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 16,
+  "ref": "Artículo 20.1 y 21.1",
+  "q": "Señale cuál de los siguientes derechos NO figura expresamente entre los enumerados en el artículo 20.1 de la Constitución.",
+  "a": [
+   "El derecho de reunión pacífica y sin armas.",
+   "La libertad de cátedra.",
+   "La producción y creación literaria, artística, científica y técnica.",
+   "La expresión y difusión libre de pensamientos, ideas y opiniones."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 17,
+  "ref": "Artículo 18.3",
+  "q": "Señale la respuesta correcta sobre el secreto de las comunicaciones en el artículo 18.3.",
+  "a": [
+   "Se garantiza, en especial, el de las comunicaciones postales, telegráficas y telefónicas, salvo resolución judicial.",
+   "Se garantiza exclusivamente el de las comunicaciones telefónicas, salvo autorización administrativa.",
+   "Podrá dejarse sin efecto por decisión de la autoridad policial en caso de cualquier investigación abierta.",
+   "No admite intervención alguna de las comunicaciones, incluso mediando resolución judicial."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 18,
+  "ref": "Artículo 9.3",
+  "q": "Entre los principios expresamente garantizados en el artículo 9.3, ¿qué formulación es constitucionalmente correcta?",
+  "a": [
+   "La responsabilidad y la interdicción de la arbitrariedad de los poderes públicos.",
+   "La irresponsabilidad de los poderes públicos y la prohibición de toda discrecionalidad administrativa.",
+   "La supremacía reglamentaria y la publicidad de los actos privados.",
+   "La retroactividad obligatoria de las disposiciones sancionadoras no favorables."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 19,
+  "ref": "Artículo 16.1",
+  "q": "El artículo 16.1 garantiza la libertad ideológica, religiosa y de culto de los individuos y las comunidades, con una limitación específica en sus manifestaciones. ¿Cuál es?",
+  "a": [
+   "La necesaria para el mantenimiento del orden público protegido por la ley.",
+   "La que acuerde discrecionalmente la autoridad gubernativa por razones de oportunidad.",
+   "La necesaria para mantener la uniformidad ideológica de las instituciones públicas.",
+   "La que resulte del carácter estatal de una confesión religiosa."
+  ],
+  "correct": 0
+ },
+ {
+  "id": 20,
+  "ref": "Artículo 17.4",
+  "q": "Indique la afirmación correcta en relación con la prisión provisional según el artículo 17.4 de la Constitución.",
+  "a": [
+   "Su plazo máximo de duración será determinado por ley.",
+   "Su plazo máximo constitucional será siempre de setenta y dos horas.",
+   "Su duración máxima será fijada por una instrucción de la autoridad gubernativa.",
+   "La Constitución prohíbe toda forma de prisión provisional."
+  ],
+  "correct": 0
+ }
+];
+const $ = id => document.getElementById(id);
+const LETTERS=['A','B','C','D'];
+let exam=[], startAt=0, elapsed=0, ticker=null, currentFilter='all', completed=false;
+function randomInt(max){if(window.crypto && crypto.getRandomValues){const array=new Uint32Array(1), limit=Math.floor(4294967296/max)*max;do{crypto.getRandomValues(array)}while(array[0]>=limit);return array[0]%max}return Math.floor(Math.random()*max)}
+function shuffle(items){const v=[...items];for(let i=v.length-1;i>0;i--){const j=randomInt(i+1);[v[i],v[j]]=[v[j],v[i]]}return v}
+function formatTime(seconds){const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),s=seconds%60;return(h?String(h).padStart(2,'0')+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function safeText(node,text){node.textContent=text}
+function show(screen){['welcome','exam','results'].forEach(id=>$(id).classList.toggle('hide',id!==screen));window.scrollTo({top:0,behavior:'instant'})}
+function add(tag,cls,txt){const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el}
+function updateProgress(){const n=exam.filter(item=>item.selected!==null).length;safeText($('progress-label'),`${n} de ${exam.length} respondidas`);safeText($('answered-count'),`${n} de ${exam.length} respondidas`);$('progress-fill').style.width=`${n/exam.length*100}%`;$('progress-bar').setAttribute('aria-valuenow',n);safeText($('pending-note'),n===exam.length?'Todo respondido':`${exam.length-n} sin responder`);[...$('question-nav').children].forEach((b,i)=>b.classList.toggle('answered',exam[i].selected!==null))}
+function renderQuestions(){const container=$('questions'),nav=$('question-nav');container.replaceChildren();nav.replaceChildren();exam.forEach((item,i)=>{const card=add('article','card question');card.id=`q-${i}`;const head=add('div','q-top');head.append(add('span','q-number',`Pregunta ${i+1} de ${exam.length}`),add('span','q-ref',item.ref));card.append(head,add('h3','',item.q));const opts=add('div','options');item.options.forEach((opt,j)=>{const label=add('label','option');const input=add('input');input.type='radio';input.name=`question-${i}`;input.value=String(opt.originalIndex);input.setAttribute('aria-label',`Opción ${LETTERS[j]}: ${opt.text}`);const letter=add('span','letter',LETTERS[j]);const text=add('span','option-text',opt.text);label.append(input,letter,text);input.addEventListener('change',()=>{item.selected=opt.originalIndex;[...opts.children].forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked));updateProgress()});opts.append(label)});card.append(opts);container.append(card);const b=add('button','num',String(i+1));b.type='button';b.setAttribute('aria-label',`Ir a pregunta ${i+1}`);b.addEventListener('click',()=>card.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(b)});updateProgress()}
+function startExam(){clearInterval(ticker);completed=false;exam=shuffle(QUESTION_BANK).map(q=>({...q,options:shuffle(q.a.map((text,originalIndex)=>({text,originalIndex}))),selected:null}));elapsed=0;startAt=Date.now();safeText($('timer'),'00:00');renderQuestions();show('exam');ticker=setInterval(()=>{elapsed=Math.floor((Date.now()-startAt)/1000);safeText($('timer'),formatTime(elapsed))},500)}
+function finishExam(){if(completed)return;const blank=exam.filter(q=>q.selected===null).length;if(blank && !confirm(`Quedan ${blank} pregunta(s) sin responder. ¿Quieres finalizar y corregir el test?`))return;completed=true;clearInterval(ticker);elapsed=Math.floor((Date.now()-startAt)/1000);const right=exam.filter(q=>q.selected===q.correct).length,wrong=exam.filter(q=>q.selected!==null&&q.selected!==q.correct).length;safeText($('score-right'),right);safeText($('score-wrong'),wrong);safeText($('score-blank'),blank);safeText($('score-time'),formatTime(elapsed));safeText($('result-title'),`${right} de ${exam.length} respuestas correctas`);safeText($('summary'),`Porcentaje de acierto: ${Math.round(right/exam.length*100)} %. Cada error muestra tu respuesta y la solución correcta.`);try{const old=JSON.parse(localStorage.getItem('miAcademiaHistoria_CE_Derechos_9_21_Test3')||'[]');old.unshift({date:new Date().toISOString(),right,wrong,blank,elapsed,total:exam.length});localStorage.setItem('miAcademiaHistoria_CE_Derechos_9_21_Test3',JSON.stringify(old.slice(0,100)))}catch(e){}currentFilter='all';renderReview();updateFilters();show('results')}
+function getAnswerLabel(q,originalIndex){const pos=q.options.findIndex(o=>o.originalIndex===originalIndex);return `${LETTERS[pos]}) ${q.a[originalIndex]}`}
+function renderReview(){const container=$('review-list');container.replaceChildren();let found=0;exam.forEach((q,i)=>{const status=q.selected===null?'blank':q.selected===q.correct?'correct':'wrong';if(currentFilter!=='all'&&status!==currentFilter)return;found++;const card=add('article','card review');const head=add('div','review-head');head.append(add('h3','',`${i+1}. ${q.q}`),add('span',`status ${status}`,status==='correct'?'Acierto':status==='wrong'?'Error':'Sin responder'));card.append(head);if(status==='wrong'){const given=add('p','answerline bad');given.append(add('b','', 'Tu respuesta: '),document.createTextNode(getAnswerLabel(q,q.selected)));card.append(given)}else if(status==='blank'){card.append(add('p','answerline bad','Tu respuesta: Sin responder'))}const correct=add('p','answerline good');correct.append(add('b','', 'Respuesta correcta: '),document.createTextNode(getAnswerLabel(q,q.correct)));card.append(correct,add('p','fine',`Referencia: Constitución Española, ${q.ref}`));container.append(card)});if(!found)container.append(add('div','card intro muted','No hay preguntas en esta categoría.'))}
+function updateFilters(){document.querySelectorAll('.filter').forEach(b=>{const active=b.dataset.filter===currentFilter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
+function loadHistory(){try{const data=JSON.parse(localStorage.getItem('miAcademiaHistoria_CE_Derechos_9_21_Test3')||'[]');safeText($('history'),data.length?`Intentos en este navegador: ${data.length} · Último: ${data[0].right}/${data[0].total} aciertos`:'Tu primer intento está listo.')}catch(e){safeText($('history'),'Tu primer intento está listo.')}}
+$('start').addEventListener('click',startExam);$('retry').addEventListener('click',startExam);$('finish-side').addEventListener('click',finishExam);$('finish-bottom').addEventListener('click',finishExam);$('home').addEventListener('click',()=>{loadHistory();show('welcome')});document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{currentFilter=b.dataset.filter;updateFilters();renderReview()}));window.addEventListener('beforeunload',e=>{if(!$('exam').classList.contains('hide')&&!completed){e.preventDefault();e.returnValue=''}});loadHistory();
+</script>
+</body>
+</html>
