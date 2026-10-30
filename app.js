@@ -247,25 +247,35 @@ function niceTitle(raw) {
 }
 
 function parseMarkdownTest(md) {
+  // Acepta el Markdown original (# y **) y también el texto copiado desde el chat, que pierde esas marcas.
   const errors = [], warnings = [];
-  const lines = md.replace(/^﻿/, '').replace(/\r\n?/g, '\n').split('\n').map(l => l.replace(/\s+$/, ''));
+  const lines = md.replace(/^﻿/, '').replace(/\r\n?/g, '\n').split('\n');
+  const HEAD = /^(PREGUNTAS|SOLUCIONARIO(?: Y EXPLICACIONES)?|EXPLICACI[ÓO]N(?:ES)?(?: DE CADA RESPUESTA)?|RESULTADO|REGISTRO DE ERRORES|REFERENCIA NORMATIVA)\s*:?$/i;
+  const ART = /^(Art[íi]culos?\s+\d+(?:\.\d+)*(?:\.[a-z])?(?:\s*[–-]\s*\d+)?(?:\s*(?:y|e|,)\s*\d+(?:\.\d+)*(?:\.[a-z])?)*)\.?\s*(.*)$/i;
   let titulo = '', fecha = '', bloque = '', tn = '', declared = null;
   const qs = [], sol = {}, exp = {};
   let section = 'meta', cur = null, lastExp = null, m;
 
-  for (const line of lines) {
-    if ((m = /^#{1,3}\s+(.+)$/.exec(line))) {
-      const name = m[1].trim().toUpperCase();
-      if (/^PREGUNTAS/.test(name)) section = 'q';
+  for (const rawLine of lines) {
+    const raw = rawLine.trim();
+    const plain = raw.replace(/\*\*/g, '').replace(/^#{1,6}\s*/, '').trim();
+    if (!plain) continue;
+
+    if ((m = HEAD.exec(plain))) {                                   // cambio de sección
+      const name = m[1].toUpperCase();
+      if (name.startsWith('PREGUNTAS')) section = 'q';
       else if (/^(SOLUCIONARIO|EXPLICACI)/.test(name)) section = 'sol';
-      else if (/^(RESULTADO|REGISTRO|REFERENCIA)/.test(name)) section = 'skip';
-      else if (!titulo) titulo = m[1].trim();
       else section = 'skip';
-      cur = null; lastExp = null;
-      continue;
+      cur = null; lastExp = null; continue;
     }
+    if (!titulo && /^TEST\s*\d+\s*[—–-]/i.test(plain)) { titulo = plain; continue; }
+    if (/^#/.test(raw)) {                                           // otro encabezado Markdown
+      if (!titulo) titulo = plain; else section = 'skip';
+      cur = null; lastExp = null; continue;
+    }
+
     if (section === 'meta') {
-      if ((m = /^\*\*([^*]+?):\*\*\s*(.*)$/.exec(line))) {
+      if ((m = /^(Bloque\s+[IVX]+|Tema\s+\d+|Fecha|Preguntas)\s*:\s*(.*)$/i.exec(plain))) {
         const k = m[1].trim(), v = m[2].trim();
         let mm;
         if ((mm = /^bloque\s+([IVX]+)$/i.exec(k))) bloque = mm[1].toUpperCase();
@@ -274,22 +284,27 @@ function parseMarkdownTest(md) {
         else if (/^preguntas$/i.test(k)) declared = parseInt(v, 10) || null;
       }
     } else if (section === 'q') {
-      if ((m = /^\*\*(\d+)\.\s+(.+?)\*\*$/.exec(line))) { cur = { n: +m[1], q: m[2].trim(), opciones: [], letters: [] }; qs.push(cur); }
-      else if ((m = /^([A-F])\)\s+(.+)$/.exec(line)) && cur) { cur.letters.push(m[1]); cur.opciones.push(m[2].trim()); }
-      else if (line.trim() && cur) {                       // línea de continuación
-        if (cur.opciones.length) cur.opciones[cur.opciones.length - 1] += ' ' + line.trim();
-        else cur.q += ' ' + line.trim();
+      if ((m = /^([A-F])[).]\s+(.+)$/.exec(plain)) && cur) { cur.letters.push(m[1]); cur.opciones.push(m[2].trim()); }
+      else if ((m = /^(\d+)[.)]\s+(.+)$/.exec(plain))) { cur = { n: +m[1], q: m[2].trim(), opciones: [], letters: [] }; qs.push(cur); }
+      else if (cur) {                                               // línea de continuación
+        if (cur.opciones.length) cur.opciones[cur.opciones.length - 1] += ' ' + plain;
+        else cur.q += ' ' + plain;
       }
     } else if (section === 'sol') {
-      if ((m = /^\|\s*(\d+)\s*\|\s*([A-F])\s*\|\s*(.*?)\s*\|$/.exec(line))) sol[+m[1]] = { l: m[2], art: m[3] };
-      else if ((m = /^\*\*(\d+)\.\s+Respuesta\s+([A-F])\s*[—–-]\s*(.+?)\.?\*\*\s*(.*)$/.exec(line))) {
+      if ((m = /^\|?\s*(\d{1,3})\s*[|\t ]+\s*([A-F])\s*(?:[|\t ]+\s*(.*?))?\s*\|?$/.exec(plain)) && !/^\d+[.)]/.test(plain)) {
+        sol[+m[1]] = { l: m[2], art: (m[3] || '').trim() };         // fila de la tabla (con | o con tabuladores)
+      } else if ((m = /^\*\*(\d+)[.)]\s+Respuesta\s+([A-F])\s*[—–-]\s*(.+?)\.?\*\*\s*(.*)$/.exec(raw))) {
         exp[+m[1]] = { l: m[2], ref: m[3].trim(), text: m[4].trim() }; lastExp = exp[+m[1]];
-      } else if (line.trim() && lastExp && !/^[|*#]/.test(line)) lastExp.text += ' ' + line.trim();
+      } else if ((m = /^(\d+)[.)]\s+Respuesta\s+([A-F])\s*[—–-]\s*(.*)$/.exec(plain))) {
+        const a = ART.exec(m[3]);                                   // sin ** hay que separar «Artículo X.» del texto
+        exp[+m[1]] = a ? { l: m[2], ref: a[1].trim(), text: a[2].trim() } : { l: m[2], ref: '', text: m[3].trim() };
+        lastExp = exp[+m[1]];
+      } else if (lastExp && !/^[|]/.test(plain)) lastExp.text += ' ' + plain;
     }
   }
 
-  if (!titulo) errors.push('No encuentro el título (una línea «# TEST 04 — …»).');
-  if (!qs.length) errors.push('No encuentro preguntas. Cada una debe empezar por «**1. Texto**» y sus opciones por «A) …».');
+  if (!titulo) errors.push('No encuentro el título (una línea «TEST 04 — …»).');
+  if (!qs.length) errors.push('No encuentro preguntas. Cada una debe empezar por «1. Texto» y sus opciones por «A) …».');
   if (declared && qs.length && declared !== qs.length) warnings.push(`El documento dice ${declared} preguntas pero he encontrado ${qs.length}.`);
   if (!fecha) warnings.push('No he podido leer la fecha; ponla abajo.');
   if (!(bloque && tn)) warnings.push('No he encontrado «Bloque» y «Tema»; elige el tema abajo.');
@@ -305,14 +320,13 @@ function parseMarkdownTest(md) {
     }
     if (s && e && s.l !== e.l) warnings.push(`Pregunta ${q.n}: la tabla dice ${s.l} y la explicación ${e.l}. Se usa la tabla; revísala.`);
     if (q.opciones.length !== 4) warnings.push(`Pregunta ${q.n}: tiene ${q.opciones.length} opciones.`);
-    const out = { q: q.q, opciones: q.opciones, correcta: idx };
+    const out = { ref: undefined, q: q.q, opciones: q.opciones, correcta: idx, explicacion: undefined };
     const ref = e && e.ref ? e.ref : (s && s.art ? 'Artículo ' + s.art : '');
     if (ref) out.ref = ref;
-    if (e && e.text) out.explicacion = e.text; else if (e !== undefined || Object.keys(exp).length) warnings.push(`Pregunta ${q.n}: sin explicación.`);
-    return out;
-  });
-  // claves en orden legible
-  const ordered = preguntas.map(p => ({ ref: p.ref, q: p.q, opciones: p.opciones, correcta: p.correcta, explicacion: p.explicacion }));
-  ordered.forEach(o => { Object.keys(o).forEach(k => o[k] === undefined && delete o[k]); });
-  return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas: ordered }, errors, warnings };
+    if (e && e.text) out.explicacion = e.text; else if (Object.keys(exp).length) warnings.push(`Pregunta ${q.n}: sin explicación.`);
+    Object.keys(out).forEach(k => out[k] === undefined && delete out[k]);
+    return { ref: out.ref, q: out.q, opciones: out.opciones, correcta: out.correcta, explicacion: out.explicacion };
+  }).map(o => { Object.keys(o).forEach(k => o[k] === undefined && delete o[k]); return o; });
+
+  return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas }, errors, warnings };
 }
