@@ -210,3 +210,109 @@ function importProgress(file, done) {
   };
   fr.readAsText(file);
 }
+
+/* ---------- importar el documento Markdown que genera ChatGPT ----------
+   Entiende: «# TEST NN — TÍTULO», «**Bloque I:**», «**Tema N:**», «**Fecha:**»,
+   preguntas «**N. texto**» + «A) … D)», tabla «| N | LETRA | art |» y
+   explicaciones «**N. Respuesta X — Artículo Y.** texto». */
+const MESES = { enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6, julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10, noviembre: 11, diciembre: 12 };
+function parseFechaES(s) {
+  s = (s || '').trim().toLowerCase();
+  let m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (m) return s;
+  m = /^(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de(?:l)?\s+(\d{4})$/.exec(s);
+  if (m && MESES[m[2]]) return `${m[3]}-${String(MESES[m[2]]).padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  m = /^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/.exec(s);
+  if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  return '';
+}
+const MINI = new Set(['de', 'del', 'la', 'las', 'el', 'los', 'y', 'e', 'en', 'a', 'al', 'o', 'u']);
+function niceTitle(raw) {
+  // «TEST 04 — CONSTITUCIÓN ESPAÑOLA (ARTÍCULOS 1–30)» -> «Test 04 · Constitución Española (artículos 1–30)»
+  const m = /^TEST\s*(\d+)\s*[—–-]\s*(.+)$/i.exec(raw.trim());
+  const num = m ? m[1] : '', rest = m ? m[2] : raw.trim();
+  let t = rest;
+  if (rest === rest.toLocaleUpperCase('es')) {            // todo en mayúsculas: pasar a formato título
+    let inParen = false, first = true;
+    t = rest.toLocaleLowerCase('es').split(' ').map(w => {
+      if (w.startsWith('(')) inParen = true;
+      let out = w;
+      if (!inParen && (first || !MINI.has(w))) out = w.charAt(0).toLocaleUpperCase('es') + w.slice(1);
+      if (w.endsWith(')')) inParen = false;
+      first = false;
+      return out;
+    }).join(' ');
+  }
+  return num ? `Test ${num} · ${t}` : t;
+}
+
+function parseMarkdownTest(md) {
+  const errors = [], warnings = [];
+  const lines = md.replace(/^﻿/, '').replace(/\r\n?/g, '\n').split('\n').map(l => l.replace(/\s+$/, ''));
+  let titulo = '', fecha = '', bloque = '', tn = '', declared = null;
+  const qs = [], sol = {}, exp = {};
+  let section = 'meta', cur = null, lastExp = null, m;
+
+  for (const line of lines) {
+    if ((m = /^#{1,3}\s+(.+)$/.exec(line))) {
+      const name = m[1].trim().toUpperCase();
+      if (/^PREGUNTAS/.test(name)) section = 'q';
+      else if (/^(SOLUCIONARIO|EXPLICACI)/.test(name)) section = 'sol';
+      else if (/^(RESULTADO|REGISTRO|REFERENCIA)/.test(name)) section = 'skip';
+      else if (!titulo) titulo = m[1].trim();
+      else section = 'skip';
+      cur = null; lastExp = null;
+      continue;
+    }
+    if (section === 'meta') {
+      if ((m = /^\*\*([^*]+?):\*\*\s*(.*)$/.exec(line))) {
+        const k = m[1].trim(), v = m[2].trim();
+        let mm;
+        if ((mm = /^bloque\s+([IVX]+)$/i.exec(k))) bloque = mm[1].toUpperCase();
+        else if ((mm = /^tema\s+(\d+)$/i.exec(k))) tn = mm[1];
+        else if (/^fecha$/i.test(k)) fecha = parseFechaES(v);
+        else if (/^preguntas$/i.test(k)) declared = parseInt(v, 10) || null;
+      }
+    } else if (section === 'q') {
+      if ((m = /^\*\*(\d+)\.\s+(.+?)\*\*$/.exec(line))) { cur = { n: +m[1], q: m[2].trim(), opciones: [], letters: [] }; qs.push(cur); }
+      else if ((m = /^([A-F])\)\s+(.+)$/.exec(line)) && cur) { cur.letters.push(m[1]); cur.opciones.push(m[2].trim()); }
+      else if (line.trim() && cur) {                       // línea de continuación
+        if (cur.opciones.length) cur.opciones[cur.opciones.length - 1] += ' ' + line.trim();
+        else cur.q += ' ' + line.trim();
+      }
+    } else if (section === 'sol') {
+      if ((m = /^\|\s*(\d+)\s*\|\s*([A-F])\s*\|\s*(.*?)\s*\|$/.exec(line))) sol[+m[1]] = { l: m[2], art: m[3] };
+      else if ((m = /^\*\*(\d+)\.\s+Respuesta\s+([A-F])\s*[—–-]\s*(.+?)\.?\*\*\s*(.*)$/.exec(line))) {
+        exp[+m[1]] = { l: m[2], ref: m[3].trim(), text: m[4].trim() }; lastExp = exp[+m[1]];
+      } else if (line.trim() && lastExp && !/^[|*#]/.test(line)) lastExp.text += ' ' + line.trim();
+    }
+  }
+
+  if (!titulo) errors.push('No encuentro el título (una línea «# TEST 04 — …»).');
+  if (!qs.length) errors.push('No encuentro preguntas. Cada una debe empezar por «**1. Texto**» y sus opciones por «A) …».');
+  if (declared && qs.length && declared !== qs.length) warnings.push(`El documento dice ${declared} preguntas pero he encontrado ${qs.length}.`);
+  if (!fecha) warnings.push('No he podido leer la fecha; ponla abajo.');
+  if (!(bloque && tn)) warnings.push('No he encontrado «Bloque» y «Tema»; elige el tema abajo.');
+  if (new Set(qs.map(q => q.n)).size !== qs.length) warnings.push('Hay números de pregunta repetidos.');
+
+  const preguntas = qs.map(q => {
+    const s = sol[q.n], e = exp[q.n], letter = s ? s.l : (e ? e.l : null);
+    let idx = -1;
+    if (!letter) errors.push(`Pregunta ${q.n}: no encuentro su respuesta en el solucionario.`);
+    else {
+      idx = q.letters.indexOf(letter);
+      if (idx < 0) errors.push(`Pregunta ${q.n}: la respuesta ${letter} no corresponde a ninguna de sus opciones.`);
+    }
+    if (s && e && s.l !== e.l) warnings.push(`Pregunta ${q.n}: la tabla dice ${s.l} y la explicación ${e.l}. Se usa la tabla; revísala.`);
+    if (q.opciones.length !== 4) warnings.push(`Pregunta ${q.n}: tiene ${q.opciones.length} opciones.`);
+    const out = { q: q.q, opciones: q.opciones, correcta: idx };
+    const ref = e && e.ref ? e.ref : (s && s.art ? 'Artículo ' + s.art : '');
+    if (ref) out.ref = ref;
+    if (e && e.text) out.explicacion = e.text; else if (e !== undefined || Object.keys(exp).length) warnings.push(`Pregunta ${q.n}: sin explicación.`);
+    return out;
+  });
+  // claves en orden legible
+  const ordered = preguntas.map(p => ({ ref: p.ref, q: p.q, opciones: p.opciones, correcta: p.correcta, explicacion: p.explicacion }));
+  ordered.forEach(o => { Object.keys(o).forEach(k => o[k] === undefined && delete o[k]); });
+  return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas: ordered }, errors, warnings };
+}

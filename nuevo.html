@@ -10,6 +10,9 @@
   .row2 label,.field label{display:block;font-size:13px;font-weight:700;margin-bottom:4px}
   select,input[type=date]{width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#fff}
   .field{margin-bottom:10px}
+  details.more{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+  details.more summary{cursor:pointer;font-weight:700;font-size:14px}
+  .info{background:var(--blueLight);color:var(--blue);border-radius:12px;padding:10px 14px;font-weight:650;margin:10px 0;font-size:14px}
   @media(max-width:600px){.row2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -22,39 +25,93 @@
 
   <section class="hero">
     <div class="eyebrow">Añadir test</div>
-    <h1>Del PDF a la web en 3 pasos</h1>
-    <p class="muted">Pide el test a tu IA en formato JSON, valídalo aquí, asígnalo a su tema y súbelo a GitHub.</p>
+    <h1>Del documento de ChatGPT a la web</h1>
+    <p class="muted">Pega el documento completo que te da ChatGPT al terminar el test (preguntas, solucionario y explicaciones). La web lo convierte sola.</p>
   </section>
 
   <section class="card panel">
-    <h2>1 · Pide el JSON a ChatGPT</h2>
-    <p class="fine" style="margin-top:0">Adjunta tu archivo de preguntas y pega este prompt. Incluye la lista de temas del programa oficial.</p>
-    <pre class="prompt" id="prompt">Cargando…</pre>
-    <button type="button" class="btn secondary" id="copy">Copiar prompt</button> <span class="fine" id="copymsg" aria-live="polite"></span>
-  </section>
-
-  <section class="card panel">
-    <h2>2 · Pega el JSON y valídalo</h2>
-    <textarea id="json" spellcheck="false" placeholder="Pega aquí lo que te devuelva ChatGPT…"></textarea>
-    <div class="actions" style="margin-top:12px"><button type="button" class="btn" id="validar">Validar</button></div>
+    <h2>1 · Pega el documento</h2>
+    <textarea id="json" spellcheck="false" placeholder="Pega aquí el documento completo (# TEST 04 — …) o súbelo como archivo."></textarea>
+    <div class="actions" style="margin-top:12px">
+      <button type="button" class="btn" id="validar">Leer y validar</button>
+      <button type="button" class="btn secondary" id="pick">Subir archivo (.md, .txt, .json)</button>
+      <input type="file" id="file" accept=".md,.txt,.json,text/plain,text/markdown,application/json" class="hide">
+    </div>
     <div id="resultado"></div>
+
+    <details class="more">
+      <summary>¿Qué formato espera la web?</summary>
+      <p class="fine">Tus documentos actuales ya lo cumplen. Si quieres asegurarte de que ChatGPT lo mantiene, pégale esto una vez en el chat:</p>
+      <pre class="prompt" id="fmt">A partir de ahora, cada test que me generes debe terminar con UN documento en Markdown con exactamente esta estructura:
+
+# TEST NN — TÍTULO EN MAYÚSCULAS
+**Bloque I:** nombre del bloque
+**Tema 1:** nombre del tema
+**Fecha:** 29 de octubre de 2026
+**Preguntas:** 25
+
+# PREGUNTAS
+**1. Enunciado de la pregunta.**
+A) Opción
+B) Opción
+C) Opción
+D) Opción
+
+# SOLUCIONARIO Y EXPLICACIONES
+| Nº | Correcta | Artículo |
+|---|---|---|
+| 1 | D | 22.3–5 |
+
+**1. Respuesta D — Artículo 22.4.** Explicación de 1-2 frases.
+
+Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bloque y de Tema es el del programa oficial; no cambies los encabezados ni el orden de las secciones.</pre>
+      <button type="button" class="btn secondary" id="copyfmt">Copiar</button> <span class="fine" id="copyfmtmsg" aria-live="polite"></span>
+    </details>
+
+    <details class="more">
+      <summary>Alternativa: pedir el test directamente en JSON</summary>
+      <p class="fine">Solo si prefieres que ChatGPT genere el JSON. Incluye la lista de temas del programa oficial.</p>
+      <pre class="prompt" id="prompt">Cargando…</pre>
+      <button type="button" class="btn secondary" id="copy">Copiar prompt</button> <span class="fine" id="copymsg" aria-live="polite"></span>
+    </details>
   </section>
 
   <section class="card panel hide" id="descarga">
-    <h2>3 · Asigna el tema y sube el archivo</h2>
+    <h2>2 · Revisa y publica</h2>
     <div class="field"><label for="titulo">Título</label><input type="text" id="titulo"></div>
     <div class="row2">
       <div><label for="tema">Tema del programa</label><select id="tema"></select></div>
       <div><label for="fecha">Fecha del test</label><input type="date" id="fecha"></div>
     </div>
     <div class="field"><label for="fname">Nombre del archivo</label><input type="text" id="fname"></div>
-    <button type="button" class="btn" id="dl">Descargar archivo</button>
-    <span class="fine" id="dlmsg" aria-live="polite"></span>
-    <ol class="steps">
-      <li>En GitHub, abre la carpeta <b>tests</b> del repositorio.</li>
-      <li><b>Add file → Upload files</b>, arrastra el archivo descargado y pulsa <b>Commit changes</b>.</li>
-      <li>En 1–2 minutos aparece en la portada, dentro de su tema. Si no, recarga con Ctrl+F5.</li>
-    </ol>
+    <div class="actions">
+      <button type="button" class="btn" id="pub">Publicar en la web</button>
+      <button type="button" class="btn secondary" id="dl">Solo descargar archivo</button>
+    </div>
+    <div id="dlmsg" class="fine" style="margin-top:10px" aria-live="polite"></div>
+    <p class="fine" style="margin-bottom:0">«Publicar» lo sube directamente a tu repositorio y en 1–2 minutos aparece en la portada. «Solo descargar» es el método manual: luego hay que subir el archivo a la carpeta <b>tests/</b> en GitHub.</p>
+  </section>
+
+  <section class="card panel" id="cfg">
+    <h2>Publicación directa <span class="fine" id="cfgstate"></span></h2>
+    <p class="fine" style="margin-top:0">Se configura <b>una sola vez</b>. Hace falta un token de GitHub limitado a este repositorio; se guarda únicamente en este navegador.</p>
+    <details class="more" id="cfgdet" style="margin-top:0;border-top:0;padding-top:0">
+      <summary>Cómo crear el token (2 minutos)</summary>
+      <ol class="steps">
+        <li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li><b>Token name:</b> mondongon. <b>Expiration:</b> 1 año.</li>
+        <li><b>Repository access → Only select repositories</b> → elige <b>web-mondongon</b>.</li>
+        <li><b>Permissions → Repository permissions → Contents → Read and write</b> (nada más).</li>
+        <li><b>Generate token</b>, copia el que empieza por <code>github_pat_…</code> y pégalo aquí abajo.</li>
+      </ol>
+      <p class="fine">No compartas este token con nadie (tampoco con ChatGPT). Si lo pierdes o quieres cortar el acceso, bórralo en esa misma página de GitHub.</p>
+    </details>
+    <div class="field" style="margin-top:12px"><label for="token">Token</label><input type="password" id="token" placeholder="github_pat_…" autocomplete="off"></div>
+    <div class="actions">
+      <button type="button" class="btn secondary" id="tsave">Guardar token</button>
+      <button type="button" class="btn secondary" id="tdel">Quitar token</button>
+      <span class="fine" id="tmsg" aria-live="polite"></span>
+    </div>
   </section>
 </div>
 
@@ -63,7 +120,7 @@
 function slug(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
 }
-function stripFences(t) { return t.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''); }
+function stripFences(t) { return t.trim().replace(/^```(?:json|markdown|md)?\s*/i, '').replace(/\s*```$/, ''); }
 
 function buildPrompt() {
   const lista = _temario.bloques.map(b => `Bloque ${b.id} · ${b.titulo}\n` + b.temas.map(t => `  ${t.id} · ${t.corto}`).join('\n')).join('\n');
@@ -112,30 +169,48 @@ function updateName() {
   const f = $('fecha').value || new Date().toISOString().slice(0, 10);
   $('fname').value = `${f}_${slug($('titulo').value || 'test')}.json`;
 }
+async function copyFrom(id, msgId) {
+  try { await navigator.clipboard.writeText($(id).textContent); $(msgId).textContent = 'Copiado.'; }
+  catch (e) { $(msgId).textContent = 'Selecciona el texto y copia con Ctrl+C.'; }
+}
+$('copy').addEventListener('click', () => copyFrom('prompt', 'copymsg'));
+$('copyfmt').addEventListener('click', () => copyFrom('fmt', 'copyfmtmsg'));
 
-$('copy').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText($('prompt').textContent); $('copymsg').textContent = 'Copiado.'; }
-  catch (e) { $('copymsg').textContent = 'Selecciona el texto y copia con Ctrl+C.'; }
-});
+function showIssues(box, errors, warnings) {
+  if (errors.length) {
+    box.append(el('p', '', 'Hay que corregir esto antes de subirlo:'));
+    const ul = el('ul', 'issues err'); errors.forEach(x => ul.append(el('li', '', x))); box.append(ul);
+  }
+  if (warnings.length) {
+    box.append(el('p', 'fine', 'Avisos (no impiden subirlo):'));
+    const ul = el('ul', 'issues wrn'); warnings.forEach(x => ul.append(el('li', '', x))); box.append(ul);
+  }
+}
 
 $('validar').addEventListener('click', () => {
   const box = $('resultado'); box.replaceChildren(); $('descarga').classList.add('hide'); current = null;
-  let d;
-  try { d = JSON.parse(stripFences($('json').value)); }
-  catch (e) { const m = el('div', 'msg warn'); m.textContent = 'No es un JSON válido: ' + e.message; box.append(m); return; }
-  const v = validateTest(d, temaIdSet());
-  // el tema se elige abajo, así que su aviso no hace falta aquí
-  v.warnings = v.warnings.filter(w => !/^(Falta )?"tema"/.test(w));
-  if (v.errors.length) {
-    box.append(el('p', '', 'Hay que corregir esto antes de subirlo:'));
-    const ul = el('ul', 'issues err'); v.errors.forEach(x => ul.append(el('li', '', x))); box.append(ul);
+  const text = stripFences($('json').value);
+  if (!text) { box.append(el('div', 'msg warn', 'Pega primero el documento.')); return; }
+  let d, errors = [], warnings = [], origen;
+  if (/^[\[{]/.test(text)) {                       // JSON
+    origen = 'JSON';
+    try { d = JSON.parse(text); }
+    catch (e) { box.append(el('div', 'msg warn', 'No es un JSON válido: ' + e.message)); return; }
+    const v = validateTest(d, temaIdSet());
+    errors = v.errors; warnings = v.warnings.filter(w => !/^(Falta )?"tema"/.test(w));   // el tema se elige abajo
+  } else {                                          // documento Markdown de ChatGPT
+    origen = 'documento de ChatGPT';
+    const r = parseMarkdownTest(text);
+    d = r.data; errors = r.errors; warnings = r.warnings;
+    if (!errors.length) {
+      const v = validateTest(d, temaIdSet());
+      errors = v.errors; warnings = warnings.concat(v.warnings.filter(w => !/^(Falta )?"tema"/.test(w) && !/^Falta "fecha"/.test(w)));
+    }
   }
-  if (v.warnings.length) {
-    box.append(el('p', 'fine', 'Avisos (no impiden subirlo):'));
-    const ul = el('ul', 'issues wrn'); v.warnings.forEach(x => ul.append(el('li', '', x))); box.append(ul);
-  }
-  if (v.errors.length) return;
-  box.prepend(el('div', 'okbox', `✔ Válido · ${d.preguntas.length} preguntas`));
+  showIssues(box, errors, warnings);
+  if (errors.length) return;
+  box.prepend(el('div', 'okbox', `✔ Leído (${origen}) · ${d.preguntas.length} preguntas`
+    + (d.tema && _temario.byId[d.tema] ? ` · ${temaLabel(d.tema)}` : '')));
   current = d;
   $('titulo').value = d.titulo;
   $('fecha').value = d.fecha || new Date().toISOString().slice(0, 10);
@@ -143,24 +218,98 @@ $('validar').addEventListener('click', () => {
   updateName();
   $('dlmsg').textContent = '';
   $('descarga').classList.remove('hide');
+  $('descarga').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+$('pick').addEventListener('click', () => $('file').click());
+$('file').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const fr = new FileReader();
+  fr.onload = () => { $('json').value = fr.result; $('validar').click(); e.target.value = ''; };
+  fr.readAsText(f);
 });
 
 ['titulo', 'fecha'].forEach(id => $(id).addEventListener('input', updateName));
 
-$('dl').addEventListener('click', () => {
-  if (!current) return;
-  if (!$('tema').value) { $('dlmsg').textContent = 'Elige primero el tema.'; $('tema').focus(); return; }
-  if (!$('titulo').value.trim()) { $('dlmsg').textContent = 'Falta el título.'; return; }
-  $('dlmsg').textContent = '';
+/* ---------- salida: archivo final ---------- */
+function buildOutput() {
+  if (!current) return null;
+  if (!$('tema').value) { setMsg('Elige primero el tema.'); $('tema').focus(); return null; }
+  if (!$('titulo').value.trim()) { setMsg('Falta el título.'); return null; }
   const out = { titulo: $('titulo').value.trim(), tema: $('tema').value, fecha: $('fecha').value, preguntas: current.preguntas };
   if (current.descripcion) out.descripcion = current.descripcion;
   let name = $('fname').value.trim() || 'test.json';
   if (!/\.json$/i.test(name)) name += '.json';
-  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
-  const a = el('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  return { out, name, text: JSON.stringify(out, null, 2) + '\n' };
+}
+function setMsg(t, ok) { const m = $('dlmsg'); m.replaceChildren(); m.style.color = ok ? 'var(--good)' : ''; m.textContent = t; return m; }
+
+$('dl').addEventListener('click', () => {
+  const r = buildOutput(); if (!r) return;
+  const blob = new Blob([r.text], { type: 'application/json' });
+  const a = el('a'); a.href = URL.createObjectURL(blob); a.download = r.name;
   document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  setMsg('Descargado. Ahora súbelo a la carpeta tests/ de GitHub.', true);
 });
+
+/* ---------- publicación directa en GitHub ---------- */
+const GH_KEY = 'ma2_gh_token';
+const getToken = () => { try { return localStorage.getItem(GH_KEY) || ''; } catch (e) { return ''; } };
+const ghUrl = name => `https://api.github.com/repos/${CFG.user}/${CFG.repo}/contents/${CFG.dir}/${encodeURIComponent(name)}`;
+const ghHeaders = () => ({ 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + getToken(), 'X-GitHub-Api-Version': '2022-11-28' });
+function b64utf8(s) { let bin = ''; new TextEncoder().encode(s).forEach(b => { bin += String.fromCharCode(b); }); return btoa(bin); }
+function ghError(status) {
+  if (status === 401) return 'GitHub rechaza el token (¿caducado o mal copiado?). Vuelve a crearlo y guárdalo abajo.';
+  if (status === 403) return 'El token no tiene permiso de escritura. Comprueba «Contents: Read and write» y que incluye el repositorio web-mondongon.';
+  if (status === 404) return 'No encuentro el repositorio o el token no tiene acceso a él (usuario/repositorio en app.js: ' + CFG.user + '/' + CFG.repo + ').';
+  if (status === 409 || status === 422) return 'GitHub no ha aceptado el archivo (conflicto). Inténtalo de nuevo en unos segundos.';
+  return 'Error de GitHub (' + status + ').';
+}
+function refreshCfg() {
+  const on = !!getToken();
+  $('cfgstate').textContent = on ? '· activada ✔' : '· sin configurar';
+  $('tdel').classList.toggle('hide', !on);
+  $('token').placeholder = on ? 'Token guardado (pega otro para cambiarlo)' : 'github_pat_…';
+}
+$('tsave').addEventListener('click', () => {
+  const t = $('token').value.trim();
+  if (!/^(github_pat_|ghp_)[A-Za-z0-9_]+$/.test(t)) { $('tmsg').textContent = 'Eso no parece un token de GitHub (empieza por github_pat_).'; return; }
+  try { localStorage.setItem(GH_KEY, t); $('token').value = ''; $('tmsg').textContent = 'Guardado en este navegador.'; }
+  catch (e) { $('tmsg').textContent = 'Tu navegador no permite guardarlo (¿modo privado?).'; }
+  refreshCfg();
+});
+$('tdel').addEventListener('click', () => { try { localStorage.removeItem(GH_KEY); } catch (e) { /* nada */ } $('tmsg').textContent = 'Token quitado de este navegador.'; refreshCfg(); });
+
+$('pub').addEventListener('click', async () => {
+  const r = buildOutput(); if (!r) return;
+  if (!getToken()) {
+    setMsg('Primero configura la publicación directa (una sola vez) en el recuadro de abajo.');
+    $('cfgdet').open = true; $('cfg').scrollIntoView({ behavior: 'smooth', block: 'start' }); return;
+  }
+  const btn = $('pub'); btn.disabled = true; setMsg('Publicando…');
+  try {
+    let sha;
+    const g = await fetch(ghUrl(r.name), { headers: ghHeaders() });
+    if (g.status === 200) {
+      if (!confirm(`Ya existe un test llamado «${r.name}». ¿Quieres sobrescribirlo?`)) { setMsg('Cancelado.'); return; }
+      sha = (await g.json()).sha;
+    } else if (g.status !== 404) { setMsg(ghError(g.status)); return; }
+    const body = { message: 'Añadir test: ' + r.out.titulo, content: b64utf8(r.text) };
+    if (sha) body.sha = sha;
+    const p = await fetch(ghUrl(r.name), { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!p.ok) { setMsg(ghError(p.status)); return; }
+    try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
+    const m = setMsg('✔ Publicado. En 1–2 minutos aparece en la portada. ', true);
+    const a = el('a', '', 'Ir a la portada'); a.href = 'index.html'; m.append(a);
+  } catch (e) {
+    setMsg('No he podido conectar con GitHub. Comprueba tu conexión e inténtalo de nuevo.');
+  } finally { btn.disabled = false; }
+});
+
+// al pegar el documento, se lee solo (un clic menos)
+$('json').addEventListener('paste', () => setTimeout(() => $('validar').click(), 60));
+refreshCfg();
 
 loadTemario().then(() => { $('prompt').textContent = buildPrompt(); });
 </script>
