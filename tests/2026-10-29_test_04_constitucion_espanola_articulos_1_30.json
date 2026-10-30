@@ -1,0 +1,307 @@
+{
+  "titulo": "Test 04 · Constitución Española (artículos 1–30)",
+  "tema": "I-1",
+  "fecha": "2026-10-29",
+  "preguntas": [
+    {
+      "ref": "Artículo 22.4",
+      "q": "Según el artículo 22 de la Constitución Española, señale la afirmación INCORRECTA respecto del derecho de asociación.",
+      "opciones": [
+        "Las asociaciones constituidas al amparo del artículo deberán inscribirse en un registro a efectos de publicidad.",
+        "Las asociaciones podrán ser suspendidas en sus actividades mediante resolución judicial motivada.",
+        "Son ilegales las asociaciones que persigan fines o utilicen medios tipificados como delito.",
+        "Las asociaciones podrán ser disueltas mediante resolución administrativa motivada, sin perjuicio de su posterior control judicial."
+      ],
+      "correcta": 3,
+      "explicacion": "La disolución o suspensión de asociaciones exige resolución judicial motivada. Una resolución administrativa, aunque esté motivada, no cumple ese requisito constitucional."
+    },
+    {
+      "ref": "Artículo 27.7",
+      "q": "En relación con el artículo 27.7, identifique la formulación que se ajusta a la Constitución.",
+      "opciones": [
+        "Los profesores, padres y alumnos intervendrán necesariamente en el control de todos los centros privados, cualquiera que sea su financiación.",
+        "Los profesores, los padres y, en su caso, los alumnos intervendrán en el control y gestión de todos los centros sostenidos con fondos públicos, en los términos legales.",
+        "Los profesores y los padres ejercerán de forma exclusiva la gestión de los centros creados por la Administración.",
+        "Los alumnos intervendrán en todo caso y en idénticas condiciones que el profesorado en el control de los centros públicos."
+      ],
+      "correcta": 1,
+      "explicacion": "El control y gestión corresponde a profesores, padres y, en su caso, alumnos, respecto de centros sostenidos con fondos públicos y según la ley. No se refiere exclusivamente a centros de titularidad pública."
+    },
+    {
+      "ref": "Artículo 30.2",
+      "q": "De conformidad con el artículo 30.2, la ley que fije las obligaciones militares de los españoles:",
+      "opciones": [
+        "Regulará exclusivamente la objeción de conciencia, correspondiendo al Gobierno determinar las exenciones.",
+        "Deberá imponer en todo caso una prestación social sustitutoria a los objetores.",
+        "Regulará con las debidas garantías la objeción de conciencia y demás causas de exención, pudiendo imponer, en su caso, una prestación social sustitutoria.",
+        "Podrá regular la objeción de conciencia, pero no las causas de exención del servicio militar obligatorio."
+      ],
+      "correcta": 2,
+      "explicacion": "La ley regulará las obligaciones militares, la objeción de conciencia y otras causas de exención, pudiendo establecer, en su caso, una prestación social sustitutoria."
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "¿Qué supuesto contempla expresamente el artículo 24.2 para que la ley regule la ausencia de obligación de declarar sobre hechos presuntamente delictivos?",
+      "opciones": [
+        "Razones de parentesco o de secreto profesional.",
+        "Razones de parentesco o de interés legítimo.",
+        "Razones de secreto profesional o de conveniencia procesal apreciada administrativamente.",
+        "Razones de afinidad personal o de confidencialidad contractual."
+      ],
+      "correcta": 0,
+      "explicacion": "La Constitución remite a la ley los casos en los que no existe obligación de declarar sobre hechos presuntamente delictivos por parentesco o secreto profesional."
+    },
+    {
+      "ref": "Artículo 28.1",
+      "q": "Con arreglo al artículo 28.1, señale la afirmación CORRECTA.",
+      "opciones": [
+        "La ley regulará las peculiaridades del ejercicio de la libertad sindical de los funcionarios y podrá limitar o exceptuar su ejercicio para los cuerpos indicados sometidos a disciplina militar.",
+        "La ley exceptuará de la libertad sindical a todos los funcionarios públicos y regulará las peculiaridades aplicables a los trabajadores privados.",
+        "Los sindicatos podrán formar confederaciones, pero únicamente de carácter nacional.",
+        "La libertad sindical comprende el derecho a afiliarse, pero la ley podrá imponer la afiliación obligatoria en sectores estratégicos."
+      ],
+      "correcta": 0,
+      "explicacion": "La ley podrá limitar o exceptuar la libertad sindical para determinados cuerpos armados o sometidos a disciplina militar, y regulará las peculiaridades de su ejercicio para funcionarios públicos."
+    },
+    {
+      "ref": "Artículo 25.3",
+      "q": "Según el artículo 25.3, ¿cuál es el alcance de la prohibición establecida para la Administración civil?",
+      "opciones": [
+        "No podrá imponer sanciones privativas de libertad de manera directa, aunque sí subsidiaria.",
+        "Solo podrá imponer privación de libertad subsidiaria cuando exista una sanción económica impagada.",
+        "No podrá imponer sanciones que, directa o subsidiariamente, impliquen privación de libertad.",
+        "No podrá imponer ninguna sanción que afecte a derechos individuales."
+      ],
+      "correcta": 2,
+      "explicacion": "La Administración civil tiene prohibido imponer sanciones que impliquen privación de libertad tanto directa como subsidiariamente."
+    },
+    {
+      "ref": "Artículo 27.5",
+      "q": "De acuerdo con el artículo 27.5, el derecho de todos a la educación será garantizado por los poderes públicos mediante:",
+      "opciones": [
+        "Una programación general de la enseñanza con participación efectiva de todos los sectores afectados y la creación de centros docentes.",
+        "La programación general de la enseñanza con participación exclusiva de los centros públicos y la homologación universitaria.",
+        "La inspección y homologación de los centros sostenidos con fondos públicos, sin perjuicio de la libertad de enseñanza.",
+        "Una programación general de la enseñanza en la que se garantice exclusivamente la participación de las Administraciones educativas."
+      ],
+      "correcta": 0,
+      "explicacion": "La garantía del derecho a la educación incluye programación general de la enseñanza, participación efectiva de los sectores afectados y creación de centros docentes."
+    },
+    {
+      "ref": "Artículo 29",
+      "q": "Conforme al artículo 29, señale la respuesta CORRECTA sobre el derecho de petición.",
+      "opciones": [
+        "Se reconoce a todas las personas, en forma individual o colectiva, en los términos que reglamentariamente se establezcan.",
+        "Los españoles podrán ejercerlo de forma individual o colectiva y verbal o escrita, con los efectos que determine la ley.",
+        "Los miembros de cuerpos sometidos a disciplina militar podrán ejercerlo colectivamente cuando su legislación lo autorice.",
+        "Todos los españoles podrán ejercerlo individual y colectivamente, por escrito, en la forma y con los efectos que determine la ley."
+      ],
+      "correcta": 3,
+      "explicacion": "El derecho de petición corresponde a todos los españoles, individual o colectivamente, por escrito. Los miembros de los cuerpos mencionados en el apartado 2 solo pueden ejercerlo individualmente."
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "Entre las garantías expresamente enumeradas en el artículo 24.2 se encuentra el derecho:",
+      "opciones": [
+        "A un juez especial designado para cada causa y a la prueba que libremente se proponga.",
+        "A un proceso público sin dilaciones indebidas y con todas las garantías, y a utilizar los medios de prueba pertinentes para la defensa.",
+        "A obtener una resolución judicial favorable en caso de duda y a no colaborar con la Administración.",
+        "A recibir asistencia letrada exclusivamente en procedimientos penales y a un proceso sin publicidad."
+      ],
+      "correcta": 1,
+      "explicacion": "El proceso público sin dilaciones indebidas y el uso de pruebas pertinentes para la defensa son garantías expresamente reconocidas."
+    },
+    {
+      "ref": "Artículo 27.6",
+      "q": "De acuerdo con el artículo 27.6, la libertad de creación de centros docentes se reconoce:",
+      "opciones": [
+        "A las personas físicas y jurídicas, dentro del respeto a los principios constitucionales.",
+        "A las personas físicas, siendo la creación por personas jurídicas una facultad exclusiva de los poderes públicos.",
+        "A las personas jurídicas exclusivamente, siempre que reciban financiación pública.",
+        "A las personas físicas y jurídicas, siempre que el centro creado esté sostenido con fondos públicos."
+      ],
+      "correcta": 0,
+      "explicacion": "Pueden crear centros docentes las personas físicas y jurídicas, respetando los principios constitucionales."
+    },
+    {
+      "ref": "Artículo 30.3",
+      "q": "Según el artículo 30, señale la afirmación INCORRECTA.",
+      "opciones": [
+        "Los españoles tienen el derecho y el deber de defender España.",
+        "Mediante ley podrán regularse los deberes de los ciudadanos en casos de grave riesgo, catástrofe o calamidad pública.",
+        "Deberá establecerse un servicio civil para el cumplimiento de fines de interés general.",
+        "La ley fijará las obligaciones militares de los españoles."
+      ],
+      "correcta": 2,
+      "explicacion": "La Constitución dice que podrá establecerse un servicio civil. No impone su creación obligatoria."
+    },
+    {
+      "ref": "Artículo 25.2",
+      "q": "El artículo 25.2 establece que las penas privativas de libertad y las medidas de seguridad:",
+      "opciones": [
+        "Estarán orientadas a la reeducación y reinserción social y podrán consistir en trabajos forzados si lo establece la ley.",
+        "Estarán orientadas a la reeducación y reinserción social y no podrán consistir en trabajos forzados.",
+        "Tenderán prioritariamente a la reparación patrimonial y podrán limitar todos los derechos fundamentales del condenado.",
+        "Estarán orientadas a la reeducación y reinserción social, aunque no reconoce derechos vinculados al trabajo de los penados."
+      ],
+      "correcta": 1,
+      "explicacion": "Las penas privativas de libertad y medidas de seguridad se orientarán hacia la reeducación y reinserción social, sin trabajos forzados."
+    },
+    {
+      "ref": "Artículo 27.8",
+      "q": "Señale qué corresponde a los poderes públicos según el artículo 27.8.",
+      "opciones": [
+        "Ayudar a todos los centros docentes sin requisitos previos, mediante inspección.",
+        "Planificar la enseñanza y decidir sobre la autonomía de cada universidad por reglamento.",
+        "Inspeccionar y homologar el sistema educativo para garantizar el cumplimiento de las leyes.",
+        "Homologar únicamente los centros públicos, dejando la inspección de los demás a sus titulares."
+      ],
+      "correcta": 2,
+      "explicacion": "Los poderes públicos inspeccionarán y homologarán el sistema educativo para garantizar el cumplimiento de las leyes."
+    },
+    {
+      "ref": "Artículo 22.3",
+      "q": "Respecto de las asociaciones contempladas en el artículo 22, ¿qué finalidad tiene constitucionalmente su inscripción en un registro?",
+      "opciones": [
+        "A los solos efectos de publicidad.",
+        "Constituir una autorización administrativa previa.",
+        "Permitir una evaluación de oportunidad de sus fines por la Administración.",
+        "Someter su existencia a ratificación judicial previa."
+      ],
+      "correcta": 0,
+      "explicacion": "La inscripción de las asociaciones se establece a los solos efectos de publicidad, no como autorización discrecional."
+    },
+    {
+      "ref": "Artículo 27.9",
+      "q": "Conforme al artículo 27.9 de la Constitución, los poderes públicos:",
+      "opciones": [
+        "Podrán ayudar exclusivamente a los centros docentes públicos.",
+        "Ayudarán a los centros docentes que reúnan los requisitos que la ley establezca.",
+        "Ayudarán a todos los centros docentes en condiciones idénticas, independientemente de los requisitos legales.",
+        "Garantizarán la financiación completa de los centros docentes creados por personas físicas y jurídicas."
+      ],
+      "correcta": 1,
+      "explicacion": "Los poderes públicos ayudarán a los centros docentes que cumplan los requisitos establecidos legalmente."
+    },
+    {
+      "ref": "Artículo 28.2",
+      "q": "En el artículo 28.2, el ejercicio del derecho de huelga se reconoce:",
+      "opciones": [
+        "A todos los ciudadanos para la defensa de cualquier interés legítimo, manteniendo todos los servicios públicos.",
+        "A los sindicatos exclusivamente, en representación de los trabajadores afiliados.",
+        "A los trabajadores para la defensa de sus intereses, debiendo la ley garantizar el mantenimiento de los servicios esenciales de la comunidad.",
+        "A los funcionarios de forma exclusiva, sin perjuicio de su extensión por ley a los trabajadores privados."
+      ],
+      "correcta": 2,
+      "explicacion": "Se reconoce el derecho de huelga de los trabajadores para defender sus intereses, con garantías legales para mantener los servicios esenciales de la comunidad."
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "Indique cuál de los derechos siguientes NO aparece expresamente incluido en la enumeración del artículo 24.2.",
+      "opciones": [
+        "Derecho al Juez ordinario predeterminado por la ley.",
+        "Derecho a no confesarse culpable.",
+        "Derecho a utilizar los medios de prueba pertinentes para la defensa.",
+        "Derecho a obtener siempre una segunda instancia judicial en cualquier procedimiento."
+      ],
+      "correcta": 3,
+      "explicacion": "No se reconoce expresamente un derecho general a una segunda instancia en cualquier procedimiento. Sí aparecen el juez predeterminado por la ley, la no autoinculpación y las pruebas pertinentes."
+    },
+    {
+      "ref": "Artículo 27.10",
+      "q": "Según el artículo 27.10, la autonomía de las Universidades:",
+      "opciones": [
+        "Se reconoce en los términos que la ley establezca.",
+        "Se reconoce solo para las universidades de titularidad pública.",
+        "Se establecerá exclusivamente mediante los estatutos de cada universidad, sin sujeción a la ley.",
+        "Se garantiza exclusivamente para las competencias docentes, sin extenderse a aspectos organizativos."
+      ],
+      "correcta": 0,
+      "explicacion": "La autonomía universitaria se reconoce en los términos que establezca la ley."
+    },
+    {
+      "ref": "Artículo 23.2",
+      "q": "De conformidad con el artículo 23.2, los ciudadanos tienen derecho a:",
+      "opciones": [
+        "Acceder automáticamente a funciones públicas tras acreditar los estudios exigidos.",
+        "Acceder a las funciones y cargos públicos en condiciones de igualdad, con los requisitos que señalen las leyes.",
+        "Participar en cualquier proceso selectivo sin que puedan establecerse requisitos legales.",
+        "Acceder a cargos públicos únicamente mediante elección por sufragio universal."
+      ],
+      "correcta": 1,
+      "explicacion": "Se garantiza el acceso en igualdad a funciones y cargos públicos, cumpliendo los requisitos legales, pero no la obtención automática de una plaza."
+    },
+    {
+      "ref": "Artículo 25.1",
+      "q": "Según el artículo 25.1, ¿qué circunstancia determina si una acción u omisión puede dar lugar a condena o sanción?",
+      "opciones": [
+        "La legislación que esté vigente al dictarse la resolución, con independencia de la fecha de los hechos.",
+        "La legislación vigente cuando se presente la denuncia, aunque la conducta fuera lícita al realizarse.",
+        "Que en el momento de producirse la acción u omisión constituyera delito, falta o infracción administrativa según la legislación entonces vigente.",
+        "Que una ley posterior considere antijurídica la conducta y establezca expresamente su aplicación retroactiva desfavorable."
+      ],
+      "correcta": 2,
+      "explicacion": "Para condenar o sancionar, la acción u omisión debía constituir infracción conforme a la legislación vigente en el momento de los hechos."
+    },
+    {
+      "ref": "Artículo 27.3",
+      "q": "A efectos del artículo 27.3, los poderes públicos garantizan a los padres el derecho a que sus hijos reciban:",
+      "opciones": [
+        "Formación religiosa y moral de acuerdo con las convicciones de los poderes públicos.",
+        "Formación religiosa obligatoria en todos los centros docentes sostenidos con fondos públicos.",
+        "Formación moral exclusivamente, dejando la formación religiosa fuera de la enseñanza.",
+        "Formación religiosa y moral de acuerdo con sus propias convicciones."
+      ],
+      "correcta": 3,
+      "explicacion": "Los poderes públicos garantizan el derecho de los padres a una formación religiosa y moral para sus hijos acorde con sus propias convicciones."
+    },
+    {
+      "ref": "Artículos 27.4 y 27.8",
+      "q": "Indique la respuesta correcta respecto de los artículos 27.4 y 27.8.",
+      "opciones": [
+        "La enseñanza básica es gratuita, pero no obligatoria; los poderes públicos inspeccionarán el sistema.",
+        "La enseñanza básica es obligatoria y gratuita; los poderes públicos inspeccionarán y homologarán el sistema educativo.",
+        "La enseñanza secundaria y universitaria son obligatorias y gratuitas; la ley podrá establecer inspecciones.",
+        "Toda enseñanza es obligatoria hasta la mayoría de edad; los centros privados quedan excluidos de la inspección."
+      ],
+      "correcta": 1,
+      "explicacion": "La enseñanza básica es obligatoria y gratuita; la inspección y homologación del sistema educativo corresponde a los poderes públicos."
+    },
+    {
+      "ref": "Artículos 28.1 y 29.2",
+      "q": "Según los artículos 28 y 29, ¿qué afirmación recoge correctamente la regulación relativa a miembros de cuerpos sometidos a disciplina militar?",
+      "opciones": [
+        "En libertad sindical, la ley podrá limitar o exceptuar el ejercicio del derecho; en petición, podrán ejercerlo solo individualmente conforme a su legislación específica.",
+        "En libertad sindical, deberán solicitar autorización individual; en petición, podrán formular peticiones colectivas autorizadas.",
+        "En ambos derechos, la Constitución establece la misma prohibición absoluta de ejercicio.",
+        "En libertad sindical, la ley regulará exclusivamente peculiaridades; en petición, el derecho se ejercerá libremente de forma colectiva."
+      ],
+      "correcta": 0,
+      "explicacion": "En materia sindical puede establecerse limitación o excepción para los cuerpos señalados; en materia de petición sus miembros solo pueden ejercer el derecho individualmente."
+    },
+    {
+      "ref": "Artículo 24.1",
+      "q": "El artículo 24.1 reconoce el derecho a obtener la tutela efectiva:",
+      "opciones": [
+        "De la Administración y de los tribunales, siempre que exista un derecho subjetivo perfecto.",
+        "De los jueces y tribunales en el ejercicio de derechos e intereses legítimos, sin que pueda producirse indefensión.",
+        "De los jueces y tribunales solo cuando el interesado tenga reconocida previamente la titularidad de un derecho fundamental.",
+        "De los jueces y tribunales siempre que el procedimiento concluya con una resolución favorable al demandante."
+      ],
+      "correcta": 1,
+      "explicacion": "La tutela judicial efectiva protege derechos e intereses legítimos, sin indefensión. No implica necesariamente obtener una resolución favorable."
+    },
+    {
+      "ref": "Artículo 30.4",
+      "q": "Conforme al artículo 30.4, ¿en qué casos podrán regularse mediante ley deberes de los ciudadanos?",
+      "opciones": [
+        "Exclusivamente en casos de guerra o estado de sitio.",
+        "En casos de cualquier riesgo de seguridad, aunque no revista gravedad.",
+        "En casos de grave riesgo, catástrofe o calamidad pública.",
+        "Únicamente en casos de catástrofe oficialmente declarada por un órgano judicial. ---"
+      ],
+      "correcta": 2,
+      "explicacion": "Mediante ley podrán regularse los deberes de los ciudadanos ante situaciones de grave riesgo, catástrofe o calamidad pública. ---"
+    }
+  ]
+}
