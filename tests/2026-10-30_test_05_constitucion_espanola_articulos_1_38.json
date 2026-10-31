@@ -1,0 +1,282 @@
+{
+  "titulo": "Test 05 · Constitución Española (artículos 1–38)",
+  "tema": "I-1",
+  "fecha": "2026-10-30",
+  "preguntas": [
+    {
+      "ref": "Artículo 31.1",
+      "q": "Según el artículo 31.1 de la Constitución Española, señale la afirmación correcta.",
+      "opciones": [
+        "Todos contribuirán al sostenimiento de los gastos públicos en proporción idéntica, con independencia de su capacidad económica.",
+        "Todos contribuirán al sostenimiento de los gastos públicos según su capacidad económica, mediante un sistema tributario justo inspirado en igualdad y progresividad.",
+        "Todos los españoles contribuirán conforme a su patrimonio, mediante un sistema tributario basado en igualdad y proporcionalidad.",
+        "Todos contribuirán según su capacidad económica mediante un sistema tributario inspirado en igualdad y eficiencia."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 31.2",
+      "q": "En relación con el artículo 31.2, ¿qué criterios rigen la programación y ejecución del gasto público?",
+      "opciones": [
+        "Equidad y progresividad.",
+        "Eficacia y rentabilidad.",
+        "Eficiencia y economía.",
+        "Igualdad y capacidad económica."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 31.3",
+      "q": "Conforme al artículo 31.3, las prestaciones personales o patrimoniales de carácter público:",
+      "opciones": [
+        "Se establecerán exclusivamente por ley orgánica.",
+        "Podrán establecerse mediante reglamento con habilitación administrativa general.",
+        "Solo podrán establecerse con arreglo a la ley.",
+        "Podrán establecerse por decisión administrativa cuando concurra utilidad pública."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 32",
+      "q": "Señale cuál de las siguientes afirmaciones reproduce correctamente una regla del artículo 32.",
+      "opciones": [
+        "La Constitución fija en dieciocho años la edad para contraer matrimonio.",
+        "La ley regulará las formas de matrimonio, la edad y capacidad para contraerlo y las causas de separación y disolución, entre otras materias.",
+        "La ley regulará únicamente las causas de disolución, correspondiendo a los reglamentos establecer las formas de matrimonio.",
+        "El artículo garantiza plena igualdad económica de los cónyuges, con independencia del régimen matrimonial."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 33.2",
+      "q": "En el artículo 33.2, la función social de la propiedad privada y de la herencia:",
+      "opciones": [
+        "Determinará su contenido conforme a resoluciones administrativas.",
+        "Delimitará el contenido de esos derechos, de acuerdo con las leyes.",
+        "Constituye por sí sola causa de privación de bienes sin indemnización.",
+        "Limitará únicamente el ejercicio del derecho a la herencia, sin afectar a la propiedad privada."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 33.3",
+      "q": "Según el artículo 33.3, señale la respuesta INCORRECTA sobre la privación de bienes y derechos.",
+      "opciones": [
+        "Debe mediar causa justificada de utilidad pública o interés social.",
+        "Ha de realizarse mediante la correspondiente indemnización.",
+        "Debe efectuarse de conformidad con lo dispuesto por las leyes.",
+        "Solo cabe cuando concurran simultáneamente utilidad pública e interés social."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 34.2",
+      "q": "¿Qué apartados del artículo 22 declara aplicables a las fundaciones el artículo 34.2?",
+      "opciones": [
+        "Los apartados 2 y 4.",
+        "Los apartados 2 y 3.",
+        "Los apartados 3 y 4.",
+        "Los apartados 1 y 5."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 34.1",
+      "q": "Conforme al artículo 34.1, el derecho de fundación se reconoce:",
+      "opciones": [
+        "Para fines de carácter privado, con autorización administrativa.",
+        "Para fines sociales o económicos, en los términos de un reglamento.",
+        "Para fines de interés general, con arreglo a la ley.",
+        "Para fines de interés público exclusivamente estatal, mediante ley orgánica."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 35.1",
+      "q": "De acuerdo con el artículo 35.1, señale la formulación correcta.",
+      "opciones": [
+        "Todos tienen el derecho y el deber de trabajar, sin discriminación por razón de nacimiento.",
+        "Todos los españoles tienen el derecho al trabajo y el deber de elegir una profesión u oficio.",
+        "Todos los trabajadores tienen el derecho al trabajo y a una remuneración igual, sin diferencias salariales.",
+        "Todos los españoles tienen el deber de trabajar y el derecho al trabajo, entre otros derechos, sin discriminación por razón de sexo."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 35.2",
+      "q": "El artículo 35.2 dispone que:",
+      "opciones": [
+        "Una ley orgánica regulará el régimen jurídico de los colegios profesionales.",
+        "La ley regulará un estatuto de los trabajadores.",
+        "Un reglamento regulará las condiciones generales de trabajo.",
+        "La ley podrá regular, en su caso, un estatuto de los trabajadores."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 36",
+      "q": "De acuerdo con el artículo 36, la estructura interna y el funcionamiento de los colegios profesionales:",
+      "opciones": [
+        "Deberán ser democráticos.",
+        "Serán democráticos cuando así lo dispongan sus estatutos.",
+        "Se regularán exclusivamente por los propios colegios, sin exigencia constitucional.",
+        "Deberán ser representativos, sin que se exija expresamente funcionamiento democrático."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 36",
+      "q": "Según el artículo 36, la ley regulará:",
+      "opciones": [
+        "La estructura interna de los sindicatos y el ejercicio de las profesiones liberales.",
+        "Las peculiaridades del régimen jurídico de los colegios profesionales y el ejercicio de las profesiones tituladas.",
+        "La creación de colegios profesionales exclusivamente por las Comunidades Autónomas.",
+        "El ejercicio de todas las actividades económicas y la colegiación obligatoria de sus titulares."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 37.1",
+      "q": "En el artículo 37.1, la fuerza vinculante se reconoce expresamente respecto de:",
+      "opciones": [
+        "Los acuerdos de todos los representantes sindicales, sean o no convenios.",
+        "Los pactos individuales de trabajo, con preferencia sobre cualquier norma legal.",
+        "Los convenios.",
+        "Las decisiones empresariales adoptadas tras una negociación colectiva."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 37.2",
+      "q": "Señale la respuesta que refleja la titularidad del derecho del artículo 37.2.",
+      "opciones": [
+        "Los trabajadores y empresarios tienen derecho a adoptar medidas de conflicto colectivo.",
+        "Solo los trabajadores tienen derecho a adoptar medidas de conflicto colectivo.",
+        "Los sindicatos y las asociaciones profesionales exclusivamente tienen derecho a esas medidas.",
+        "Los representantes de los trabajadores, pero no los empresarios, pueden adoptar medidas de conflicto colectivo."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 28.2 y 37.2",
+      "q": "En relación con los servicios esenciales de la comunidad, indique la afirmación que se corresponde con los artículos 28.2 y 37.2.",
+      "opciones": [
+        "Ambos apartados emplean literalmente la expresión «funcionamiento de los servicios esenciales».",
+        "El 28.2 se refiere al funcionamiento y el 37.2 al mantenimiento.",
+        "Ambos apartados ordenan mantener sin interrupción todos los servicios públicos.",
+        "El 28.2 se refiere al mantenimiento y el 37.2 al funcionamiento de los servicios esenciales."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 38",
+      "q": "En el artículo 38, los poderes públicos garantizan y protegen:",
+      "opciones": [
+        "El ejercicio de la libertad de empresa y la defensa de la productividad.",
+        "La iniciativa económica pública y la defensa de la competitividad exclusivamente.",
+        "El derecho al trabajo y el mantenimiento de la rentabilidad de las empresas.",
+        "La libertad de empresa y la planificación obligatoria de todas las actividades económicas."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 38",
+      "q": "Señale la respuesta correcta según el artículo 38 sobre el marco en que se reconoce la libertad de empresa.",
+      "opciones": [
+        "Dentro de la planificación económica obligatoria.",
+        "En el marco de la economía social de mercado, sin referencia a planificación.",
+        "En el marco de la economía de mercado, de acuerdo con las exigencias de la economía general y, en su caso, de la planificación.",
+        "En el marco de una economía pública planificada por los poderes públicos."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 31.1 y 38",
+      "q": "Señale qué afirmación se ajusta a los artículos 31 y 38 de la Constitución.",
+      "opciones": [
+        "La productividad constituye un principio expreso del sistema tributario en el artículo 31.1.",
+        "La progresividad es criterio de ejecución del gasto público en el artículo 31.2.",
+        "La economía general constituye por sí misma una causa de expropiación obligatoria en el artículo 38.",
+        "La progresividad inspira el sistema tributario y los poderes públicos protegen la defensa de la productividad en el marco de la libertad de empresa."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 3.1",
+      "q": "De acuerdo con el artículo 3.1 de la Constitución, indique el enunciado correcto.",
+      "opciones": [
+        "Todos los españoles tienen el derecho a conocer el castellano y el deber de usarlo.",
+        "Todos los españoles tienen el deber de conocer el castellano y el derecho a usarlo.",
+        "Todos los ciudadanos tienen el deber de usar el castellano y el derecho a conocerlo.",
+        "Todos los españoles tienen el deber de conocer y usar el castellano."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 17.2",
+      "q": "Conforme al artículo 17.2, en cualquier caso, el detenido deberá quedar en libertad o a disposición judicial en un plazo máximo de:",
+      "opciones": [
+        "Cuarenta y ocho horas, salvo acuerdo judicial motivado.",
+        "Setenta y dos horas, pero sin perjuicio de que la detención dure más tiempo para agotar las averiguaciones.",
+        "Setenta y dos horas, sin que la detención preventiva pueda durar más del tiempo estrictamente necesario.",
+        "Tres días hábiles contados desde el comienzo de las diligencias policiales."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 18.2",
+      "q": "Según el artículo 18.2, la entrada o registro de domicilio sin consentimiento del titular ni resolución judicial:",
+      "opciones": [
+        "Únicamente cabe en caso de flagrante delito, conforme a la excepción expresamente prevista.",
+        "Cabe cuando exista delito grave, aunque no sea flagrante.",
+        "Requiere autorización motivada de la autoridad gubernativa.",
+        "Cabe en toda investigación penal si se comunica posteriormente al juez."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 20.5",
+      "q": "Conforme al artículo 20.5, el secuestro de publicaciones, grabaciones y otros medios de información:",
+      "opciones": [
+        "Solo podrá acordarse por decisión de la autoridad gubernativa con posterior control judicial.",
+        "Podrá acordarse por resolución administrativa motivada cuando exista orden público comprometido.",
+        "Solo podrá acordarse en virtud de resolución judicial motivada, según la expresión literal.",
+        "Solo podrá acordarse en virtud de resolución judicial."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 22.4",
+      "q": "De acuerdo con el artículo 22.4, las asociaciones solo podrán ser disueltas o suspendidas en sus actividades:",
+      "opciones": [
+        "Por resolución de la autoridad administrativa competente con autorización judicial posterior.",
+        "Mediante resolución judicial motivada.",
+        "Mediante resolución judicial en los casos que reglamentariamente se determinen, sin exigencia expresa de motivación.",
+        "Por acuerdo administrativo motivado siempre que exista interés general."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "Según el artículo 24.2, la ley regulará los casos en que no se estará obligado a declarar sobre hechos presuntamente delictivos por razón de:",
+      "opciones": [
+        "Parentesco o secreto profesional.",
+        "Parentesco o intereses legítimos.",
+        "Secreto profesional o secreto de las comunicaciones.",
+        "Amistad íntima o parentesco."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 30.3",
+      "q": "Según el artículo 30.3, señale la respuesta constitucionalmente correcta.",
+      "opciones": [
+        "La ley deberá establecer un servicio civil de carácter obligatorio para fines de interés general.",
+        "Podrá imponerse una prestación social sustitutoria en todos los casos de grave riesgo.",
+        "Podrá establecerse un servicio civil para el cumplimiento de fines de interés general.",
+        "Se establecerá un servicio civil obligatorio para el ejercicio del derecho de petición. ---"
+      ],
+      "correcta": 2
+    }
+  ]
+}
