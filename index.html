@@ -2,59 +2,75 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mi Academia · Tests AGE C1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Academia</title>
+<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell narrow">
-  <header class="mast">
-    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia</a>
-    <a class="pill" href="nuevo.html">+ Añadir test</a>
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
+    <a class="btn small ghost" href="nuevo.html">Añadir test</a>
   </header>
 
-  <section class="hero">
-    <div class="eyebrow">Administrativo AGE · C1 · 6 bloques · 45 temas</div>
-    <h1>Tu preparación</h1>
-    <p class="muted">Tests organizados por bloque y tema del programa oficial. Practica, mira dónde flojeas y repasa tus errores.</p>
-  </section>
+  <h1 class="titular">Tu preparación</h1>
+  <p class="entradilla">Administrativo del Estado (C1): 6 bloques y 45 temas.</p>
+  <p class="estado" id="estado"></p>
 
-  <section class="statgrid" aria-label="Resumen">
-    <div class="card stat"><strong id="s-intentos">0</strong><span>Intentos realizados</span></div>
-    <div class="card stat"><strong id="s-acierto">–</strong><span>Acierto medio</span></div>
-    <div class="card stat"><strong id="s-errores">0</strong><span>Preguntas por repasar</span></div>
-    <div class="card stat"><strong id="s-cobertura">–</strong><span>Temas con tests</span></div>
-  </section>
-
-  <section class="card panel">
-    <h2>Practica</h2>
-    <div id="debil" class="callout hide"></div>
-    <div class="actions">
-      <a class="btn disabled" id="btn-errores" href="test.html?t=errores">Repasar mis errores</a>
-      <a class="btn secondary disabled" id="btn-mixto" href="test.html?t=mixto&n=20">Test mixto de 20 preguntas</a>
+  <section class="hoja mapa" aria-labelledby="mapa-t">
+    <h2 id="mapa-t" class="sr">Mapa del temario</h2>
+    <div id="mapa-filas"></div>
+    <p class="minfo" id="minfo" aria-live="polite">Toca un cuadrado para ver el tema.</p>
+    <div class="leyenda" aria-hidden="true">
+      <span><i class="l-no"></i>Sin tests</span>
+      <span><i class="l-si"></i>Con tests</span>
+      <span><i class="l-ac"></i>Altura: tu acierto</span>
+      <span><i class="l-bj"></i>Bajo el 60 %</span>
     </div>
-    <p class="fine" style="margin:12px 0 0">El repaso de errores reúne las preguntas que has fallado en cualquier test; si aciertas una ahí, sale de la lista.</p>
   </section>
 
-  <section class="card panel">
+  <section class="sec">
+    <h2>Practicar</h2>
+    <p class="aviso-flojo hide" id="flojo"></p>
+    <div class="acciones">
+      <a class="btn off" id="b-errores" href="test.html?t=errores">Repasar errores</a>
+      <a class="btn ghost off" id="b-dudas" href="test.html?t=dudosas">Repasar dudas</a>
+      <a class="btn ghost off" id="b-mixto" href="test.html?t=mixto&n=20">Test mixto de 20</a>
+    </div>
+    <p class="fine" style="margin:.8rem 0 0">Los errores son las preguntas que has fallado. Las dudas, las que marcaste con la estrella. En cuanto aciertas una repasándola, sale de su lista.</p>
+  </section>
+
+  <section class="sec">
     <h2>Temario</h2>
-    <p class="fine" style="margin:0 0 6px">Abre un bloque para ver sus temas. Pasa el ratón por un tema para ver su enunciado oficial. En naranja, los temas por debajo del 60 %.</p>
-    <div id="temario"><div class="msg">Cargando temario…</div></div>
+    <p class="sub">Abre un bloque para ver sus temas y practicar cada uno.</p>
+    <div id="temario"></div>
   </section>
 
-  <h2 style="margin:26px 0 4px;font-size:20px">Todos los tests</h2>
-  <div class="toolbar">
-    <input type="search" id="buscar" placeholder="Buscar test…" aria-label="Buscar test">
-  </div>
-  <div class="chips" id="chips"></div>
-  <div class="fine" id="count" style="margin-bottom:6px"></div>
-  <div id="lista"><div class="msg">Cargando tests…</div></div>
-  <div id="avisos"></div>
+  <section class="sec" id="seccion-tests">
+    <h2>Tests</h2>
+    <div class="filtros">
+      <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="cuenta" id="cuenta"></div>
+    <div class="lista" id="lista"><p class="vacio-msg">Cargando tests…</p></div>
+    <div id="avisos"></div>
+  </section>
 
-  <div class="foot">
-    <span class="fine">Tu progreso se guarda solo en este navegador:</span>
-    <button type="button" class="btn secondary" id="exp">Exportar</button>
-    <button type="button" class="btn secondary" id="imp">Importar</button>
+  <div class="pie">
+    <span class="fine" style="flex:1 1 16rem">Tu progreso se guarda en este navegador. Para llevarlo a otro dispositivo, expórtalo aquí e impórtalo allí.</span>
+    <button type="button" class="btn small ghost" id="exp">Exportar</button>
+    <button type="button" class="btn small ghost" id="imp">Importar</button>
     <input type="file" id="impfile" accept="application/json,.json" class="hide">
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
@@ -62,98 +78,147 @@
 
 <script src="app.js"></script>
 <script>
-let items = [], fBloque = 'Todos', fTema = null;
-let acc = {}, cnt = {}, errCount = {};
-
+let items = [], fBloque = 'Todos', fTema = null, selTema = null, primera = true;
+let acc = {}, cnt = {}, errC = {}, dudC = {};
 const pct = a => Math.round(a.r / a.t * 100);
-function sumAcc(ids) { const o = { r: 0, t: 0 }; ids.forEach(i => { if (acc[i]) { o.r += acc[i].r; o.t += acc[i].t; } }); return o; }
+const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
 
 function computeData() {
-  acc = {}; cnt = {}; errCount = {};
+  acc = {}; cnt = {}; errC = {}; dudC = {};
   getHist().forEach(x => Object.entries(x.byTema || {}).forEach(([t, v]) => {
     acc[t] = acc[t] || { r: 0, t: 0 }; acc[t].r += v.r; acc[t].t += v.t;
   }));
   items.filter(i => i.kind === 'json').forEach(i => Object.entries(i.temas).forEach(([t, n]) => {
     cnt[t] = cnt[t] || { tests: 0, preguntas: 0 }; cnt[t].tests++; cnt[t].preguntas += n;
   }));
-  Object.values(getErr()).forEach(e => { if (e.tema) errCount[e.tema] = (errCount[e.tema] || 0) + 1; });
+  Object.values(getErr()).forEach(e => { if (e.tema) errC[e.tema] = (errC[e.tema] || 0) + 1; });
+  Object.values(getDud()).forEach(e => { if (e.tema) dudC[e.tema] = (dudC[e.tema] || 0) + 1; });
 }
 
-function renderStats() {
-  const h = getHist(), err = Object.keys(getErr()).length;
+/* ---------- estado y practicar ---------- */
+function renderEstado() {
+  const h = getHist(), nErr = Object.keys(getErr()).length;
   const right = h.reduce((a, x) => a + x.right, 0), total = h.reduce((a, x) => a + x.total, 0);
-  $('s-intentos').textContent = h.length;
-  $('s-acierto').textContent = total ? Math.round(right / total * 100) + ' %' : '–';
-  $('s-errores').textContent = err;
-  $('btn-errores').classList.toggle('disabled', !err);
-  const ids = Object.keys(_temario.byId);
-  if (ids.length) $('s-cobertura').textContent = `${ids.filter(t => cnt[t]).length}/${ids.length}`;
+  const p = $('estado'); p.replaceChildren();
+  if (!h.length) { p.append('Todavía no has hecho ningún intento. Elige un tema del mapa o abre el último test.'); return; }
+  p.append(`${plural(h.length, 'intento', 'intentos')} hechos, con un ${Math.round(right / total * 100)} % de acierto. `);
+  if (nErr) { const m = el('span', 'mark', `${plural(nErr, 'pregunta', 'preguntas')} por repasar`); p.append(m, '.'); }
+  else p.append('No te queda nada por repasar.');
 }
 
-function bar(a) {
-  const b = el('div', 'bar'), f = el('div', pct(a) < 60 ? 'low' : '');
-  f.style.width = pct(a) + '%'; b.append(f); return b;
+function renderPracticar() {
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length;
+  $('b-errores').textContent = nErr ? `Repasar errores (${nErr})` : 'Repasar errores';
+  $('b-dudas').textContent = nDud ? `Repasar dudas (${nDud})` : 'Repasar dudas';
+  $('b-errores').classList.toggle('off', !nErr);
+  $('b-dudas').classList.toggle('off', !nDud);
+  $('b-mixto').classList.toggle('off', !items.some(i => i.kind === 'json'));
+  const c = Object.entries(acc).filter(([t, a]) => a.t >= 10 && _temario.byId[t]).sort((x, y) => x[1].r / x[1].t - y[1].r / y[1].t)[0];
+  const f = $('flojo');
+  if (!c) { f.classList.add('hide'); return; }
+  f.classList.remove('hide'); f.replaceChildren();
+  const m = el('span', 'mark', `${temaLabel(c[0])} (${pct(c[1])} %)`);
+  const b = el('a', 'btn small', 'Practicar este tema'); b.href = `test.html?t=mixto&tema=${encodeURIComponent(c[0])}&n=20`;
+  f.append('Tu tema más flojo: ', m, ' ', b);
 }
 
+/* ---------- mapa del temario ---------- */
+function resumenTema(t) {
+  const c = cnt[t.id], a = acc[t.id];
+  let s = c ? `${plural(c.tests, 'test', 'tests')} y ${plural(c.preguntas, 'pregunta', 'preguntas')}` : 'sin tests todavía';
+  if (a && a.t) s += `, acierto ${pct(a)} %`;
+  return s;
+}
+function selectTema(id, hard) {
+  selTema = id;
+  document.querySelectorAll('.cell').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+  const t = _temario.byId[id], box = $('minfo'); box.replaceChildren();
+  if (!t) return;
+  box.append(el('strong', '', `${t.id} ${t.corto}`), `: ${resumenTema(t)}. `);
+  const go = el('button', 'link', 'Ir al tema'); go.type = 'button';
+  go.addEventListener('click', () => irATema(id)); box.append(go);
+}
+function irATema(id) {
+  const row = $('tema-' + id); if (!row) return;
+  const d = row.closest('details'); if (d) d.open = true;
+  row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+}
+function renderMapa() {
+  const box = $('mapa-filas'); box.replaceChildren();
+  let idx = 0; const fills = [];
+  _temario.bloques.forEach(b => {
+    const row = el('div', 'mrow'); row.dataset.b = b.id;
+    row.append(el('div', 'mnum', b.id));
+    const cells = el('div', 'mcells');
+    b.temas.forEach(t => {
+      const c = cnt[t.id], a = acc[t.id], has = a && a.t;
+      const btn = el('button', 'cell' + (c ? ' has' : '') + (has && pct(a) < 60 ? ' weak' : '') + (selTema === t.id ? ' on' : ''));
+      btn.type = 'button'; btn.dataset.id = t.id;
+      btn.title = `${t.id} ${t.corto}: ${resumenTema(t)}`;
+      btn.setAttribute('aria-label', `${t.id} ${t.corto}: ${resumenTema(t)}`);
+      const fill = el('i'); fill.style.setProperty('--i', idx++);
+      fills.push([fill, has ? pct(a) : 0]);
+      btn.append(fill, el('b', '', String(t.n)));
+      btn.addEventListener('click', () => selectTema(t.id));
+      cells.append(btn);
+    });
+    row.append(cells); box.append(row);
+  });
+  // un único movimiento al cargar: los cuadrados se llenan hasta tu acierto
+  const apply = () => fills.forEach(([f, h]) => { f.style.height = h + '%'; });
+  if (primera) requestAnimationFrame(() => requestAnimationFrame(apply)); else apply();
+  primera = false;
+}
+
+/* ---------- temario como índice ---------- */
 function temaRow(t) {
-  const c = cnt[t.id] || { tests: 0, preguntas: 0 }, a = acc[t.id], ne = errCount[t.id] || 0;
-  const row = el('div', 'trow' + (c.tests ? '' : ' empty'));
-  const name = el('div', 'tname'); name.title = t.oficial;
-  name.append(el('span', 'tid', t.id), document.createTextNode(t.corto));
-  const info = el('div', 'fine', c.tests ? `${c.tests} test${c.tests > 1 ? 's' : ''} · ${c.preguntas} preg.` : 'Sin tests');
-  const perf = el('div', 'tperf');
-  if (a && a.t) perf.append(bar(a), el('span', '', pct(a) + ' %'));
-  else perf.append(el('span', 'fine', c.tests ? 'Sin intentos' : '–'));
-  const acts = el('div', 'tacts');
-  if (c.preguntas) {
-    const pr = el('a', 'mini', 'Practicar'); pr.href = `test.html?t=mixto&tema=${encodeURIComponent(t.id)}&n=20`; acts.append(pr);
-    const vt = el('button', 'mini', 'Tests'); vt.type = 'button';
-    vt.addEventListener('click', () => { fTema = t.id; fBloque = 'Todos'; renderChips(); renderList(); $('lista').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-    acts.append(vt);
+  const c = cnt[t.id], a = acc[t.id], has = a && a.t, ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
+  const row = el('div', 'tema' + (c ? '' : ' vacio')); row.id = 'tema-' + t.id; row.title = t.oficial;
+  row.append(el('span', 'tid', t.id), el('span', 'tname', t.corto));
+  const det = el('div', 'tdet');
+  det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests'));
+  if (has) {
+    const pf = el('span', 'perf'), m = el('span', 'meter'), f = el('i', pct(a) < 60 ? 'low' : '');
+    f.style.width = pct(a) + '%'; m.append(f); pf.append(m, el('span', 'tab', pct(a) + ' %')); det.append(pf);
   }
-  if (ne) { const er = el('a', 'mini err', `Errores (${ne})`); er.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; acts.append(er); }
-  row.append(name, info, perf, acts);
+  row.append(det);
+  if (c) {
+    const act = el('div', 'tact');
+    const pr = el('a', 'mini', 'Practicar'); pr.href = `test.html?t=mixto&tema=${encodeURIComponent(t.id)}&n=20`; act.append(pr);
+    const vt = el('button', 'mini', 'Ver tests'); vt.type = 'button';
+    vt.addEventListener('click', () => { fTema = t.id; fBloque = 'Todos'; renderChips(); renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
+    act.append(vt);
+    if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
+    if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
+    row.append(act);
+  }
   return row;
 }
-
 function renderTemario() {
-  const box = $('temario'); box.replaceChildren();
-  if (!_temario.bloques.length) { box.append(el('div', 'msg warn', 'No se pudo cargar temario.json.')); return; }
+  const box = $('temario');
+  const abiertos = new Set([...box.querySelectorAll('details[open]')].map(d => d.dataset.b));
+  box.replaceChildren();
   _temario.bloques.forEach(b => {
     const ids = b.temas.map(t => t.id);
-    const conTests = ids.filter(i => cnt[i]).length, a = sumAcc(ids);
-    const d = el('details', 'bloque'); d.open = conTests > 0;
-    const sum = el('summary'), head = el('div', 'bhead'), meta = el('div', 'bmeta');
-    head.append(el('span', 'bnum', 'Bloque ' + b.id), el('span', 'btitle', b.titulo));
-    meta.append(el('span', '', `${conTests}/${ids.length} temas`));
-    if (a.t) { const w = el('span', 'tperf'); w.style.width = '130px'; w.append(bar(a), el('span', '', pct(a) + ' %')); meta.append(w); }
-    if (ids.some(i => cnt[i])) {
-      const pb = el('a', 'mini', 'Practicar bloque'); pb.href = `test.html?t=mixto&bloque=${b.id}&n=20`;
-      pb.addEventListener('click', e => e.stopPropagation()); meta.append(pb);
+    const con = ids.filter(i => cnt[i]).length;
+    let r = 0, tt = 0; ids.forEach(i => { if (acc[i]) { r += acc[i].r; tt += acc[i].t; } });
+    const d = el('details', 'bloque'); d.dataset.b = b.id;
+    d.open = abiertos.has(b.id);                                  // siempre cerrados salvo que los abras tú
+    const sum = el('summary', 'bsum');
+    sum.append(el('span', 'rn', b.id), el('span', 'bt', b.titulo), el('span', 'lead'),
+      el('span', 'bs', `${con} de ${ids.length} temas` + (tt ? `, ${Math.round(r / tt * 100)} %` : '')), el('span', 'chev'));
+    d.append(sum);
+    if (con) {
+      const bp = el('div', 'bpract'), a = el('a', 'mini', 'Practicar este bloque');
+      a.href = `test.html?t=mixto&bloque=${b.id}&n=20`; bp.append(a); d.append(bp);
     }
-    sum.append(head, meta); d.append(sum);
     b.temas.forEach(t => d.append(temaRow(t)));
     box.append(d);
   });
 }
 
-function renderWeak() {
-  const c = Object.entries(acc).filter(([t, a]) => a.t >= 10 && _temario.byId[t]).sort((x, y) => x[1].r / x[1].t - y[1].r / y[1].t)[0];
-  const box = $('debil');
-  if (!c) { box.classList.add('hide'); return; }
-  const [t, a] = c;
-  box.classList.remove('hide'); box.replaceChildren();
-  box.append(document.createTextNode(`Tu tema más flojo: ${temaLabel(t)} (${pct(a)} %). `));
-  const l = el('a', '', 'Practicarlo'); l.href = `test.html?t=mixto&tema=${encodeURIComponent(t)}&n=20`; box.append(l);
-}
-
-function scoreBadge(it) {
-  const s = it.kind === 'json' ? statsFor(it.id) : null;
-  if (!s) return null;
-  const p = Math.round(s.mejor * 100);
-  return el('span', 'score ' + (p >= 80 ? 'good' : p >= 60 ? 'mid' : 'low'), `Mejor ${p} % · ${s.intentos}×`);
-}
-
+/* ---------- lista de tests ---------- */
 const itemTemas = it => Object.keys(it.temas || {});
 function matches(it) {
   if (fTema && !itemTemas(it).includes(fTema)) return false;
@@ -161,61 +226,59 @@ function matches(it) {
   if (fBloque !== 'Todos' && !itemTemas(it).some(t => bloqueOf(t) === fBloque)) return false;
   return true;
 }
-
+function scoreOf(it) {
+  const s = it.kind === 'json' ? statsFor(it.id) : null;
+  return s ? { p: Math.round(s.mejor * 100), n: s.intentos } : null;
+}
 function renderList() {
   const f = $('buscar').value.trim().toLowerCase();
   const vis = items.filter(it => matches(it) && (it.titulo + ' ' + itemTemas(it).map(temaLabel).join(' ') + ' ' + fmtDate(it.fecha)).toLowerCase().includes(f));
-  $('count').textContent = items.length ? `${vis.length} test${vis.length === 1 ? '' : 's'}` : '';
+  $('cuenta').textContent = items.length ? plural(vis.length, 'test', 'tests') : '';
   const list = $('lista'); list.replaceChildren();
   if (!vis.length) {
-    list.append(el('div', 'msg', items.length ? 'Ningún test coincide con el filtro.' : 'Aún no hay tests. Usa «+ Añadir test» para subir el primero.'));
+    list.append(el('p', 'vacio-msg', items.length ? 'Ningún test coincide con el filtro.' : 'Todavía no hay tests. Usa «Añadir test» para subir el primero.'));
     return;
   }
   vis.forEach(it => {
-    const a = el('a', 'test'); a.href = it.url;
-    const main = el('div', 't-main'), meta = el('div', 't-meta');
-    const ts = itemTemas(it);
-    const tagText = it.kind === 'html' ? 'Sin clasificar' : (ts.length > 1 ? `${temaLabel(it.tema)} (+${ts.length - 1})` : temaLabel(it.tema));
-    meta.append(el('span', 'tag' + (it.kind === 'html' ? ' legacy' : ''), tagText));
-    if (it.n) meta.append(el('span', '', it.n + ' preguntas'));
-    if (it.fecha) meta.append(el('span', '', fmtDate(it.fecha)));
-    main.append(el('strong', '', it.titulo), meta);
-    const side = el('div', 't-side'), b = scoreBadge(it);
-    if (b) side.append(b);
-    side.append(el('span', 'arrow', '→'));
-    a.append(main, side); list.append(a);
+    const a = el('a', 'fila'); a.href = it.url;
+    const main = el('div'), meta = el('div', 'fmeta');
+    const ts = itemTemas(it), b = ts.map(bloqueOf).find(Boolean);
+    a.dataset.b = b || 'x';
+    const day = fmtDay(it.fecha), fe = el('div', 'fecha');
+    if (day) fe.append(el('b', '', day.d), el('span', '', day.m)); else fe.append(el('b', '', '–'));
+    const tagText = it.kind === 'html' ? 'Sin clasificar' : (ts.length > 1 ? `${temaLabel(it.tema)} y ${ts.length - 1} más` : temaLabel(it.tema));
+    meta.append(el('span', 'tg', tagText));
+    if (it.n) meta.append(el('span', '', `${it.n} preguntas`));
+    main.append(el('div', 'ftit', it.titulo), meta);
+    a.append(fe, main);
+    const sc = scoreOf(it);
+    if (sc) { const r = el('div', 'fres' + (sc.p < 60 ? ' low' : '')); r.append(el('b', '', sc.p + ' %'), el('span', '', `mejor, ${plural(sc.n, 'intento', 'intentos')}`)); a.append(r); }
+    list.append(a);
   });
 }
-
 function renderChips() {
   const box = $('chips'); box.replaceChildren();
-  const mk = (txt, active, fn, x) => {
-    const b = el('button', 'chip' + (active ? ' active' : ''), txt); b.type = 'button';
-    if (x) b.append(el('span', 'x', '✕'));
-    b.addEventListener('click', fn); box.append(b);
-  };
-  if (fTema) mk('Tema ' + fTema, true, () => { fTema = null; renderChips(); renderList(); }, true);
+  const mk = (txt, on, fn) => { const b = el('button', 'chip' + (on ? ' on' : ''), txt); b.type = 'button'; b.addEventListener('click', fn); box.append(b); };
+  if (fTema) mk(`Tema ${fTema} ✕`, true, () => { fTema = null; renderChips(); renderList(); });
   const bl = new Set();
   items.forEach(it => { const t = itemTemas(it).map(bloqueOf).filter(Boolean); if (t.length) t.forEach(x => bl.add(x)); else bl.add('Sin clasificar'); });
   if (bl.size < 2 && !fTema) return;
   mk('Todos', fBloque === 'Todos', () => { fBloque = 'Todos'; renderChips(); renderList(); });
   [..._temario.bloques.map(b => b.id), 'Sin clasificar'].filter(b => bl.has(b))
-    .forEach(b => mk(b === 'Sin clasificar' ? b : 'Bloque ' + b, fBloque === b, () => { fBloque = b; renderChips(); renderList(); }));
+    .forEach(b => mk(b === 'Sin clasificar' ? b : `Bloque ${b}`, fBloque === b, () => { fBloque = b; renderChips(); renderList(); }));
 }
 
-function refresh() { computeData(); renderStats(); renderWeak(); renderTemario(); renderChips(); renderList(); }
+function refresh() { computeData(); renderEstado(); renderPracticar(); renderMapa(); renderTemario(); renderChips(); renderList(); if (selTema) selectTema(selTema); }
 
 async function init() {
   await loadTemario();
-  renderStats(); renderTemario();
+  computeData(); renderEstado(); renderMapa(); renderTemario(); renderPracticar();
   try {
     const { items: all, invalid } = await loadCatalog();
-    items = all;
-    $('btn-mixto').classList.toggle('disabled', !items.some(i => i.kind === 'json'));
-    refresh();
-    if (invalid.length) $('avisos').append(el('div', 'msg warn', 'Estos archivos tienen errores y no se muestran: ' + invalid.join(', ') + '. Valídalos en «+ Añadir test».'));
+    items = all; refresh();
+    if (invalid.length) $('avisos').append(el('p', 'aviso', 'Estos archivos tienen errores y no se muestran: ' + invalid.join(', ') + '. Revísalos en «Añadir test».'));
   } catch (e) {
-    $('lista').replaceChildren(el('div', 'msg warn', 'No se pudo cargar la lista de tests (¿límite de la API de GitHub o repo privado?). Recarga en unos minutos.'));
+    $('lista').replaceChildren(el('p', 'aviso', 'No se pudo cargar la lista de tests. Puede ser el límite de la API de GitHub; recarga en unos minutos.'));
   }
 }
 
@@ -224,8 +287,8 @@ $('exp').addEventListener('click', exportProgress);
 $('imp').addEventListener('click', () => $('impfile').click());
 $('impfile').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
-  if (!confirm('Esto reemplaza el progreso actual de este navegador. ¿Continuar?')) { e.target.value = ''; return; }
-  importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'Archivo no válido.'; if (ok) refresh(); e.target.value = ''; });
+  if (!confirm('Esto reemplaza el progreso guardado en este navegador. ¿Continuar?')) { e.target.value = ''; return; }
+  importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'El archivo no es válido.'; if (ok) refresh(); e.target.value = ''; });
 });
 init();
 </script>

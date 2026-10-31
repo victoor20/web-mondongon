@@ -7,7 +7,7 @@
 const CFG = { user: 'victoor20', repo: 'web-mondongon', dir: 'tests' };
 // ----------------------------------------------------------------------
 
-const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista' };
+const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:' };
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 const $ = id => document.getElementById(id);
@@ -25,6 +25,11 @@ function jset(store, key, val) { try { store.setItem(key, JSON.stringify(val)); 
 function fmtTime(s) {
   const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
   return (h ? String(h).padStart(2, '0') + ':' : '') + String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+}
+const MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+function fmtDay(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+  return m ? { d: String(+m[3]), m: MES3[+m[2] - 1] } : null;
 }
 function fmtDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
@@ -110,7 +115,7 @@ async function loadTemario() {
 const temaIdSet = () => new Set(Object.keys(_temario.byId));
 function temaLabel(id) {
   const t = _temario.byId[id];
-  return t ? `${id} · ${t.corto}` : (id || 'General');
+  return t ? `${id}: ${t.corto}` : (id || 'General');
 }
 const bloqueInfo = id => _temario.bloques.find(b => b.id === id) || null;
 
@@ -183,6 +188,18 @@ const getHist = () => jget(localStorage, LS.hist, []);
 function addHist(entry) { const h = getHist(); h.unshift(entry); jset(localStorage, LS.hist, h.slice(0, 500)); }
 const getErr = () => jget(localStorage, LS.err, {});
 const setErr = o => jset(localStorage, LS.err, o);
+const getDud = () => jget(localStorage, LS.dud, {});          // preguntas marcadas con estrella (dudas)
+const setDud = o => jset(localStorage, LS.dud, o);
+const getNotas = () => jget(localStorage, LS.notas, {});      // nota propia por pregunta
+function setNota(key, text) {
+  const n = getNotas();
+  if (text && text.trim()) n[key] = text; else delete n[key];
+  jset(localStorage, LS.notas, n);
+}
+const getPrefs = () => jget(localStorage, LS.prefs, {});
+function setPref(k, v) { const p = getPrefs(); p[k] = v; jset(localStorage, LS.prefs, p); }
+const getBloc = () => { try { return localStorage.getItem(LS.bloc) || ''; } catch (e) { return ''; } };
+const setBloc = t => { try { localStorage.setItem(LS.bloc, t); } catch (e) { /* nada */ } };
 
 function statsFor(id) {
   const h = getHist().filter(x => x.id === id);
@@ -191,7 +208,8 @@ function statsFor(id) {
 }
 
 function exportProgress() {
-  const blob = new Blob([JSON.stringify({ version: 2, historial: getHist(), errores: getErr() }, null, 1)], { type: 'application/json' });
+  const data = { version: 3, historial: getHist(), errores: getErr(), dudosas: getDud(), notas: getNotas(), bloc: getBloc() };
+  const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = el('a'); a.href = URL.createObjectURL(blob);
   a.download = `mi-academia-progreso-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.append(a); a.click(); a.remove();
@@ -205,6 +223,9 @@ function importProgress(file, done) {
       if (!Array.isArray(d.historial) || typeof d.errores !== 'object') throw new Error('formato');
       jset(localStorage, LS.hist, d.historial);
       jset(localStorage, LS.err, d.errores);
+      if (d.dudosas && typeof d.dudosas === 'object') jset(localStorage, LS.dud, d.dudosas);
+      if (d.notas && typeof d.notas === 'object') jset(localStorage, LS.notas, d.notas);
+      if (typeof d.bloc === 'string') setBloc(d.bloc);
       done(true);
     } catch (e) { done(false); }
   };
@@ -243,7 +264,7 @@ function niceTitle(raw) {
       return out;
     }).join(' ');
   }
-  return num ? `Test ${num} · ${t}` : t;
+  return num ? `Test ${num}: ${t}` : t;
 }
 
 function parseMarkdownTest(md) {

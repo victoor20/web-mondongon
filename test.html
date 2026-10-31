@@ -2,114 +2,141 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test · Mi Academia</title>
+<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell">
-  <header class="mast">
-    <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">✦</span> Mi Academia</a>
-    <a class="pill" href="index.html">← Todos los tests</a>
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
+    <a class="btn small ghost" href="index.html">Todos los tests</a>
   </header>
 
-  <section id="loading" class="msg">Cargando…</section>
+  <p id="loading" class="vacio-msg">Cargando…</p>
 
-  <section id="welcome" class="card intro hide">
-    <div class="eyebrow" id="w-eyebrow"></div>
-    <h2 id="w-title"></h2>
-    <p class="muted" id="w-desc"></p>
-    <div class="featuregrid">
-      <div class="feature"><strong id="w-n">0</strong><span>Preguntas</span></div>
-      <div class="feature"><strong id="w-opts">4</strong><span>Opciones por pregunta</span></div>
-      <div class="feature"><strong>∞</strong><span>Intentos sin límite</span></div>
+  <!-- INICIO -->
+  <section id="welcome" class="inicio hide">
+    <h1 id="w-title"></h1>
+    <p class="desc" id="w-desc"></p>
+    <div class="datos">
+      <div><b id="w-n">0</b><span>preguntas</span></div>
+      <div><b id="w-best">–</b><span id="w-best-l">sin intentos</span></div>
     </div>
-    <div class="modes" role="radiogroup" aria-label="Modo">
-      <label class="mode"><input type="radio" name="modo" value="examen" checked><b>Modo examen</b><span>Sin pistas. Corrección y explicaciones al terminar.</span></label>
-      <label class="mode"><input type="radio" name="modo" value="estudio"><b>Modo estudio</b><span>Corrección y explicación al instante, pregunta a pregunta.</span></label>
+
+    <div class="reanudar hide" id="reanudar">
+      <p id="reanudar-txt"></p>
+      <div class="acciones">
+        <button type="button" class="btn" id="b-reanudar">Continuar donde lo dejé</button>
+        <button type="button" class="btn ghost" id="b-descartar">Empezar de nuevo</button>
+      </div>
     </div>
-    <div class="actions"><button type="button" class="btn" id="start">Empezar test</button><span id="history" class="fine" aria-live="polite"></span></div>
+
+    <div id="config">
+      <div class="modos" role="radiogroup" aria-label="Modo">
+        <label class="modo"><input type="radio" name="modo" value="examen" checked><b>Examen</b><span>Sin pistas. La corrección y las explicaciones llegan al terminar.</span></label>
+        <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder cada pregunta.</span></label>
+      </div>
+      <label class="opcion"><input type="checkbox" id="o-cuenta" checked><span>Contar este intento en mis estadísticas<small id="o-cuenta-h"></small></span></label>
+      <label class="opcion"><input type="checkbox" id="o-tiempo" checked><span>Mostrar el tiempo mientras respondo<small>Se mide siempre y lo verás al final. Puedes ocultarlo o mostrarlo durante el test.</small></span></label>
+      <div class="acciones" style="margin-top:1.3rem"><button type="button" class="btn" id="start">Empezar</button></div>
+    </div>
   </section>
 
+  <!-- TEST -->
   <section id="exam" class="hide">
-    <div class="exam-layout">
-      <div>
-        <div class="card test-top">
-          <div style="flex:1"><strong id="progress-label">0 de 0 respondidas</strong>
-            <div class="progress" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="progress-bar"><div id="progress-fill" style="width:0%"></div></div></div>
-          <span class="pill" id="mode-pill">Modo examen</span>
-        </div>
-        <div id="questions"></div>
-        <div class="foot-actions"><span id="pending-note" class="fine"></span><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div>
-      </div>
-      <aside class="card sidebar">
-        <div class="eyebrow">Tiempo transcurrido</div>
-        <div id="timer" class="time" role="timer">00:00</div>
-        <div class="fine" id="answered-count"></div>
-        <h3 style="margin-top:20px">Ir a la pregunta</h3>
-        <div class="numbers" id="question-nav"></div>
-        <button type="button" class="btn" id="finish-side">Finalizar test</button>
-        <div class="fine" style="margin-top:12px">Puedes terminar aunque dejes preguntas en blanco.</div>
-      </aside>
+    <div class="exambar">
+      <div class="prog"><strong id="progress-label">0 de 0</strong><div class="meter" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="progress-bar"><i id="progress-fill"></i></div></div>
+      <button type="button" class="tbtn" id="timer-btn" aria-label="Ocultar el tiempo">
+        <span class="t" id="timer" role="timer">00:00</span>
+        <svg id="ico-eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="ico-eyeoff" class="hide" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.7A16.6 16.6 0 0 0 2 12s3.6 7 10 7c1.7 0 3.2-.4 4.5-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+      </button>
+      <button type="button" class="tbtn" id="nav-btn" aria-label="Ir a una pregunta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">Preguntas</span></button>
+      <button type="button" class="tbtn" id="bloc-btn" aria-label="Abrir el bloc de notas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg><span class="lbl">Bloc</span></button>
+      <button type="button" class="btn small" id="finish-top">Finalizar</button>
     </div>
+    <div id="questions"></div>
+    <div class="fin"><span class="fine" id="pending-note"></span><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div>
   </section>
 
+  <!-- RESULTADOS -->
   <section id="results" class="hide">
-    <div class="card result-header">
-      <div class="eyebrow">Test finalizado</div>
-      <h2 id="result-title">Tus resultados</h2>
-      <p class="muted" style="margin:0">Las preguntas en blanco cuentan como no acertadas. Los fallos pasan a «Repasar mis errores».</p>
-      <div class="score-grid">
-        <div class="scorebox"><strong id="score-right">0</strong><span>Aciertos</span></div>
-        <div class="scorebox"><strong id="score-wrong">0</strong><span>Errores</span></div>
-        <div class="scorebox"><strong id="score-blank">0</strong><span>Sin responder</span></div>
-        <div class="scorebox"><strong id="score-time">00:00</strong><span>Tiempo empleado</span></div>
+    <div class="hoja res">
+      <h2 id="result-title">Resultado</h2>
+      <p class="fine" id="summary" style="margin:0"></p>
+      <span class="nocuenta hide" id="nocuenta">Intento de repaso: no cuenta en tus estadísticas.</span>
+      <div class="cifras">
+        <div><b id="score-right">0</b><span>aciertos</span></div>
+        <div><b id="score-wrong">0</b><span>errores</span></div>
+        <div><b id="score-blank">0</b><span>en blanco</span></div>
+        <div><b id="score-time">00:00</b><span>tiempo</span></div>
       </div>
-      <div class="actions">
-        <button type="button" id="retry" class="btn">Repetir con nuevo orden</button>
-        <a class="btn secondary" href="index.html">Volver al inicio</a>
-        <a class="btn secondary hide" id="go-errores" href="test.html?t=errores">Repasar mis errores</a>
+      <div class="acciones">
+        <button type="button" id="retry" class="btn">Repetir</button>
+        <a class="btn ghost" href="index.html">Volver al inicio</a>
+        <a class="btn ghost hide" id="go-errores" href="test.html?t=errores">Repasar errores</a>
       </div>
-      <p class="fine" id="summary" style="margin-bottom:0"></p>
     </div>
-    <div class="filterbar" id="filters">
-      <button type="button" data-filter="all" class="chip active">Todas</button>
+    <div class="chips" id="filters" style="margin:1.2rem 0 .6rem">
+      <button type="button" data-filter="all" class="chip on">Todas</button>
       <button type="button" data-filter="wrong" class="chip">Errores</button>
-      <button type="button" data-filter="blank" class="chip">Sin responder</button>
+      <button type="button" data-filter="blank" class="chip">En blanco</button>
       <button type="button" data-filter="correct" class="chip">Aciertos</button>
+      <button type="button" data-filter="star" class="chip">Con estrella</button>
+      <button type="button" data-filter="note" class="chip">Con nota</button>
     </div>
     <div id="review-list"></div>
   </section>
 </div>
 
+<!-- paneles inferiores -->
+<div class="scrim hide" id="scrim"></div>
+<aside class="panel-b hide" id="p-nav" role="dialog" aria-modal="true" aria-labelledby="p-nav-t">
+  <div class="cab"><h2 id="p-nav-t">Ir a una pregunta</h2><button type="button" class="btn small ghost" data-close>Cerrar</button></div>
+  <div class="grid" id="grid"></div>
+  <div class="leyenda">
+    <span><i style="background:var(--tinta);border-color:var(--tinta)"></i>Respondida</span>
+    <span><i style="border-color:var(--estrella);background:var(--subraya-suave)"></i>Con estrella</span>
+    <span><i style="background:var(--foco);border-color:var(--foco)"></i>Con nota</span>
+  </div>
+  <div class="acciones" style="margin-top:.9rem"><button type="button" class="btn small ghost" id="go-first-blank">Ir a la primera sin responder</button></div>
+</aside>
+<aside class="panel-b hide" id="p-bloc" role="dialog" aria-modal="true" aria-labelledby="p-bloc-t">
+  <div class="cab"><h2 id="p-bloc-t">Bloc de notas</h2><button type="button" class="btn small ghost" data-close>Cerrar</button></div>
+  <textarea id="bloc-text" placeholder="Apunta aquí lo que quieras recordar: artículos, plazos, cifras…" aria-label="Bloc de notas"></textarea>
+  <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
+</aside>
+
 <script src="app.js"></script>
 <script>
 const params = new URLSearchParams(location.search);
-const T = params.get('t');
-let meta = { titulo: '', eyebrow: '', desc: '' }, pool = [], exam = [];
-let mode = 'examen', startAt = 0, elapsed = 0, ticker = null, completed = false, filtro = 'all';
+const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
+const ES_BANCO = T === 'errores' || T === 'dudosas';
+const CURSO = LS.curso + location.search;
+
+const ICON_STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></svg>';
+const ICON_PEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+
+let meta = { titulo: '', desc: '' }, pool = [], exam = [];
+let mode = 'examen', countIt = true, showTimer = true;
+let startAt = 0, elapsed = 0, ticker = null, hiddenAt = 0, completed = false, filtro = 'all', enExamen = false, countTouched = false;
 
 function show(id) {
   ['loading', 'welcome', 'exam', 'results'].forEach(s => $(s).classList.toggle('hide', s !== id));
   window.scrollTo(0, 0);
 }
-function fail(msg) { const b = $('loading'); b.className = 'msg warn'; b.textContent = msg; show('loading'); }
+function fail(msg) { const b = $('loading'); b.className = 'aviso'; b.textContent = msg; show('loading'); }
+const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
 
-/* ---------- preparar el conjunto de preguntas según el modo ---------- */
-async function prepTest(id) {
-  const { data, preguntas } = await loadTestData(id);
-  pool = preguntas;
-  document.title = data.titulo + ' · Mi Academia';
-  const temas = [...new Set(preguntas.map(q => q.tema))];
-  meta = { titulo: data.titulo, eyebrow: temas.map(temaLabel).join(' + ') + (data.fecha ? ' · ' + fmtDate(data.fecha) : ''), desc: data.descripcion || 'El test mezcla de forma independiente las preguntas y las opciones. El cronómetro empieza al pulsar «Empezar test».' };
-}
-async function allJsonTests() {
-  const { items } = await loadCatalog();
-  const res = await Promise.allSettled(items.filter(i => i.kind === 'json').map(i => loadTestData(i.id)));
-  return res.filter(r => r.status === 'fulfilled').map(r => r.value.preguntas);
-}
-const PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
+/* ---------- preparar el conjunto de preguntas ---------- */
 function scopeFilter(q) {
   if (PTEMA) return q.tema === PTEMA;
   if (PBLOQUE) return bloqueOf(q.tema) === PBLOQUE;
@@ -117,181 +144,327 @@ function scopeFilter(q) {
 }
 function scopeName() {
   if (PTEMA) return temaLabel(PTEMA);
-  if (PBLOQUE) { const b = bloqueInfo(PBLOQUE); return `Bloque ${PBLOQUE}` + (b ? ' · ' + b.titulo : ''); }
+  if (PBLOQUE) { const b = bloqueInfo(PBLOQUE); return `Bloque ${PBLOQUE}` + (b ? ': ' + b.titulo : ''); }
   return '';
+}
+async function allJsonTests() {
+  const { items } = await loadCatalog();
+  const res = await Promise.allSettled(items.filter(i => i.kind === 'json').map(i => loadTestData(i.id)));
+  return res.filter(r => r.status === 'fulfilled').map(r => r.value.preguntas);
+}
+async function prepTest(id) {
+  const { data, preguntas } = await loadTestData(id);
+  pool = preguntas;
+  document.title = data.titulo + ' · Mi Academia';
+  meta = { titulo: data.titulo, desc: data.descripcion || [...new Set(preguntas.map(q => q.tema))].map(temaLabel).join(' y ') + (data.fecha ? `. Hecho el ${fmtDate(data.fecha)}.` : '.') };
 }
 async function prepMixto() {
   const n = Math.max(5, parseInt(params.get('n'), 10) || 20);
   const all = (await allJsonTests()).flat().filter(scopeFilter);
-  if (!all.length) throw new Error(scopeName() ? `Aún no hay preguntas de ${scopeName()}.` : 'Aún no hay tests para mezclar.');
+  if (!all.length) throw new Error(scopeName() ? `Todavía no hay preguntas de ${scopeName()}.` : 'Todavía no hay tests para mezclar.');
   pool = shuffle(all).slice(0, n);
-  meta = { titulo: scopeName() ? 'Test mixto · ' + scopeName() : 'Test mixto', eyebrow: scopeName() ? 'Práctica por tema' : 'Preguntas de todos tus tests',
-    desc: `${pool.length} preguntas al azar${scopeName() ? ' de este ámbito' : ' de todos los tests publicados'}.` };
+  meta = { titulo: scopeName() ? 'Test mixto. ' + scopeName() : 'Test mixto', desc: `${plural(pool.length, 'pregunta', 'preguntas')} al azar${scopeName() ? ' de este ámbito' : ' de todos tus tests'}.` };
 }
-async function prepErrores() {
-  const keys = new Set(Object.keys(getErr()));
-  if (!keys.size) throw new Error('No tienes preguntas pendientes de repasar. ¡Bien!');
+async function prepBanco(tipo) {
+  const store = tipo === 'errores' ? getErr() : getDud();
+  const keys = new Set(Object.keys(store));
+  if (!keys.size) throw new Error(tipo === 'errores' ? 'No tienes errores pendientes de repasar.' : 'No tienes dudas marcadas con la estrella.');
   const all = (await allJsonTests()).flat().filter(q => keys.has(q.key) && scopeFilter(q));
-  if (!all.length) throw new Error(scopeName() ? `No tienes errores pendientes en ${scopeName()}.` : 'Las preguntas que fallaste ya no están en los tests publicados.');
+  if (!all.length) throw new Error(scopeName() ? `No tienes ${tipo} pendientes en ${scopeName()}.` : `Las preguntas guardadas ya no están en los tests publicados.`);
   pool = all;
-  meta = { titulo: scopeName() ? 'Repaso de errores · ' + scopeName() : 'Repaso de errores', eyebrow: 'Tus preguntas falladas', desc: 'Si aciertas una pregunta aquí, sale de tu lista de errores. Si la fallas, se queda.' };
+  const base = tipo === 'errores' ? 'Repaso de errores' : 'Repaso de dudas';
+  meta = { titulo: scopeName() ? `${base}. ${scopeName()}` : base,
+    desc: tipo === 'errores' ? 'Si aciertas una pregunta aquí, sale de tu lista de errores. Si la fallas, se queda.'
+      : 'Son las preguntas que marcaste con la estrella. Si esta vez no la marcas, se da por resuelta y sale de la lista.' };
 }
 
-/* ---------- pantalla de inicio ---------- */
+/* ---------- inicio ---------- */
+function refreshCuentaHint() {
+  $('o-cuenta-h').textContent = $('o-cuenta').checked
+    ? 'Tus aciertos y fallos cuentan en las estadísticas y alimentan tu lista de errores.'
+    : 'Es un repaso: ni los aciertos ni los fallos cambian tus estadísticas ni tu lista de errores.';
+}
+function applyDefaultCuenta() {
+  if (countTouched) return;
+  const estudio = document.querySelector('input[name=modo]:checked').value === 'estudio';
+  $('o-cuenta').checked = !(estudio && !ES_BANCO);
+  refreshCuentaHint();
+}
 function showWelcome() {
-  $('w-eyebrow').textContent = meta.eyebrow;
   $('w-title').textContent = meta.titulo;
   $('w-desc').textContent = meta.desc;
   $('w-n').textContent = pool.length;
-  $('w-opts').textContent = Math.max(...pool.map(q => q.opciones.length));
-  const s = statsFor(T);
-  const h = getHist().filter(x => x.id === T);
-  $('history').textContent = h.length
-    ? `Intentos: ${h.length} · Último: ${h[0].right}/${h[0].total}` + (s ? ` · Mejor: ${Math.round(s.mejor * 100)} %` : '')
-    : 'Tu primer intento está listo.';
+  const s = statsFor(T), h = getHist().filter(x => x.id === T);
+  if (s) { $('w-best').textContent = Math.round(s.mejor * 100) + ' %'; $('w-best-l').textContent = `mejor nota en ${plural(s.intentos, 'intento', 'intentos')}`; }
+  else if (h.length) { $('w-best').textContent = String(h.length); $('w-best-l').textContent = 'intentos'; }
+  $('o-tiempo').checked = getPrefs().timer !== false;
+  applyDefaultCuenta();
+  const saved = jget(localStorage, CURSO, null);
+  if (saved && Array.isArray(saved.exam) && saved.exam.length) {
+    const n = saved.exam.filter(q => q.selected !== null).length;
+    $('reanudar-txt').textContent = `Tienes un intento sin terminar: ${n} de ${saved.exam.length} respondidas.`;
+    $('reanudar').classList.remove('hide'); $('config').classList.add('hide');
+  }
   show('welcome');
 }
 
-/* ---------- examen ---------- */
+/* ---------- progreso en curso (sobrevive a cerrar la app) ---------- */
+function save() {
+  if (!enExamen || completed) return;
+  jset(localStorage, CURSO, { v: 1, mode, countIt, elapsed, exam, savedAt: Date.now() });
+}
+
+/* ---------- test ---------- */
 function answeredCount() { return exam.filter(q => q.selected !== null).length; }
 function updateProgress() {
   const n = answeredCount();
-  $('progress-label').textContent = `${n} de ${exam.length} respondidas`;
-  $('answered-count').textContent = `${n} de ${exam.length} respondidas`;
+  $('progress-label').textContent = `${n} de ${exam.length}`;
   $('progress-fill').style.width = `${n / exam.length * 100}%`;
-  $('progress-bar').setAttribute('aria-valuenow', n);
-  $('pending-note').textContent = n === exam.length ? 'Todo respondido' : `${exam.length - n} sin responder`;
-  [...$('question-nav').children].forEach((b, i) => b.classList.toggle('answered', exam[i].selected !== null));
+  $('progress-bar').setAttribute('aria-valuenow', n); $('progress-bar').setAttribute('aria-valuemax', exam.length);
+  const dud = exam.filter(q => q.star !== null).length;
+  $('pending-note').textContent = n === exam.length ? 'Todo respondido' : `${exam.length - n} sin responder` + (dud ? `, ${dud} con estrella` : '');
+}
+function paintTimer() {
+  $('timer').textContent = showTimer ? fmtTime(elapsed) : '';
+  $('timer').classList.toggle('hide', !showTimer);
+  $('ico-eye').classList.toggle('hide', !showTimer);
+  $('ico-eyeoff').classList.toggle('hide', showTimer);
+  $('timer-btn').setAttribute('aria-label', showTimer ? 'Ocultar el tiempo' : 'Mostrar el tiempo');
+  $('timer-btn').title = showTimer ? 'Ocultar el tiempo' : 'Mostrar el tiempo';
+}
+function tick() {
+  elapsed = Math.floor((Date.now() - startAt) / 1000);
+  if (showTimer) $('timer').textContent = fmtTime(elapsed);
+  if (elapsed % 5 === 0) save();
 }
 
-function lockStudy(item, optsBox, card) {
-  [...optsBox.children].forEach(label => {
-    const inp = label.querySelector('input'), orig = Number(inp.value);
-    inp.disabled = true; label.classList.add('locked');
-    if (orig === item.correcta) label.classList.add('right');
-    else if (orig === item.selected) label.classList.add('wrong');
+function lockStudy(item, opts, card) {
+  [...opts.children].forEach(div => {
+    const inp = div.querySelector('input'), orig = Number(inp.value);
+    inp.disabled = true; div.classList.add('locked');
+    if (orig === item.correcta) div.classList.add('right'); else if (orig === item.selected) div.classList.add('wrong');
   });
+  const old = card.querySelector('.fb'); if (old) old.remove();
   const ok = item.selected === item.correcta;
-  const fb = el('div', 'feedback ' + (ok ? 'ok' : 'ko'));
-  fb.append(el('strong', '', ok ? '✔ Correcto' : '✘ Incorrecto · Respuesta: ' + LETTERS[item.opts.findIndex(o => o.orig === item.correcta)] + ') ' + item.opciones[item.correcta]));
+  const fb = el('div', 'fb ' + (ok ? 'ok' : 'ko'));
+  fb.append(el('strong', '', ok ? 'Correcto.' : `Incorrecto. La respuesta es ${LETTERS[item.opts.findIndex(o => o.orig === item.correcta)]}) ${item.opciones[item.correcta]}`));
   if (item.explicacion) fb.append(el('p', '', item.explicacion));
   if (item.ref) fb.append(el('p', 'fine', 'Referencia: ' + item.ref));
-  card.append(fb);
+  card.querySelector('.opts').after(fb);
 }
 
 function renderQuestions() {
-  const box = $('questions'), nav = $('question-nav');
-  box.replaceChildren(); nav.replaceChildren();
+  const box = $('questions'); box.replaceChildren();
+  const notas = getNotas();
   exam.forEach((item, i) => {
-    const card = el('article', 'card question'); card.id = 'q-' + i;
-    const head = el('div', 'q-top');
-    head.append(el('span', 'q-number', `Pregunta ${i + 1} de ${exam.length}`), el('span', 'q-ref', item.ref));
-    card.append(head, el('h3', '', item.q));
-    const opts = el('div', 'options');
+    const card = el('article', 'hoja q'); card.id = 'q-' + i;
+    const head = el('div', 'qhead');
+    head.append(el('span', 'qn', `Pregunta ${i + 1} de ${exam.length}`));
+    if (item.ref) head.append(el('span', 'qref', item.ref));
+    card.append(head, el('h3', 'qtext', item.q));
+    const opts = el('div', 'opts');
     item.opts.forEach((o, j) => {
-      const label = el('label', 'option');
-      const input = el('input'); input.type = 'radio'; input.name = 'q' + i; input.value = String(o.orig);
-      input.setAttribute('aria-label', `Opción ${LETTERS[j]}: ${o.text}`);
-      label.append(input, el('span', 'letter', LETTERS[j]), el('span', 'option-text', o.text));
-      input.addEventListener('change', () => {
+      const div = el('div', 'opt' + (item.selected === o.orig ? ' sel' : '') + (item.star === o.orig ? ' dud' : ''));
+      const label = el('label'), inp = el('input');
+      inp.type = 'radio'; inp.name = 'q' + i; inp.value = String(o.orig); inp.checked = item.selected === o.orig;
+      label.append(inp, el('span', 'let', LETTERS[j]), el('span', 'otx', o.text));
+      const star = el('button', 'star'); star.type = 'button';
+      star.setAttribute('aria-pressed', String(item.star === o.orig));
+      star.setAttribute('aria-label', `Marcar con estrella la opción ${LETTERS[j]}: la que crees correcta, pendiente de revisar`);
+      star.title = 'Marcar como posible respuesta (queda como duda)';
+      star.insertAdjacentHTML('beforeend', ICON_STAR);
+      div.append(label, star); opts.append(div);
+
+      inp.addEventListener('change', () => {
         item.selected = o.orig;
-        [...opts.children].forEach(x => x.classList.toggle('selected', x.querySelector('input').checked));
-        updateProgress();
+        [...opts.children].forEach(d => d.classList.toggle('sel', d.querySelector('input').checked));
+        updateProgress(); paintNav(); save();
         if (mode === 'estudio') lockStudy(item, opts, card);
       });
-      opts.append(label);
+      star.addEventListener('click', () => {
+        item.star = item.star === o.orig ? null : o.orig;
+        [...opts.children].forEach((d, k) => {
+          const on = item.star === item.opts[k].orig;
+          d.classList.toggle('dud', on); d.querySelector('.star').setAttribute('aria-pressed', String(on));
+        });
+        updateProgress(); paintNav(); save();
+      });
     });
-    card.append(opts); box.append(card);
-    const b = el('button', 'num', String(i + 1)); b.type = 'button';
-    b.setAttribute('aria-label', 'Ir a pregunta ' + (i + 1));
-    b.addEventListener('click', () => card.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-    nav.append(b);
+    card.append(opts);
+    if (item.selected !== null && mode === 'estudio') lockStudy(item, opts, card);
+
+    // nota propia (se guarda por pregunta y reaparece cada vez que sale)
+    const foot = el('div', 'qfoot'), nb = el('button', 'notebtn'); nb.type = 'button';
+    const nota = el('div', 'nota hide'), ta = el('textarea');
+    ta.placeholder = 'Tu nota para esta pregunta'; ta.setAttribute('aria-label', 'Nota de la pregunta ' + (i + 1)); ta.value = notas[item.key] || '';
+    const paintNb = () => {
+      nb.replaceChildren(); nb.insertAdjacentHTML('beforeend', ICON_PEN);
+      nb.append(ta.value.trim() ? 'Ver nota' : 'Añadir nota');
+      nb.classList.toggle('lleva', !!ta.value.trim());
+    };
+    paintNb();
+    nb.addEventListener('click', () => { nota.classList.toggle('hide'); if (!nota.classList.contains('hide')) ta.focus(); });
+    ta.addEventListener('input', () => { setNota(item.key, ta.value); paintNb(); paintNav(); });
+    nota.append(ta);
+    if (ta.value.trim()) nota.classList.remove('hide');
+    foot.append(el('span'), nb);
+    card.append(foot, nota);
+    box.append(card);
   });
-  updateProgress();
+  updateProgress(); paintNav(); paintTimer();
 }
 
+/* ---------- panel «ir a pregunta» ---------- */
+function paintNav() {
+  const grid = $('grid'); grid.replaceChildren();
+  const notas = getNotas();
+  exam.forEach((q, i) => {
+    const b = el('button', 'gq' + (q.selected !== null ? ' hecha' : '') + (q.star !== null ? ' dud' : '') + (notas[q.key] ? ' nota' : ''), String(i + 1));
+    b.type = 'button'; b.setAttribute('aria-label', `Pregunta ${i + 1}` + (q.selected !== null ? ', respondida' : '') + (q.star !== null ? ', con estrella' : ''));
+    b.addEventListener('click', () => { closePanels(); $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    grid.append(b);
+  });
+}
+let lastFocus = null;
+function openPanel(id, focusId) {
+  lastFocus = document.activeElement;
+  $('scrim').classList.remove('hide'); $(id).classList.remove('hide');
+  const f = focusId ? $(focusId) : $(id).querySelector('button'); if (f) f.focus();
+}
+function closePanels() {
+  ['p-nav', 'p-bloc'].forEach(p => $(p).classList.add('hide')); $('scrim').classList.add('hide');
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+/* ---------- empezar / reanudar ---------- */
+function startTicker() {
+  clearInterval(ticker);
+  ticker = setInterval(tick, 500);
+}
+function beginExam() {
+  enExamen = true; completed = false;
+  renderQuestions(); show('exam'); startTicker(); save();
+}
 function startExam() {
-  clearInterval(ticker); completed = false;
   mode = document.querySelector('input[name=modo]:checked').value;
-  $('mode-pill').textContent = mode === 'estudio' ? 'Modo estudio' : 'Modo examen';
-  exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null }));
-  elapsed = 0; startAt = Date.now(); $('timer').textContent = '00:00';
-  renderQuestions(); show('exam');
-  ticker = setInterval(() => { elapsed = Math.floor((Date.now() - startAt) / 1000); $('timer').textContent = fmtTime(elapsed); }, 500);
+  countIt = $('o-cuenta').checked; showTimer = $('o-tiempo').checked; setPref('timer', showTimer);
+  exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null, star: null }));
+  elapsed = 0; startAt = Date.now();
+  beginExam();
+}
+function resumeExam() {
+  const s = jget(localStorage, CURSO, null); if (!s) return;
+  mode = s.mode; countIt = s.countIt; exam = s.exam.map(q => ({ star: null, ...q }));
+  showTimer = getPrefs().timer !== false;
+  elapsed = s.elapsed || 0; startAt = Date.now() - elapsed * 1000;
+  beginExam();
 }
 
 /* ---------- resultados ---------- */
-function label(q, orig) {
-  const pos = q.opts.findIndex(o => o.orig === orig);
-  return `${LETTERS[pos]}) ${q.opciones[orig]}`;
-}
+function label(q, orig) { const pos = q.opts.findIndex(o => o.orig === orig); return `${LETTERS[pos]}) ${q.opciones[orig]}`; }
 function renderReview() {
   const box = $('review-list'); box.replaceChildren(); let found = 0;
+  const notas = getNotas();
   exam.forEach((q, i) => {
     const st = q.selected === null ? 'blank' : q.selected === q.correcta ? 'correct' : 'wrong';
-    if (filtro !== 'all' && st !== filtro) return;
+    const nota = notas[q.key] || '';
+    if (filtro === 'star' && q.star === null) return;
+    if (filtro === 'note' && !nota) return;
+    if (['wrong', 'blank', 'correct'].includes(filtro) && st !== filtro) return;
     found++;
-    const card = el('article', 'card review'), head = el('div', 'review-head');
-    head.append(el('h3', '', `${i + 1}. ${q.q}`), el('span', 'status ' + st, st === 'correct' ? 'Acierto' : st === 'wrong' ? 'Error' : 'Sin responder'));
+    const card = el('article', 'hoja rev'), head = el('div', 'rh');
+    head.append(el('h3', '', `${i + 1}. ${q.q}`), el('span', 'est ' + st, st === 'correct' ? 'Acierto' : st === 'wrong' ? 'Error' : 'En blanco'));
     card.append(head);
-    if (st === 'wrong') { const p = el('p', 'answerline bad'); p.append(el('b', '', 'Tu respuesta: '), document.createTextNode(label(q, q.selected))); card.append(p); }
-    if (st === 'blank') card.append(el('p', 'answerline bad', 'Tu respuesta: Sin responder'));
-    const ok = el('p', 'answerline good'); ok.append(el('b', '', 'Respuesta correcta: '), document.createTextNode(label(q, q.correcta))); card.append(ok);
+    if (st === 'wrong') { const p = el('p', 'lin bad'); p.append(el('b', '', 'Tu respuesta: '), label(q, q.selected)); card.append(p); }
+    if (st === 'blank') card.append(el('p', 'lin bad', 'Tu respuesta: sin responder'));
+    const ok = el('p', 'lin good'); ok.append(el('b', '', 'Correcta: '), label(q, q.correcta)); card.append(ok);
+    if (q.star !== null) card.append(el('p', 'lin dudl', `★ Marcaste ${label(q, q.star)} como posible respuesta` + (q.star === q.selected ? ' y la elegiste.' : (q.selected === null ? '.' : ' pero acabaste eligiendo otra.'))));
     if (q.explicacion) card.append(el('div', 'expl', q.explicacion));
-    card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, 'Tema ' + temaLabel(q.tema), T === 'mixto' || T === 'errores' ? 'Test: ' + q.testTitulo : ''].filter(Boolean).join(' · ')));
+    if (nota) { const n = el('div', 'minota'); n.append(el('b', '', 'Tu nota: '), nota); card.append(n); }
+    card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, temaLabel(q.tema), (T === 'mixto' || ES_BANCO) && q.testTitulo].filter(Boolean).join('. ')));
     box.append(card);
   });
-  if (!found) box.append(el('div', 'msg', 'No hay preguntas en esta categoría.'));
+  if (!found) box.append(el('p', 'vacio-msg', 'No hay preguntas en esta categoría.'));
 }
-function updateFilters() {
-  document.querySelectorAll('#filters .chip').forEach(b => b.classList.toggle('active', b.dataset.filter === filtro));
-}
+function updateFilters() { document.querySelectorAll('#filters .chip').forEach(b => b.classList.toggle('on', b.dataset.filter === filtro)); }
 
 function finishExam() {
   if (completed) return;
-  const blank = exam.filter(q => q.selected === null).length;
-  if (blank && !confirm(`Quedan ${blank} pregunta(s) sin responder. ¿Quieres finalizar y corregir el test?`)) return;
-  completed = true; clearInterval(ticker);
+  const blank = exam.filter(q => q.selected === null).length, dudas = exam.filter(q => q.star !== null).length;
+  if (blank || dudas) {
+    const partes = [blank && `Quedan ${plural(blank, 'pregunta', 'preguntas')} sin responder.`, dudas && `${plural(dudas, 'pregunta tiene', 'preguntas tienen')} estrella y se guardarán como dudas.`].filter(Boolean);
+    if (!confirm(partes.join(' ') + ' ¿Finalizar y corregir?')) return;
+  }
+  completed = true; enExamen = false; clearInterval(ticker);
   elapsed = Math.floor((Date.now() - startAt) / 1000);
   const right = exam.filter(q => q.selected === q.correcta).length;
   const wrong = exam.filter(q => q.selected !== null && q.selected !== q.correcta).length;
 
-  // estadísticas por tema + banco de errores
-  const byTema = {}, errs = getErr();
+  // dudas (estrella): son decisiones tuyas, se guardan siempre
+  const dud = getDud();
   exam.forEach(q => {
-    byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++;
-    if (q.selected === q.correcta) {
-      byTema[q.tema].r++;
-      if (T === 'errores') delete errs[q.key];                       // repasada: sale de la lista
-    } else if (q.selected !== null) {
-      errs[q.key] = { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 };
-    }
+    if (q.star !== null) dud[q.key] = { testId: q.testId, tema: q.tema, n: ((dud[q.key] || {}).n || 0) + 1 };
+    else if (T === 'dudosas') delete dud[q.key];
   });
-  setErr(errs);
-  addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, total: exam.length, elapsed, mode, byTema });
+  setDud(dud);
 
-  $('score-right').textContent = right; $('score-wrong').textContent = wrong;
-  $('score-blank').textContent = blank; $('score-time').textContent = fmtTime(elapsed);
-  $('result-title').textContent = `${right} de ${exam.length} respuestas correctas`;
-  $('summary').textContent = `Porcentaje de acierto: ${Math.round(right / exam.length * 100)} %.`;
-  $('go-errores').classList.toggle('hide', !Object.keys(errs).length || T === 'errores');
+  // estadísticas y errores: solo si el intento cuenta
+  if (countIt) {
+    const byTema = {}, errs = getErr();
+    exam.forEach(q => {
+      byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++;
+      if (q.selected === q.correcta) { byTema[q.tema].r++; if (T === 'errores') delete errs[q.key]; }
+      else if (q.selected !== null) errs[q.key] = { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 };
+    });
+    setErr(errs);
+    addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, total: exam.length, elapsed, mode, byTema });
+  }
+  try { localStorage.removeItem(CURSO); } catch (e) { /* nada */ }
+
+  $('score-right').textContent = right; $('score-wrong').textContent = wrong; $('score-blank').textContent = blank; $('score-time').textContent = fmtTime(elapsed);
+  $('result-title').textContent = `${right} de ${exam.length} correctas`;
+  $('summary').textContent = `Acierto del ${Math.round(right / exam.length * 100)} %.`;
+  $('nocuenta').classList.toggle('hide', countIt);
+  $('go-errores').classList.toggle('hide', !countIt || !Object.keys(getErr()).length || T === 'errores');
   filtro = wrong || blank ? 'wrong' : 'all';
   renderReview(); updateFilters(); show('results');
 }
 
+/* ---------- eventos ---------- */
 $('start').addEventListener('click', startExam);
-$('retry').addEventListener('click', () => { if (T === 'mixto' || T === 'errores') location.reload(); else startExam(); });
-$('finish-side').addEventListener('click', finishExam);
+$('b-reanudar').addEventListener('click', resumeExam);
+$('b-descartar').addEventListener('click', () => { try { localStorage.removeItem(CURSO); } catch (e) { /* nada */ } $('reanudar').classList.add('hide'); $('config').classList.remove('hide'); });
+$('retry').addEventListener('click', () => { if (T === 'mixto' || ES_BANCO) location.reload(); else { show('welcome'); showWelcome(); } });
+$('finish-top').addEventListener('click', finishExam);
 $('finish-bottom').addEventListener('click', finishExam);
 document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
-window.addEventListener('beforeunload', e => { if (!$('exam').classList.contains('hide') && !completed) { e.preventDefault(); e.returnValue = ''; } });
+document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', applyDefaultCuenta));
+$('o-cuenta').addEventListener('change', () => { countTouched = true; refreshCuentaHint(); });
+$('timer-btn').addEventListener('click', () => { showTimer = !showTimer; setPref('timer', showTimer); paintTimer(); if (showTimer) $('timer').textContent = fmtTime(elapsed); });
+$('nav-btn').addEventListener('click', () => { paintNav(); openPanel('p-nav'); });
+$('bloc-btn').addEventListener('click', () => { $('bloc-text').value = getBloc(); openPanel('p-bloc', 'bloc-text'); });
+$('bloc-text').addEventListener('input', e => setBloc(e.target.value));
+$('scrim').addEventListener('click', closePanels);
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closePanels));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanels(); });
+$('go-first-blank').addEventListener('click', () => {
+  const i = exam.findIndex(q => q.selected === null); closePanels();
+  if (i >= 0) $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+// el tiempo se pausa mientras la app está en segundo plano y el intento se guarda
+document.addEventListener('visibilitychange', () => {
+  if (!enExamen) return;
+  if (document.hidden) { hiddenAt = Date.now(); elapsed = Math.floor((hiddenAt - startAt) / 1000); save(); }
+  else if (hiddenAt) { startAt += Date.now() - hiddenAt; hiddenAt = 0; }
+});
+window.addEventListener('pagehide', save);
 
 (async function init() {
   if (!T) { location.replace('index.html'); return; }
   await loadTemario();
   try {
     if (T === 'mixto') await prepMixto();
-    else if (T === 'errores') await prepErrores();
+    else if (ES_BANCO) await prepBanco(T);
     else await prepTest(T);
   } catch (e) { fail(e.message); return; }
   showWelcome();
