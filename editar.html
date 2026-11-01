@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editar test · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
+    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html">Inicio</a></div>
+  </header>
+
+  <h1 class="titular" style="font-size:clamp(1.7rem,6vw,2.3rem)">Editar test</h1>
+  <p class="entradilla" id="sub">Cargando…</p>
+
+  <div id="cuerpo" class="hide">
+    <section class="hoja ed-meta">
+      <div class="campo"><label for="titulo">Título</label><input type="text" id="titulo"></div>
+      <div class="fila2">
+        <div class="campo"><label for="tema">Tema del programa</label><select id="tema"></select></div>
+        <div class="campo"><label for="fecha">Fecha del test</label><input type="date" id="fecha"></div>
+      </div>
+      <div class="campo" style="margin-bottom:0"><label for="fuente">Origen (herramienta que lo creó)</label>
+        <input type="text" id="fuente" list="lista-fuentes" placeholder="ChatGPT" autocomplete="off">
+        <datalist id="lista-fuentes"></datalist>
+        <p class="fine" style="margin:.4rem 0 0">Sirve para clasificar y filtrar tus tests en la portada. Si lo dejas vacío, se muestra como ChatGPT.</p>
+      </div>
+    </section>
+
+    <h2 style="font:600 1.15rem/1.2 var(--serif);margin:1.6rem 0 .3rem">Preguntas <span class="fine" id="npreg"></span></h2>
+    <p class="fine" style="margin:0 0 .8rem">Marca con el círculo verde la respuesta correcta. Si cambias el enunciado de una pregunta, sus notas y su estado de error o duda se conservan en este dispositivo.</p>
+    <div id="preguntas"></div>
+    <div class="acciones" style="margin-top:.4rem"><button type="button" class="btn ghost" id="add">Añadir pregunta</button></div>
+
+    <section class="peligro">
+      <h2>Eliminar este test</h2>
+      <p class="fine" style="margin:0 0 .7rem">Lo borra de la web. GitHub conserva el historial, así que se puede recuperar desde ahí.</p>
+      <button type="button" class="btn ko small" id="borrar">Eliminar test</button>
+    </section>
+
+    <div class="ed-barra">
+      <button type="button" class="btn" id="guardar">Guardar cambios</button>
+      <button type="button" class="btn ghost" id="bajar">Descargar JSON</button>
+      <span class="msg fine" id="msg" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ID = new URLSearchParams(location.search).get('t');
+let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0;
+
+function setMsg(t, tipo) { const m = $('msg'); m.replaceChildren(); m.style.color = tipo === 'ok' ? 'var(--ok)' : tipo === 'mal' ? 'var(--ko)' : ''; m.textContent = t; return m; }
+function marcarSucio() { if (!sucio) { sucio = true; setMsg('Hay cambios sin guardar.'); } }
+
+function selectTema(sel, valor) {
+  sel.replaceChildren();
+  const ph = el('option', '', 'Elige el tema'); ph.value = ''; sel.append(ph);
+  _temario.bloques.forEach(b => {
+    const g = el('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
+    b.temas.forEach(t => { const o = el('option', '', `${t.id}: ${t.corto}`); o.value = t.id; g.append(o); });
+    sel.append(g);
+  });
+  sel.value = valor && _temario.byId[valor] ? valor : '';
+}
+
+function numerar() {
+  [...$('preguntas').children].forEach((c, i) => { c.querySelector('.cab b').textContent = `Pregunta ${i + 1}`; });
+  $('npreg').textContent = `(${tarjetas.length})`;
+}
+
+function crearTarjeta(p, orig) {
+  const n = ++uid, card = el('article', 'hoja ed-q');
+  const t = { orig, extra: { ...(p.tema ? { tema: p.tema } : {}) }, card, radios: [], ops: [] };
+  const cab = el('div', 'cab'), del = el('button', 'btn small ghost', 'Eliminar pregunta'); del.type = 'button';
+  cab.append(el('b', '', 'Pregunta'), del); card.append(cab);
+
+  const cq = el('div', 'campo'); cq.append(el('label', '', 'Enunciado'));
+  t.q = el('textarea'); t.q.value = p.q || ''; cq.append(t.q); card.append(cq);
+
+  const cr = el('div', 'campo'); cr.append(el('label', '', 'Referencia (artículo o ley, opcional)'));
+  t.ref = el('input'); t.ref.type = 'text'; t.ref.value = p.ref || ''; cr.append(t.ref); card.append(cr);
+
+  const co = el('div', 'campo'); co.append(el('label', '', 'Opciones'));
+  const opciones = (p.opciones && p.opciones.length ? p.opciones : ['', '', '', '']);
+  opciones.forEach((txt, i) => {
+    const fila = el('div', 'ed-op' + (i === p.correcta ? ' ok' : ''));
+    const rl = el('label'), r = el('input'); r.type = 'radio'; r.name = 'c' + n; r.checked = i === p.correcta;
+    r.setAttribute('aria-label', `Opción ${LETTERS[i]} es la correcta`);
+    rl.append(r, el('span', 'let', LETTERS[i]));
+    const ti = el('input'); ti.type = 'text'; ti.value = txt; ti.setAttribute('aria-label', `Texto de la opción ${LETTERS[i]}`);
+    r.addEventListener('change', () => { fila.parentNode.querySelectorAll('.ed-op').forEach(f => f.classList.toggle('ok', f.querySelector('input[type=radio]').checked)); });
+    fila.append(rl, ti); co.append(fila); t.radios.push(r); t.ops.push(ti);
+  });
+  card.append(co);
+
+  const ce = el('div', 'campo', ''); ce.append(el('label', '', 'Explicación (opcional)'));
+  t.expl = el('textarea'); t.expl.value = p.explicacion || ''; ce.append(t.expl); card.append(ce);
+
+  card.addEventListener('input', marcarSucio); card.addEventListener('change', marcarSucio);
+  del.addEventListener('click', () => {
+    if (!confirm('¿Eliminar esta pregunta del test?')) return;
+    tarjetas = tarjetas.filter(x => x !== t); card.remove(); numerar(); marcarSucio();
+  });
+  tarjetas.push(t);
+  return card;
+}
+
+// recoge el formulario; devuelve {out, qs} o null si hay un problema ya mostrado
+function recoger() {
+  const preguntas = [], qs = [], temaTest = $('tema').value;
+  for (let i = 0; i < tarjetas.length; i++) {
+    const t = tarjetas[i];
+    const textos = t.ops.map(o => o.value.trim());
+    const sel = t.radios.findIndex(r => r.checked);
+    if (sel >= 0 && !textos[sel]) { setMsg(`Pregunta ${i + 1}: la opción marcada como correcta está vacía.`, 'mal'); return null; }
+    const idxs = textos.map((x, k) => (x ? k : -1)).filter(k => k >= 0);          // se descartan las opciones vacías
+    const p = { ref: t.ref.value.trim() || undefined, q: t.q.value.trim(), opciones: idxs.map(k => textos[k]), correcta: idxs.indexOf(sel), explicacion: t.expl.value.trim() || undefined, ...t.extra };
+    Object.keys(p).forEach(k => p[k] === undefined && delete p[k]);
+    preguntas.push({ ref: p.ref, q: p.q, opciones: p.opciones, correcta: p.correcta, explicacion: p.explicacion, ...(p.tema ? { tema: p.tema } : {}) });
+    qs.push({ orig: t.orig, key: qkey(ID, p.q), tema: p.tema || temaTest || 'General' });
+  }
+  preguntas.forEach(p => Object.keys(p).forEach(k => p[k] === undefined && delete p[k]));
+  const out = { ...data, titulo: $('titulo').value.trim(), tema: temaTest, fecha: $('fecha').value, preguntas };
+  const f = $('fuente').value.trim(); if (f) out.fuente = f; else delete out.fuente;
+  if (!out.tema) delete out.tema; if (!out.fecha) delete out.fecha;
+  return { out, qs };
+}
+const textoJSON = o => JSON.stringify(o, null, 2) + '\n';
+
+function validar(out) {
+  const v = validateTest(out, temaIdSet());
+  const errores = v.errors.slice();
+  if (!out.tema) errores.push('Elige el tema del programa.');
+  if (errores.length) { setMsg(errores[0] + (errores.length > 1 ? ` (y ${errores.length - 1} más)` : ''), 'mal'); return false; }
+  return true;
+}
+
+$('bajar').addEventListener('click', () => {
+  const r = recoger(); if (!r || !validar(r.out)) return;
+  const a = el('a'); a.href = URL.createObjectURL(new Blob([textoJSON(r.out)], { type: 'application/json' })); a.download = ID + '.json';
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  setMsg('Descargado. Para aplicarlo, súbelo a la carpeta tests de GitHub con el mismo nombre.', 'ok');
+});
+
+async function pedirArchivo() {
+  const g = await fetch(ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`), { headers: ghHeaders(), cache: 'no-store' });
+  if (g.status === 404) return { error: 'Este test ya no existe en el repositorio.' };
+  if (!g.ok) return { error: ghError(g.status) };
+  const j = await g.json();
+  let remoto = null; try { remoto = JSON.parse(fromB64utf8(j.content)); } catch (e) { /* nada */ }
+  return { sha: j.sha, remoto };
+}
+
+$('guardar').addEventListener('click', async () => {
+  const r = recoger(); if (!r || !validar(r.out)) return;
+  if (!getToken()) { const m = setMsg('Para guardar hace falta el token de GitHub de este dispositivo. '); const a = el('a', '', 'Configurarlo'); a.href = 'nuevo.html'; m.append(a, '. Mientras tanto puedes descargar el JSON.'); return; }
+  const btn = $('guardar'); btn.disabled = true; setMsg('Guardando…');
+  try {
+    const f = await pedirArchivo(); if (f.error) { setMsg(f.error, 'mal'); return; }
+    if (f.remoto && canon(f.remoto) !== baseCanon && !confirm('Este test ha cambiado en GitHub desde que lo abriste. ¿Quieres sobrescribirlo con tus cambios?')) { setMsg('Cancelado.'); return; }
+    const url = ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`);
+    const p = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Editar test: ' + r.out.titulo, content: b64utf8(textoJSON(r.out)), sha: f.sha }) });
+    if (!p.ok) { setMsg(ghError(p.status), 'mal'); return; }
+    migrarTrasEditar(oldQs, r.qs);
+    try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
+    data = r.out; baseCanon = canon(r.out); sucio = false;
+    oldQs = r.qs.map(q => ({ key: q.key, tema: q.tema })); tarjetas.forEach((t, i) => { t.orig = i; });
+    setMsg('Guardado. En 1 o 2 minutos se ve en la web.', 'ok');
+    $('sub').textContent = `${r.out.titulo}. Archivo: ${ID}.json`;
+  } catch (e) { setMsg('No he podido conectar con GitHub. Revisa tu conexión.', 'mal'); }
+  finally { btn.disabled = false; }
+});
+
+$('add').addEventListener('click', () => {
+  const c = crearTarjeta({ q: '', opciones: ['', '', '', ''], correcta: -1 }, -1);
+  $('preguntas').append(c); numerar(); marcarSucio(); c.querySelector('textarea').focus();
+});
+
+$('borrar').addEventListener('click', async () => {
+  if (!getToken()) { setMsg('Para eliminar hace falta el token de GitHub de este dispositivo (en «Añadir test»).', 'mal'); return; }
+  if (!confirm(`¿Eliminar «${data.titulo}» de la web? Esta acción borra el archivo del repositorio.`)) return;
+  setMsg('Eliminando…');
+  try {
+    const f = await pedirArchivo(); if (f.error) { setMsg(f.error, 'mal'); return; }
+    const d = await fetch(ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`), { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Eliminar test: ' + data.titulo, sha: f.sha }) });
+    if (!d.ok) { setMsg(ghError(d.status), 'mal'); return; }
+    migrarTrasEditar(oldQs, []);
+    try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
+    sucio = false;
+    const m = setMsg('Test eliminado. ', 'ok'); const a = el('a', '', 'Volver a la portada'); a.href = 'index.html'; m.append(a);
+    $('guardar').disabled = true; $('borrar').disabled = true;
+  } catch (e) { setMsg('No he podido conectar con GitHub. Revisa tu conexión.', 'mal'); }
+});
+
+window.addEventListener('beforeunload', e => { if (sucio) { e.preventDefault(); e.returnValue = ''; } });
+
+(async function init() {
+  mountThemeControl($('tema-ctl'));
+  if (!ID) { location.replace('index.html'); return; }
+  await loadTemario();
+  const dl = $('lista-fuentes'); FUENTES.forEach(f => { const o = el('option'); o.value = f; dl.append(o); });
+  try { data = await loadRawTest(ID); }
+  catch (e) { $('sub').textContent = e.message; return; }
+  if (!Array.isArray(data.preguntas)) { $('sub').textContent = 'Este archivo no tiene el formato esperado; edítalo a mano en GitHub.'; return; }
+  document.title = 'Editar: ' + data.titulo + ' · Mi Academia';
+  $('sub').textContent = `${data.titulo}. Archivo: ${ID}.json`;
+  baseCanon = canon(data);
+  oldQs = data.preguntas.map(p => ({ key: qkey(ID, p.q), tema: p.tema || data.tema || 'General' }));
+  $('titulo').value = data.titulo || ''; $('fecha').value = data.fecha || ''; $('fuente').value = data.fuente || '';
+  selectTema($('tema'), data.tema);
+  data.preguntas.forEach((p, i) => $('preguntas').append(crearTarjeta(p, i)));
+  numerar();
+  ['titulo', 'tema', 'fecha', 'fuente'].forEach(id => { $(id).addEventListener('input', marcarSucio); $(id).addEventListener('change', marcarSucio); });
+  $('cuerpo').classList.remove('hide');
+})();
+</script>
+</body>
+</html>

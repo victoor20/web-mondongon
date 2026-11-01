@@ -4,10 +4,15 @@
    ===================================================================== */
 
 // ---- CONFIGURACIÓN (cambia solo si renombras el repo) ----------------
-const CFG = { user: 'victoor20', repo: 'web-mondongon', dir: 'tests' };
+const CFG = {
+  user: 'victoor20', repo: 'web-mondongon', dir: 'tests',
+  datos: { repo: 'mondongon-datos', path: 'progreso.json' },   // repositorio PRIVADO donde se sincroniza tu progreso
+  fuenteAntigua: 'ChatGPT'                                       // origen que se asume en los tests que no lo indican
+};
+const FUENTES = ['ChatGPT', 'Claude', 'Gemini', 'Propio', 'Academia'];
 // ----------------------------------------------------------------------
 
-const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:' };
+const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', bloc2: 'ma2_bloc2', sync: 'ma2_sync' };
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 const $ = id => document.getElementById(id);
@@ -65,6 +70,7 @@ function validateTest(d, temaIds) {
   if (!d.titulo || typeof d.titulo !== 'string') errors.push('Falta "titulo".');
   if (!d.tema) warnings.push('Falta "tema" (código del temario, p. ej. I-1).');
   else if (known && !known.has(d.tema)) warnings.push(`"tema" «${d.tema}» no es un código del temario (p. ej. I-1, III-3, VI-5).`);
+  if (d.fuente !== undefined && typeof d.fuente !== 'string') errors.push('"fuente" debe ser un texto (p. ej. "ChatGPT").');
   if (!d.fecha) warnings.push('Falta "fecha" (AAAA-MM-DD).');
   else if (!/^\d{4}-\d{2}-\d{2}$/.test(d.fecha)) errors.push('"fecha" debe tener formato AAAA-MM-DD.');
   if (!Array.isArray(d.preguntas) || !d.preguntas.length) {
@@ -165,50 +171,231 @@ async function loadCatalog() {
       const temas = {};                                   // tema -> nº de preguntas (admite temas por pregunta)
       d.preguntas.forEach(p => { const t = p.tema || d.tema || 'General'; temas[t] = (temas[t] || 0) + 1; });
       const tema = d.tema || Object.keys(temas).sort((a, b) => temas[b] - temas[a])[0];
-      return { id, kind: 'json', titulo: d.titulo, tema, temas, fecha: d.fecha || dateFromName(id), n: d.preguntas.length, url: `test.html?t=${encodeURIComponent(id)}` };
+      return { id, kind: 'json', titulo: d.titulo, tema, temas, fuente: (d.fuente || '').trim() || CFG.fuenteAntigua, fecha: d.fecha || dateFromName(id), n: d.preguntas.length, url: `test.html?t=${encodeURIComponent(id)}` };
     } catch (e) { invalid.push(n); return null; }
   }));
-  const old = legacy.map(n => ({ id: baseName(n), kind: 'html', titulo: prettyFromName(baseName(n)), tema: 'Sin clasificar', temas: {}, fecha: dateFromName(baseName(n)), n: null, url: `${CFG.dir}/${encodeURIComponent(n)}` }));
+  const old = legacy.map(n => ({ id: baseName(n), kind: 'html', titulo: prettyFromName(baseName(n)), tema: 'Sin clasificar', temas: {}, fuente: 'Sin origen', fecha: dateFromName(baseName(n)), n: null, url: `${CFG.dir}/${encodeURIComponent(n)}` }));
   const items = [...loaded.filter(Boolean), ...old]
     .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id));
   return { items, invalid };
 }
 
-async function loadTestData(id) {
+async function loadRawTest(id) {
   const r = await fetch(`${CFG.dir}/${encodeURIComponent(id)}.json`, { cache: 'no-cache' });
   if (!r.ok) throw new Error(`No se encuentra el test "${id}".`);
-  const d = await r.json();
+  return r.json();
+}
+async function loadTestData(id) {
+  const d = await loadRawTest(id);
   const v = validateTest(d);
   if (v.errors.length) throw new Error(`El test "${id}" tiene errores: ${v.errors[0]}`);
   return { data: d, preguntas: normalizeTest(id, d) };
 }
 
-/* ---------- progreso guardado en este navegador ---------- */
-const getHist = () => jget(localStorage, LS.hist, []);
-function addHist(entry) { const h = getHist(); h.unshift(entry); jset(localStorage, LS.hist, h.slice(0, 500)); }
-const getErr = () => jget(localStorage, LS.err, {});
-const setErr = o => jset(localStorage, LS.err, o);
-const getDud = () => jget(localStorage, LS.dud, {});          // preguntas marcadas con estrella (dudas)
-const setDud = o => jset(localStorage, LS.dud, o);
-const getNotas = () => jget(localStorage, LS.notas, {});      // nota propia por pregunta
-function setNota(key, text) {
-  const n = getNotas();
-  if (text && text.trim()) n[key] = text; else delete n[key];
-  jset(localStorage, LS.notas, n);
+/* ---------- GitHub: token y acceso a archivos ---------- */
+const GH_KEY = 'ma2_gh_token';
+const getToken = () => { try { return localStorage.getItem(GH_KEY) || ''; } catch (e) { return ''; } };
+const ghHeaders = () => ({ 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + getToken(), 'X-GitHub-Api-Version': '2022-11-28' });
+const ghFileUrl = (repo, path) => `https://api.github.com/repos/${CFG.user}/${repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+function b64utf8(s) { let bin = ''; new TextEncoder().encode(s).forEach(b => { bin += String.fromCharCode(b); }); return btoa(bin); }
+function fromB64utf8(b) { const bin = atob(b.replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); }
+function ghError(status) {
+  if (status === 401) return 'GitHub rechaza el token. Puede haber caducado o estar mal copiado. Créalo de nuevo y guárdalo en «Añadir test».';
+  if (status === 403) return 'El token no tiene permiso de escritura. Revisa que tenga «Contents: Read and write» y que incluya el repositorio.';
+  if (status === 404) return 'No encuentro el repositorio o el token no tiene acceso a él.';
+  if (status === 409 || status === 422) return 'GitHub no ha aceptado el cambio por un conflicto. Inténtalo de nuevo en unos segundos.';
+  return `GitHub ha devuelto un error (${status}).`;
 }
-const getPrefs = () => jget(localStorage, LS.prefs, {});
-function setPref(k, v) { const p = getPrefs(); p[k] = v; jset(localStorage, LS.prefs, p); }
-const getBloc = () => { try { return localStorage.getItem(LS.bloc) || ''; } catch (e) { return ''; } };
-const setBloc = t => { try { localStorage.setItem(LS.bloc, t); } catch (e) { /* nada */ } };
 
-function statsFor(id) {
+/* ---------- aspecto: claro, oscuro o el del sistema ---------- */
+const META_TEMA = { claro: '#F2F4F8', oscuro: '#0E131E' };
+function applyTema(t) {
+  if (typeof document === 'undefined') return;
+  const r = document.documentElement;
+  if (t === 'claro' || t === 'oscuro') r.dataset.tema = t; else delete r.dataset.tema;
+  document.querySelectorAll('meta[name=theme-color]').forEach(m => {
+    if (!m.dataset.orig) m.dataset.orig = m.content;
+    m.content = META_TEMA[t] || m.dataset.orig;
+  });
+}
+const ICONOS_TEMA = {
+  sistema: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  claro: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  oscuro: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+};
+function mountThemeControl(box) {
+  if (!box) return;
+  const actual = getPrefs().tema || 'sistema';
+  box.className = 'ctl'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Aspecto de la web');
+  box.replaceChildren();
+  [['sistema', 'Como el sistema'], ['claro', 'Claro'], ['oscuro', 'Oscuro']].forEach(([v, txt]) => {
+    const b = el('button'); b.type = 'button'; b.title = txt; b.setAttribute('aria-label', txt); b.setAttribute('aria-pressed', String(v === actual));
+    b.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONOS_TEMA[v]}</svg>`);   // iconos fijos, no vienen de datos
+    b.addEventListener('click', () => { setPref('tema', v); applyTema(v); [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === b))); });
+    box.append(b);
+  });
+}
+
+/* ---------- progreso guardado en este navegador ----------
+   Cada dato lleva una marca de tiempo (t) para poder fusionarlo con otros dispositivos.
+   Lo borrado queda como «tumba» ({del:true,t}) para que el borrado también se sincronice. */
+const nowT = () => Date.now();
+const getHist = () => jget(localStorage, LS.hist, []);
+function addHist(entry) { const h = getHist(); h.unshift(entry); jset(localStorage, LS.hist, h.slice(0, 1000)); }
+const vivos = raw => { const o = {}; Object.entries(raw || {}).forEach(([k, v]) => { if (v && !v.del) o[k] = v; }); return o; };
+const getErr = () => vivos(jget(localStorage, LS.err, {}));      // errores: preguntas falladas
+const getDud = () => vivos(jget(localStorage, LS.dud, {}));      // dudas: preguntas con estrella
+function bankSet(store, key, entry) { const raw = jget(localStorage, store, {}); raw[key] = { ...entry, t: nowT() }; jset(localStorage, store, raw); scheduleSync(); }
+function bankDel(store, key) {
+  const raw = jget(localStorage, store, {});
+  if (raw[key] && !raw[key].del) { raw[key] = { del: true, t: nowT() }; jset(localStorage, store, raw); scheduleSync(); }
+}
+function notasRaw() {                                              // admite el formato antiguo (texto suelto)
+  const raw = jget(localStorage, LS.notas, {}), o = {};
+  Object.entries(raw).forEach(([k, v]) => { o[k] = typeof v === 'string' ? { x: v, t: 0 } : v; });
+  return o;
+}
+const getNotas = () => { const o = {}; Object.entries(notasRaw()).forEach(([k, v]) => { if (v && v.x && v.x.trim()) o[k] = v.x; }); return o; };
+function setNota(key, text) { const raw = notasRaw(); raw[key] = { x: text || '', t: nowT() }; jset(localStorage, LS.notas, raw); scheduleSync(); }
+const getPrefs = () => jget(localStorage, LS.prefs, {});             // preferencias de ESTE dispositivo (no se sincronizan)
+function setPref(k, v) { const p = getPrefs(); p[k] = v; jset(localStorage, LS.prefs, p); }
+function blocRaw() {
+  const v = jget(localStorage, LS.bloc2, null);
+  if (v) return v;
+  let old = ''; try { old = localStorage.getItem(LS.bloc) || ''; } catch (e) { /* nada */ }
+  return { x: old, t: 0 };
+}
+const getBloc = () => blocRaw().x;
+function setBloc(t) { jset(localStorage, LS.bloc2, { x: t, t: nowT() }); scheduleSync(); }
+
+function statsFor(id) {                                              // resultados de un test concreto
   const h = getHist().filter(x => x.id === id);
   if (!h.length) return null;
-  return { intentos: h.length, ultimo: h[0], mejor: Math.max(...h.map(x => x.right / x.total)) };
+  const ult = h.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+  return { intentos: h.length, ultimo: ult, ultimoPct: Math.round(ult.right / ult.total * 100), mejor: Math.max(...h.map(x => x.right / x.total)) };
+}
+// Por tema: acierto RECIENTE (últimos 3 intentos, refleja lo que sabes ahora) y datos de uso
+function temaStats() {
+  const h = getHist().slice().sort((a, b) => a.date.localeCompare(b.date)), por = {}, out = {};
+  h.forEach(e => Object.entries(e.byTema || {}).forEach(([t, v]) => { (por[t] = por[t] || []).push({ date: e.date, r: v.r, t: v.t }); }));
+  Object.entries(por).forEach(([t, arr]) => {
+    const rec = arr.slice(-3);
+    out[t] = { intentos: arr.length, ultima: arr[arr.length - 1].date,
+      reciente: { r: rec.reduce((a, x) => a + x.r, 0), t: rec.reduce((a, x) => a + x.t, 0) },
+      total: { r: arr.reduce((a, x) => a + x.r, 0), t: arr.reduce((a, x) => a + x.t, 0) } };
+  });
+  return out;
+}
+function haceTexto(iso) {
+  if (!iso) return '';
+  const d = Math.floor((Date.now() - new Date(iso).getTime()) / 864e5);
+  if (d <= 0) return 'hoy';
+  if (d === 1) return 'ayer';
+  if (d < 14) return `hace ${d} días`;
+  if (d < 60) return `hace ${Math.round(d / 7)} semanas`;
+  return `hace ${Math.round(d / 30)} meses`;
+}
+
+/* ---------- sincronización entre dispositivos ----------
+   Guarda tu progreso, errores, dudas y notas en un repositorio PRIVADO (CFG.datos) usando tu token.
+   Fusiona sin perder nada: gana siempre el cambio más reciente de cada elemento. */
+const SYNC_VER = 1;
+const canon = v => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)) ? Object.fromEntries(Object.keys(x).sort().map(key => [key, x[key]])) : x);
+function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw() }; }
+function mergeMap(a, b) {
+  const out = {}, limite = Date.now() - 90 * 864e5;
+  new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(k => {
+    const x = a && a[k], y = b && b[k];
+    const w = x && y ? ((y.t || 0) > (x.t || 0) ? y : x) : (x || y);
+    if (w.del && (w.t || 0) < limite) return;                  // las tumbas de más de 90 días se limpian
+    out[k] = w;
+  });
+  return out;
+}
+function mergeSnap(a, b) {
+  b = b || {};
+  const vistos = new Set(), hist = [];
+  [...(a.hist || []), ...(b.hist || [])].forEach(e => { const k = e.date + '|' + e.id; if (!vistos.has(k)) { vistos.add(k); hist.push(e); } });
+  hist.sort((x, y) => (y.date || '').localeCompare(x.date || ''));
+  const ba = a.bloc || { x: '', t: 0 }, bb = b.bloc || { x: '', t: 0 };
+  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
+}
+function applySnap(s) {
+  jset(localStorage, LS.hist, s.hist); jset(localStorage, LS.err, s.err); jset(localStorage, LS.dud, s.dud);
+  jset(localStorage, LS.notas, s.notas); jset(localStorage, LS.bloc2, s.bloc);
+}
+// estado: off (sin token) | ok | sin-repo (falta el repositorio de datos o el token no llega a él) | token | permiso | error
+const syncInfo = { estado: 'off', t: jget(localStorage, LS.sync, {}).t || 0 };
+let _syncing = null, _syncTimer = null;
+function setSync(estado) { syncInfo.estado = estado; if (estado === 'ok') { syncInfo.t = nowT(); jset(localStorage, LS.sync, { t: syncInfo.t }); } return { ok: estado === 'ok', estado }; }
+function syncNow() {
+  if (_syncing) return _syncing;
+  _syncing = (async () => {
+    if (!getToken()) return setSync('off');
+    const url = ghFileUrl(CFG.datos.repo, CFG.datos.path);
+    try {
+      for (let i = 0; i < 3; i++) {
+        const g = await fetch(url, { headers: ghHeaders(), cache: 'no-store' });
+        let remote = null, sha;
+        if (g.status === 200) { const j = await g.json(); sha = j.sha; try { remote = JSON.parse(fromB64utf8(j.content)); } catch (e) { remote = null; } }
+        else if (g.status === 404) {                               // ¿no existe el archivo o no existe/no se ve el repositorio?
+          const rr = await fetch(`https://api.github.com/repos/${CFG.user}/${CFG.datos.repo}`, { headers: ghHeaders() });
+          if (rr.status === 401) return setSync('token');
+          if (rr.status !== 200) return setSync('sin-repo');
+        } else if (g.status === 401) return setSync('token');
+        else if (g.status === 403) return setSync('permiso');
+        else return setSync('error');
+        const local = snapshot(), merged = mergeSnap(local, remote);
+        const cambioLocal = canon(merged) !== canon(local);
+        if (cambioLocal) applySnap(merged);
+        if (remote && canon(merged) === canon(remote)) { const r = setSync('ok'); r.cambioLocal = cambioLocal; return r; }
+        const body = { message: 'Sincronizar progreso', content: b64utf8(JSON.stringify(merged)) };
+        if (sha) body.sha = sha;
+        const p = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        if (p.ok) { const r = setSync('ok'); r.cambioLocal = cambioLocal; return r; }
+        if (p.status === 409 || p.status === 422) continue;        // otro dispositivo escribió a la vez: se reintenta
+        return setSync(p.status === 403 ? 'permiso' : p.status === 404 ? 'sin-repo' : 'error');
+      }
+      return setSync('error');
+    } catch (e) { return setSync('error'); }
+  })().finally(() => { _syncing = null; });
+  return _syncing;
+}
+function scheduleSync() {                                          // tras editar notas, errores o dudas: sube los cambios en unos segundos
+  if (!getToken()) return;
+  clearTimeout(_syncTimer); _syncTimer = setTimeout(() => { syncNow(); }, 8000);
+}
+const conTiempo = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r({ ok: false, estado: 'tiempo' }), ms))]);
+
+// Tras editar un test: conserva en ESTE dispositivo las notas, errores y dudas de las preguntas que siguen existiendo.
+// oldQs: [{key}] del test antes de editar. newQs: [{orig (índice en oldQs o -1), key, tema}] después.
+function migrarTrasEditar(oldQs, newQs) {
+  const mapa = new Map(); newQs.forEach(n => { if (n.orig >= 0) mapa.set(oldQs[n.orig].key, n); });
+  [LS.err, LS.dud].forEach(store => {
+    const raw = jget(localStorage, store, {});
+    oldQs.forEach(o => {
+      const e = raw[o.key]; if (!e || e.del) return;
+      const n = mapa.get(o.key);
+      if (!n) { raw[o.key] = { del: true, t: nowT() }; return; }
+      if (n.key !== o.key) { raw[n.key] = { ...e, tema: n.tema, t: nowT() }; raw[o.key] = { del: true, t: nowT() }; }
+      else if (e.tema !== n.tema) raw[o.key] = { ...e, tema: n.tema, t: nowT() };
+    });
+    jset(localStorage, store, raw);
+  });
+  const notas = notasRaw();
+  oldQs.forEach(o => {
+    const e = notas[o.key]; if (!e || !e.x) return;
+    const n = mapa.get(o.key);
+    if (n && n.key === o.key) return;
+    notas[o.key] = { x: '', t: nowT() };
+    if (n) notas[n.key] = { x: e.x, t: nowT() };
+  });
+  jset(localStorage, LS.notas, notas);
+  scheduleSync();
 }
 
 function exportProgress() {
-  const data = { version: 3, historial: getHist(), errores: getErr(), dudosas: getDud(), notas: getNotas(), bloc: getBloc() };
+  const data = { version: 4, historial: getHist(), errores: jget(localStorage, LS.err, {}), dudosas: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw() };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = el('a'); a.href = URL.createObjectURL(blob);
   a.download = `mi-academia-progreso-${new Date().toISOString().slice(0, 10)}.json`;
@@ -225,7 +412,8 @@ function importProgress(file, done) {
       jset(localStorage, LS.err, d.errores);
       if (d.dudosas && typeof d.dudosas === 'object') jset(localStorage, LS.dud, d.dudosas);
       if (d.notas && typeof d.notas === 'object') jset(localStorage, LS.notas, d.notas);
-      if (typeof d.bloc === 'string') setBloc(d.bloc);
+      if (typeof d.bloc === 'string') jset(localStorage, LS.bloc2, { x: d.bloc, t: nowT() });
+      else if (d.bloc && typeof d.bloc === 'object') jset(localStorage, LS.bloc2, d.bloc);
       done(true);
     } catch (e) { done(false); }
   };
@@ -351,3 +539,5 @@ function parseMarkdownTest(md) {
 
   return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas }, errors, warnings };
 }
+
+applyTema(getPrefs().tema);

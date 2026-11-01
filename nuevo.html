@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Añadir test · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
 <meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +18,7 @@
 <div class="wrap">
   <header class="site">
     <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
-    <a class="btn small ghost" href="index.html">Inicio</a>
+    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html">Inicio</a></div>
   </header>
 
   <h1 class="titular">Añadir un test</h1>
@@ -77,6 +78,7 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
       <div class="campo"><label for="tema">Tema del programa</label><select id="tema"></select></div>
       <div class="campo"><label for="fecha">Fecha del test</label><input type="date" id="fecha"></div>
     </div>
+    <div class="campo"><label for="fuente">Origen (herramienta que lo creó)</label><input type="text" id="fuente" list="lista-fuentes" autocomplete="off" placeholder="ChatGPT"><datalist id="lista-fuentes"></datalist></div>
     <div class="campo"><label for="fname">Nombre del archivo</label><input type="text" id="fname" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
     <div class="acciones">
       <button type="button" class="btn" id="pub">Publicar</button>
@@ -102,7 +104,8 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
     </details>
     <div class="campo" style="margin-top:.9rem"><label for="token">Token</label><input type="password" id="token" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
     <div class="acciones">
-      <button type="button" class="btn ghost" id="tsave">Guardar token</button>
+      <button type="button" class="btn ghost" id="tsave">Guardar y comprobar</button>
+      <button type="button" class="btn ghost hide" id="tcheck">Comprobar</button>
       <button type="button" class="btn ghost hide" id="tdel">Quitar token</button>
       <span class="fine" id="tmsg" aria-live="polite"></span>
     </div>
@@ -208,6 +211,7 @@ $('validar').addEventListener('click', () => {
   $('titulo').value = d.titulo;
   $('fecha').value = d.fecha || new Date().toISOString().slice(0, 10);
   fillTemaSelect(d.tema);
+  $('fuente').value = d.fuente || getPrefs().fuente || CFG.fuenteAntigua;
   updateName();
   setMsg('');
   $('descarga').classList.remove('hide');
@@ -230,6 +234,7 @@ function buildOutput() {
   if (!$('tema').value) { setMsg('Elige primero el tema.'); $('tema').focus(); return null; }
   if (!$('titulo').value.trim()) { setMsg('Falta el título.'); return null; }
   const out = { titulo: $('titulo').value.trim(), tema: $('tema').value, fecha: $('fecha').value, preguntas: current.preguntas };
+  const org = $('fuente').value.trim(); if (org) { out.fuente = org; setPref('fuente', org); }
   if (current.descripcion) out.descripcion = current.descripcion;
   let name = $('fname').value.trim() || 'test.json';
   if (!/\.json$/i.test(name)) name += '.json';
@@ -245,18 +250,7 @@ $('dl').addEventListener('click', () => {
 });
 
 /* ---------- publicación directa en GitHub ---------- */
-const GH_KEY = 'ma2_gh_token';
-const getToken = () => { try { return localStorage.getItem(GH_KEY) || ''; } catch (e) { return ''; } };
-const ghUrl = name => `https://api.github.com/repos/${CFG.user}/${CFG.repo}/contents/${CFG.dir}/${encodeURIComponent(name)}`;
-const ghHeaders = () => ({ 'Accept': 'application/vnd.github+json', 'Authorization': 'Bearer ' + getToken(), 'X-GitHub-Api-Version': '2022-11-28' });
-function b64utf8(s) { let bin = ''; new TextEncoder().encode(s).forEach(b => { bin += String.fromCharCode(b); }); return btoa(bin); }
-function ghError(status) {
-  if (status === 401) return 'GitHub rechaza el token. Puede haber caducado o estar mal copiado. Créalo de nuevo y guárdalo abajo.';
-  if (status === 403) return 'El token no tiene permiso de escritura. Revisa que tenga «Contents: Read and write» y que incluya el repositorio web-mondongon.';
-  if (status === 404) return `No encuentro el repositorio o el token no tiene acceso a él (${CFG.user}/${CFG.repo}).`;
-  if (status === 409 || status === 422) return 'GitHub no ha aceptado el archivo por un conflicto. Inténtalo de nuevo en unos segundos.';
-  return `GitHub ha devuelto un error (${status}).`;
-}
+const ghUrl = name => ghFileUrl(CFG.repo, CFG.dir + '/' + name);
 // acepta el token aunque el móvil haya añadido saltos de línea, espacios, mayúsculas o texto alrededor
 function extractToken(raw) {
   const limpio = raw.replace(/[\u200B-\u200D\u2060\uFEFF]/g, '');
@@ -270,15 +264,38 @@ function refreshCfg() {
   const on = !!getToken();
   $('cfgstate').textContent = on ? 'Activada' : 'Sin configurar';
   $('tdel').classList.toggle('hide', !on);
+  $('tcheck').classList.toggle('hide', !on);
   $('token').placeholder = on ? 'Ya hay un token guardado. Pega otro para cambiarlo.' : 'github_pat_…';
 }
-$('tsave').addEventListener('click', () => {
+// comprueba el token con una lectura del repositorio: no publica ni cambia nada
+async function checkToken() {
+  const m = $('tmsg'); m.style.color = ''; m.textContent = 'Comprobando…';
+  try {
+    const r = await fetch(`https://api.github.com/repos/${CFG.user}/${CFG.repo}`, { headers: ghHeaders() });
+    if (r.status === 401) { m.textContent = 'GitHub rechaza este token. Puede estar mal copiado o haber caducado.'; return false; }
+    if (r.status === 404) { m.textContent = `El token no tiene acceso al repositorio ${CFG.user}/${CFG.repo}.`; return false; }
+    if (!r.ok) { m.textContent = ghError(r.status); return false; }
+    const j = await r.json();
+    if (j.permissions && j.permissions.push) {
+      m.style.color = 'var(--ok)'; m.textContent = `Comprobado: este dispositivo puede publicar en ${CFG.repo}.`;
+      try {
+        const d = await fetch(`https://api.github.com/repos/${CFG.user}/${CFG.datos.repo}`, { headers: ghHeaders() });
+        const dj = d.ok ? await d.json() : null;
+        m.textContent += dj && dj.permissions && dj.permissions.push ? ' La sincronización del progreso también está disponible.' : ' La sincronización del progreso aún no está configurada (es opcional; mira «Sincronización» en la portada).';
+      } catch (e) { /* nada */ }
+      return true;
+    }
+    m.textContent = 'El token es válido pero no puede escribir. Revisa que tenga «Contents: Read and write».'; return false;
+  } catch (e) { m.textContent = 'No he podido conectar con GitHub para comprobarlo. Revisa tu conexión.'; return false; }
+}
+$('tsave').addEventListener('click', async () => {
   const t = extractToken($('token').value);
   if (!t) { $('tmsg').textContent = 'No encuentro un token en lo que has pegado. Debe empezar por github_pat_.'; return; }
-  try { localStorage.setItem(GH_KEY, t); $('token').value = ''; $('tmsg').textContent = 'Guardado en este navegador.'; }
-  catch (e) { $('tmsg').textContent = 'Este navegador no permite guardarlo (¿modo privado?).'; }
-  refreshCfg();
+  try { localStorage.setItem(GH_KEY, t); $('token').value = ''; }
+  catch (e) { $('tmsg').textContent = 'Este navegador no permite guardarlo (¿modo privado?).'; return; }
+  refreshCfg(); await checkToken();
 });
+$('tcheck').addEventListener('click', checkToken);
 $('tdel').addEventListener('click', () => { try { localStorage.removeItem(GH_KEY); } catch (e) { /* nada */ } $('tmsg').textContent = 'Token quitado de este navegador.'; refreshCfg(); });
 
 $('pub').addEventListener('click', async () => {
@@ -310,6 +327,8 @@ $('pub').addEventListener('click', async () => {
 // al pegar el documento, se lee solo
 $('json').addEventListener('paste', () => setTimeout(() => $('validar').click(), 60));
 refreshCfg();
+mountThemeControl($('tema-ctl'));
+{ const dl = $('lista-fuentes'); FUENTES.forEach(f => { const o = el('option'); o.value = f; dl.append(o); }); }
 loadTemario().then(() => { $('prompt').textContent = buildPrompt(); });
 </script>
 </body>
