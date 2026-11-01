@@ -1,0 +1,304 @@
+{
+  "titulo": "Test 06: Constitución Española (artículos 39–50)",
+  "tema": "I-1",
+  "fecha": "2026-11-01",
+  "preguntas": [
+    {
+      "ref": "Artículo 39.1",
+      "q": "Según el artículo 39.1 de la Constitución, los poderes públicos aseguran la protección de la familia en los ámbitos:",
+      "opciones": [
+        "Social, económico y jurídico.",
+        "Social, educativo y asistencial.",
+        "Jurídico, sanitario y económico.",
+        "Económico, cultural y laboral."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 39.2",
+      "q": "Conforme al artículo 39.2, señale la afirmación correcta.",
+      "opciones": [
+        "La igualdad de los hijos se garantiza con independencia del estado civil de sus padres, pero no de su filiación.",
+        "La protección integral alcanza a los hijos con independencia de su filiación y a las madres cualquiera que sea su estado civil.",
+        "La Constitución atribuye exclusivamente a los órganos judiciales la investigación de la maternidad.",
+        "La investigación de la paternidad solo podrá admitirse cuando exista matrimonio."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 39.3",
+      "q": "Respecto de la asistencia que los padres deben prestar a sus hijos, ¿qué afirmación se corresponde con el artículo 39.3?",
+      "opciones": [
+        "Se limita siempre al período anterior a los dieciocho años.",
+        "Solo se exige cuando los hijos han nacido dentro del matrimonio.",
+        "Se establece exclusivamente para las necesidades económicas de los menores.",
+        "Comprende la asistencia de todo orden durante la minoría de edad y en los demás casos en que legalmente proceda."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 39.4",
+      "q": "El artículo 39.4 establece que los niños gozarán de la protección prevista en:",
+      "opciones": [
+        "Las recomendaciones de las instituciones internacionales, sin referencia a acuerdos.",
+        "Los convenios colectivos de los servicios sociales.",
+        "Los acuerdos internacionales que velan por sus derechos.",
+        "Las normas de los centros educativos exclusivamente."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 40.1",
+      "q": "Según el artículo 40.1, la distribución de la renta que deben favorecer los poderes públicos es:",
+      "opciones": [
+        "Territorial y laboral, igualitaria.",
+        "Regional y personal, más equitativa.",
+        "Regional y familiar, proporcional.",
+        "Personal y empresarial, homogénea."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 40.1",
+      "q": "De acuerdo con el artículo 40.1, ¿cómo debe caracterizarse la política de empleo mencionada?",
+      "opciones": [
+        "Deberá asegurar individualmente un empleo remunerado a todo solicitante.",
+        "Se orientará exclusivamente a crear empleo público.",
+        "Será una política obligatoria de pleno empleo inmediato.",
+        "Será una política orientada al pleno empleo, en el marco de una política de estabilidad económica."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 40.2",
+      "q": "Señale la opción que recoge los medios expresamente previstos en el artículo 40.2 para garantizar el descanso necesario.",
+      "opciones": [
+        "Limitación de la jornada laboral, vacaciones periódicas retribuidas y promoción de centros adecuados.",
+        "Jornada máxima uniforme, descanso semanal y vacaciones anuales de treinta días.",
+        "Reducción de la edad de jubilación, permisos retribuidos y jornada continua.",
+        "Limitación de la jornada laboral, vacaciones periódicas y reducción de las horas extraordinarias."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 40.2",
+      "q": "En relación con la formación y las condiciones de trabajo, el artículo 40.2 dispone que los poderes públicos:",
+      "opciones": [
+        "Regularán directamente todas las profesiones tituladas y garantizarán la promoción interna.",
+        "Establecerán formación universitaria gratuita y seguridad social complementaria.",
+        "Fomentarán una política que garantice la formación y readaptación profesionales y velarán por la seguridad e higiene en el trabajo.",
+        "Garantizarán exclusivamente la formación inicial y la salubridad de los centros públicos."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 41",
+      "q": "Respecto al régimen de Seguridad Social reconocido en el artículo 41, señale la opción correcta.",
+      "opciones": [
+        "Los poderes públicos podrán implantar un régimen público únicamente para trabajadores en activo.",
+        "Los poderes públicos mantendrán un régimen público para todos los ciudadanos que garantice asistencia y prestaciones sociales suficientes ante situaciones de necesidad.",
+        "El régimen público se limitará constitucionalmente a las contingencias de desempleo y jubilación.",
+        "Las prestaciones sociales complementarias sustituirán obligatoriamente a las del régimen público."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 41",
+      "q": "Según la última frase del artículo 41, la asistencia y prestaciones complementarias:",
+      "opciones": [
+        "Estarán sujetas obligatoriamente a gestión pública.",
+        "Solo podrán existir para personas desempleadas.",
+        "Quedarán excluidas cuando el ciudadano disponga de protección pública.",
+        "Serán libres."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 42",
+      "q": "En relación con los trabajadores españoles en el extranjero, el artículo 42 atribuye expresamente al Estado:",
+      "opciones": [
+        "El deber de velar especialmente por sus derechos económicos y sociales y orientar su política hacia su retorno.",
+        "El deber de garantizar su inmediata reincorporación al mercado laboral español.",
+        "La obligación de velar exclusivamente por sus derechos políticos y electorales.",
+        "La facultad de ordenar su retorno en situaciones de desempleo."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 42",
+      "q": "¿Cuál de las siguientes expresiones reproduce correctamente el sujeto y la actuación del artículo 42?",
+      "opciones": [
+        "Los poderes públicos garantizarán el regreso de los ciudadanos residentes en el extranjero.",
+        "Las comunidades autónomas velarán por los emigrantes que sean naturales de su territorio.",
+        "El Estado velará especialmente por la salvaguardia de los derechos económicos y sociales de los trabajadores españoles en el extranjero.",
+        "El Gobierno garantizará la protección de los derechos laborales de todos los trabajadores desplazados."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 43.2",
+      "q": "Conforme al artículo 43.2, compete a los poderes públicos organizar y tutelar la salud pública:",
+      "opciones": [
+        "Exclusivamente mediante actuaciones asistenciales y hospitalarias.",
+        "A través de medidas preventivas y de las prestaciones y servicios necesarios.",
+        "Por medio de prestaciones económicas de Seguridad Social y medidas curativas.",
+        "Mediante la gestión directa obligatoria de todos los centros sanitarios."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 43.2 y 43.3",
+      "q": "En relación con las previsiones del artículo 43, señale la afirmación INCORRECTA.",
+      "opciones": [
+        "La ley establecerá los derechos y deberes de todos respecto de la salud pública.",
+        "Los poderes públicos fomentarán la educación sanitaria y la educación física.",
+        "Los poderes públicos facilitarán la adecuada utilización del ocio.",
+        "Los poderes públicos establecerán mediante reglamento los derechos y deberes de todos respecto de la salud pública."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 44",
+      "q": "De acuerdo con el artículo 44, los poderes públicos:",
+      "opciones": [
+        "Promoverán y tutelarán el acceso a la cultura y promoverán la ciencia y la investigación científica y técnica en beneficio del interés general.",
+        "Garantizarán la investigación científica y tutelarán la técnica en beneficio de intereses particulares.",
+        "Promoverán el acceso a la cultura exclusivamente de los españoles y regularán toda investigación por ley orgánica.",
+        "Tutelarán el acceso a la cultura y garantizarán la investigación científica exclusivamente en universidades públicas."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 44.1",
+      "q": "Según el artículo 44.1, ¿quiénes tienen derecho al acceso a la cultura?",
+      "opciones": [
+        "Únicamente los ciudadanos españoles.",
+        "Los españoles y los extranjeros residentes con autorización.",
+        "Todos.",
+        "Las personas con plena capacidad de obrar."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 45.2",
+      "q": "El artículo 45.2 dispone que la utilización racional de todos los recursos naturales se realizará:",
+      "opciones": [
+        "Para mantener su productividad económica y asegurar la solidaridad territorial.",
+        "Con el fin de proteger y mejorar la calidad de la vida y defender y restaurar el medio ambiente, apoyándose en la indispensable solidaridad colectiva.",
+        "Con el fin exclusivo de preservar recursos de titularidad estatal.",
+        "Mediante una asignación equitativa de recursos y una planificación económica obligatoria."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 45.3",
+      "q": "En relación con el incumplimiento al que se refiere el artículo 45.3, señale la afirmación correcta.",
+      "opciones": [
+        "La Constitución exige simultáneamente una sanción penal y otra administrativa en todos los supuestos.",
+        "La Constitución prevé únicamente responsabilidad civil por daño ambiental.",
+        "Solo cabe una sanción penal, quedando excluidas las administrativas.",
+        "En los términos fijados por la ley se establecerán sanciones penales o, en su caso, administrativas, así como la obligación de reparar el daño causado."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 46",
+      "q": "Conforme al artículo 46, la protección del patrimonio histórico, cultural y artístico se extiende a los bienes que lo integran:",
+      "opciones": [
+        "Cualquiera que sea su régimen jurídico y su titularidad.",
+        "Siempre que su titularidad sea de una Administración pública.",
+        "Solo cuando hayan sido adquiridos por los poderes públicos.",
+        "Con independencia de su localización, pero únicamente si son de titularidad estatal."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 45.3 y 46",
+      "q": "Señale la afirmación que distingue correctamente los artículos 45.3 y 46.",
+      "opciones": [
+        "Ambos artículos mencionan expresamente sanciones penales y administrativas y la reparación del daño.",
+        "El 45.3 impone exclusivamente responsabilidad administrativa y el 46 exclusivamente civil.",
+        "El 45.3 contempla sanciones penales o, en su caso, administrativas y reparación del daño; el 46 afirma que la ley penal sancionará los atentados contra el patrimonio.",
+        "El 45.3 excluye las sanciones penales y el 46 exige la reparación ambiental."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 47",
+      "q": "En relación con el derecho a la vivienda del artículo 47, indique la afirmación correcta.",
+      "opciones": [
+        "El derecho se reconoce literalmente a todos los ciudadanos, sin mención a la nacionalidad.",
+        "Los poderes públicos regularán la utilización del suelo de acuerdo con el interés general para impedir la especulación.",
+        "La Constitución atribuye a cada ciudadano un derecho automático a recibir una vivienda de propiedad pública.",
+        "La Constitución prohíbe que los propietarios particulares obtengan beneficio por vender suelo."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 47",
+      "q": "Conforme a la última frase del artículo 47, ¿quién participará en las plusvalías que genere la acción urbanística de los entes públicos?",
+      "opciones": [
+        "Exclusivamente los titulares privados de los terrenos.",
+        "Solo los ayuntamientos que hayan ejecutado físicamente las obras.",
+        "Los poderes públicos, que se apropiarán en todos los casos de la totalidad de las plusvalías.",
+        "La comunidad."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 48",
+      "q": "Señale la formulación que se ajusta al artículo 48.",
+      "opciones": [
+        "Los poderes públicos promoverán las condiciones para la participación libre y eficaz de la juventud en el desarrollo político, social, económico y cultural.",
+        "Los poderes públicos garantizarán la participación obligatoria y efectiva de la juventud en la actividad política y social.",
+        "El Estado asegurará a los mayores de dieciocho años la participación libre en las instituciones culturales.",
+        "Los poderes públicos tutelarán la participación de la juventud en el desarrollo científico, educativo, económico y deportivo."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 49.1",
+      "q": "A tenor de la redacción vigente del artículo 49, señale la opción correcta.",
+      "opciones": [
+        "La especial protección de las personas con discapacidad se regulará mediante reglamento y se refiere solo a derechos laborales.",
+        "Los poderes públicos garantizarán únicamente la integración educativa y profesional de las personas con discapacidad.",
+        "Las personas con discapacidad ejercen los derechos previstos en el Título I en condiciones de libertad e igualdad reales y efectivas; la protección especial necesaria se regulará por ley.",
+        "Las personas con discapacidad tienen igualdad formal, salvo los supuestos en que una Administración acuerde medidas de apoyo."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 49.2",
+      "q": "Según el artículo 49.2, la atención particular a necesidades específicas alcanza expresamente a:",
+      "opciones": [
+        "Las mujeres y los mayores con discapacidad.",
+        "Las mujeres y los menores con discapacidad.",
+        "Los menores y las personas desempleadas con discapacidad.",
+        "Las mujeres, los jóvenes y las personas mayores con discapacidad, como enumeración expresa."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 49.2 y 50",
+      "q": "Señale la afirmación correcta en relación con las políticas sociales de los artículos 49 y 50.",
+      "opciones": [
+        "El artículo 49 prevé entornos universalmente accesibles y el artículo 50 contempla servicios sociales para salud, vivienda, cultura y ocio en la tercera edad.",
+        "El artículo 49 reserva la accesibilidad a edificios sanitarios y el 50 condiciona el bienestar a la inexistencia de familiares.",
+        "El artículo 49 limita la participación de organizaciones de personas con discapacidad y el 50 garantiza una pensión igual para todos.",
+        "El artículo 49 reconoce exclusivamente medidas asistenciales y el 50 exige actualizar toda pensión mediante una cuantía fija constitucional."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 50",
+      "q": "De acuerdo con el artículo 50, los poderes públicos:",
+      "opciones": [
+        "Promoverán la suficiencia económica durante la tercera edad y garantizarán el bienestar exclusivamente mediante prestaciones monetarias.",
+        "Garantizarán el bienestar de las personas mayores solo si carecen de familiares obligados legalmente.",
+        "Garantizarán mediante pensiones adecuadas y periódicamente actualizadas la suficiencia económica y, con independencia de las obligaciones familiares, promoverán su bienestar mediante servicios sociales.",
+        "Establecerán una cuantía mínima constitucional de pensión y asegurarán prestaciones de vivienda, transporte y educación. ---"
+      ],
+      "correcta": 2
+    }
+  ]
+}
