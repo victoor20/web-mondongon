@@ -171,7 +171,7 @@ function selectTema(id) {
   document.querySelectorAll('.cell').forEach(c => c.classList.toggle('on', c.dataset.id === id));
   const t = _temario.byId[id], box = $('minfo'); box.replaceChildren();
   if (!t) return;
-  box.append(el('strong', '', `${t.id} ${t.corto}`), `: ${resumenTema(t)}. `);
+  box.append(el('strong', '', `${codigoTema(t.id)} ${t.corto}`), `: ${resumenTema(t)}. `);
   const go = el('button', 'link', 'Ir al tema'); go.type = 'button';
   go.addEventListener('click', () => irATema(id)); box.append(go);
 }
@@ -192,8 +192,8 @@ function renderMapa() {
       const c = cnt[t.id], r = reciente(t.id);
       const btn = el('button', 'cell' + (c ? ' has' : '') + (r && pct(r) < 60 ? ' weak' : '') + (selTema === t.id ? ' on' : ''));
       btn.type = 'button'; btn.dataset.id = t.id;
-      btn.title = `${t.id} ${t.corto}: ${resumenTema(t)}`;
-      btn.setAttribute('aria-label', `${t.id} ${t.corto}: ${resumenTema(t)}`);
+      btn.title = `${codigoTema(t.id)} ${t.corto}: ${resumenTema(t)}`;
+      btn.setAttribute('aria-label', `${codigoTema(t.id)} ${t.corto}: ${resumenTema(t)}`);
       const fill = el('i'); fill.style.setProperty('--i', idx++);
       fills.push([fill, r ? pct(r) : 0]);
       btn.append(fill, el('b', '', String(t.n)));
@@ -211,7 +211,7 @@ function renderMapa() {
 function temaRow(t) {
   const c = cnt[t.id], a = TS[t.id], r = reciente(t.id), ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
   const row = el('div', 'tema' + (c ? '' : ' vacio')); row.id = 'tema-' + t.id; row.title = t.oficial;
-  row.append(el('span', 'tid', t.id), el('span', 'tname', t.corto));
+  row.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto));
   const det = el('div', 'tdet');
   det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests'));
   if (r) {
@@ -278,7 +278,7 @@ function fila(it) {
   const a = el('a', 'fl'); a.href = it.url;
   const ins = el('div', 'ins' + (b ? '' : ' sin'));
   ins.title = it.kind === 'html' ? 'Sin clasificar' : temaLabel(it.tema);
-  ins.append(el('b', '', b ? it.tema : '?'));
+  ins.append(el('b', '', b ? codigoTema(it.tema) : '?'));
   if (ts.length > 1) ins.append(el('small', '', `+${ts.length - 1}`));
   const main = el('div'), meta = el('div', 'fmeta'), day = fmtDay(it.fecha);
   const corto = _temario.byId[it.tema] ? _temario.byId[it.tema].corto : (it.kind === 'html' ? 'Sin clasificar' : it.tema);

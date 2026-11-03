@@ -119,9 +119,11 @@ async function loadTemario() {
   return _temario;
 }
 const temaIdSet = () => new Set(Object.keys(_temario.byId));
+// Código visible: «I-1» (así se guarda) se muestra como «BI-T1» = Bloque I, Tema 1
+const codigoTema = id => String(id || '').replace(/^([IVX]+)-(\d+)$/, 'B$1-T$2');
 function temaLabel(id) {
   const t = _temario.byId[id];
-  return t ? `${id}: ${t.corto}` : (id || 'General');
+  return t ? `${codigoTema(id)}: ${t.corto}` : (id || 'General');
 }
 const bloqueInfo = id => _temario.bloques.find(b => b.id === id) || null;
 
@@ -234,6 +236,28 @@ function mountThemeControl(box) {
     b.addEventListener('click', () => { setPref('tema', v); applyTema(v); [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === b))); });
     box.append(b);
   });
+  montarRefresco(box);
+}
+
+/* Botón de refresco: sincroniza, renueva la copia sin conexión (si ya la guardaste) y recarga. No se pone en pantalla de test. */
+let _refrescando = false;
+async function refrescarTodo(btn) {
+  if (_refrescando) return; _refrescando = true;
+  btn.classList.add('gira'); btn.disabled = true;
+  try {
+    if (navigator.onLine !== false) {
+      if (getToken()) await conTiempo(syncNow(), 5000);
+      if (offInfo().t) { const { items } = await loadCatalog(); await guardarOffline(items); }
+    }
+  } catch (e) { /* si algo falla, igualmente se recarga */ }
+  location.reload();
+}
+function montarRefresco(box) {
+  if (document.getElementById('exam') || document.querySelector('.refresco')) return;
+  const b = el('button', 'refresco'); b.type = 'button'; b.title = 'Actualizar'; b.setAttribute('aria-label', 'Actualizar la web, los tests y el progreso');
+  b.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>');
+  b.addEventListener('click', () => refrescarTodo(b));
+  box.before(b);
 }
 
 /* ---------- progreso guardado en este navegador ----------

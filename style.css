@@ -139,7 +139,7 @@ summary.bsum::-webkit-details-marker{display:none}
 .bsum .chev{flex:none;width:.55rem;height:.55rem;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-.15rem);transition:transform .15s}
 details[open]>.bsum .chev{transform:rotate(-135deg) translateY(-.05rem)}
 .bpract{padding:0 0 .7rem 2.9rem}
-.tema{display:grid;grid-template-columns:2.2rem minmax(0,1fr);column-gap:.7rem;row-gap:.35rem;padding:.7rem 0 .7rem .1rem;border-top:1px solid var(--linea);margin-left:0;scroll-margin-top:1rem}
+.tema{display:grid;grid-template-columns:3.1rem minmax(0,1fr);column-gap:.7rem;row-gap:.35rem;padding:.7rem 0 .7rem .1rem;border-top:1px solid var(--linea);margin-left:0;scroll-margin-top:1rem}
 .tema .tid{font:700 .8rem/1.5rem var(--sans);color:var(--bc);font-variant-numeric:tabular-nums}
 .tema .tname{font:500 .98rem/1.4 var(--serif)}
 .tema.vacio .tname,.tema.vacio .tid{color:var(--muted)}
@@ -320,10 +320,10 @@ ol.pasos li{margin:.4rem 0}
 .chips.origen{margin-top:.1rem}
 .chips .rot{font-size:.76rem;color:var(--muted);align-self:center;margin-right:.1rem}
 .fila{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;border-top:1px solid var(--linea)}
-.fila .fl{display:grid;grid-template-columns:3.1rem minmax(0,1fr) auto;gap:.9rem;align-items:center;padding:.9rem .1rem;text-decoration:none;min-width:0}
+.fila .fl{display:grid;grid-template-columns:3.6rem minmax(0,1fr) auto;gap:.9rem;align-items:center;padding:.9rem .1rem;text-decoration:none;min-width:0}
 .fila .fe{margin:0 .1rem 0 .4rem}
-.ins{display:grid;place-items:center;align-content:center;width:3.1rem;height:3.1rem;border-radius:10px;border:1.5px solid var(--bc,var(--linea2));background:var(--bt,transparent);color:var(--bc,var(--muted));line-height:1.05;text-align:center}
-.ins b{font:700 .88rem/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.ins{display:grid;place-items:center;align-content:center;min-width:3.6rem;padding:0 .2rem;height:3.1rem;border-radius:10px;border:1.5px solid var(--bc,var(--linea2));background:var(--bt,transparent);color:var(--bc,var(--muted));line-height:1.05;text-align:center}
+.ins b{font:700 .8rem/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .ins small{font-size:.62rem;margin-top:.15rem;opacity:.9}
 .ins.sin{border-style:dashed}
 .fmeta .org{font-weight:600;color:var(--tinta)}
@@ -374,8 +374,8 @@ ol.pasos li{margin:.4rem 0}
   .bsum .chev{grid-column:3;grid-row:1;align-self:center}
   .bsum .bs{grid-column:2;grid-row:2;margin:0}
   .bsum .lead{display:none}
-  .fila .fl{grid-template-columns:2.8rem minmax(0,1fr);gap:.7rem}
-  .ins{width:2.8rem;height:2.8rem}
+  .fila .fl{grid-template-columns:3.4rem minmax(0,1fr);gap:.7rem}
+  .ins{min-width:3.4rem;height:2.8rem}
   .fres{grid-column:2;text-align:left;display:flex;gap:.5rem;align-items:baseline}
   .fres b{display:inline}
   .hoy-fila{flex-direction:column;align-items:flex-start;gap:.6rem}
@@ -393,3 +393,11 @@ ol.pasos li{margin:.4rem 0}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+.refresco{display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid var(--linea2);border-radius:9px;background:var(--hoja);color:var(--muted);padding:0;cursor:pointer}
+.refresco svg{width:1.05rem;height:1.05rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.refresco:hover{color:var(--tinta)}
+.refresco.gira svg{animation:giro .8s linear infinite}
+@keyframes giro{to{transform:rotate(360deg)}}
+@media (max-width:640px){.refresco{width:1.95rem;height:1.95rem}}
+@media (prefers-reduced-motion:reduce){.refresco.gira svg{animation:none}}

@@ -46,6 +46,7 @@
         <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder cada pregunta.</span></label>
       </div>
       <label class="opcion"><input type="checkbox" id="o-cuenta" checked><span>Contar este intento en mis estadísticas<small id="o-cuenta-h"></small></span></label>
+      <label class="opcion"><input type="checkbox" id="o-fb"><span>Mostrar la respuesta correcta y la explicación al responder<small id="o-fb-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-tiempo" checked><span>Mostrar el tiempo mientras respondo<small>Se mide siempre y lo verás al final. Puedes ocultarlo o mostrarlo durante el test.</small></span></label>
       <div class="acciones" style="margin-top:1.3rem"><button type="button" class="btn" id="start">Empezar</button></div>
     </div>
@@ -128,7 +129,7 @@ const ICON_STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l
 const ICON_PEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
 
 let meta = { titulo: '', desc: '' }, pool = [], exam = [];
-let mode = 'examen', countIt = true, showTimer = true;
+let mode = 'examen', countIt = true, showTimer = true, feedback = false, fbTouched = false;
 let startAt = 0, elapsed = 0, ticker = null, hiddenAt = 0, completed = false, filtro = 'all', enExamen = false, countTouched = false;
 
 function show(id) {
@@ -192,6 +193,15 @@ function applyDefaultCuenta() {
   $('o-cuenta').checked = !(estudio && !ES_BANCO);
   refreshCuentaHint();
 }
+function refreshFbHint() {
+  $('o-fb-h').textContent = $('o-fb').checked
+    ? 'Al elegir una opción verás al instante si es correcta y por qué; ya no podrás cambiarla.'
+    : 'Sin pistas: no sabrás nada hasta terminar y entregar el test, como en el examen real.';
+}
+function applyDefaultFb() {
+  if (!fbTouched) $('o-fb').checked = document.querySelector('input[name=modo]:checked').value === 'estudio';
+  refreshFbHint();
+}
 function showWelcome() {
   $('w-title').textContent = meta.titulo;
   $('w-desc').textContent = meta.desc;
@@ -200,7 +210,7 @@ function showWelcome() {
   if (s) { $('w-best').textContent = Math.round(s.mejor * 100) + ' %'; $('w-best-l').textContent = `mejor nota en ${plural(s.intentos, 'intento', 'intentos')}`; }
   else if (h.length) { $('w-best').textContent = String(h.length); $('w-best-l').textContent = 'intentos'; }
   $('o-tiempo').checked = getPrefs().timer !== false;
-  applyDefaultCuenta(); pintarModos();
+  applyDefaultCuenta(); applyDefaultFb(); pintarModos();
   const saved = jget(localStorage, CURSO, null);
   if (saved && Array.isArray(saved.exam) && saved.exam.length) {
     const n = saved.exam.filter(q => q.selected !== null).length;
@@ -213,7 +223,7 @@ function showWelcome() {
 /* ---------- progreso en curso (sobrevive a cerrar la app) ---------- */
 function save() {
   if (!enExamen || completed) return;
-  jset(localStorage, CURSO, { v: 1, mode, countIt, elapsed, exam, savedAt: Date.now() });
+  jset(localStorage, CURSO, { v: 1, mode, feedback, countIt, elapsed, exam, savedAt: Date.now() });
 }
 
 /* ---------- test ---------- */
@@ -281,7 +291,7 @@ function renderQuestions() {
         item.selected = o.orig;
         [...opts.children].forEach(d => d.classList.toggle('sel', d.querySelector('input').checked));
         updateProgress(); paintNav(); save();
-        if (mode === 'estudio') lockStudy(item, opts, card);
+        if (feedback) lockStudy(item, opts, card);
       });
       star.addEventListener('click', () => {
         item.star = item.star === o.orig ? null : o.orig;
@@ -293,7 +303,7 @@ function renderQuestions() {
       });
     });
     card.append(opts);
-    if (item.selected !== null && mode === 'estudio') lockStudy(item, opts, card);
+    if (item.selected !== null && feedback) lockStudy(item, opts, card);
 
     // nota propia (se guarda por pregunta y reaparece cada vez que sale)
     const foot = el('div', 'qfoot'), nb = el('button', 'notebtn'); nb.type = 'button';
@@ -349,6 +359,7 @@ function beginExam() {
 }
 function startExam() {
   mode = document.querySelector('input[name=modo]:checked').value;
+  feedback = $('o-fb').checked;
   countIt = $('o-cuenta').checked; showTimer = $('o-tiempo').checked; setPref('timer', showTimer);
   exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null, star: null }));
   elapsed = 0; startAt = Date.now();
@@ -356,7 +367,7 @@ function startExam() {
 }
 function resumeExam() {
   const s = jget(localStorage, CURSO, null); if (!s) return;
-  mode = s.mode; countIt = s.countIt; exam = s.exam.map(q => ({ star: null, ...q }));
+  mode = s.mode; feedback = s.feedback !== undefined ? !!s.feedback : s.mode === 'estudio'; countIt = s.countIt; exam = s.exam.map(q => ({ star: null, ...q }));
   showTimer = getPrefs().timer !== false;
   elapsed = s.elapsed || 0; startAt = Date.now() - elapsed * 1000;
   beginExam();
@@ -442,7 +453,8 @@ $('finish-top').addEventListener('click', finishExam);
 $('finish-bottom').addEventListener('click', finishExam);
 document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
 function pintarModos() { document.querySelectorAll('.modo').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
-document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => { pintarModos(); applyDefaultCuenta(); }));
+document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => { pintarModos(); applyDefaultCuenta(); applyDefaultFb(); }));
+$('o-fb').addEventListener('change', () => { fbTouched = true; refreshFbHint(); });
 $('o-cuenta').addEventListener('change', () => { countTouched = true; refreshCuentaHint(); });
 $('timer-btn').addEventListener('click', () => { showTimer = !showTimer; setPref('timer', showTimer); paintTimer(); if (showTimer) $('timer').textContent = fmtTime(elapsed); });
 $('nav-btn').addEventListener('click', () => { paintNav(); openPanel('p-nav'); });

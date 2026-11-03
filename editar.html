@@ -70,7 +70,7 @@ function selectTema(sel, valor) {
   const ph = el('option', '', 'Elige el tema'); ph.value = ''; sel.append(ph);
   _temario.bloques.forEach(b => {
     const g = el('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
-    b.temas.forEach(t => { const o = el('option', '', `${t.id}: ${t.corto}`); o.value = t.id; g.append(o); });
+    b.temas.forEach(t => { const o = el('option', '', `${codigoTema(t.id)}: ${t.corto}`); o.value = t.id; g.append(o); });
     sel.append(g);
   });
   sel.value = valor && _temario.byId[valor] ? valor : '';
