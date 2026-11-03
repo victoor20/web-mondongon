@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20261103">
 </head>
 <body>
 <div class="wrap">
@@ -78,6 +78,7 @@
         <div><b id="score-right">0</b><span>aciertos</span></div>
         <div><b id="score-wrong">0</b><span>errores</span></div>
         <div><b id="score-blank">0</b><span>en blanco</span></div>
+        <div><b id="score-net">0</b><span>nota neta (−⅓ por error)</span></div>
         <div><b id="score-time">00:00</b><span>tiempo</span></div>
       </div>
       <div class="acciones">
@@ -116,7 +117,7 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js"></script>
+<script src="app.js?v=20261103"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
@@ -199,7 +200,7 @@ function showWelcome() {
   if (s) { $('w-best').textContent = Math.round(s.mejor * 100) + ' %'; $('w-best-l').textContent = `mejor nota en ${plural(s.intentos, 'intento', 'intentos')}`; }
   else if (h.length) { $('w-best').textContent = String(h.length); $('w-best-l').textContent = 'intentos'; }
   $('o-tiempo').checked = getPrefs().timer !== false;
-  applyDefaultCuenta();
+  applyDefaultCuenta(); pintarModos();
   const saved = jget(localStorage, CURSO, null);
   if (saved && Array.isArray(saved.exam) && saved.exam.length) {
     const n = saved.exam.filter(q => q.selected !== null).length;
@@ -416,10 +417,12 @@ function finishExam() {
       if (q.selected === q.correcta) { byTema[q.tema].r++; if (T === 'errores') bankDel(LS.err, q.key); }
       else if (q.selected !== null) bankSet(LS.err, q.key, { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 });
     });
-    addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, total: exam.length, elapsed, mode, byTema });
+    addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, neta: Math.round((right - wrong / 3) * 100) / 100, total: exam.length, elapsed, mode, byTema });
   }
   try { localStorage.removeItem(CURSO); } catch (e) { /* nada */ }
 
+  const neta = right - wrong / 3;
+  $('score-net').textContent = neta.toFixed(2).replace('.', ',') + ' / ' + exam.length;
   $('score-right').textContent = right; $('score-wrong').textContent = wrong; $('score-blank').textContent = blank; $('score-time').textContent = fmtTime(elapsed);
   $('result-title').textContent = `${right} de ${exam.length} correctas`;
   $('summary').textContent = `Acierto del ${Math.round(right / exam.length * 100)} %.`;
@@ -438,7 +441,8 @@ $('retry').addEventListener('click', () => { if (T === 'mixto' || ES_BANCO) loca
 $('finish-top').addEventListener('click', finishExam);
 $('finish-bottom').addEventListener('click', finishExam);
 document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
-document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', applyDefaultCuenta));
+function pintarModos() { document.querySelectorAll('.modo').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
+document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => { pintarModos(); applyDefaultCuenta(); }));
 $('o-cuenta').addEventListener('change', () => { countTouched = true; refreshCuentaHint(); });
 $('timer-btn').addEventListener('click', () => { showTimer = !showTimer; setPref('timer', showTimer); paintTimer(); if (showTimer) $('timer').textContent = fmtTime(elapsed); });
 $('nav-btn').addEventListener('click', () => { paintNav(); openPanel('p-nav'); });

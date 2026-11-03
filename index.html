@@ -15,7 +15,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20261103">
 </head>
 <body>
 <div class="wrap">
@@ -72,7 +72,27 @@
     <div id="avisos"></div>
   </section>
 
-  <section class="hoja sync" id="sync-box" aria-live="polite">
+  <section class="hoja sync" id="off-box">
+    <h2>Uso sin conexión</h2>
+    <p class="estado-s" id="off-estado"></p>
+    <div class="acciones" style="margin-top:.7rem">
+      <button type="button" class="btn small" id="off-guardar">Guardar para usar sin conexión</button>
+      <button type="button" class="btn small ghost hide" id="off-instalar">Instalar como app</button>
+    </div>
+    <progress class="off-prog hide" id="off-prog" value="0" max="1" aria-label="Guardando"></progress>
+    <details>
+      <summary>Cómo usarlo</summary>
+      <ol class="pasos">
+        <li>Con internet, pulsa el botón. Verás cuántos tests se guardan en este dispositivo.</li>
+        <li>iPhone: abre la web desde el icono de la pantalla de inicio. Si aún no lo tienes, en Safari pulsa Compartir y «Añadir a pantalla de inicio».</li>
+        <li>Tablet o portátil con Chrome: menú y «Instalar aplicación» (o «Añadir a pantalla de inicio»).</li>
+        <li>Para comprobarlo, activa el modo avión y abre la web: la portada y los tests deben cargar.</li>
+      </ol>
+      <p class="fine">Hay que hacerlo una vez en cada dispositivo. Si pasas muchos días sin abrir la web, el móvil puede borrar lo guardado y bastará con volver a pulsar el botón. Cuando hay conexión, la web se actualiza sola.</p>
+    </details>
+  </section>
+
+  <section class="hoja sync" id="sync-box" aria-live="polite" style="margin-top:1rem">
     <h2>Sincronización</h2>
     <p class="estado-s" id="sync-estado"></p>
     <div class="acciones" style="margin-top:.7rem"><button type="button" class="btn small ghost hide" id="sync-ya">Sincronizar ahora</button></div>
@@ -96,7 +116,7 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=20261103"></script>
 <script>
 let items = [], fBloque = 'Todos', fTema = null, fFuente = 'Todos', selTema = null, primera = true, pagina = 1;
 let TS = {}, cnt = {}, errC = {}, dudC = {};
@@ -328,6 +348,7 @@ function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
   const tiene = !!getToken();
   $('sync-ya').classList.toggle('hide', !tiene);
+  if (tiene && navigator.onLine === false) { p.append(el('span', 'mal', 'Sin conexión. '), 'Tu progreso se guarda aquí y se sincronizará cuando vuelva internet.'); return; }
   if (!tiene) { p.append(el('span', 'mal', 'Sin sincronizar. '), 'Este navegador guarda tu progreso solo aquí. Para activarla, guarda tu token en «Añadir test».'); return; }
   if (e === 'ok') { p.append(el('span', 'ok', 'Sincronizado. '), `Última vez ${haceTexto(new Date(syncInfo.t).toISOString())}.`); return; }
   const msgs = {
@@ -339,6 +360,36 @@ function renderSync() {
   };
   p.append(el('span', 'mal', 'Sin sincronizar. '), msgs[e] || msgs.error);
 }
+/* ---------- uso sin conexión ---------- */
+function renderOffline() {
+  const p = $('off-estado'), info = offInfo(), b = $('off-guardar');
+  p.replaceChildren();
+  if (!('serviceWorker' in navigator) || !window.caches) {
+    p.append(el('span', 'mal', 'No disponible. '), 'Este navegador no permite guardar la web para usarla sin conexión.'); b.classList.add('hide'); return;
+  }
+  if (info.t) {
+    p.append(el('span', 'ok', 'Lista para usar sin conexión. '), `${plural(info.n, 'test guardado', 'tests guardados')}. Última actualización ${haceTexto(new Date(info.t).toISOString())}.`);
+    b.textContent = 'Actualizar ahora';
+  } else {
+    p.append(el('span', 'mal', 'Todavía no. '), 'Pulsa el botón, con internet, para guardar la web y tus tests en este dispositivo.');
+    b.textContent = 'Guardar para usar sin conexión';
+  }
+  $('off-instalar').classList.toggle('hide', !_pideInstalar);
+}
+async function guardarTodo() {
+  const b = $('off-guardar'), pr = $('off-prog'); let fallo = false;
+  b.disabled = true; pr.classList.remove('hide');
+  try {
+    const todos = items.length ? items : (await loadCatalog()).items;
+    await guardarOffline(todos, (h, n) => { pr.max = n; pr.value = h; $('off-estado').textContent = `Guardando… ${h} de ${n}`; });
+  } catch (e) {
+    fallo = true;
+    $('off-estado').replaceChildren(el('span', 'mal', 'No se ha podido guardar. '), navigator.onLine === false ? 'Ahora mismo no hay conexión.' : 'Inténtalo de nuevo en unos segundos.');
+  }
+  b.disabled = false; pr.classList.add('hide');
+  if (!fallo) renderOffline();
+}
+
 async function sincronizar() {
   $('sync-estado').textContent = 'Sincronizando…';
   const r = await syncNow();
@@ -352,7 +403,7 @@ async function init() {
   mountThemeControl($('tema-ctl'));
   initControles();
   await loadTemario();
-  computeData(); renderHoy(); renderMapa(); renderTemario(); renderSync();
+  computeData(); renderHoy(); renderMapa(); renderTemario(); renderSync(); renderOffline();
   try {
     const { items: all, invalid } = await loadCatalog();
     items = all; refresh();
@@ -360,10 +411,17 @@ async function init() {
   } catch (e) {
     $('lista').replaceChildren(el('p', 'aviso', 'No se pudo cargar la lista de tests. Puede ser el límite de la API de GitHub; recarga en unos minutos.'));
   }
+  const off = offInfo();                                         // si ya la guardaste, se renueva sola de vez en cuando
+  if (off.t && navigator.onLine !== false && Date.now() - off.t > OFF.maxEdad) guardarOffline(items).then(renderOffline).catch(() => { /* nada */ });
   if (getToken()) sincronizar();
 }
 
 $('sync-ya').addEventListener('click', sincronizar);
+$('off-guardar').addEventListener('click', guardarTodo);
+$('off-instalar').addEventListener('click', async () => { if (_pideInstalar) { _pideInstalar.prompt(); try { await _pideInstalar.userChoice; } catch (e) { /* nada */ } _pideInstalar = null; renderOffline(); } });
+document.addEventListener('ma-puede-instalar', renderOffline);
+window.addEventListener('offline', renderSync);
+window.addEventListener('online', () => { if (getToken()) sincronizar(); else renderSync(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 $('exp').addEventListener('click', exportProgress);
 $('imp').addEventListener('click', () => $('impfile').click());

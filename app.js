@@ -540,4 +540,48 @@ function parseMarkdownTest(md) {
   return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas }, errors, warnings };
 }
 
+/* ---------- uso sin conexión ---------- */
+const OFF = { cache: 'ma-dinamico', clave: 'ma2_offline', maxEdad: 6 * 3600 * 1000 };
+function registrarSW() {
+  if (!('serviceWorker' in navigator)) return Promise.resolve(null);
+  return navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).catch(() => null);
+}
+const offInfo = () => jget(localStorage, OFF.clave, {});
+// Guarda en este dispositivo todos los tests (y deja guardada la lista) para poder usar la web sin conexión.
+async function guardarOffline(items, onProgreso) {
+  const reg = await registrarSW();
+  if (!reg || !window.caches) throw new Error('sin-soporte');
+  const cache = await caches.open(OFF.cache);
+  try { await listFiles(); } catch (e) { /* sin lista nueva: se conserva la anterior */ }
+  const rutas = ['temario.json', ...items.filter(i => i.kind === 'json').map(i => `${CFG.dir}/${encodeURIComponent(i.id)}.json`)];
+  let hechos = 0, tests = 0;
+  for (const ruta of rutas) {
+    try {
+      const u = new URL(ruta, location.href), r = await fetch(u.href, { cache: 'no-cache' });
+      if (r.ok) { await cache.put(new Request(u.origin + u.pathname), r); if (ruta !== 'temario.json') tests++; }
+    } catch (e) { /* ese archivo no se pudo bajar */ }
+    if (onProgreso) onProgreso(++hechos, rutas.length);
+  }
+  const meta = { t: Date.now(), n: tests };
+  jset(localStorage, OFF.clave, meta);
+  try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (e) { /* nada */ }
+  return meta;
+}
+
+// Aviso cuando no hay conexión, y sincronización al volver
+let _pideInstalar = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _pideInstalar = e; document.dispatchEvent(new Event('ma-puede-instalar')); });
+function montarAvisoRed() {
+  const wrap = document.querySelector('.wrap'), cab = wrap && wrap.querySelector('.site');
+  if (!wrap || !cab) return;
+  const av = el('p', 'sin-red hide', 'Sin conexión. Puedes practicar con los tests que tengas guardados; tu progreso se sincronizará al volver.');
+  av.setAttribute('role', 'status'); cab.after(av);
+  const pinta = () => av.classList.toggle('hide', navigator.onLine !== false);
+  window.addEventListener('offline', pinta);
+  window.addEventListener('online', () => { pinta(); if (getToken()) syncNow(); });
+  pinta();
+}
+registrarSW();
+montarAvisoRed();
+
 applyTema(getPrefs().tema);
