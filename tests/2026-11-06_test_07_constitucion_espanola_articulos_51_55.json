@@ -1,0 +1,283 @@
+{
+  "titulo": "Test 07: Constitución Española (artículos 51-55)",
+  "tema": "I-1",
+  "fecha": "2026-11-06",
+  "preguntas": [
+    {
+      "ref": "Artículo 51.1",
+      "q": "Según el artículo 51.1 de la Constitución, los poderes públicos garantizarán la defensa de consumidores y usuarios protegiendo, mediante procedimientos eficaces:",
+      "opciones": [
+        "La seguridad, la salud y sus legítimos intereses económicos.",
+        "La salud, la educación y sus intereses patrimoniales.",
+        "La seguridad, el derecho de asociación y sus intereses económicos.",
+        "La salud, la libertad de empresa y sus legítimos intereses sociales."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 51.2",
+      "q": "Conforme al artículo 51.2, señale la afirmación correcta acerca de las organizaciones de consumidores y usuarios.",
+      "opciones": [
+        "Sus informes deberán ser vinculantes cuando las decisiones públicas afecten a sus asociados.",
+        "Los poderes públicos fomentarán sus organizaciones y las oirán en las cuestiones que puedan afectar a consumidores y usuarios, en los términos de la ley.",
+        "Solo podrán ser oídas cuando lo solicite una mayoría de las personas consumidoras.",
+        "La Constitución atribuye su organización y consulta exclusivamente a los órganos judiciales."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 51.3",
+      "q": "¿Qué materias remite expresamente el artículo 51.3 a la regulación por ley?",
+      "opciones": [
+        "El comercio interior y exterior y el régimen general de defensa de la competencia.",
+        "El régimen de consumo privado y las autorizaciones de establecimientos mercantiles.",
+        "El comercio interior y el régimen de autorización de productos comerciales.",
+        "El comercio exterior y la autorización administrativa de actividades profesionales."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 51.1–2",
+      "q": "En cuanto a los verbos empleados en los dos primeros apartados del artículo 51, identifique la combinación correcta.",
+      "opciones": [
+        "El primero establece «promoverán la defensa» y el segundo «garantizarán la información».",
+        "El primero dispone «tutelarán la defensa» y el segundo «garantizarán sus organizaciones».",
+        "El primero dice «velarán por la defensa» y el segundo «autorizarán sus organizaciones».",
+        "El primero dispone «garantizarán la defensa» y el segundo «promoverán la información y la educación»."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 52",
+      "q": "Según el artículo 52, ¿qué caracteriza a las organizaciones profesionales que regula la ley?",
+      "opciones": [
+        "Contribuyen a la defensa de sus propios intereses económicos y deben tener estructura interna y funcionamiento democráticos.",
+        "Defienden intereses económicos generales y podrán organizarse democráticamente si lo establecen sus estatutos.",
+        "Son únicamente colegios profesionales vinculados al ejercicio de profesiones tituladas.",
+        "Su régimen se establece por reglamento y su funcionamiento queda libre de exigencias democráticas."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 36 y 52",
+      "q": "Conforme a los artículos 36 y 52, indique la afirmación correcta.",
+      "opciones": [
+        "Solo los colegios profesionales del artículo 36 deben tener estructura democrática.",
+        "El artículo 36 regula colegios profesionales y profesiones tituladas; el 52 organizaciones profesionales que defienden intereses económicos propios; ambos exigen estructura y funcionamiento democráticos.",
+        "El artículo 52 remite expresamente al régimen constitucional de los colegios profesionales del artículo 36.",
+        "El artículo 36 obliga a colegiarse a todo trabajador y el 52 a pertenecer a una organización profesional."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 53.1",
+      "q": "¿A qué derechos y libertades resulta aplicable la previsión del artículo 53.1 sobre vinculación de todos los poderes públicos y reserva de ley?",
+      "opciones": [
+        "Exclusivamente a los artículos 15 a 29.",
+        "A todos los artículos del Título I, incluidos los principios rectores.",
+        "A los derechos y libertades del Capítulo II del Título I.",
+        "Únicamente al artículo 14 y a la Sección 1.ª del Capítulo II."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 53.1",
+      "q": "El ejercicio de los derechos y libertades a los que se refiere el artículo 53.1:",
+      "opciones": [
+        "Podrá regularse por disposición reglamentaria siempre que exista un interés público acreditado.",
+        "Solo podrá regularse mediante ley orgánica en todos los supuestos.",
+        "Se regulará mediante disposiciones administrativas que preserven la eficacia de los derechos.",
+        "Solo podrá regularse por ley, que deberá respetar en todo caso su contenido esencial."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 53.1",
+      "q": "Según el último inciso del artículo 53.1, los derechos y libertades allí mencionados se tutelarán de acuerdo con:",
+      "opciones": [
+        "Lo previsto en el artículo 161.1.a) de la Constitución.",
+        "Lo dispuesto en el artículo 162.1.b), relativo al recurso de amparo.",
+        "El procedimiento específico del artículo 116.",
+        "Lo previsto exclusivamente en el artículo 54."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 53.2",
+      "q": "¿Qué conjunto de derechos queda expresamente comprendido en la tutela judicial basada en preferencia y sumariedad del artículo 53.2?",
+      "opciones": [
+        "Todos los del Capítulo II, incluidos los artículos 30 a 38.",
+        "Los reconocidos en el artículo 14 y la Sección 1.ª del Capítulo II.",
+        "Los reconocidos en la Sección 1.ª y los principios rectores del Capítulo III.",
+        "Únicamente los artículos 15 a 29, excluyendo el artículo 14."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 53.2",
+      "q": "La previsión del recurso de amparo contenida en el artículo 53.2 se extiende expresamente a:",
+      "opciones": [
+        "La totalidad de los deberes del artículo 30.",
+        "El derecho a la propiedad privada del artículo 33.",
+        "La objeción de conciencia reconocida en el artículo 30.",
+        "La libertad de empresa del artículo 38."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 53.2",
+      "q": "De acuerdo con el artículo 53.2, cualquier ciudadano podrá recabar la tutela de los derechos mencionados ante los tribunales ordinarios mediante un procedimiento basado en:",
+      "opciones": [
+        "Prioridad y urgencia.",
+        "Igualdad y contradicción.",
+        "Celeridad y proporcionalidad.",
+        "Preferencia y sumariedad."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 53.3",
+      "q": "Según el artículo 53.3, los principios reconocidos en el Capítulo III del Título I:",
+      "opciones": [
+        "Informarán la legislación positiva, la práctica judicial y la actuación de los poderes públicos.",
+        "Vincularán exclusivamente a los tribunales constitucionales y no al legislador.",
+        "Se aplicarán de forma idéntica a los derechos de la Sección 1.ª del Capítulo II.",
+        "Solo informarán la legislación positiva, quedando excluida la práctica judicial."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 53.3",
+      "q": "En relación con los principios rectores del Capítulo III, señale la afirmación correcta sobre su alegación judicial.",
+      "opciones": [
+        "Pueden alegarse en todo caso directamente mediante recurso de amparo.",
+        "Solo podrán alegarse ante la jurisdicción ordinaria de acuerdo con lo que dispongan las leyes que los desarrollen.",
+        "No pueden alegarse ante ninguna jurisdicción en ningún supuesto.",
+        "Pueden alegarse exclusivamente ante el Tribunal Constitucional mediante recurso de inconstitucionalidad individual."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 33 y 53",
+      "q": "Una persona invoca el derecho a la propiedad privada del artículo 33. ¿Cuál de las siguientes afirmaciones sobre las garantías del artículo 53 es correcta?",
+      "opciones": [
+        "El derecho del artículo 33 disfruta automáticamente de recurso de amparo por pertenecer al Capítulo II.",
+        "Su ejercicio puede regularse reglamentariamente sin reserva de ley por estar fuera de la Sección 1.ª.",
+        "Está sujeto a las garantías generales del artículo 53.1, pero no figura por sí mismo entre los derechos del recurso de amparo contemplados en el 53.2.",
+        "Se trata de un principio rector del Capítulo III y únicamente puede alegarse según el 53.3."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 54",
+      "q": "Según el artículo 54, el Defensor del Pueblo es:",
+      "opciones": [
+        "Un órgano superior del Gobierno designado por el Congreso.",
+        "Un comisionado judicial nombrado por el Tribunal Constitucional.",
+        "Un órgano dependiente del Ministerio Fiscal y elegido por las Cortes Generales.",
+        "El alto comisionado de las Cortes Generales, designado por estas para defender los derechos comprendidos en el Título I."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 54",
+      "q": "Conforme al artículo 54, indique la combinación correcta sobre su regulación y facultades.",
+      "opciones": [
+        "Una ley orgánica regulará la institución, que podrá supervisar la actividad de la Administración dando cuenta a las Cortes Generales.",
+        "Una ley ordinaria regulará la institución, que dictará resoluciones judiciales vinculantes.",
+        "Un reglamento de las Cortes regulará al Defensor del Pueblo, que supervisará exclusivamente al Poder Judicial.",
+        "Una ley orgánica regulará la institución, que dirigirá jerárquicamente todas las administraciones públicas."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 55.1",
+      "q": "Conforme al artículo 55.1, determinados derechos podrán ser suspendidos cuando se acuerde la declaración:",
+      "opciones": [
+        "Del estado de alarma o del estado de excepción.",
+        "Del estado de excepción o del estado de sitio.",
+        "Del estado de alarma, excepción o sitio indistintamente.",
+        "Únicamente del estado de sitio."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 55.1",
+      "q": "¿Cuál de los siguientes derechos NO figura expresamente entre los susceptibles de suspensión general según el artículo 55.1?",
+      "opciones": [
+        "La libertad de circulación del artículo 19.",
+        "El derecho de reunión del artículo 21.",
+        "El derecho de sufragio y participación política del artículo 23.",
+        "El derecho de huelga del artículo 28.2."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 49.1",
+      "q": "Tras la reforma del artículo 49 de la Constitución, señale la afirmación correcta.",
+      "opciones": [
+        "La protección especial necesaria para ejercer los derechos del Título I se regulará exclusivamente mediante reglamento.",
+        "Las personas con discapacidad ejercen los derechos del Título I en condiciones de libertad e igualdad reales y efectivas, y se regulará por ley la protección especial necesaria.",
+        "La Constitución garantiza únicamente igualdad formal, mientras que la autonomía personal se regula por ley ordinaria.",
+        "El artículo 49 remite al Defensor del Pueblo la regulación de la protección especial."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 47",
+      "q": "De acuerdo con el artículo 47, señale la afirmación correcta.",
+      "opciones": [
+        "Todos tienen derecho, según su expresión literal, a obtener gratuitamente una vivienda digna.",
+        "La Constitución obliga a que la totalidad de las plusvalías urbanísticas corresponda al Estado.",
+        "Los poderes públicos regularán la utilización del suelo según el interés general para impedir la especulación, y la comunidad participará en las plusvalías generadas por la acción urbanística pública.",
+        "La protección de la vivienda se fundamenta exclusivamente en los derechos susceptibles de amparo constitucional."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 33.3 y 53.2",
+      "q": "Señale qué opción combina correctamente los artículos 33.3 y 53.2.",
+      "opciones": [
+        "La expropiación exige simultáneamente utilidad pública e interés social y tiene siempre amparo constitucional directo.",
+        "La propiedad privada figura en el catálogo de protección judicial preferente y sumaria del artículo 53.2.",
+        "La Constitución permite privar de bienes por mera oportunidad administrativa sin compensación.",
+        "La privación expropiatoria exige causa justificada de utilidad pública o interés social, indemnización y conformidad con las leyes, sin que ello sitúe por sí solo a la propiedad dentro del amparo del 53.2."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 28.2 y 37.2",
+      "q": "Señale la opción que distingue correctamente el artículo 28.2 del 37.2.",
+      "opciones": [
+        "El artículo 28.2 se refiere al mantenimiento de los servicios esenciales, y el 37.2 a garantizar su funcionamiento.",
+        "Ambos artículos reconocen exactamente el mismo derecho a trabajadores y empresarios.",
+        "El 28.2 protege la negociación colectiva y el 37.2 la huelga.",
+        "El 28.2 reconoce el derecho de huelga a empresarios y trabajadores y el 37.2 exclusivamente a trabajadores."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 22.4 y 34.2",
+      "q": "Conforme a los artículos 22.4 y 34.2, indique la afirmación correcta.",
+      "opciones": [
+        "La disolución o suspensión de fundaciones podrá realizarse mediante resolución administrativa motivada.",
+        "A las fundaciones se aplica, por remisión del artículo 34.2, la exigencia de resolución judicial motivada prevista en el artículo 22.4.",
+        "El artículo 34.2 remite únicamente al apartado 3 del artículo 22.",
+        "La remisión del 34.2 hace que cualquier asociación se considere automáticamente una fundación."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "Según el artículo 24.2, la ley regulará los casos en que no se estará obligado a declarar sobre hechos presuntamente delictivos por razón de:",
+      "opciones": [
+        "Parentesco y residencia.",
+        "Relación laboral y secreto profesional.",
+        "Parentesco o secreto profesional.",
+        "Secreto de las comunicaciones o condición de funcionario público. ---"
+      ],
+      "correcta": 2
+    }
+  ],
+  "fuente": "ChatGPT"
+}
