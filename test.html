@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261109">
+<link rel="stylesheet" href="style.css?v=20261110">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -117,7 +117,7 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261109"></script>
+<script src="app.js?v=20261110"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
@@ -232,8 +232,12 @@ function showWelcome() {
 /* ---------- progreso en curso (sobrevive a cerrar la app) ---------- */
 function save() {
   if (!enExamen || completed) return;
-  jset(localStorage, CURSO, { v: 1, mode, feedback, countIt, elapsed, exam, savedAt: Date.now() });
+  cursoSet(CURSO, { v: 1, mode, feedback, countIt, elapsed, exam, savedAt: Date.now() });
+  const sig = answeredCount() + '/' + exam.filter(q => q.star !== null).length;
+  if (sig !== _sig) { _sig = sig; scheduleSyncSoon(30000); }       // el progreso del test llega a tus otros dispositivos
 }
+let _sig = '';
+document.addEventListener('visibilitychange', () => { if (document.hidden && enExamen && !completed) { save(); if (getToken()) syncNow(); } });
 
 /* ---------- test ---------- */
 function answeredCount() { return exam.filter(q => q.selected !== null).length; }
@@ -443,7 +447,7 @@ function finishExam() {
     });
     addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, neta: Math.round((right - wrong / 3) * 100) / 100, total: exam.length, elapsed, mode, byTema });
   }
-  try { localStorage.removeItem(CURSO); } catch (e) { /* nada */ }
+  cursoDel(CURSO);
 
   const neta = right - wrong / 3;
   $('score-net').textContent = neta.toFixed(2).replace('.', ',') + ' / ' + exam.length;
@@ -460,7 +464,7 @@ function finishExam() {
 /* ---------- eventos ---------- */
 $('start').addEventListener('click', startExam);
 $('b-reanudar').addEventListener('click', resumeExam);
-$('b-descartar').addEventListener('click', () => { try { localStorage.removeItem(CURSO); } catch (e) { /* nada */ } $('reanudar').classList.add('hide'); $('config').classList.remove('hide'); });
+$('b-descartar').addEventListener('click', () => { cursoDel(CURSO); $('reanudar').classList.add('hide'); $('config').classList.remove('hide'); });
 $('retry').addEventListener('click', () => { if (T === 'mixto' || ES_BANCO) location.reload(); else { show('welcome'); showWelcome(); } });
 $('finish-top').addEventListener('click', finishExam);
 $('finish-bottom').addEventListener('click', finishExam);

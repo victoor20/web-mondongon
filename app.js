@@ -12,7 +12,7 @@ const CFG = {
 const FUENTES = ['ChatGPT', 'Claude', 'Gemini', 'Propio', 'Academia'];
 // ----------------------------------------------------------------------
 
-const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', bloc2: 'ma2_bloc2', sync: 'ma2_sync' };
+const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', cursoT: 'ma2_cursos_t', bloc2: 'ma2_bloc2', sync: 'ma2_sync' };
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 const $ = id => document.getElementById(id);
@@ -317,7 +317,26 @@ function haceTexto(iso) {
    Fusiona sin perder nada: gana siempre el cambio más reciente de cada elemento. */
 const SYNC_VER = 1;
 const canon = v => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)) ? Object.fromEntries(Object.keys(x).sort().map(key => [key, x[key]])) : x);
-function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw() }; }
+/* tests sin terminar: se sincronizan como el resto (clave = parte «?t=…» de la dirección) */
+const cursoKeys = () => Object.keys(localStorage).filter(k => k.startsWith(LS.curso));
+function cursosRaw() {
+  const o = { ...jget(localStorage, LS.cursoT, {}) };
+  cursoKeys().forEach(k => {
+    const s = jget(localStorage, k, null); if (!s || !Array.isArray(s.exam)) return;
+    const t = s.t || s.savedAt || 0, q = k.slice(LS.curso.length);
+    if (!o[q] || (o[q].t || 0) < t) o[q] = { ...s, t };
+  });
+  return o;
+}
+function cursoSet(key, state) { jset(localStorage, key, { ...state, t: nowT() }); }
+function cursoDel(key) {
+  try { localStorage.removeItem(key); } catch (e) { /* nada */ }
+  const m = jget(localStorage, LS.cursoT, {}); m[key.slice(LS.curso.length)] = { del: true, t: nowT() }; jset(localStorage, LS.cursoT, m);
+  scheduleSync();
+}
+let _thr = null;
+function scheduleSyncSoon(ms) { if (!getToken() || _thr) return; _thr = setTimeout(() => { _thr = null; syncNow(); }, ms || 30000); }
+function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), cursos: cursosRaw() }; }
 function mergeMap(a, b) {
   const out = {}, limite = Date.now() - 90 * 864e5;
   new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(k => {
@@ -334,11 +353,18 @@ function mergeSnap(a, b) {
   [...(a.hist || []), ...(b.hist || [])].forEach(e => { const k = e.date + '|' + e.id; if (!vistos.has(k)) { vistos.add(k); hist.push(e); } });
   hist.sort((x, y) => (y.date || '').localeCompare(x.date || ''));
   const ba = a.bloc || { x: '', t: 0 }, bb = b.bloc || { x: '', t: 0 };
-  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
+  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), cursos: mergeMap(a.cursos, b.cursos), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
 }
 function applySnap(s) {
   jset(localStorage, LS.hist, s.hist); jset(localStorage, LS.err, s.err); jset(localStorage, LS.dud, s.dud);
   jset(localStorage, LS.notas, s.notas); jset(localStorage, LS.bloc2, s.bloc);
+  const tumbas = {};
+  Object.entries(s.cursos || {}).forEach(([q, v]) => {
+    const k = LS.curso + q;
+    if (v.del) { tumbas[q] = v; try { localStorage.removeItem(k); } catch (e) { /* nada */ } }
+    else jset(localStorage, k, v);
+  });
+  jset(localStorage, LS.cursoT, tumbas);
 }
 // estado: off (sin token) | ok | sin-repo (falta el repositorio de datos o el token no llega a él) | token | permiso | error
 const syncInfo = { estado: 'off', t: jget(localStorage, LS.sync, {}).t || 0 };
