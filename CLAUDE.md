@@ -91,3 +91,17 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   fuera de git). Versiones anteriores de estos mismos ficheros, que no coincidían con el
   remoto, se archivaron en `C:\Proyectos\mondongon-web-archivo` por si hace falta recuperar
   algo de ellas.
+
+## Trabajo entre dos equipos
+
+Este proyecto se usa desde dos equipos distintos; el hook `SessionStart` de `.claude/settings.json`
+hace `git pull --ff-only` al empezar. Reglas:
+
+1. **Al empezar**, comprobar con `git status` que no hay cambios sin subir de una sesión anterior y
+   avisar al usuario si los hay.
+2. **Si `git pull` falla o hay conflicto**, no resolverlo por su cuenta: pararse y explicar al
+   usuario qué pasa.
+3. **Al terminar un cambio pedido por el usuario**, hacer `git status` y `git diff --stat`, mostrar
+   el resumen, y después commit y push.
+4. **Solo se suben archivos de la web**, nunca material de la academia ni tokens.
+5. **Si va a tocar `sw.js` o la lista `PRECACHE`**, recordar al usuario que hay que subir `VERSION`.
