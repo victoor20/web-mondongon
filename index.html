@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261110">
+<link rel="stylesheet" href="style.css?v=20261111">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -53,8 +53,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261110"></script>
-<script src="vistas.js?v=20261110"></script>
+<script src="app.js?v=20261111"></script>
+<script src="vistas.js?v=20261111"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -108,7 +108,10 @@ function renderContinuar() {
     const d = el('div', 'continuar');
     const tx = el('p', ''); tx.append(el('strong', '', 'Tienes un test sin terminar. '), `${nombre}: ${n} de ${s.exam.length} respondidas.`);
     const a = el('a', 'btn small', 'Continuar'); a.href = 'test.html' + k.slice(LS.curso.length);
-    d.append(tx, a); box.append(d);
+    const b = el('button', 'btn small ghost', 'Descartar'); b.type = 'button';
+    b.addEventListener('click', () => { if (confirm(`¿Descartar «${nombre}»? Se pierde lo respondido hasta ahora.`)) { cursoDel(k); refresh(); sincronizar(); } });
+    const ac = el('div', 'continuar-ac'); ac.append(a, b);
+    d.append(tx, ac); box.append(d);
   });
 }
 function selectTema(id) {
