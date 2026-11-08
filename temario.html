@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Temario · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261109">
+</head>
+<body data-pagina="temario">
+<div class="wrap">
+  <div class="pagehead">
+    <h1 class="titular">Temario</h1>
+    <p class="entradilla">6 bloques y 45 temas. Abre un bloque para ver sus temas, practicar y repasar errores. El porcentaje es tu acierto en los últimos 3 intentos de cada tema.</p>
+  </div>
+  <div id="temario"></div>
+</div>
+<script src="app.js?v=20261109"></script>
+<script src="vistas.js?v=20261109"></script>
+<script>
+function temaRow(t) {
+  const c = cnt[t.id], a = TS[t.id], r = reciente(t.id), ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
+  const row = el('div', 'tema' + (c ? '' : ' vacio')); row.id = 'tema-' + t.id; row.title = t.oficial;
+  row.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto));
+  const det = el('div', 'tdet');
+  det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests'));
+  if (r) {
+    const pf = el('span', 'perf'), m = el('span', 'meter'), f = el('i', pct(r) < 60 ? 'low' : '');
+    f.style.width = pct(r) + '%'; m.append(f); pf.append(m, el('span', 'tab', pct(r) + ' %')); det.append(pf);
+    det.append(el('span', '', `${plural(a.intentos, 'intento', 'intentos')}, ${haceTexto(a.ultima)}`));
+  }
+  row.append(det);
+  if (c) {
+    const act = el('div', 'tact');
+    const pr = el('a', 'mini azul', 'Practicar'); pr.href = urlMixto(t.id); act.append(pr);
+    const vt = el('a', 'mini', 'Ver tests'); vt.href = `tests.html?tema=${encodeURIComponent(t.id)}`; act.append(vt);
+    if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
+    if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
+    row.append(act);
+  }
+  return row;
+}
+function renderTemario() {
+  const box = $('temario');
+  const abiertos = new Set([...box.querySelectorAll('details[open]')].map(d => d.dataset.b));
+  box.replaceChildren();
+  _temario.bloques.forEach(b => {
+    const ids = b.temas.map(t => t.id);
+    const con = ids.filter(i => cnt[i]).length;
+    let rr = 0, tt = 0; ids.forEach(i => { const r = reciente(i); if (r) { rr += r.r; tt += r.t; } });
+    const d = el('details', 'bloque'); d.dataset.b = b.id;
+    d.open = abiertos.has(b.id);                                   // cerrados salvo que los abras tú
+    const sum = el('summary', 'bsum');
+    const info = el('span', 'bi'); info.append(el('span', 'bt', b.titulo),
+      el('span', 'bs', `${plural(con, 'tema con tests', 'temas con tests')} de ${ids.length}` + (tt ? `. Acierto reciente: ${Math.round(rr / tt * 100)} %` : '')));
+    sum.append(el('span', 'rn', b.id), info, el('span', 'chev'));
+    d.append(sum);
+    if (con) {
+      const bp = el('div', 'bpract'), a = el('a', 'mini azul', 'Practicar este bloque');
+      a.href = `test.html?t=mixto&bloque=${b.id}&n=20`; bp.append(a); d.append(bp);
+    }
+    b.temas.forEach(t => d.append(temaRow(t)));
+    box.append(d);
+  });
+}
+function irAHash() {
+  const m = /^#tema-(.+)$/.exec(location.hash); if (!m) return;
+  const row = document.getElementById('tema-' + decodeURIComponent(m[1])); if (!row) return;
+  const d = row.closest('details'); if (d) d.open = true;
+  row.scrollIntoView({ block: 'center' });
+  row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+}
+async function init() {
+  await loadTemario(); computeData(); renderTemario(); irAHash();
+  await cargarCatalogo(); renderTemario(); irAHash();
+}
+window.addEventListener('hashchange', irAHash);
+init();
+</script>
+</body>
+</html>

@@ -6,21 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Editar test · Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
-<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261103">
+<link rel="stylesheet" href="style.css?v=20261109">
 </head>
-<body>
+<body data-pagina="tests" data-angosto>
 <div class="wrap">
-  <header class="site">
-    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
-    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
-  </header>
+  <div class="volver"><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
 
   <h1 class="titular" style="font-size:clamp(1.7rem,6vw,2.3rem)">Editar test</h1>
   <p class="entradilla" id="sub">Cargando…</p>
@@ -58,7 +55,7 @@
   </div>
 </div>
 
-<script src="app.js?v=20261103"></script>
+<script src="app.js?v=20261109"></script>
 <script>
 const ID = new URLSearchParams(location.search).get('t');
 let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0;
@@ -211,7 +208,6 @@ $('borrar').addEventListener('click', async () => {
 window.addEventListener('beforeunload', e => { if (sucio) { e.preventDefault(); e.returnValue = ''; } });
 
 (async function init() {
-  mountThemeControl($('tema-ctl'));
   if (!ID) { location.replace('index.html'); return; }
   await loadTemario();
   const dl = $('lista-fuentes'); FUENTES.forEach(f => { const o = el('option'); o.value = f; dl.append(o); });

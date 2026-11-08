@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
-<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mi Academia">
@@ -15,148 +15,76 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preload" href="fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261103">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261109">
 </head>
-<body>
+<body data-pagina="inicio">
 <div class="wrap">
-  <header class="site">
-    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
-    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="nuevo.html">Añadir test</a></div>
-  </header>
-  <p class="sin-red hide" id="aviso-token" role="status"></p>
-
-  <h1 class="titular">Tu preparación</h1>
-  <p class="entradilla">Administrativo del Estado (C1): 6 bloques y 45 temas.</p>
-
-  <section class="sec hoy-sec" aria-labelledby="hoy-t">
-    <h2 id="hoy-t">Para hoy</h2>
-    <div class="empezar" id="empezar"></div>
-    <div class="hoy" id="hoy"></div>
-  </section>
-
-  <section class="hoja mapa" aria-labelledby="mapa-t" style="margin-top:2.4rem">
-    <h2 id="mapa-t" class="sr">Mapa del temario</h2>
-    <div id="mapa-filas"></div>
-    <p class="minfo" id="minfo" aria-live="polite">Toca un cuadrado para ver el tema.</p>
-    <div class="leyenda" aria-hidden="true">
-      <span><i class="l-no"></i>Sin tests</span>
-      <span><i class="l-si"></i>Con tests</span>
-      <span><i class="l-ac"></i>Altura: tu acierto en los últimos intentos</span>
-      <span><i class="l-bj"></i>Bajo el 60 %</span>
-    </div>
-  </section>
-
-  <section class="sec">
-    <h2>Temario</h2>
-    <p class="sub">Abre un bloque para ver sus temas y practicar cada uno. El porcentaje es tu acierto en los últimos 3 intentos de cada tema.</p>
-    <div id="temario"></div>
-  </section>
-
-  <section class="sec" id="seccion-tests">
-    <h2>Tests</h2>
-    <div class="filtros">
-      <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
-      <div class="chips" id="chips"></div>
-      <div class="chips origen" id="chips-origen"></div>
-    </div>
-    <div class="barra">
-      <label>Mostrar <select id="pp" aria-label="Tests por página"></select></label>
-      <label>Ordenar <select id="orden" aria-label="Orden"></select></label>
-      <span class="fine" id="cuenta"></span>
-    </div>
-    <div class="lista" id="lista"><p class="vacio-msg">Cargando tests…</p></div>
-    <div class="pager hide" id="pager">
-      <button type="button" class="btn small ghost" id="ant">Anterior</button>
-      <span id="pag"></span>
-      <button type="button" class="btn small ghost" id="sig">Siguiente</button>
-    </div>
-    <div id="avisos"></div>
-  </section>
-
-  <section class="hoja sync" id="off-box">
-    <h2>Uso sin conexión</h2>
-    <p class="estado-s" id="off-estado"></p>
-    <div class="acciones" style="margin-top:.7rem">
-      <button type="button" class="btn small" id="off-guardar">Guardar para usar sin conexión</button>
-      <button type="button" class="btn small ghost hide" id="off-instalar">Instalar como app</button>
-    </div>
-    <progress class="off-prog hide" id="off-prog" value="0" max="1" aria-label="Guardando"></progress>
-    <details>
-      <summary>Cómo usarlo</summary>
-      <ol class="pasos">
-        <li>Con internet, pulsa el botón. Verás cuántos tests se guardan en este dispositivo.</li>
-        <li>iPhone: abre la web desde el icono de la pantalla de inicio. Si aún no lo tienes, en Safari pulsa Compartir y «Añadir a pantalla de inicio».</li>
-        <li>Tablet o portátil con Chrome: menú y «Instalar aplicación» (o «Añadir a pantalla de inicio»).</li>
-        <li>Para comprobarlo, activa el modo avión y abre la web: la portada y los tests deben cargar.</li>
-      </ol>
-      <p class="fine">Hay que hacerlo una vez en cada dispositivo. Si pasas muchos días sin abrir la web, el móvil puede borrar lo guardado y bastará con volver a pulsar el botón. Cuando hay conexión, la web se actualiza sola.</p>
-    </details>
-  </section>
-
-  <section class="hoja sync" id="sync-box" aria-live="polite" style="margin-top:1rem">
-    <h2>Sincronización</h2>
-    <p class="estado-s" id="sync-estado"></p>
-    <div class="acciones" style="margin-top:.7rem"><button type="button" class="btn small ghost hide" id="sync-ya">Sincronizar ahora</button></div>
-    <details>
-      <summary>Cómo configurarla</summary>
-      <p class="fine">Tu progreso, errores, dudas y notas se guardan en este navegador. Para verlos igual en el PC, el móvil y la tablet, se sincronizan a través de un repositorio privado de GitHub que solo tú ves.</p>
-      <ol class="pasos">
-        <li>En GitHub crea un repositorio nuevo llamado <b>mondongon-datos</b>, marcado como <b>Private</b>.</li>
-        <li>Edita tu token (Settings, Developer settings, Personal access tokens, Fine-grained tokens) y añade ese repositorio con <b>Contents: Read and write</b>. Si no te deja editarlo, crea otro token que incluya los dos repositorios.</li>
-        <li>En cada dispositivo, guarda el token en «Añadir test», recuadro «Publicación directa».</li>
-      </ol>
-    </details>
-  </section>
-
-  <div class="pie">
-    <span class="fine" style="flex:1 1 16rem">Copia manual de tu progreso, por si no usas la sincronización.</span>
-    <button type="button" class="btn small ghost" id="exp">Exportar</button>
-    <button type="button" class="btn small ghost" id="imp">Importar</button>
-    <input type="file" id="impfile" accept="application/json,.json" class="hide">
-    <span class="fine" id="impmsg" aria-live="polite"></span>
+  <div class="pagehead">
+    <h1 class="titular">Tu preparación</h1>
+    <p class="entradilla" id="estado">Administrativo del Estado (C1).</p>
   </div>
+
+  <div id="continuar"></div>
+
+  <section class="hoy-sec" aria-labelledby="hoy-t">
+    <h2 class="h-sec" id="hoy-t">Para hoy</h2>
+    <div class="hoy-grid" id="empezar"></div>
+    <div id="sugerencias"></div>
+  </section>
+
+  <section class="hoja hoja-resp" aria-labelledby="mapa-t">
+    <div class="hr-cab">
+      <h2 id="mapa-t">Hoja de respuestas</h2>
+      <p>Cada círculo es un tema. Se rellena según tu acierto en los últimos intentos.</p>
+    </div>
+    <div id="mapa-filas"></div>
+    <div class="minfo" id="minfo" aria-live="polite"><span class="fine">Toca un círculo para ver el tema.</span></div>
+    <div class="leyenda" aria-hidden="true">
+      <span><i class="b-no"></i>Sin tests</span>
+      <span><i class="b-si"></i>Con tests, sin intentos</span>
+      <span><i class="b-ac"></i>Relleno: tu acierto</span>
+      <span><i class="b-bj"></i>Bajo el 60 %</span>
+    </div>
+  </section>
+
+  <section class="hoy-sec" aria-labelledby="ult-t">
+    <h2 class="h-sec" id="ult-t">Últimos resultados</h2>
+    <div id="ultimos"></div>
+  </section>
 </div>
-
-<script src="app.js?v=20261103"></script>
+<script src="app.js?v=20261109"></script>
+<script src="vistas.js?v=20261109"></script>
 <script>
-let items = [], fBloque = 'Todos', fTema = null, fFuente = 'Todos', selTema = null, primera = true, pagina = 1;
-let TS = {}, cnt = {}, errC = {}, dudC = {};
-const pct = a => Math.round(a.r / a.t * 100);
-const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+let selTema = null, primera = true;
 
-function computeData() {
-  TS = temaStats(); cnt = {}; errC = {}; dudC = {};
-  items.filter(i => i.kind === 'json').forEach(i => Object.entries(i.temas).forEach(([t, n]) => {
-    cnt[t] = cnt[t] || { tests: 0, preguntas: 0 }; cnt[t].tests++; cnt[t].preguntas += n;
-  }));
-  Object.values(getErr()).forEach(e => { if (e.tema) errC[e.tema] = (errC[e.tema] || 0) + 1; });
-  Object.values(getDud()).forEach(e => { if (e.tema) dudC[e.tema] = (dudC[e.tema] || 0) + 1; });
-}
-const reciente = id => (TS[id] && TS[id].reciente.t ? TS[id].reciente : null);
+function renderEstado() { $('estado').textContent = fraseEstado(); }
 
-/* ---------- para hoy ---------- */
-function renderEmpezar(nErr, nDud) {
+function renderEmpezar() {
   const box = $('empezar'); box.replaceChildren();
-  const total = items.filter(i => i.kind === 'json').reduce((s, i) => s + (i.n || 0), 0);
-  const mixto = el('div', 'accion' + (total ? '' : ' off'));
-  mixto.append(el('h3', '', 'Test mixto'), el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). Elige cuántas:` : 'Aparecerá cuando tengas tests publicados.'));
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, total = totalPreguntas();
+  const m = el('div', 'mixto' + (total ? '' : ' off'));
+  const bub = el('div', 'mixto-bub'); bub.setAttribute('aria-hidden', 'true');
+  ['A', 'B', 'C', 'D'].forEach((l, i) => bub.append(el('i', i === 2 ? 'x' : '', l)));
+  m.append(bub, el('h3', '', 'Test mixto'),
+    el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
   const ch = el('div', 'nchips');
   [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}`; ch.append(a); });
   if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}`; ch.append(a); }
-  mixto.append(ch);
-  const err = el('a', 'accion' + (nErr ? '' : ' off')); err.href = 'test.html?t=errores';
-  err.append(el('h3', '', 'Repasar errores'), el('p', '', nErr ? `${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.` : 'No tienes errores pendientes.'), el('span', 'go', nErr ? 'Empezar →' : ''));
-  const dud = el('a', 'accion' + (nDud ? '' : ' off')); dud.href = 'test.html?t=dudosas';
-  dud.append(el('h3', '', 'Repasar dudas'), el('p', '', nDud ? `${plural(nDud, 'duda marcada', 'dudas marcadas')} con la estrella.` : 'No tienes dudas marcadas.'), el('span', 'go', nDud ? 'Empezar →' : ''));
-  box.append(mixto, err, dud);
+  m.append(ch);
+  const lado = el('div', 'hoy-lado');
+  const tarjeta = (n, titulo, vacio, lleno, href) => {
+    const a = el('a', 'accion' + (n ? '' : ' off')); a.href = href;
+    a.append(el('span', 'accion-n', String(n)), el('h3', '', titulo), el('p', '', n ? lleno : vacio)); return a;
+  };
+  lado.append(
+    tarjeta(nErr, 'Errores', 'Nada pendiente de repasar.', `${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.`, 'test.html?t=errores'),
+    tarjeta(nDud, 'Dudas', 'Ninguna pregunta marcada con la estrella.', `${plural(nDud, 'pregunta marcada', 'preguntas marcadas')} con la estrella.`, 'test.html?t=dudosas'));
+  box.append(m, lado);
 }
-const urlMixto = id => `test.html?t=mixto&tema=${encodeURIComponent(id)}&n=20`;
-function renderHoy() {
-  const box = $('hoy'); box.replaceChildren();
-  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length;
+function renderSugerencias() {
+  const box = $('sugerencias'); box.replaceChildren();
   const filas = [];
-  renderEmpezar(nErr, nDud);
   const conDatos = Object.entries(TS).filter(([t]) => _temario.byId[t] && cnt[t]);
   const flojos = conDatos.filter(([, a]) => a.reciente.t >= 10).sort((x, y) => pct(x[1].reciente) - pct(y[1].reciente));
   const flojo = flojos.length && pct(flojos[0][1].reciente) < 85 ? flojos[0][0] : null;
@@ -165,294 +93,88 @@ function renderHoy() {
   if (viejo) filas.push([`${temaLabel(viejo[0])}. Lo practicaste por última vez ${haceTexto(viejo[1].ultima)}.`, 'Practicar', urlMixto(viejo[0])]);
   const sinIntento = Object.keys(cnt).filter(t => _temario.byId[t] && !TS[t]);
   if (sinIntento.length && Object.keys(TS).length) filas.push([`${plural(sinIntento.length, 'tema tiene', 'temas tienen')} tests que aún no has hecho.`, 'Ver el primero', urlMixto(sinIntento[0])]);
-  if (filas.length) box.append(el('h3', 'hoy-sub', 'Sugerencias'));
-  else if (!Object.keys(TS).length) box.append(el('p', 'hoy-ok', 'Todavía no has hecho ningún intento. Empieza con un test mixto o toca un cuadrado del mapa.'));
   filas.forEach(([txt, bt, href]) => {
-    const f = el('div', 'hoy-fila'), a = el('a', 'btn small', bt); a.href = href;
+    const f = el('div', 'hoy-fila'), a = el('a', 'btn small ghost', bt); a.href = href;
     f.append(el('p', '', txt), a); box.append(f);
   });
 }
-
-
-/* ---------- mapa del temario ---------- */
-function resumenTema(t) {
-  const c = cnt[t.id], a = TS[t.id];
-  let s = c ? `${plural(c.tests, 'test', 'tests')} y ${plural(c.preguntas, 'pregunta', 'preguntas')}` : 'sin tests todavía';
-  if (a && a.reciente.t) s += `; acierto ${pct(a.reciente)} % en los últimos intentos, ${plural(a.intentos, 'intento', 'intentos')}, última vez ${haceTexto(a.ultima)}`;
-  return s;
+function renderContinuar() {
+  const box = $('continuar'); box.replaceChildren();
+  Object.keys(localStorage).filter(k => k.startsWith(LS.curso)).forEach(k => {
+    const s = jget(localStorage, k, null); if (!s || !Array.isArray(s.exam) || !s.exam.length) return;
+    const t = new URLSearchParams(k.slice(LS.curso.length)).get('t'), it = items.find(i => i.id === t);
+    const nombre = t === 'mixto' ? 'Test mixto' : t === 'errores' ? 'Repaso de errores' : t === 'dudosas' ? 'Repaso de dudas' : (it ? it.titulo : 'Test');
+    const n = s.exam.filter(x => x.selected !== null).length;
+    const d = el('div', 'continuar');
+    const tx = el('p', ''); tx.append(el('strong', '', 'Tienes un test sin terminar. '), `${nombre}: ${n} de ${s.exam.length} respondidas.`);
+    const a = el('a', 'btn small', 'Continuar'); a.href = 'test.html' + k.slice(LS.curso.length);
+    d.append(tx, a); box.append(d);
+  });
 }
 function selectTema(id) {
   selTema = id;
-  document.querySelectorAll('.cell').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+  document.querySelectorAll('.burbuja').forEach(c => c.classList.toggle('on', c.dataset.id === id));
   const t = _temario.byId[id], box = $('minfo'); box.replaceChildren();
   if (!t) return;
-  box.append(el('strong', '', `${codigoTema(t.id)} ${t.corto}`), `: ${resumenTema(t)}. `);
-  const go = el('button', 'link', 'Ir al tema'); go.type = 'button';
-  go.addEventListener('click', () => irATema(id)); box.append(go);
+  box.dataset.b = bloqueOf(id);
+  const tx = el('p', ''); tx.append(el('strong', '', `${codigoTema(t.id)} ${t.corto}`), el('span', '', resumenTema(t)));
+  const ac = el('div', 'minfo-ac');
+  const ver = el('a', 'mini', 'Ver en el temario'); ver.href = `temario.html#tema-${t.id}`; ac.append(ver);
+  if (cnt[id]) { const pr = el('a', 'mini azul', 'Practicar'); pr.href = urlMixto(id); ac.append(pr); }
+  box.append(tx, ac);
 }
-function irATema(id) {
-  const row = $('tema-' + id); if (!row) return;
-  const d = row.closest('details'); if (d) d.open = true;
-  row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
-}
-function renderMapa() {
+function renderHoja() {
   const box = $('mapa-filas'); box.replaceChildren();
   let idx = 0; const fills = [];
   _temario.bloques.forEach(b => {
-    const row = el('div', 'mrow'); row.dataset.b = b.id;
-    row.append(el('div', 'mnum', b.id));
-    const cells = el('div', 'mcells');
+    const row = el('div', 'hr-row'); row.dataset.b = b.id;
+    const lab = el('div', 'hr-lab'); lab.append(el('b', '', b.id), el('span', '', b.titulo));
+    const cells = el('div', 'hr-cells');
     b.temas.forEach(t => {
       const c = cnt[t.id], r = reciente(t.id);
-      const btn = el('button', 'cell' + (c ? ' has' : '') + (r && pct(r) < 60 ? ' weak' : '') + (selTema === t.id ? ' on' : ''));
+      const btn = el('button', 'burbuja' + (c ? ' has' : '') + (r && pct(r) < 60 ? ' weak' : '') + (selTema === t.id ? ' on' : ''));
       btn.type = 'button'; btn.dataset.id = t.id;
-      btn.title = `${codigoTema(t.id)} ${t.corto}: ${resumenTema(t)}`;
       btn.setAttribute('aria-label', `${codigoTema(t.id)} ${t.corto}: ${resumenTema(t)}`);
-      const fill = el('i'); fill.style.setProperty('--i', idx++);
-      fills.push([fill, r ? pct(r) : 0]);
-      btn.append(fill, el('b', '', String(t.n)));
+      btn.title = `${codigoTema(t.id)} ${t.corto}`;
+      fills.push([btn, r ? pct(r) : 0, idx++]);
+      btn.append(el('b', '', String(t.n)));
       btn.addEventListener('click', () => selectTema(t.id));
       cells.append(btn);
     });
-    row.append(cells); box.append(row);
+    row.append(lab, cells); box.append(row);
   });
-  const apply = () => fills.forEach(([f, h]) => { f.style.height = h + '%'; });
+  const apply = () => fills.forEach(([b, p, i]) => { b.style.transitionDelay = (i * 18) + 'ms'; b.style.setProperty('--p', p); });
   if (primera) requestAnimationFrame(() => requestAnimationFrame(apply)); else apply();   // un único movimiento al cargar
   primera = false;
 }
-
-/* ---------- temario como índice ---------- */
-function temaRow(t) {
-  const c = cnt[t.id], a = TS[t.id], r = reciente(t.id), ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
-  const row = el('div', 'tema' + (c ? '' : ' vacio')); row.id = 'tema-' + t.id; row.title = t.oficial;
-  row.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto));
-  const det = el('div', 'tdet');
-  det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests'));
-  if (r) {
-    const pf = el('span', 'perf'), m = el('span', 'meter'), f = el('i', pct(r) < 60 ? 'low' : '');
-    f.style.width = pct(r) + '%'; m.append(f); pf.append(m, el('span', 'tab', pct(r) + ' %')); det.append(pf);
-    det.append(el('span', '', `${plural(a.intentos, 'intento', 'intentos')}, ${haceTexto(a.ultima)}`));
-  }
-  row.append(det);
-  if (c) {
-    const act = el('div', 'tact');
-    const pr = el('a', 'mini', 'Practicar'); pr.href = urlMixto(t.id); act.append(pr);
-    const vt = el('button', 'mini', 'Ver tests'); vt.type = 'button';
-    vt.addEventListener('click', () => { fTema = t.id; fBloque = 'Todos'; pagina = 1; renderChips(); renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
-    act.append(vt);
-    if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
-    if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
-    row.append(act);
-  }
-  return row;
-}
-function renderTemario() {
-  const box = $('temario');
-  const abiertos = new Set([...box.querySelectorAll('details[open]')].map(d => d.dataset.b));
-  box.replaceChildren();
-  _temario.bloques.forEach(b => {
-    const ids = b.temas.map(t => t.id);
-    const con = ids.filter(i => cnt[i]).length;
-    let rr = 0, tt = 0; ids.forEach(i => { const r = reciente(i); if (r) { rr += r.r; tt += r.t; } });
-    const d = el('details', 'bloque'); d.dataset.b = b.id;
-    d.open = abiertos.has(b.id);                                   // cerrados salvo que los abras tú
-    const sum = el('summary', 'bsum');
-    sum.append(el('span', 'rn', b.id), el('span', 'bt', b.titulo), el('span', 'lead'),
-      el('span', 'bs', `${con} de ${ids.length} temas` + (tt ? `, ${Math.round(rr / tt * 100)} %` : '')), el('span', 'chev'));
-    d.append(sum);
-    if (con) {
-      const bp = el('div', 'bpract'), a = el('a', 'mini', 'Practicar este bloque');
-      a.href = `test.html?t=mixto&bloque=${b.id}&n=20`; bp.append(a); d.append(bp);
-    }
-    b.temas.forEach(t => d.append(temaRow(t)));
-    box.append(d);
+function renderUltimos() {
+  const box = $('ultimos'); box.replaceChildren();
+  const h = getHist().slice(0, 5);
+  if (!h.length) { box.append(el('p', 'vacio-msg', 'Todavía no has hecho ningún test. Empieza con uno mixto o abre un test desde «Tests».')); return; }
+  const lista = el('div', 'res-lista');
+  h.forEach(e => {
+    const p = e.total ? Math.round(e.right / e.total * 100) : 0;
+    const a = el('a', 'res-fila'); a.href = `test.html?t=${encodeURIComponent(e.id)}`;
+    const m = el('div'); m.append(el('div', 'res-tit', e.titulo), el('div', 'fine', `${haceTexto(e.date)} · ${plural(e.right, 'acierto', 'aciertos')} de ${e.total}`));
+    a.append(m, el('b', 'res-pct' + (p < 60 ? ' low' : ''), p + ' %')); lista.append(a);
   });
+  box.append(lista);
 }
-
-/* ---------- lista de tests ---------- */
-const ORDENES = {
-  recientes: ['Más recientes primero', (a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id)],
-  antiguos: ['Más antiguos primero', (a, b) => (a.fecha || '').localeCompare(b.fecha || '') || a.id.localeCompare(b.id)],
-  nombre: ['Nombre (A–Z)', (a, b) => a.titulo.localeCompare(b.titulo, 'es', { numeric: true })],
-  peor: ['Peor nota primero', (a, b) => ((statsFor(a.id) || { ultimoPct: 101 }).ultimoPct) - ((statsFor(b.id) || { ultimoPct: 101 }).ultimoPct)],
-  sinhacer: ['Sin hacer primero', (a, b) => (statsFor(a.id) ? 1 : 0) - (statsFor(b.id) ? 1 : 0) || (b.fecha || '').localeCompare(a.fecha || '')]
-};
-const TAMANOS = [5, 10, 25, 50, 100, 0];     // 0 = todos
-const itemTemas = it => Object.keys(it.temas || {});
-function matches(it) {
-  if (fTema && !itemTemas(it).includes(fTema)) return false;
-  if (fFuente !== 'Todos' && it.fuente !== fFuente) return false;
-  if (fBloque === 'Sin clasificar') return it.kind === 'html' || !itemTemas(it).some(t => bloqueOf(t));
-  if (fBloque !== 'Todos' && !itemTemas(it).some(t => bloqueOf(t) === fBloque)) return false;
-  return true;
-}
-function fila(it) {
-  const ts = itemTemas(it), b = ts.map(bloqueOf).find(Boolean), sc = it.kind === 'json' ? statsFor(it.id) : null;
-  const f = el('div', 'fila'); f.dataset.b = b || 'x';
-  const a = el('a', 'fl'); a.href = it.url;
-  const ins = el('div', 'ins' + (b ? '' : ' sin'));
-  ins.title = it.kind === 'html' ? 'Sin clasificar' : temaLabel(it.tema);
-  ins.append(el('b', '', b ? codigoTema(it.tema) : '?'));
-  if (ts.length > 1) ins.append(el('small', '', `+${ts.length - 1}`));
-  const main = el('div'), meta = el('div', 'fmeta'), day = fmtDay(it.fecha);
-  const corto = _temario.byId[it.tema] ? _temario.byId[it.tema].corto : (it.kind === 'html' ? 'Sin clasificar' : it.tema);
-  meta.append(el('span', '', corto), el('span', 'org', it.fuente));
-  if (it.n) meta.append(el('span', '', `${it.n} preguntas`));
-  if (day) meta.append(el('span', '', `${day.d} ${day.m}`));
-  main.append(el('div', 'ftit', it.titulo), meta);
-  a.append(ins, main);
-  if (sc) { const r = el('div', 'fres' + (sc.ultimoPct < 60 ? ' low' : '')); r.append(el('b', '', sc.ultimoPct + ' %'), el('span', '', `último, ${plural(sc.intentos, 'intento', 'intentos')}`)); a.append(r); }
-  f.append(a);
-  if (it.kind === 'json') { const e = el('a', 'btn small ghost fe', 'Editar'); e.href = `editar.html?t=${encodeURIComponent(it.id)}`; e.setAttribute('aria-label', `Editar: ${it.titulo}`); f.append(e); }
-  return f;
-}
-function renderList() {
-  const q = $('buscar').value.trim().toLowerCase(), prefs = getPrefs();
-  const orden = ORDENES[prefs.orden] ? prefs.orden : 'recientes', pp = TAMANOS.includes(prefs.pp) ? prefs.pp : 10;
-  const vis = items.filter(it => matches(it) && (it.titulo + ' ' + itemTemas(it).map(temaLabel).join(' ') + ' ' + it.fuente + ' ' + fmtDate(it.fecha)).toLowerCase().includes(q)).sort(ORDENES[orden][1]);
-  const paginas = pp ? Math.max(1, Math.ceil(vis.length / pp)) : 1;
-  if (pagina > paginas) pagina = paginas;
-  const trozo = pp ? vis.slice((pagina - 1) * pp, pagina * pp) : vis;
-  $('cuenta').textContent = items.length ? (vis.length === items.length ? plural(vis.length, 'test', 'tests') : `${vis.length} de ${items.length} tests`) : '';
-  const list = $('lista'); list.replaceChildren();
-  if (!vis.length) {
-    list.append(el('p', 'vacio-msg', items.length ? 'Ningún test coincide con el filtro.' : 'Todavía no hay tests. Usa «Añadir test» para subir el primero.'));
-  } else trozo.forEach(it => list.append(fila(it)));
-  $('pager').classList.toggle('hide', paginas < 2);
-  $('pag').textContent = `Página ${pagina} de ${paginas}`;
-  $('ant').disabled = pagina <= 1; $('sig').disabled = pagina >= paginas;
-  $('ant').classList.toggle('off', pagina <= 1); $('sig').classList.toggle('off', pagina >= paginas);
-}
-function renderChips() {
-  const box = $('chips'); box.replaceChildren();
-  const mk = (txt, on, fn) => { const b = el('button', 'chip' + (on ? ' on' : ''), txt); b.type = 'button'; b.addEventListener('click', fn); box.append(b); };
-  if (fTema) mk(`Tema ${fTema} ✕`, true, () => { fTema = null; pagina = 1; renderChips(); renderList(); });
-  const bl = new Set();
-  items.forEach(it => { const t = itemTemas(it).map(bloqueOf).filter(Boolean); if (t.length) t.forEach(x => bl.add(x)); else bl.add('Sin clasificar'); });
-  if (bl.size >= 2 || fTema) {
-    mk('Todos', fBloque === 'Todos', () => { fBloque = 'Todos'; pagina = 1; renderChips(); renderList(); });
-    [..._temario.bloques.map(b => b.id), 'Sin clasificar'].filter(b => bl.has(b))
-      .forEach(b => mk(b === 'Sin clasificar' ? b : `Bloque ${b}`, fBloque === b, () => { fBloque = b; pagina = 1; renderChips(); renderList(); }));
-  }
-  const fb = $('chips-origen'); fb.replaceChildren();
-  const fuentes = [...new Set(items.map(i => i.fuente))].sort((a, b) => a.localeCompare(b, 'es'));
-  if (fuentes.length >= 2) {
-    fb.append(el('span', 'rot', 'Origen'));
-    ['Todos', ...fuentes].forEach(f => {
-      const b = el('button', 'chip' + (fFuente === f ? ' on' : ''), f); b.type = 'button';
-      b.addEventListener('click', () => { fFuente = f; pagina = 1; renderChips(); renderList(); }); fb.append(b);
-    });
-  }
-}
-function initControles() {
-  const prefs = getPrefs();
-  const o = $('orden'); Object.entries(ORDENES).forEach(([k, v]) => { const op = el('option', '', v[0]); op.value = k; o.append(op); });
-  o.value = ORDENES[prefs.orden] ? prefs.orden : 'recientes';
-  const p = $('pp'); TAMANOS.forEach(n => { const op = el('option', '', n ? String(n) : 'Todos'); op.value = String(n); p.append(op); });
-  p.value = String(TAMANOS.includes(prefs.pp) ? prefs.pp : 10);
-  o.addEventListener('change', () => { setPref('orden', o.value); pagina = 1; renderList(); });
-  p.addEventListener('change', () => { setPref('pp', Number(p.value)); pagina = 1; renderList(); });
-  $('ant').addEventListener('click', () => { pagina--; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
-  $('sig').addEventListener('click', () => { pagina++; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
-  $('buscar').addEventListener('input', () => { pagina = 1; renderList(); });
-}
-
-/* ---------- sincronización ---------- */
-function avisoToken(tiene, e) {
-  const a = $('aviso-token'); a.replaceChildren();
-  const txt = !tiene ? 'Este dispositivo no tiene el token de GitHub: tu progreso no se sincroniza y no podrás publicar tests. '
-    : (e === 'token' ? 'GitHub rechaza el token de este dispositivo (puede haber caducado): no se sincroniza ni se pueden publicar tests. ' : '');
-  if (txt) { const l = el('a', '', !tiene ? 'Configurarlo' : 'Guardar uno nuevo'); l.href = 'nuevo.html'; a.append(txt, l); }
-  a.classList.toggle('hide', !txt);
-}
-function renderSync() {
-  const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
-  const tiene = !!getToken();
-  avisoToken(tiene, e);
-  $('sync-ya').classList.toggle('hide', !tiene);
-  if (tiene && navigator.onLine === false) { p.append(el('span', 'mal', 'Sin conexión. '), 'Tu progreso se guarda aquí y se sincronizará cuando vuelva internet.'); return; }
-  if (!tiene) { p.append(el('span', 'mal', 'Sin sincronizar. '), 'Este navegador guarda tu progreso solo aquí. Para activarla, guarda tu token en «Añadir test».'); return; }
-  if (e === 'ok') { p.append(el('span', 'ok', 'Sincronizado. '), `Última vez ${haceTexto(new Date(syncInfo.t).toISOString())}.`); return; }
-  const msgs = {
-    'sin-repo': 'No encuentro el repositorio privado «mondongon-datos» o tu token no llega a él. Sigue los pasos de «Cómo configurarla».',
-    token: 'GitHub rechaza el token de este dispositivo. Guárdalo de nuevo en «Añadir test».',
-    permiso: 'El token no puede escribir en «mondongon-datos». Revisa que tenga «Contents: Read and write».',
-    error: 'No he podido sincronizar ahora. Se reintentará al volver a abrir la web.',
-    off: 'Comprobando…'
-  };
-  p.append(el('span', 'mal', 'Sin sincronizar. '), msgs[e] || msgs.error);
-}
-/* ---------- uso sin conexión ---------- */
-function renderOffline() {
-  const p = $('off-estado'), info = offInfo(), b = $('off-guardar');
-  p.replaceChildren();
-  if (!('serviceWorker' in navigator) || !window.caches) {
-    p.append(el('span', 'mal', 'No disponible. '), 'Este navegador no permite guardar la web para usarla sin conexión.'); b.classList.add('hide'); return;
-  }
-  if (info.t) {
-    p.append(el('span', 'ok', 'Lista para usar sin conexión. '), `${plural(info.n, 'test guardado', 'tests guardados')}. Última actualización ${haceTexto(new Date(info.t).toISOString())}.`);
-    b.textContent = 'Actualizar ahora';
-  } else {
-    p.append(el('span', 'mal', 'Todavía no. '), 'Pulsa el botón, con internet, para guardar la web y tus tests en este dispositivo.');
-    b.textContent = 'Guardar para usar sin conexión';
-  }
-  $('off-instalar').classList.toggle('hide', !_pideInstalar);
-}
-async function guardarTodo() {
-  const b = $('off-guardar'), pr = $('off-prog'); let fallo = false;
-  b.disabled = true; pr.classList.remove('hide');
-  try {
-    const todos = items.length ? items : (await loadCatalog()).items;
-    await guardarOffline(todos, (h, n) => { pr.max = n; pr.value = h; $('off-estado').textContent = `Guardando… ${h} de ${n}`; });
-  } catch (e) {
-    fallo = true;
-    $('off-estado').replaceChildren(el('span', 'mal', 'No se ha podido guardar. '), navigator.onLine === false ? 'Ahora mismo no hay conexión.' : 'Inténtalo de nuevo en unos segundos.');
-  }
-  b.disabled = false; pr.classList.add('hide');
-  if (!fallo) renderOffline();
-}
-
+function refresh() { computeData(); renderEstado(); renderEmpezar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
 async function sincronizar() {
-  $('sync-estado').textContent = 'Sincronizando…';
   const r = await syncNow();
   if (r.cambioLocal) refresh();
-  renderSync();
+  pintaAvisoToken();
 }
-
-function refresh() { computeData(); renderHoy(); renderMapa(); renderTemario(); renderChips(); renderList(); if (selTema) selectTema(selTema); }
-
 async function init() {
-  mountThemeControl($('tema-ctl'));
-  initControles();
-  await loadTemario();
-  computeData(); renderHoy(); renderMapa(); renderTemario(); renderSync(); renderOffline();
-  try {
-    const { items: all, invalid } = await loadCatalog();
-    items = all; refresh();
-    if (invalid.length) $('avisos').append(el('p', 'aviso', 'Estos archivos tienen errores y no se muestran: ' + invalid.join(', ') + '. Revísalos en «Añadir test».'));
-  } catch (e) {
-    $('lista').replaceChildren(el('p', 'aviso', 'No se pudo cargar la lista de tests. Puede ser el límite de la API de GitHub; recarga en unos minutos.'));
-  }
+  await loadTemario(); refresh();
+  await cargarCatalogo(); refresh();
   const off = offInfo();                                         // si ya la guardaste, se renueva sola de vez en cuando
-  if (off.t && navigator.onLine !== false && Date.now() - off.t > OFF.maxEdad) guardarOffline(items).then(renderOffline).catch(() => { /* nada */ });
+  if (off.t && navigator.onLine !== false && Date.now() - off.t > OFF.maxEdad) guardarOffline(items).catch(() => { /* nada */ });
   if (getToken()) sincronizar();
 }
-
-$('sync-ya').addEventListener('click', sincronizar);
-$('off-guardar').addEventListener('click', guardarTodo);
-$('off-instalar').addEventListener('click', async () => { if (_pideInstalar) { _pideInstalar.prompt(); try { await _pideInstalar.userChoice; } catch (e) { /* nada */ } _pideInstalar = null; renderOffline(); } });
-document.addEventListener('ma-puede-instalar', renderOffline);
-window.addEventListener('offline', renderSync);
-window.addEventListener('online', () => { if (getToken()) sincronizar(); else renderSync(); });
+window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
-$('exp').addEventListener('click', exportProgress);
-$('imp').addEventListener('click', () => $('impfile').click());
-$('impfile').addEventListener('change', e => {
-  const f = e.target.files[0]; if (!f) return;
-  if (!confirm('Esto reemplaza el progreso guardado en este navegador. ¿Continuar?')) { e.target.value = ''; return; }
-  importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'El archivo no es válido.'; if (ok) { refresh(); scheduleSync(); } e.target.value = ''; });
-});
 init();
 </script>
 </body>

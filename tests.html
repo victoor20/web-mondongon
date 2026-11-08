@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tests · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261109">
+</head>
+<body data-pagina="tests">
+<div class="wrap">
+  <div class="pagehead pagehead-fila">
+    <div>
+      <h1 class="titular">Tests</h1>
+      <p class="entradilla">Todos tus tests. Ábrelos para hacerlos, o edítalos si hay algo que corregir.</p>
+    </div>
+    <a class="btn" href="nuevo.html">Añadir test</a>
+  </div>
+
+  <section id="seccion-tests">
+    <div class="filtros hoja pad">
+      <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
+      <div class="chips" id="chips"></div>
+      <div class="chips origen" id="chips-origen"></div>
+    </div>
+    <div class="barra">
+      <label>Mostrar <select id="pp" aria-label="Tests por página"></select></label>
+      <label>Ordenar <select id="orden" aria-label="Orden"></select></label>
+      <span class="fine" id="cuenta"></span>
+    </div>
+    <div class="lista" id="lista"><p class="vacio-msg">Cargando tests…</p></div>
+    <div class="pager hide" id="pager">
+      <button type="button" class="btn small ghost" id="ant">Anterior</button>
+      <span id="pag"></span>
+      <button type="button" class="btn small ghost" id="sig">Siguiente</button>
+    </div>
+    <div id="avisos"></div>
+  </section>
+</div>
+<script src="app.js?v=20261109"></script>
+<script src="vistas.js?v=20261109"></script>
+<script>
+let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', pagina = 1;
+const ORDENES = {
+  recientes: ['Más recientes primero', (a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id)],
+  antiguos: ['Más antiguos primero', (a, b) => (a.fecha || '').localeCompare(b.fecha || '') || a.id.localeCompare(b.id)],
+  nombre: ['Nombre (A–Z)', (a, b) => a.titulo.localeCompare(b.titulo, 'es', { numeric: true })],
+  peor: ['Peor nota primero', (a, b) => ((statsFor(a.id) || { ultimoPct: 101 }).ultimoPct) - ((statsFor(b.id) || { ultimoPct: 101 }).ultimoPct)],
+  sinhacer: ['Sin hacer primero', (a, b) => (statsFor(a.id) ? 1 : 0) - (statsFor(b.id) ? 1 : 0) || (b.fecha || '').localeCompare(a.fecha || '')]
+};
+const TAMANOS = [5, 10, 25, 50, 100, 0];     // 0 = todos
+const itemTemas = it => Object.keys(it.temas || {});
+function matches(it) {
+  if (fTema && !itemTemas(it).includes(fTema)) return false;
+  if (fFuente !== 'Todos' && it.fuente !== fFuente) return false;
+  if (fBloque === 'Sin clasificar') return it.kind === 'html' || !itemTemas(it).some(t => bloqueOf(t));
+  if (fBloque !== 'Todos' && !itemTemas(it).some(t => bloqueOf(t) === fBloque)) return false;
+  return true;
+}
+function fila(it) {
+  const ts = itemTemas(it), b = ts.map(bloqueOf).find(Boolean), sc = it.kind === 'json' ? statsFor(it.id) : null;
+  const f = el('div', 'fila'); f.dataset.b = b || 'x';
+  const a = el('a', 'fl'); a.href = it.url;
+  const ins = el('div', 'ins' + (b ? '' : ' sin'));
+  ins.title = it.kind === 'html' ? 'Sin clasificar' : temaLabel(it.tema);
+  ins.append(el('b', '', b ? codigoTema(it.tema) : '?'));
+  if (ts.length > 1) ins.append(el('small', '', `+${ts.length - 1}`));
+  const main = el('div'), meta = el('div', 'fmeta'), day = fmtDay(it.fecha);
+  const corto = _temario.byId[it.tema] ? _temario.byId[it.tema].corto : (it.kind === 'html' ? 'Sin clasificar' : it.tema);
+  meta.append(el('span', '', corto), el('span', 'org', it.fuente));
+  if (it.n) meta.append(el('span', '', `${it.n} preguntas`));
+  if (day) meta.append(el('span', '', `${day.d} ${day.m}`));
+  main.append(el('div', 'ftit', it.titulo), meta);
+  a.append(ins, main);
+  if (sc) { const r = el('div', 'fres' + (sc.ultimoPct < 60 ? ' low' : '')); r.append(el('b', '', sc.ultimoPct + ' %'), el('span', '', `último, ${plural(sc.intentos, 'intento', 'intentos')}`)); a.append(r); }
+  f.append(a);
+  if (it.kind === 'json') { const e = el('a', 'btn small ghost fe', 'Editar'); e.href = `editar.html?t=${encodeURIComponent(it.id)}`; e.setAttribute('aria-label', `Editar: ${it.titulo}`); f.append(e); }
+  return f;
+}
+function renderList() {
+  const q = $('buscar').value.trim().toLowerCase(), prefs = getPrefs();
+  const orden = ORDENES[prefs.orden] ? prefs.orden : 'recientes', pp = TAMANOS.includes(prefs.pp) ? prefs.pp : 10;
+  const vis = items.filter(it => matches(it) && (it.titulo + ' ' + itemTemas(it).map(temaLabel).join(' ') + ' ' + it.fuente + ' ' + fmtDate(it.fecha)).toLowerCase().includes(q)).sort(ORDENES[orden][1]);
+  const paginas = pp ? Math.max(1, Math.ceil(vis.length / pp)) : 1;
+  if (pagina > paginas) pagina = paginas;
+  const trozo = pp ? vis.slice((pagina - 1) * pp, pagina * pp) : vis;
+  $('cuenta').textContent = items.length ? (vis.length === items.length ? plural(vis.length, 'test', 'tests') : `${vis.length} de ${items.length} tests`) : '';
+  const list = $('lista'); list.replaceChildren();
+  if (!vis.length) {
+    list.append(el('p', 'vacio-msg', items.length ? 'Ningún test coincide con el filtro.' : 'Todavía no hay tests. Usa «Añadir test» para subir el primero.'));
+  } else trozo.forEach(it => list.append(fila(it)));
+  $('pager').classList.toggle('hide', paginas < 2);
+  $('pag').textContent = `Página ${pagina} de ${paginas}`;
+  $('ant').disabled = pagina <= 1; $('sig').disabled = pagina >= paginas;
+  $('ant').classList.toggle('off', pagina <= 1); $('sig').classList.toggle('off', pagina >= paginas);
+}
+function renderChips() {
+  const box = $('chips'); box.replaceChildren();
+  const mk = (txt, on, fn) => { const b = el('button', 'chip' + (on ? ' on' : ''), txt); b.type = 'button'; b.addEventListener('click', fn); box.append(b); };
+  if (fTema) mk(`Tema ${codigoTema(fTema)} ✕`, true, () => { fTema = null; pagina = 1; renderChips(); renderList(); });
+  const bl = new Set();
+  items.forEach(it => { const t = itemTemas(it).map(bloqueOf).filter(Boolean); if (t.length) t.forEach(x => bl.add(x)); else bl.add('Sin clasificar'); });
+  if (bl.size >= 2 || fTema) {
+    mk('Todos', fBloque === 'Todos', () => { fBloque = 'Todos'; pagina = 1; renderChips(); renderList(); });
+    [..._temario.bloques.map(b => b.id), 'Sin clasificar'].filter(b => bl.has(b))
+      .forEach(b => mk(b === 'Sin clasificar' ? b : `Bloque ${b}`, fBloque === b, () => { fBloque = b; pagina = 1; renderChips(); renderList(); }));
+  }
+  const fb = $('chips-origen'); fb.replaceChildren();
+  const fuentes = [...new Set(items.map(i => i.fuente))].sort((a, b) => a.localeCompare(b, 'es'));
+  if (fuentes.length >= 2) {
+    fb.append(el('span', 'rot', 'Origen'));
+    ['Todos', ...fuentes].forEach(f => {
+      const b = el('button', 'chip' + (fFuente === f ? ' on' : ''), f); b.type = 'button';
+      b.addEventListener('click', () => { fFuente = f; pagina = 1; renderChips(); renderList(); }); fb.append(b);
+    });
+  }
+}
+function initControles() {
+  const prefs = getPrefs();
+  const o = $('orden'); Object.entries(ORDENES).forEach(([k, v]) => { const op = el('option', '', v[0]); op.value = k; o.append(op); });
+  o.value = ORDENES[prefs.orden] ? prefs.orden : 'recientes';
+  const p = $('pp'); TAMANOS.forEach(n => { const op = el('option', '', n ? String(n) : 'Todos'); op.value = String(n); p.append(op); });
+  p.value = String(TAMANOS.includes(prefs.pp) ? prefs.pp : 10);
+  o.addEventListener('change', () => { setPref('orden', o.value); pagina = 1; renderList(); });
+  p.addEventListener('change', () => { setPref('pp', Number(p.value)); pagina = 1; renderList(); });
+  $('ant').addEventListener('click', () => { pagina--; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
+  $('sig').addEventListener('click', () => { pagina++; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
+  $('buscar').addEventListener('input', () => { pagina = 1; renderList(); });
+}
+async function init() {
+  initControles();
+  await loadTemario();
+  const r = await cargarCatalogo();
+  if (!r.ok) { $('lista').replaceChildren(el('p', 'aviso', 'No se pudo cargar la lista de tests. Puede ser el límite de la API de GitHub; recarga en unos minutos.')); return; }
+  renderChips(); renderList();
+  if (r.invalid.length) $('avisos').append(el('p', 'aviso', 'Estos archivos tienen errores y no se muestran: ' + r.invalid.join(', ') + '. Revísalos en «Añadir test».'));
+}
+init();
+</script>
+</body>
+</html>

@@ -6,21 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test · Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
-<meta name="theme-color" content="#F2F4F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E131E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261103">
+<link rel="stylesheet" href="style.css?v=20261109">
 </head>
-<body>
+<body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
-  <header class="site">
-    <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
-    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
-  </header>
+  <div class="volver"><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
 
   <p id="loading" class="vacio-msg">Cargando…</p>
 
@@ -120,7 +117,7 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261103"></script>
+<script src="app.js?v=20261109"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque');
@@ -494,7 +491,6 @@ window.addEventListener('pagehide', save);
 
 (async function init() {
   if (!T) { location.replace('index.html'); return; }
-  mountThemeControl($('tema-ctl'));
   await loadTemario();
   if (ES_BANCO) await conTiempo(syncNow(), 5000);                  // errores y dudas: trae antes lo de tus otros dispositivos
   else syncNow();

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ajustes · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261109">
+</head>
+<body data-pagina="ajustes">
+<div class="wrap">
+  <div class="pagehead">
+    <h1 class="titular">Ajustes</h1>
+    <p class="entradilla">Aspecto, uso sin conexión y sincronización entre tus dispositivos.</p>
+  </div>
+
+  <section class="hoja sync" style="margin-top:0">
+    <h2>Aspecto</h2>
+    <p class="estado-s">Claro, oscuro o como el sistema.</p>
+    <div style="margin-top:.7rem"><div data-tema-ctl></div></div>
+  </section>
+
+  <section class="hoja sync" id="off-box" style="margin-top:1rem">
+    <h2>Uso sin conexión</h2>
+    <p class="estado-s" id="off-estado"></p>
+    <div class="acciones" style="margin-top:.7rem">
+      <button type="button" class="btn small" id="off-guardar">Guardar para usar sin conexión</button>
+      <button type="button" class="btn small ghost hide" id="off-instalar">Instalar como app</button>
+    </div>
+    <progress class="off-prog hide" id="off-prog" value="0" max="1" aria-label="Guardando"></progress>
+    <details>
+      <summary>Cómo usarlo</summary>
+      <ol class="pasos">
+        <li>Con internet, pulsa el botón. Verás cuántos tests se guardan en este dispositivo.</li>
+        <li>iPhone: abre la web desde el icono de la pantalla de inicio. Si aún no lo tienes, en Safari pulsa Compartir y «Añadir a pantalla de inicio».</li>
+        <li>Tablet o portátil con Chrome: menú y «Instalar aplicación» (o «Añadir a pantalla de inicio»).</li>
+        <li>Para comprobarlo, activa el modo avión y abre la web: el inicio y los tests deben cargar.</li>
+      </ol>
+      <p class="fine">Hay que hacerlo una vez en cada dispositivo. Si pasas muchos días sin abrir la web, el móvil puede borrar lo guardado y bastará con volver a pulsar el botón. Cuando hay conexión, la web se actualiza sola.</p>
+    </details>
+  </section>
+
+  <section class="hoja sync" id="sync-box" aria-live="polite" style="margin-top:1rem">
+    <h2>Sincronización</h2>
+    <p class="estado-s" id="sync-estado"></p>
+    <div class="acciones" style="margin-top:.7rem">
+      <button type="button" class="btn small ghost hide" id="sync-ya">Sincronizar ahora</button>
+      <a class="btn small ghost" href="nuevo.html#token">Token de GitHub</a>
+    </div>
+    <details>
+      <summary>Cómo configurarla</summary>
+      <p class="fine">Tu progreso, errores, dudas y notas se guardan en este navegador. Para verlos igual en el PC, el móvil y la tablet, se sincronizan a través de un repositorio privado de GitHub que solo tú ves.</p>
+      <ol class="pasos">
+        <li>En GitHub crea un repositorio nuevo llamado <b>mondongon-datos</b>, marcado como <b>Private</b>.</li>
+        <li>Edita tu token (Settings, Developer settings, Personal access tokens, Fine-grained tokens) y añade ese repositorio con <b>Contents: Read and write</b>. Si no te deja editarlo, crea otro token que incluya los dos repositorios.</li>
+        <li>En cada dispositivo, guarda el token en «Token de GitHub».</li>
+      </ol>
+    </details>
+  </section>
+
+  <div class="pie">
+    <span class="fine" style="flex:1 1 16rem">Copia manual de tu progreso, por si no usas la sincronización.</span>
+    <button type="button" class="btn small ghost" id="exp">Exportar</button>
+    <button type="button" class="btn small ghost" id="imp">Importar</button>
+    <input type="file" id="impfile" accept="application/json,.json" class="hide">
+    <span class="fine" id="impmsg" aria-live="polite"></span>
+  </div>
+</div>
+<script src="app.js?v=20261109"></script>
+<script src="vistas.js?v=20261109"></script>
+<script>
+function renderSync() {
+  const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
+  const tiene = !!getToken();
+  pintaAvisoToken();
+  $('sync-ya').classList.toggle('hide', !tiene);
+  if (tiene && navigator.onLine === false) { p.append(el('span', 'mal', 'Sin conexión. '), 'Tu progreso se guarda aquí y se sincronizará cuando vuelva internet.'); return; }
+  if (!tiene) { p.append(el('span', 'mal', 'Sin sincronizar. '), 'Este navegador guarda tu progreso solo aquí. Para activarla, guarda tu token de GitHub.'); return; }
+  if (e === 'ok') { p.append(el('span', 'ok', 'Sincronizado. '), `Última vez ${haceTexto(new Date(syncInfo.t).toISOString())}.`); return; }
+  const msgs = {
+    'sin-repo': 'No encuentro el repositorio privado «mondongon-datos» o tu token no llega a él. Sigue los pasos de «Cómo configurarla».',
+    token: 'GitHub rechaza el token de este dispositivo. Guárdalo de nuevo en «Token de GitHub».',
+    permiso: 'El token no puede escribir en «mondongon-datos». Revisa que tenga «Contents: Read and write».',
+    error: 'No he podido sincronizar ahora. Se reintentará al volver a abrir la web.',
+    off: 'Comprobando…'
+  };
+  p.append(el('span', 'mal', 'Sin sincronizar. '), msgs[e] || msgs.error);
+}
+function renderOffline() {
+  const p = $('off-estado'), info = offInfo(), b = $('off-guardar');
+  p.replaceChildren();
+  if (!('serviceWorker' in navigator) || !window.caches) {
+    p.append(el('span', 'mal', 'No disponible. '), 'Este navegador no permite guardar la web para usarla sin conexión.'); b.classList.add('hide'); return;
+  }
+  if (info.t) {
+    p.append(el('span', 'ok', 'Lista para usar sin conexión. '), `${plural(info.n, 'test guardado', 'tests guardados')}. Última actualización ${haceTexto(new Date(info.t).toISOString())}.`);
+    b.textContent = 'Actualizar ahora';
+  } else {
+    p.append(el('span', 'mal', 'Todavía no. '), 'Pulsa el botón, con internet, para guardar la web y tus tests en este dispositivo.');
+    b.textContent = 'Guardar para usar sin conexión';
+  }
+  $('off-instalar').classList.toggle('hide', !_pideInstalar);
+}
+async function guardarTodo() {
+  const b = $('off-guardar'), pr = $('off-prog'); let fallo = false;
+  b.disabled = true; pr.classList.remove('hide');
+  try {
+    const todos = items.length ? items : (await loadCatalog()).items;
+    await guardarOffline(todos, (h, n) => { pr.max = n; pr.value = h; $('off-estado').textContent = `Guardando… ${h} de ${n}`; });
+  } catch (e) {
+    fallo = true;
+    $('off-estado').replaceChildren(el('span', 'mal', 'No se ha podido guardar. '), navigator.onLine === false ? 'Ahora mismo no hay conexión.' : 'Inténtalo de nuevo en unos segundos.');
+  }
+  b.disabled = false; pr.classList.add('hide');
+  if (!fallo) renderOffline();
+}
+async function sincronizar() {
+  $('sync-estado').textContent = 'Sincronizando…';
+  await syncNow();
+  renderSync();
+}
+$('sync-ya').addEventListener('click', sincronizar);
+$('off-guardar').addEventListener('click', guardarTodo);
+$('off-instalar').addEventListener('click', async () => { if (_pideInstalar) { _pideInstalar.prompt(); try { await _pideInstalar.userChoice; } catch (e) { /* nada */ } _pideInstalar = null; renderOffline(); } });
+document.addEventListener('ma-puede-instalar', renderOffline);
+window.addEventListener('offline', renderSync);
+window.addEventListener('online', renderSync);
+$('exp').addEventListener('click', exportProgress);
+$('imp').addEventListener('click', () => $('impfile').click());
+$('impfile').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (!confirm('Esto reemplaza el progreso guardado en este navegador. ¿Continuar?')) { e.target.value = ''; return; }
+  importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'El archivo no es válido.'; if (ok) scheduleSync(); e.target.value = ''; });
+});
+renderSync(); renderOffline();
+if (getToken()) sincronizar();
+</script>
+</body>
+</html>

@@ -236,7 +236,6 @@ function mountThemeControl(box) {
     b.addEventListener('click', () => { setPref('tema', v); applyTema(v); [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === b))); });
     box.append(b);
   });
-  montarRefresco(box);
 }
 
 /* Botón de refresco: sincroniza, renueva la copia sin conexión (si ya la guardaste) y recarga. No se pone en pantalla de test. */
@@ -251,13 +250,6 @@ async function refrescarTodo(btn) {
     }
   } catch (e) { /* si algo falla, igualmente se recarga */ }
   location.reload();
-}
-function montarRefresco(box) {
-  if (document.getElementById('exam') || document.querySelector('.refresco')) return;
-  const b = el('button', 'refresco'); b.type = 'button'; b.title = 'Actualizar'; b.setAttribute('aria-label', 'Actualizar la web, los tests y el progreso');
-  b.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>');
-  b.addEventListener('click', () => refrescarTodo(b));
-  box.before(b);
 }
 
 /* ---------- progreso guardado en este navegador ----------
@@ -596,17 +588,78 @@ async function guardarOffline(items, onProgreso) {
 let _pideInstalar = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _pideInstalar = e; document.dispatchEvent(new Event('ma-puede-instalar')); });
 function montarAvisoRed() {
-  const wrap = document.querySelector('.wrap'), cab = wrap && wrap.querySelector('.site');
-  if (!wrap || !cab) return;
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
   const av = el('p', 'sin-red hide', 'Sin conexión. Puedes practicar con los tests que tengas guardados; tu progreso se sincronizará al volver.');
-  av.setAttribute('role', 'status'); cab.after(av);
+  av.setAttribute('role', 'status'); wrap.prepend(av);
   const pinta = () => av.classList.toggle('hide', navigator.onLine !== false);
   window.addEventListener('offline', pinta);
   window.addEventListener('online', () => { pinta(); if (getToken()) syncNow(); });
   pinta();
 }
+
+/* ---------- estructura común: menú lateral (escritorio) y barra inferior (móvil) ---------- */
+const ICO = {
+  inicio: '<path d="M4 11.2 12 4l8 7.2V19a1.5 1.5 0 0 1-1.5 1.5H15V15H9v5.5H5.5A1.5 1.5 0 0 1 4 19z"/>',
+  temario: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.6 6.5h.01M4.6 12h.01M4.6 17.5h.01"/>',
+  tests: '<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="m8.4 12.2 2.5 2.5 4.7-5.2"/>',
+  biblioteca: '<path d="M4 5.8A1.8 1.8 0 0 1 5.8 4H11v16H5.8A1.8 1.8 0 0 1 4 18.2z"/><path d="M20 5.8A1.8 1.8 0 0 0 18.2 4H13v16h5.2a1.8 1.8 0 0 0 1.8-1.8z"/>',
+  ajustes: '<path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/>',
+  refrescar: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'
+};
+const NAV = [['inicio', 'Inicio', 'index.html'], ['temario', 'Temario', 'temario.html'], ['tests', 'Tests', 'tests.html'], ['biblioteca', 'Biblioteca', 'biblioteca.html']];
+const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;   // iconos fijos, no vienen de datos
+function crearRefresco() {
+  const b = el('button', 'refresco'); b.type = 'button'; b.title = 'Actualizar'; b.setAttribute('aria-label', 'Actualizar la web, los tests y el progreso');
+  b.insertAdjacentHTML('beforeend', svg('refrescar'));
+  b.addEventListener('click', () => refrescarTodo(b));
+  return b;
+}
+function montarShell() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap || document.querySelector('.rail')) return;
+  const pag = document.body.dataset.pagina || '', enfoque = document.body.hasAttribute('data-enfoque');
+  const marca = '<img src="apple-touch-icon.png" alt="" width="32" height="32"><span>Mi Academia</span>';
+  const enlace = (id, txt, href, cls) => {
+    const a = el('a', cls); a.href = href; a.insertAdjacentHTML('beforeend', svg(id)); a.append(el('span', '', txt));
+    if (id === pag) a.setAttribute('aria-current', 'page'); return a;
+  };
+  // escritorio: menú lateral
+  const rail = el('aside', 'rail'), brand = el('a', 'brand'); brand.href = 'index.html'; brand.insertAdjacentHTML('beforeend', marca);
+  const nav = el('nav', 'nav'); nav.setAttribute('aria-label', 'Secciones');
+  NAV.forEach(([id, txt, href]) => nav.append(enlace(id, txt, href, 'nav-i')));
+  const pie = el('div', 'rail-pie');
+  const tc = el('div'); tc.dataset.temaCtl = '';
+  const fila = el('div', 'rail-fila'); if (!enfoque) fila.append(crearRefresco()); fila.append(tc);
+  pie.append(fila, enlace('ajustes', 'Ajustes', 'ajustes.html', 'nav-i'));
+  rail.append(brand, nav, pie);
+  // móvil: barra superior y barra de pestañas
+  const main = el('div', 'main'), top = el('header', 'topbar'), tb = el('a', 'brand'); tb.href = 'index.html'; tb.insertAdjacentHTML('beforeend', marca);
+  const acc = el('div', 'topbar-acc'); if (!enfoque) acc.append(crearRefresco());
+  const aj = el('a', 'refresco'); aj.href = 'ajustes.html'; aj.title = 'Ajustes'; aj.setAttribute('aria-label', 'Ajustes'); aj.insertAdjacentHTML('beforeend', svg('ajustes'));
+  if (pag === 'ajustes') aj.setAttribute('aria-current', 'page');
+  acc.append(aj); top.append(tb, acc);
+  const tab = el('nav', 'tabbar'); tab.setAttribute('aria-label', 'Secciones');
+  NAV.forEach(([id, txt, href]) => tab.append(enlace(id, txt, href, 'tab-i')));
+  wrap.before(main); main.append(top, wrap); document.body.prepend(rail); document.body.append(tab);
+  document.querySelectorAll('[data-tema-ctl]').forEach(mountThemeControl);
+}
+// aviso arriba de cada página cuando este dispositivo no tiene el token (o GitHub lo rechaza)
+function pintaAvisoToken() {
+  const wrap = document.querySelector('.wrap'); if (!wrap) return;
+  let a = document.getElementById('aviso-token');
+  if (!a) { a = el('p', 'sin-red hide', ''); a.id = 'aviso-token'; a.setAttribute('role', 'status'); wrap.prepend(a); }
+  const tiene = !!getToken(), e = syncInfo.estado;
+  a.replaceChildren();
+  const txt = !tiene ? 'Este dispositivo no tiene el token de GitHub: tu progreso no se sincroniza y no podrás publicar tests. '
+    : (e === 'token' ? 'GitHub rechaza el token de este dispositivo (puede haber caducado): no se sincroniza ni se pueden publicar tests. ' : '');
+  if (txt) { const l = el('a', '', !tiene ? 'Configurarlo' : 'Guardar uno nuevo'); l.href = 'nuevo.html#token'; a.append(txt, l); }
+  a.classList.toggle('hide', !txt);
+}
 registrarSW();
+montarShell();
 montarAvisoRed();
+pintaAvisoToken();
 
 applyTema(getPrefs().tema);
 

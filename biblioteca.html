@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Biblioteca · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261109">
+</head>
+<body data-pagina="biblioteca">
+<div class="wrap">
+  <div class="pagehead">
+    <h1 class="titular">Biblioteca</h1>
+    <p class="entradilla">Material, tarjetas y notas, ordenados por bloque y tema.</p>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Biblioteca">
+    <button type="button" role="tab" id="tab-material" aria-controls="panel-material" aria-selected="true">Material</button>
+    <button type="button" role="tab" id="tab-tarjetas" aria-controls="panel-tarjetas" aria-selected="false" tabindex="-1">Tarjetas</button>
+    <button type="button" role="tab" id="tab-notas" aria-controls="panel-notas" aria-selected="false" tabindex="-1">Notas</button>
+  </div>
+
+  <div role="tabpanel" id="panel-material" aria-labelledby="tab-material">
+    <div class="vacio-card">
+      <h2>Todavía no hay material</h2>
+      <p>Aquí se ordenarán los PDF, esquemas y audios de la academia, por bloque y tema. Se guardarán en un repositorio privado y se podrán leer sin conexión.</p>
+    </div>
+    <div class="bib-grid" id="bib-bloques"></div>
+  </div>
+  <div role="tabpanel" id="panel-tarjetas" aria-labelledby="tab-tarjetas" class="hide">
+    <div class="vacio-card">
+      <h2>Todavía no hay tarjetas</h2>
+      <p>Aquí guardarás definiciones y conceptos por tema para repasarlos con tarjetas de pregunta y respuesta.</p>
+    </div>
+  </div>
+  <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
+    <div id="notas"></div>
+  </div>
+</div>
+<script src="app.js?v=20261109"></script>
+<script src="vistas.js?v=20261109"></script>
+<script>
+const TABS = ['material', 'tarjetas', 'notas'];
+function mostrar(t, enfocar) {
+  if (!TABS.includes(t)) t = 'material';
+  TABS.forEach(x => {
+    const on = x === t, b = $('tab-' + x);
+    b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+    $('panel-' + x).classList.toggle('hide', !on);
+    if (on && enfocar) b.focus();
+  });
+  try { history.replaceState(null, '', '#' + t); } catch (e) { /* nada */ }
+  if (t === 'notas') renderNotas();
+}
+TABS.forEach((t, i) => {
+  const b = $('tab-' + t);
+  b.addEventListener('click', () => mostrar(t));
+  b.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+    e.preventDefault(); mostrar(TABS[(i + d + TABS.length) % TABS.length], true);
+  });
+});
+function renderBloques() {
+  const box = $('bib-bloques'); box.replaceChildren();
+  _temario.bloques.forEach(b => {
+    const c = el('article', 'bib-bloque'); c.dataset.b = b.id;
+    c.append(el('b', 'rn', b.id), el('h3', '', b.titulo), el('p', 'fine', `${plural(b.temas.length, 'tema', 'temas')} · sin documentos`));
+    box.append(c);
+  });
+}
+let notasCargadas = false;
+async function renderNotas() {
+  const box = $('notas'); if (notasCargadas) return;
+  const notas = getNotas(), keys = Object.keys(notas);
+  box.replaceChildren();
+  if (!keys.length) {
+    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes notas'), el('p', '', 'Cuando escribas una nota en una pregunta durante un test, aparecerá aquí agrupada por tema.')); box.append(v); notasCargadas = true; return;
+  }
+  box.append(el('p', 'vacio-msg', 'Cargando notas…'));
+  const qs = {}; (await todasLasPreguntas()).forEach(q => { qs[q.key] = q; });
+  box.replaceChildren();
+  const grupos = {};
+  keys.forEach(k => { const q = qs[k], t = q ? q.tema : 'General'; (grupos[t] = grupos[t] || []).push({ k, q, texto: notas[k] }); });
+  const orden = Object.keys(_temario.byId), ids = Object.keys(grupos).sort((a, b) => (orden.indexOf(a) + 1 || 999) - (orden.indexOf(b) + 1 || 999));
+  ids.forEach(t => {
+    const g = el('section', 'notas-g'); g.dataset.b = bloqueOf(t) || 'x';
+    g.append(el('h2', 'notas-t', temaLabel(t)));
+    grupos[t].forEach(n => {
+      const c = el('article', 'nota-card');
+      c.append(el('p', 'nota-q', n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.'), el('p', 'nota-x', n.texto));
+      if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = `test.html?t=${encodeURIComponent(n.q.testId)}`; c.append(a); }
+      g.append(c);
+    });
+    box.append(g);
+  });
+  notasCargadas = true;
+}
+async function init() {
+  await loadTemario(); renderBloques();
+  mostrar(location.hash.slice(1));
+}
+init();
+</script>
+</body>
+</html>
