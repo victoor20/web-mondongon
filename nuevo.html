@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Añadir test · Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
@@ -293,6 +294,7 @@ $('tsave').addEventListener('click', async () => {
   if (!t) { $('tmsg').textContent = 'No encuentro un token en lo que has pegado. Debe empezar por github_pat_.'; return; }
   try { localStorage.setItem(GH_KEY, t); $('token').value = ''; }
   catch (e) { $('tmsg').textContent = 'Este navegador no permite guardarlo (¿modo privado?).'; return; }
+  try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (e) { /* nada */ }   // pide al navegador no borrar los datos de la web
   refreshCfg(); await checkToken();
 });
 $('tcheck').addEventListener('click', checkToken);

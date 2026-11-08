@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
@@ -23,6 +24,7 @@
     <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
     <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="nuevo.html">Añadir test</a></div>
   </header>
+  <p class="sin-red hide" id="aviso-token" role="status"></p>
 
   <h1 class="titular">Tu preparación</h1>
   <p class="entradilla">Administrativo del Estado (C1): 6 bloques y 45 temas.</p>
@@ -344,9 +346,17 @@ function initControles() {
 }
 
 /* ---------- sincronización ---------- */
+function avisoToken(tiene, e) {
+  const a = $('aviso-token'); a.replaceChildren();
+  const txt = !tiene ? 'Este dispositivo no tiene el token de GitHub: tu progreso no se sincroniza y no podrás publicar tests. '
+    : (e === 'token' ? 'GitHub rechaza el token de este dispositivo (puede haber caducado): no se sincroniza ni se pueden publicar tests. ' : '');
+  if (txt) { const l = el('a', '', !tiene ? 'Configurarlo' : 'Guardar uno nuevo'); l.href = 'nuevo.html'; a.append(txt, l); }
+  a.classList.toggle('hide', !txt);
+}
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
   const tiene = !!getToken();
+  avisoToken(tiene, e);
   $('sync-ya').classList.toggle('hide', !tiene);
   if (tiene && navigator.onLine === false) { p.append(el('span', 'mal', 'Sin conexión. '), 'Tu progreso se guarda aquí y se sincronizará cuando vuelva internet.'); return; }
   if (!tiene) { p.append(el('span', 'mal', 'Sin sincronizar. '), 'Este navegador guarda tu progreso solo aquí. Para activarla, guarda tu token en «Añadir test».'); return; }

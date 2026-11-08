@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test · Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
@@ -45,6 +46,7 @@
         <label class="modo"><input type="radio" name="modo" value="examen" checked><b>Examen</b><span>Sin pistas. La corrección y las explicaciones llegan al terminar.</span></label>
         <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder cada pregunta.</span></label>
       </div>
+      <label class="opcion hide" id="o-n-box"><span>Número de preguntas<small>Se eligen al azar entre todos tus tests (o del tema elegido).</small></span><select id="o-n" aria-label="Número de preguntas"></select></label>
       <label class="opcion"><input type="checkbox" id="o-cuenta" checked><span>Contar este intento en mis estadísticas<small id="o-cuenta-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-fb"><span>Mostrar la respuesta correcta y la explicación al responder<small id="o-fb-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-tiempo" checked><span>Mostrar el tiempo mientras respondo<small>Se mide siempre y lo verás al final. Puedes ocultarlo o mostrarlo durante el test.</small></span></label>
@@ -161,11 +163,20 @@ async function prepTest(id) {
   document.title = data.titulo + ' · Mi Academia';
   meta = { titulo: data.titulo, desc: data.descripcion || [...new Set(preguntas.map(q => q.tema))].map(temaLabel).join(' y ') + (data.fecha ? `. Hecho el ${fmtDate(data.fecha)}.` : '.') };
 }
+let mixtoAll = [];
+function nMixto() { const v = $('o-n').value; return v === 'todas' ? mixtoAll.length : parseInt(v, 10); }
 async function prepMixto() {
   const n = Math.max(5, parseInt(params.get('n'), 10) || 20);
   const all = (await allJsonTests()).flat().filter(scopeFilter);
   if (!all.length) throw new Error(scopeName() ? `Todavía no hay preguntas de ${scopeName()}.` : 'Todavía no hay tests para mezclar.');
-  pool = shuffle(all).slice(0, n);
+  mixtoAll = all;
+  const op = [10, 20, 30, 50, 70, 100].filter(x => x < all.length);
+  const sel = $('o-n'); sel.replaceChildren();
+  op.forEach(x => sel.append(new Option(String(x), String(x))));
+  sel.append(new Option(`Todas (${all.length})`, 'todas'));
+  sel.value = op.includes(n) ? String(n) : (n >= all.length ? 'todas' : String(op.filter(x => x <= n).pop() || op[0] || 'todas'));
+  $('o-n-box').classList.remove('hide');
+  pool = shuffle(all).slice(0, Math.min(n, all.length));
   meta = { titulo: scopeName() ? 'Test mixto. ' + scopeName() : 'Test mixto', desc: `${plural(pool.length, 'pregunta', 'preguntas')} al azar${scopeName() ? ' de este ámbito' : ' de todos tus tests'}.` };
 }
 async function prepBanco(tipo) {
@@ -361,6 +372,10 @@ function startExam() {
   mode = document.querySelector('input[name=modo]:checked').value;
   feedback = $('o-fb').checked;
   countIt = $('o-cuenta').checked; showTimer = $('o-tiempo').checked; setPref('timer', showTimer);
+  if (T === 'mixto') {
+    pool = shuffle(mixtoAll).slice(0, nMixto());
+    try { const u = new URL(location.href); u.searchParams.set('n', String(pool.length)); history.replaceState(null, '', u); } catch (e) { /* nada */ }   // «otro test» conserva el número elegido
+  }
   exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null, star: null }));
   elapsed = 0; startAt = Date.now();
   beginExam();
@@ -454,6 +469,7 @@ $('finish-bottom').addEventListener('click', finishExam);
 document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
 function pintarModos() { document.querySelectorAll('.modo').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
 document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => { pintarModos(); applyDefaultCuenta(); applyDefaultFb(); }));
+$('o-n').addEventListener('change', () => { $('w-n').textContent = nMixto(); });
 $('o-fb').addEventListener('change', () => { fbTouched = true; refreshFbHint(); });
 $('o-cuenta').addEventListener('change', () => { countTouched = true; refreshCuentaHint(); });
 $('timer-btn').addEventListener('click', () => { showTimer = !showTimer; setPref('timer', showTimer); paintTimer(); if (showTimer) $('timer').textContent = fmtTime(elapsed); });

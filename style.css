@@ -401,3 +401,4 @@ ol.pasos li{margin:.4rem 0}
 @keyframes giro{to{transform:rotate(360deg)}}
 @media (max-width:640px){.refresco{width:1.95rem;height:1.95rem}}
 @media (prefers-reduced-motion:reduce){.refresco.gira svg{animation:none}}
+.opcion select{margin-left:auto;flex:none;min-width:6.5rem}
