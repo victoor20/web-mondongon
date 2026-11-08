@@ -19,7 +19,7 @@
 <div class="wrap">
   <header class="site">
     <a class="brand" href="index.html"><img src="apple-touch-icon.png" alt="" width="32" height="32">Mi Academia</a>
-    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html">Todos los tests</a></div>
+    <div class="lado"><div id="tema-ctl"></div><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
   </header>
 
   <p id="loading" class="vacio-msg">Cargando…</p>
@@ -46,7 +46,7 @@
         <label class="modo"><input type="radio" name="modo" value="examen" checked><b>Examen</b><span>Sin pistas. La corrección y las explicaciones llegan al terminar.</span></label>
         <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder cada pregunta.</span></label>
       </div>
-      <label class="opcion hide" id="o-n-box"><span>Número de preguntas<small>Se eligen al azar entre todos tus tests (o del tema elegido).</small></span><select id="o-n" aria-label="Número de preguntas"></select></label>
+      <div class="opcion-n hide" id="o-n-box"><label for="o-n">Número de preguntas</label><select id="o-n"></select><small>Se eligen al azar entre todos tus tests (o del tema elegido).</small></div>
       <label class="opcion"><input type="checkbox" id="o-cuenta" checked><span>Contar este intento en mis estadísticas<small id="o-cuenta-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-fb"><span>Mostrar la respuesta correcta y la explicación al responder<small id="o-fb-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-tiempo" checked><span>Mostrar el tiempo mientras respondo<small>Se mide siempre y lo verás al final. Puedes ocultarlo o mostrarlo durante el test.</small></span></label>
@@ -164,6 +164,7 @@ async function prepTest(id) {
   meta = { titulo: data.titulo, desc: data.descripcion || [...new Set(preguntas.map(q => q.tema))].map(temaLabel).join(' y ') + (data.fecha ? `. Hecho el ${fmtDate(data.fecha)}.` : '.') };
 }
 let mixtoAll = [];
+const descMixto = n => `${plural(n, 'pregunta', 'preguntas')} al azar${scopeName() ? ' de este ámbito' : ' de todos tus tests'}.`;
 function nMixto() { const v = $('o-n').value; return v === 'todas' ? mixtoAll.length : parseInt(v, 10); }
 async function prepMixto() {
   const n = Math.max(5, parseInt(params.get('n'), 10) || 20);
@@ -177,7 +178,7 @@ async function prepMixto() {
   sel.value = op.includes(n) ? String(n) : (n >= all.length ? 'todas' : String(op.filter(x => x <= n).pop() || op[0] || 'todas'));
   $('o-n-box').classList.remove('hide');
   pool = shuffle(all).slice(0, Math.min(n, all.length));
-  meta = { titulo: scopeName() ? 'Test mixto. ' + scopeName() : 'Test mixto', desc: `${plural(pool.length, 'pregunta', 'preguntas')} al azar${scopeName() ? ' de este ámbito' : ' de todos tus tests'}.` };
+  meta = { titulo: scopeName() ? 'Test mixto. ' + scopeName() : 'Test mixto', desc: descMixto(pool.length) };
 }
 async function prepBanco(tipo) {
   const store = tipo === 'errores' ? getErr() : getDud();
@@ -469,7 +470,7 @@ $('finish-bottom').addEventListener('click', finishExam);
 document.querySelectorAll('#filters .chip').forEach(b => b.addEventListener('click', () => { filtro = b.dataset.filter; updateFilters(); renderReview(); }));
 function pintarModos() { document.querySelectorAll('.modo').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)); }
 document.querySelectorAll('input[name=modo]').forEach(r => r.addEventListener('change', () => { pintarModos(); applyDefaultCuenta(); applyDefaultFb(); }));
-$('o-n').addEventListener('change', () => { $('w-n').textContent = nMixto(); });
+$('o-n').addEventListener('change', () => { const n = nMixto(); $('w-n').textContent = n; $('w-desc').textContent = descMixto(n); });
 $('o-fb').addEventListener('change', () => { fbTouched = true; refreshFbHint(); });
 $('o-cuenta').addEventListener('change', () => { countTouched = true; refreshCuentaHint(); });
 $('timer-btn').addEventListener('click', () => { showTimer = !showTimer; setPref('timer', showTimer); paintTimer(); if (showTimer) $('timer').textContent = fmtTime(elapsed); });

@@ -29,7 +29,13 @@
   <h1 class="titular">Tu preparación</h1>
   <p class="entradilla">Administrativo del Estado (C1): 6 bloques y 45 temas.</p>
 
-  <section class="hoja mapa" aria-labelledby="mapa-t" style="margin-top:1.4rem">
+  <section class="sec hoy-sec" aria-labelledby="hoy-t">
+    <h2 id="hoy-t">Para hoy</h2>
+    <div class="empezar" id="empezar"></div>
+    <div class="hoy" id="hoy"></div>
+  </section>
+
+  <section class="hoja mapa" aria-labelledby="mapa-t" style="margin-top:2.4rem">
     <h2 id="mapa-t" class="sr">Mapa del temario</h2>
     <div id="mapa-filas"></div>
     <p class="minfo" id="minfo" aria-live="polite">Toca un cuadrado para ver el tema.</p>
@@ -39,12 +45,6 @@
       <span><i class="l-ac"></i>Altura: tu acierto en los últimos intentos</span>
       <span><i class="l-bj"></i>Bajo el 60 %</span>
     </div>
-  </section>
-
-  <section class="sec">
-    <h2>Para hoy</h2>
-    <div class="hoy" id="hoy"></div>
-    <div class="acciones" style="margin-top:1rem"><a class="btn ghost off" id="b-mixto" href="test.html?t=mixto&n=20">Test mixto de 20 preguntas</a></div>
   </section>
 
   <section class="sec">
@@ -136,13 +136,27 @@ function computeData() {
 const reciente = id => (TS[id] && TS[id].reciente.t ? TS[id].reciente : null);
 
 /* ---------- para hoy ---------- */
+function renderEmpezar(nErr, nDud) {
+  const box = $('empezar'); box.replaceChildren();
+  const total = items.filter(i => i.kind === 'json').reduce((s, i) => s + (i.n || 0), 0);
+  const mixto = el('div', 'accion' + (total ? '' : ' off'));
+  mixto.append(el('h3', '', 'Test mixto'), el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). Elige cuántas:` : 'Aparecerá cuando tengas tests publicados.'));
+  const ch = el('div', 'nchips');
+  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}`; ch.append(a); });
+  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}`; ch.append(a); }
+  mixto.append(ch);
+  const err = el('a', 'accion' + (nErr ? '' : ' off')); err.href = 'test.html?t=errores';
+  err.append(el('h3', '', 'Repasar errores'), el('p', '', nErr ? `${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.` : 'No tienes errores pendientes.'), el('span', 'go', nErr ? 'Empezar →' : ''));
+  const dud = el('a', 'accion' + (nDud ? '' : ' off')); dud.href = 'test.html?t=dudosas';
+  dud.append(el('h3', '', 'Repasar dudas'), el('p', '', nDud ? `${plural(nDud, 'duda marcada', 'dudas marcadas')} con la estrella.` : 'No tienes dudas marcadas.'), el('span', 'go', nDud ? 'Empezar →' : ''));
+  box.append(mixto, err, dud);
+}
 const urlMixto = id => `test.html?t=mixto&tema=${encodeURIComponent(id)}&n=20`;
 function renderHoy() {
   const box = $('hoy'); box.replaceChildren();
   const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length;
   const filas = [];
-  if (nErr) filas.push([`${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.`, 'Repasar errores', 'test.html?t=errores']);
-  if (nDud) filas.push([`${plural(nDud, 'duda marcada', 'dudas marcadas')} con la estrella.`, 'Repasar dudas', 'test.html?t=dudosas']);
+  renderEmpezar(nErr, nDud);
   const conDatos = Object.entries(TS).filter(([t]) => _temario.byId[t] && cnt[t]);
   const flojos = conDatos.filter(([, a]) => a.reciente.t >= 10).sort((x, y) => pct(x[1].reciente) - pct(y[1].reciente));
   const flojo = flojos.length && pct(flojos[0][1].reciente) < 85 ? flojos[0][0] : null;
@@ -151,15 +165,14 @@ function renderHoy() {
   if (viejo) filas.push([`${temaLabel(viejo[0])}. Lo practicaste por última vez ${haceTexto(viejo[1].ultima)}.`, 'Practicar', urlMixto(viejo[0])]);
   const sinIntento = Object.keys(cnt).filter(t => _temario.byId[t] && !TS[t]);
   if (sinIntento.length && Object.keys(TS).length) filas.push([`${plural(sinIntento.length, 'tema tiene', 'temas tienen')} tests que aún no has hecho.`, 'Ver el primero', urlMixto(sinIntento[0])]);
-  if (!filas.length) {
-    box.append(el('p', 'hoy-ok', Object.keys(TS).length ? 'Estás al día: no tienes errores ni dudas pendientes.' : 'Todavía no has hecho ningún intento. Toca un cuadrado del mapa o abre un test.'));
-  }
+  if (filas.length) box.append(el('h3', 'hoy-sub', 'Sugerencias'));
+  else if (!Object.keys(TS).length) box.append(el('p', 'hoy-ok', 'Todavía no has hecho ningún intento. Empieza con un test mixto o toca un cuadrado del mapa.'));
   filas.forEach(([txt, bt, href]) => {
     const f = el('div', 'hoy-fila'), a = el('a', 'btn small', bt); a.href = href;
     f.append(el('p', '', txt), a); box.append(f);
   });
-  $('b-mixto').classList.toggle('off', !items.some(i => i.kind === 'json'));
 }
+
 
 /* ---------- mapa del temario ---------- */
 function resumenTema(t) {

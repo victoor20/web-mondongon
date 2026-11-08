@@ -609,3 +609,10 @@ registrarSW();
 montarAvisoRed();
 
 applyTema(getPrefs().tema);
+
+// «← Atrás»: vuelve a la página anterior de esta web; si se abrió directamente, va al inicio
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-atras]'); if (!b) return;
+  let mismo = false; try { mismo = document.referrer && new URL(document.referrer).origin === location.origin; } catch (err) { /* nada */ }
+  if (mismo && history.length > 1) { e.preventDefault(); history.back(); }
+});
