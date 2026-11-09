@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Visor · Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261113">
+</head>
+<body data-pagina="biblioteca" data-enfoque>
+<div class="wrap">
+  <div class="vis-barra" role="toolbar" aria-label="Controles del visor">
+    <a class="btn small ghost" href="biblioteca.html#material" data-atras>← Biblioteca</a>
+    <h1 class="vis-t" id="v-titulo">Documento</h1>
+    <button type="button" class="btn small" id="v-desc" disabled>Descargar</button>
+    <label class="vis-pag">pág. <input type="number" id="v-pag" min="1" step="1" inputmode="numeric" aria-label="Ir a la página" disabled> / <span id="v-n">–</span></label>
+    <div class="vis-zoom">
+      <button type="button" id="v-menos" aria-label="Reducir zoom" disabled>−</button>
+      <span class="z" id="v-z" aria-live="polite">100 %</span>
+      <button type="button" id="v-mas" aria-label="Ampliar zoom" disabled>+</button>
+      <button type="button" id="v-aj" aria-label="Ajustar al ancho" disabled>Ajustar</button>
+    </div>
+  </div>
+  <div class="vis-msg" id="v-msg" role="status" aria-live="polite"></div>
+  <div class="vis-doc" id="v-doc"><div class="vis-pags" id="v-pags"></div></div>
+  <noscript><p class="vis-msg">Este visor necesita JavaScript.</p></noscript>
+  <script nomodule>document.getElementById('v-msg').textContent = 'Este navegador es demasiado antiguo para el visor. Vuelve a la Biblioteca y usa «Descargar».';</script>
+</div>
+<script src="app.js?v=20261113"></script>
+<script src="biblioteca.js?v=20261113"></script>
+<script type="module">
+const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx: 16e6 };
+const id = new URLSearchParams(location.search).get('id') || '';
+const doc = bibDocs[id];
+const msgEl = $('v-msg'), pagsEl = $('v-pags'), barra = document.querySelector('.vis-barra');
+let blob = null, pdf = null, z = 1, fit = 1, n = 0, actual = 1, base = null;
+const pags = [];                                                  // { div, estado, tarea, h, w }
+
+function aviso(texto, malo, extra) {
+  msgEl.replaceChildren(); msgEl.className = 'vis-msg' + (malo ? ' mal' : '');
+  if (texto) msgEl.append(texto);
+  if (extra) msgEl.append(...extra);
+}
+const enlaceVolver = () => { const a = el('a', 'btn small ghost', 'Volver a la Biblioteca'); a.href = 'biblioteca.html#material'; return a; };
+const botonDescargar = () => { const b = el('button', 'btn small', 'Descargar'); b.type = 'button'; b.addEventListener('click', descargar); return b; };
+function descargar() { if (blob && doc) bibGuardarComo(blob, bibNombre(doc)); }
+const leerBuf = b => b.arrayBuffer ? b.arrayBuffer() : new Promise((ok, ko) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = () => ko(fr.error); fr.readAsArrayBuffer(b); });
+const guardado = () => jget(localStorage, VIS.clave, {});
+let tG = 0;
+function recuerda() { clearTimeout(tG); tG = setTimeout(() => { const g = guardado(); g[id] = { p: actual, z }; jset(localStorage, VIS.clave, g); }, 400); }
+
+async function abrir() {
+  if (!doc) { aviso('No encuentro este documento en este dispositivo. Abre la Biblioteca con conexión para actualizar la lista.', true, [el('br'), enlaceVolver()]); return; }
+  $('v-titulo').textContent = doc.titulo; $('v-titulo').title = doc.titulo; document.title = doc.titulo + ' · Mi Academia';
+  aviso('Abriendo el documento…');
+  blob = await bibCopia(id);
+  if (!blob) {
+    if (!navigator.onLine) { aviso('Sin conexión y sin copia guardada. Ábrelo una vez con internet o pulsa «Guardar sin conexión» en la Biblioteca.', true, [el('br'), enlaceVolver()]); return; }
+    try { blob = await bibDescargar(doc); } catch (e) { aviso(bibErrTexto(e), true, [el('br'), enlaceVolver()]); return; }
+  }
+  $('v-desc').disabled = false; $('v-desc').addEventListener('click', descargar);
+  if (doc.ext !== 'pdf') { aviso('Este archivo no es un PDF y el visor no puede mostrarlo. Puedes descargarlo.', false, [el('br'), botonDescargar()]); return; }
+  let lib;
+  try { lib = await import('./vendor/pdfjs/pdf.min.mjs'); lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs/pdf.worker.min.mjs', location.href).href; }
+  catch (e) { aviso('Este navegador no puede cargar el visor. Puedes descargar el archivo.', true, [el('br'), botonDescargar()]); return; }
+  try { pdf = await lib.getDocument({ data: new Uint8Array(await leerBuf(blob)), isEvalSupported: false }).promise; }
+  catch (e) { aviso('No he podido abrir este PDF: puede estar dañado o protegido con contraseña.', true, [el('br'), botonDescargar()]); return; }
+  n = pdf.numPages; $('v-n').textContent = n; $('v-pag').max = n; $('v-pag').value = 1; $('v-pag').disabled = false;
+  ['v-menos', 'v-mas', 'v-aj'].forEach(x => { $(x).disabled = false; });
+  const g = guardado()[id] || {};
+  z = Math.min(VIS.max, Math.max(VIS.min, +g.z || 1));
+  base = (await pdf.getPage(1)).getViewport({ scale: 1 });
+  aviso('');
+  montar(); aplicaZoom(null);
+  if (g.p > 1 && g.p <= n) irAPagina(g.p);
+}
+
+/* ---- maquetación y render perezoso ---- */
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
+  const p = pags[+e.target.dataset.n - 1]; if (e.isIntersecting) pinta(p); else libera(p);
+}), { rootMargin: '100% 0px 100% 0px' }) : null;
+function montar() {
+  pagsEl.replaceChildren();
+  for (let i = 0; i < n; i++) { const d = el('div', 'vis-hoja'); d.dataset.n = i + 1; d.setAttribute('role', 'img'); d.setAttribute('aria-label', 'Página ' + (i + 1)); pagsEl.append(d); pags.push({ div: d, estado: '', tarea: null, i }); }
+}
+function medidas() {
+  const disp = Math.min($('v-doc').clientWidth || 320, VIS.ancho);
+  fit = disp / base.width; return fit * z;                         // escala CSS de las páginas
+}
+function dimensiona(p, w, h) { p.w = w; p.h = h; p.div.style.width = w + 'px'; p.div.style.height = h + 'px'; }
+function aplicaZoom(ancla) {                                       // ancla: { i, f } página y fracción visible, para no perder el sitio
+  const s = medidas(); $('v-z').textContent = Math.round(z * 100) + ' %';
+  $('v-menos').disabled = z <= VIS.min + 1e-6; $('v-mas').disabled = z >= VIS.max - 1e-6;
+  pags.forEach(p => { libera(p); if (io) io.unobserve(p.div); dimensiona(p, Math.floor(base.width * s), Math.floor(base.height * s)); });
+  if (ancla) { const p = pags[ancla.i]; window.scrollTo(window.scrollX, p.div.getBoundingClientRect().top + scrollY - barra.offsetHeight - 8 + ancla.f * p.h); }
+  if (io) pags.forEach(p => io.observe(p.div)); else pags.slice(Math.max(0, actual - 2), actual + 2).forEach(pinta);
+  recuerda();
+}
+async function pinta(p) {
+  if (p.estado) return; p.estado = 'cargando'; const tk = p.tk = (p.tk || 0) + 1;
+  try {
+    const page = await pdf.getPage(p.i + 1); if (p.tk !== tk) return;
+    const s = fit * z, vp0 = page.getViewport({ scale: s }), w = Math.floor(vp0.width), h = Math.floor(vp0.height);
+    if (Math.abs(w - p.w) > 1 || Math.abs(h - p.h) > 1) dimensiona(p, w, h);   // páginas con otro tamaño que la primera
+    const f = Math.min(Math.min(window.devicePixelRatio || 1, 2), Math.sqrt(VIS.maxPx / (w * h)));
+    const vp = page.getViewport({ scale: s * f }), c = document.createElement('canvas');
+    c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+    p.tarea = page.render({ canvasContext: c.getContext('2d'), viewport: vp });
+    await p.tarea.promise; if (p.tk !== tk) return;
+    p.div.replaceChildren(c); p.estado = 'ok'; p.tarea = null;
+  } catch (e) { if (p.tk === tk) { p.estado = ''; p.tarea = null; } }
+}
+function libera(p) {                                               // las páginas lejanas devuelven su memoria
+  if (!p.estado) return; p.tk = (p.tk || 0) + 1;
+  if (p.tarea) { try { p.tarea.cancel(); } catch (e) { /* nada */ } p.tarea = null; }
+  const c = p.div.firstChild; if (c) { c.width = 0; c.height = 0; p.div.replaceChildren(); }
+  p.estado = '';
+}
+
+/* ---- página actual, saltos y zoom ---- */
+const ancla = () => barra.getBoundingClientRect().bottom + 8;
+function paginaActual() {
+  let i = actual - 1; const y = ancla();
+  while (i > 0 && pags[i].div.getBoundingClientRect().top > y) i--;
+  while (i < n - 1 && pags[i].div.getBoundingClientRect().bottom <= y) i++;
+  return i;
+}
+function irAPagina(k) {
+  k = Math.min(n, Math.max(1, Math.round(k) || 1)); actual = k;
+  window.scrollTo(window.scrollX, pags[k - 1].div.getBoundingClientRect().top + scrollY - barra.offsetHeight - 8);
+  $('v-pag').value = k; recuerda();
+}
+function cambiaZoom(nz) {
+  nz = Math.min(VIS.max, Math.max(VIS.min, nz)); if (Math.abs(nz - z) < 1e-6) return;
+  const i = paginaActual(), p = pags[i], r = p.div.getBoundingClientRect(), f = Math.max(0, (ancla() - r.top) / (p.h || 1));
+  z = nz; aplicaZoom({ i, f });
+}
+let raf = 0;
+addEventListener('scroll', () => { if (!n || raf) return; raf = requestAnimationFrame(() => { raf = 0; actual = paginaActual() + 1; if (document.activeElement !== $('v-pag')) $('v-pag').value = actual; recuerda(); }); }, { passive: true });
+$('v-menos').addEventListener('click', () => cambiaZoom(z - VIS.paso));
+$('v-mas').addEventListener('click', () => cambiaZoom(z + VIS.paso));
+$('v-aj').addEventListener('click', () => cambiaZoom(1));
+$('v-pag').addEventListener('change', () => irAPagina(+$('v-pag').value));
+$('v-pag').addEventListener('keydown', e => { if (e.key === 'Enter') { irAPagina(+$('v-pag').value); $('v-pag').blur(); } });
+let tR = 0, ancho0 = innerWidth;
+addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; ancho0 = innerWidth; clearTimeout(tR); tR = setTimeout(() => { const i = paginaActual(); aplicaZoom({ i, f: 0 }); }, 250); });
+abrir();
+</script>
+</body>
+</html>

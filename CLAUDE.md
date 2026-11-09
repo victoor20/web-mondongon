@@ -92,6 +92,23 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   remoto, se archivaron en `C:\Proyectos\mondongon-web-archivo` por si hace falta recuperar
   algo de ellas.
 
+## Biblioteca y visor de PDF
+
+- `biblioteca.html` + `biblioteca.js`: pestañas Material / Tarjetas / Notas, navegación por hash
+  (`#material` = cuadrícula de bloques de colores, `#material/I` = temas del bloque I con sus documentos,
+  `#material/general` = documentos sin tema). El enlace antiguo `biblioteca.html?tema=I-2#material`
+  redirige a `#material/I` con ese tema abierto.
+- Los archivos de material **no están en este repo**: viven en el repositorio privado `mondongon-datos`
+  (carpeta `biblioteca/` y la lista `biblioteca.json`). La lista se copia en `localStorage` (`ma2_bib`) y
+  cada archivo guardado «sin conexión» va a la caché `ma-bib` del navegador, por eso la Biblioteca y el
+  visor funcionan sin red con lo ya guardado.
+- `visor.html` abre los PDF con **pdf.js 6.5.438 (build legacy)**, vendorizado en `vendor/pdfjs/`
+  (`pdf.min.mjs`, `pdf.worker.min.mjs`, `LICENSE`). Versión fija: no se actualiza sola; para cambiarla,
+  `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos tres archivos desde `package/legacy/build/`.
+  Recuerda la última página y el zoom por documento en `ma2_visor`.
+- **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
+  `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
+
 ## Trabajo entre dos equipos
 
 Este proyecto se usa desde dos equipos distintos; el hook `SessionStart` de `.claude/settings.json`

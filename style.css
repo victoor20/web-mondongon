@@ -599,3 +599,57 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .doc-ac .mini{cursor:pointer}
 .doc-ac .mini[disabled]{opacity:.5}
 @media(max-width:640px){.doc{flex-wrap:wrap}.doc-ac{width:100%;justify-content:flex-start}}
+
+/* ---------- Biblioteca por bloques ---------- */
+a.bib-bloque{display:block;overflow:hidden;color:inherit;text-decoration:none;padding:1.4rem 1.2rem 1.1rem;border-color:var(--bc);background:linear-gradient(165deg,var(--bt) 0,var(--hoja) 72%);transition:transform .15s,box-shadow .15s}
+a.bib-bloque:hover{transform:translateY(-2px);box-shadow:0 10px 24px -12px var(--bc)}
+a.bib-bloque:focus-visible{outline:3px solid var(--foco);outline-offset:3px}
+a.bib-bloque .rn{display:block;font-size:2.7rem;letter-spacing:-.03em}
+a.bib-bloque h3{margin:.5rem 0 .55rem;padding-right:1.6rem;font:700 1.02rem/1.3 var(--display)}
+a.bib-bloque .fine{color:var(--tinta);opacity:.78}
+.bib-flecha{position:absolute;right:1.1rem;bottom:1.2rem;width:.6rem;height:.6rem;border-top:2.5px solid var(--bc);border-right:2.5px solid var(--bc);transform:rotate(45deg)}
+.bib-nota{margin:-.4rem 0 1rem}
+.bib-msg:not(:empty){position:sticky;top:.5rem;z-index:5;padding:.55rem .85rem;border-radius:10px;border:1px solid var(--linea);background:var(--hoja);box-shadow:var(--sombra)}
+.bib-volver{display:inline-flex;align-items:center;min-height:2.25rem;margin:0 0 1rem;padding:.3rem .8rem;border:1px solid var(--linea2);border-radius:8px;color:var(--tinta);font:600 .85rem/1 var(--sans);text-decoration:none}
+.bib-volver:hover{border-color:var(--tinta)}
+.bib-cab{display:flex;align-items:center;gap:1rem;margin:0 0 1.2rem}
+.bib-cab .rn{flex:none;min-width:3.4rem;font:800 3.2rem/1 var(--display);letter-spacing:-.03em;color:var(--bc)}
+.bib-cab h2{margin:0;font:700 1.35rem/1.2 var(--display)}
+.bib-cab h2:focus{outline:none}
+.bib-tema{position:relative;margin:0 0 .6rem;border:1px solid var(--linea);border-left:5px solid var(--bc);border-radius:14px;background:var(--hoja);scroll-margin-top:1rem}
+.bib-ts{display:flex;align-items:center;gap:.7rem;min-height:3.2rem;padding:.7rem 1rem;cursor:pointer;list-style:none}
+.bib-ts::-webkit-details-marker{display:none}
+.bib-ts:focus-visible{outline:3px solid var(--foco);outline-offset:-3px;border-radius:10px}
+.bib-ts .tid{flex:none;font:700 .8rem/1.4 var(--sans);color:var(--bc);font-variant-numeric:tabular-nums}
+.bib-ts .tname{flex:1;min-width:0;font:600 .98rem/1.35 var(--display)}
+.bib-ts .tn{flex:none;font-size:.8rem;color:var(--tinta);white-space:nowrap}
+.bib-ts .tn.cero{color:var(--muted)}
+.bib-ts .chev{flex:none;width:.55rem;height:.55rem;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-.15rem);transition:transform .15s}
+.bib-tema[open]>.bib-ts .chev{transform:rotate(-135deg) translateY(-.05rem)}
+.bib-tb{padding:0 1rem 1rem}
+.bib-tb>.fine{margin:0 0 .7rem}
+.bib-tb .doc{background:transparent}
+.bib-vista>.bib-tb{padding:0}
+.bib-tema.flash{animation:flash 1.6s ease-out}
+@media(max-width:560px){.bib-cab .rn{font-size:2.6rem;min-width:2.8rem}}
+
+/* ---------- Visor de PDF ---------- */
+.vis-barra{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .6rem;margin:0 0 .8rem;padding:.55rem .7rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja);box-shadow:0 -14px 0 var(--papel),var(--sombra)}
+.vis-t{flex:1 1 8rem;min-width:0;margin:0;font:700 1rem/1.2 var(--display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vis-barra .vis-pag,.vis-barra .vis-zoom{display:inline-flex;align-items:center;gap:.35rem;font-size:.85rem;color:var(--muted)}
+.vis-pag input{width:3.6rem;min-height:2.25rem;padding:.2rem .4rem;border:1.5px solid var(--linea2);border-radius:8px;background:var(--hoja);color:var(--tinta);font:600 .9rem/1 var(--sans);text-align:center}
+.vis-zoom button{min-width:2.25rem;min-height:2.25rem;padding:0 .6rem;border:1px solid var(--linea2);border-radius:8px;background:transparent;color:var(--tinta);font:700 1rem/1 var(--sans);cursor:pointer}
+.vis-zoom button:hover{border-color:var(--tinta)}
+.vis-zoom button:disabled{opacity:.4;cursor:default}
+.vis-zoom #v-aj{font-size:.8rem}
+.vis-zoom .z{min-width:2.9rem;text-align:center;font-variant-numeric:tabular-nums;color:var(--tinta)}
+.vis-barra button:focus-visible,.vis-barra input:focus-visible,.vis-barra a:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+.vis-msg{margin:0 0 .8rem;padding:1rem 1.1rem;border:1.5px dashed var(--linea2);border-radius:14px}
+.vis-msg:empty{display:none}
+.vis-msg.mal{border-color:var(--ko);color:var(--ko)}
+.vis-msg .btn{margin:.7rem .5rem 0 0}
+.vis-doc{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.vis-pags{display:flex;flex-direction:column;align-items:center;width:max-content;min-width:100%}
+.vis-hoja{position:relative;flex:none;margin:0 0 .7rem;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.vis-hoja canvas{display:block;width:100%;height:100%}
+@media(max-width:560px){.vis-barra{padding:.5rem}.vis-t{flex:1 1 0}}

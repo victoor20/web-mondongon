@@ -86,3 +86,18 @@ async function bibAbrir(d, aviso) {
   const url = URL.createObjectURL(blob);
   if (w && !w.closed) w.location.href = url; else location.href = url;
 }
+
+/* bytes de un documento: primero la copia del dispositivo; si no hay, se descarga (y se guarda) con conexión */
+async function bibBlob(d) {
+  const b = await bibCopia(d.id); if (b) return b;
+  if (!navigator.onLine) throw new Error('offline');
+  return bibDescargar(d);
+}
+const bibNombre = d => ((d.titulo || 'documento').replace(/[\/:*?"<>|]+/g, ' ').trim() || 'documento') + '.' + d.ext;
+function bibGuardarComo(blob, nombre) {
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = nombre; a.style.display = 'none'; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+const bibErrTexto = e => e.message === 'offline' ? 'Sin conexión y sin copia guardada. Ábrelo una vez con internet o pulsa «Guardar sin conexión».'
+  : e.message === '401' ? ghError(401) : 'No he podido descargar el archivo. Inténtalo de nuevo.';

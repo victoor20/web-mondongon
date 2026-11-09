@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261112">
+<link rel="stylesheet" href="style.css?v=20261113">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -32,11 +32,12 @@
   </div>
 
   <div role="tabpanel" id="panel-material" aria-labelledby="tab-material">
-    <div class="bib-barra">
+    <div class="bib-barra" id="bib-barra">
       <input type="search" id="f-q" placeholder="Buscar por título" aria-label="Buscar documentos">
-      <select id="f-tema" aria-label="Filtrar por tema"></select>
       <button type="button" class="btn small" id="b-subir">Subir archivo</button>
+      <button type="button" class="btn small ghost" id="b-todo">Guardar todo sin conexión</button>
     </div>
+    <p class="fine bib-nota hide" id="b-todo-nota">Para guardar todo necesitas conexión y el token de GitHub en este dispositivo.</p>
 
     <form id="subir" class="bib-form hide" autocomplete="off">
       <h2 id="subir-t">Subir material</h2>
@@ -63,54 +64,73 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261112"></script>
-<script src="vistas.js?v=20261112"></script>
-<script src="biblioteca.js?v=20261112"></script>
+<script src="app.js?v=20261113"></script>
+<script src="vistas.js?v=20261113"></script>
+<script src="biblioteca.js?v=20261113"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
-function mostrar(t, enfocar) {
-  if (!TABS.includes(t)) t = 'material';
+let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
+function leerRuta() {
+  const p = location.hash.slice(1).split('/').map(x => { try { return decodeURIComponent(x); } catch (e) { return x; } });
+  return { tab: TABS.includes(p[0]) ? p[0] : 'material', sub: p[1] || '' };
+}
+function irA(t) { location.hash = '#' + t; }                      // el hash crea entrada en el historial: Atrás funciona entre vistas
+function ruta(nav) {
+  const antes = vista; vista = leerRuta();
   TABS.forEach(x => {
-    const on = x === t, b = $('tab-' + x);
+    const on = x === vista.tab, b = $('tab-' + x);
     b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
     $('panel-' + x).classList.toggle('hide', !on);
-    if (on && enfocar) b.focus();
+    if (on && enfocarTab) b.focus();
   });
-  try { history.replaceState(null, '', '#' + t); } catch (e) { /* nada */ }
-  if (t === 'notas') renderNotas();
+  enfocarTab = false;
+  if (vista.tab === 'notas') renderNotas();
+  if (vista.tab === 'material') {
+    renderMaterial();
+    if (nav && (antes.tab !== vista.tab || antes.sub !== vista.sub)) {
+      window.scrollTo(0, 0);
+      const h = $('bib-vt'); if (h) h.focus({ preventScroll: true });
+    }
+  }
 }
 TABS.forEach((t, i) => {
   const b = $('tab-' + t);
-  b.addEventListener('click', () => mostrar(t));
+  b.addEventListener('click', () => irA(t));
   b.addEventListener('keydown', e => {
     const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
-    e.preventDefault(); mostrar(TABS[(i + d + TABS.length) % TABS.length], true);
+    e.preventDefault(); enfocarTab = true; irA(TABS[(i + d + TABS.length) % TABS.length]);
   });
 });
+window.addEventListener('hashchange', () => ruta(true));
 /* ---------- Material ---------- */
 const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
-let copias = new Set(), edit = null;
-function opcionesTema(sel, todos) {
+let copias = new Set(), edit = null, ocupado = false;
+const abierto = {};                                               // temas abiertos o cerrados a mano en la vista de bloque
+const esGeneral = d => !d.tema || !_temario.byId[d.tema];
+function opcionesTema(sel) {
   sel.replaceChildren();
-  sel.append(new Option(todos ? 'Todos los temas' : 'General (sin tema)', ''));
+  sel.append(new Option('General (sin tema)', ''));
   _temario.bloques.forEach(b => {
     const g = document.createElement('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
     b.temas.forEach(t => g.append(new Option(`${codigoTema(t.id)} · ${t.corto}`, t.id)));
     sel.append(g);
   });
 }
+function notaTodo() {
+  const sin = !navigator.onLine || !getToken();
+  $('b-todo').disabled = sin || ocupado;
+  $('b-todo-nota').classList.toggle('hide', !sin || !bibLista().length || !!vista.sub);
+}
 function renderMaterial() {
   const box = $('bib-lista'); box.replaceChildren();
-  const q = $('f-q').value.trim().toLowerCase(), ft = $('f-tema').value;
-  const docs = bibLista().filter(d => (!ft || d.tema === ft) && (!q || d.titulo.toLowerCase().includes(q)));
-  if (!bibLista().length) {
-    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no hay material'),
-      el('p', '', getToken() ? 'Pulsa «Subir archivo» para añadir tu primer PDF. Elige el tema al que pertenece y quedará ordenado aquí.' : 'Para subir y consultar material necesitas el token de GitHub en este dispositivo.'));
-    if (!getToken()) { const a = el('a', 'btn small', 'Configurar el token'); a.href = 'nuevo.html#token'; a.style.marginTop = '.9rem'; a.style.display = 'inline-flex'; v.append(a); }
-    box.append(v); return;
-  }
-  if (!docs.length) { box.append(el('p', 'vacio-msg', 'Ningún documento coincide con el filtro.')); return; }
-  const grupos = {}; docs.forEach(d => { (grupos[d.tema || ''] = grupos[d.tema || ''] || []).push(d); });
+  const q = $('f-q').value.trim().toLowerCase(), enBloque = !!vista.sub;
+  $('bib-barra').classList.toggle('hide', enBloque); notaTodo();
+  if (enBloque) vistaBloque(box, vista.sub); else if (q) vistaBusqueda(box, q); else vistaBloques(box);
+}
+function vistaBusqueda(box, q) {
+  const docs = bibLista().filter(d => d.titulo.toLowerCase().includes(q));
+  if (!docs.length) { box.append(el('p', 'vacio-msg', 'Ningún documento coincide con la búsqueda.')); return; }
+  const grupos = {}; docs.forEach(d => { const t = esGeneral(d) ? '' : d.tema; (grupos[t] = grupos[t] || []).push(d); });
   const orden = Object.keys(_temario.byId);
   Object.keys(grupos).sort((a, b) => (a ? orden.indexOf(a) + 1 || 998 : 999) - (b ? orden.indexOf(b) + 1 || 998 : 999)).forEach(t => {
     const g = el('section', 'bib-g'); g.dataset.b = bloqueOf(t) || 'x';
@@ -118,6 +138,59 @@ function renderMaterial() {
     grupos[t].sort((a, b) => b.t - a.t).forEach(d => g.append(filaDoc(d)));
     box.append(g);
   });
+}
+function vistaBloques(box) {
+  const docs = bibLista();
+  if (!docs.length) {
+    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no hay material'),
+      el('p', '', getToken() ? 'Pulsa «Subir archivo» para añadir tu primer PDF. Elige el tema al que pertenece y quedará ordenado en su bloque.' : 'Para subir y consultar material necesitas el token de GitHub en este dispositivo.'));
+    if (!getToken()) { const a = el('a', 'btn small', 'Configurar el token'); a.href = 'nuevo.html#token'; a.style.marginTop = '.9rem'; a.style.display = 'inline-flex'; v.append(a); }
+    box.append(v);
+  }
+  const grid = el('div', 'bib-grid');
+  const tarjeta = (id, rn, titulo, linea) => {
+    const a = el('a', 'bib-bloque'); a.dataset.b = id; a.href = '#material/' + (id === 'x' ? 'general' : id);
+    a.append(el('span', 'rn', rn), el('h3', '', titulo), el('p', 'fine', linea), el('span', 'bib-flecha')); return a;
+  };
+  _temario.bloques.forEach(b => {
+    const n = docs.filter(d => !esGeneral(d) && bloqueOf(d.tema) === b.id).length;
+    grid.append(tarjeta(b.id, b.id, b.titulo, `${plural(b.temas.length, 'tema', 'temas')} · ${n ? plural(n, 'documento', 'documentos') : 'sin documentos'}`));
+  });
+  const g = docs.filter(esGeneral).length;
+  if (g) grid.append(tarjeta('x', 'G', 'General', `${plural(g, 'documento', 'documentos')} sin tema`));
+  box.append(grid);
+}
+function vistaBloque(box, sub) {
+  const general = sub === 'general', b = general ? null : bloqueInfo(sub);
+  if (!general && !b) { vista.sub = ''; history.replaceState(null, '', '#material'); renderMaterial(); return; }
+  const w = el('section', 'bib-vista'); w.dataset.b = general ? 'x' : b.id;
+  const vol = el('a', 'bib-volver', '← Biblioteca'); vol.href = '#material';
+  const cab = el('div', 'bib-cab'), h = el('h2', '', general ? 'General' : b.titulo); h.id = 'bib-vt'; h.tabIndex = -1;
+  cab.append(el('span', 'rn', general ? 'G' : b.id), h); w.append(vol, cab);
+  const docs = bibLista().sort((x, y) => y.t - x.t);
+  const subirAqui = tema => { const s = el('button', 'mini azul', 'Subir aquí'); s.type = 'button'; s.addEventListener('click', () => abrirForm(null, tema)); return s; };
+  if (general) {
+    const lista = docs.filter(esGeneral), c = el('div', 'bib-tb');
+    if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', 'Sin documentos'));
+    c.append(subirAqui('')); w.append(c);
+  } else {
+    b.temas.forEach(t => {
+      const lista = docs.filter(d => d.tema === t.id), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
+      det.open = t.id in abierto ? abierto[t.id] : lista.length > 0;
+      det.addEventListener('toggle', () => { abierto[t.id] = det.open; });
+      const sum = el('summary', 'bib-ts');
+      sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : 'sin documentos'), el('span', 'chev'));
+      det.append(sum);
+      const c = el('div', 'bib-tb');
+      if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', 'Sin documentos'));
+      c.append(subirAqui(t.id)); det.append(c); w.append(det);
+    });
+  }
+  box.append(w);
+  if (resaltar) {
+    const r = document.getElementById('bt-' + resaltar); resaltar = '';
+    if (r) { r.open = true; r.scrollIntoView({ block: 'center' }); r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash'); }
+  }
 }
 function filaDoc(d) {
   const f = el('article', 'doc');
@@ -127,8 +200,19 @@ function filaDoc(d) {
   cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(' · ') + (off ? ' · guardado en este dispositivo' : '')));
   f.append(cuerpo);
   const ac = el('div', 'doc-ac');
-  const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button'; ab.addEventListener('click', async () => { ab.disabled = true; msg(''); await bibAbrir(d, t => msg(t, true)); ab.disabled = false; copias = await bibCopiasIds(); renderMaterial(); });
+  const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button';
+  ab.addEventListener('click', async () => {
+    if (d.ext === 'pdf') { location.href = 'visor.html?id=' + encodeURIComponent(d.id); return; }   // el visor propio, en la misma pestaña
+    ab.disabled = true; msg(''); await bibAbrir(d, t => msg(t, true)); ab.disabled = false; copias = await bibCopiasIds(); renderMaterial();
+  });
   ac.append(ab);
+  const ds = el('button', 'mini', 'Descargar'); ds.type = 'button';
+  ds.addEventListener('click', async () => {
+    ds.disabled = true; msg('');
+    try { bibGuardarComo(await bibBlob(d), bibNombre(d)); } catch (e) { msg(bibErrTexto(e), true); }
+    copias = await bibCopiasIds(); renderMaterial();
+  });
+  ac.append(ds);
   const of = el('button', 'mini', off ? 'Quitar copia' : 'Guardar sin conexión'); of.type = 'button';
   of.addEventListener('click', async () => {
     of.disabled = true;
@@ -148,23 +232,39 @@ function filaDoc(d) {
   ac.append(bo); f.append(ac);
   return f;
 }
-function abrirForm(d) {
+function abrirForm(d, tema) {
   edit = d || null; msg('');
   if (!getToken() && !d) { msg('Para subir archivos necesitas el token de GitHub: Ajustes → Token de GitHub.', true); return; }
   $('subir').classList.remove('hide');
   $('subir-t').textContent = d ? 'Editar documento' : 'Subir material';
   $('bf-archivo').classList.toggle('hide', !!d); $('subir-nota').classList.toggle('hide', !!d);
-  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : $('f-tema').value; $('i-tipo').value = d ? d.tipo : 'Ley';
+  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : (tema || ''); $('i-tipo').value = d ? d.tipo : 'Ley';
+  $('bf-titulo').classList.remove('hide');
   $('i-ok').textContent = d ? 'Guardar cambios' : 'Subir'; $('i-ok').disabled = false;
   $('subir').scrollIntoView({ block: 'nearest' }); (d ? $('i-titulo') : $('i-archivo')).focus();
 }
 const cerrarForm = () => { $('subir').classList.add('hide'); edit = null; };
+async function guardarTodo() {
+  copias = await bibCopiasIds();
+  const pend = bibLista().filter(d => !copias.has(d.id));
+  if (!pend.length) { msg('Todo guardado en este dispositivo.'); return; }
+  ocupado = true; notaTodo(); let fallos = 0, auth = false;
+  for (let i = 0; i < pend.length; i++) {
+    msg(`Guardando ${i + 1} de ${pend.length}…`);
+    try { await bibDescargar(pend[i]); } catch (e) { fallos++; if (e.message === '401') { auth = true; break; } }
+  }
+  ocupado = false; copias = await bibCopiasIds(); renderMaterial();
+  if (auth) msg(ghError(401), true);
+  else if (fallos) msg(`Guardados ${pend.length - fallos} de ${pend.length}; ${fallos === 1 ? 'uno no se ha podido descargar' : fallos + ' no se han podido descargar'}. Comprueba la conexión y vuelve a intentarlo.`, true);
+  else msg('Todo guardado en este dispositivo.');
+}
 function initMaterial() {
-  opcionesTema($('f-tema'), true); opcionesTema($('i-tema'), false);
+  opcionesTema($('i-tema'));
   TIPOS.forEach(t => $('i-tipo').append(new Option(t, t)));
-  const pt = new URLSearchParams(location.search).get('tema'); if (pt && _temario.byId[pt]) $('f-tema').value = pt;
-  $('f-q').addEventListener('input', renderMaterial); $('f-tema').addEventListener('change', renderMaterial);
+  $('f-q').addEventListener('input', renderMaterial);
   $('b-subir').addEventListener('click', () => abrirForm(null)); $('i-cancel').addEventListener('click', cerrarForm);
+  $('b-todo').addEventListener('click', guardarTodo);
+  window.addEventListener('online', notaTodo); window.addEventListener('offline', notaTodo);
   $('i-archivo').addEventListener('change', () => { const fs = $('i-archivo').files; $('bf-titulo').classList.toggle('hide', fs.length > 1); if (fs.length === 1 && !$('i-titulo').value) $('i-titulo').value = fs[0].name.replace(/\.[^.]+$/, ''); });
   $('subir').addEventListener('submit', async e => {
     e.preventDefault();
@@ -195,9 +295,9 @@ function initMaterial() {
 }
 async function cargaMaterial() {
   copias = await bibCopiasIds(); renderMaterial();
-  const r = await bibRefrescar();
+  const antes = JSON.stringify(bibDocs), r = await bibRefrescar();
   if (r === 'token') msg(ghError(401), true); else if (r === 'error' && getToken()) msg('No he podido actualizar la lista; muestro la última copia guardada en este dispositivo.');
-  renderMaterial();
+  if (JSON.stringify(bibDocs) !== antes) renderMaterial();         // solo si la lista cambió (así no se pierde el resaltado ni el scroll)
 }
 let notasCargadas = false;
 async function renderNotas() {
@@ -227,8 +327,11 @@ async function renderNotas() {
   notasCargadas = true;
 }
 async function init() {
-  await loadTemario(); initMaterial(); cargaMaterial();
-  mostrar(location.hash.slice(1));
+  await loadTemario(); initMaterial();
+  // enlace antiguo del temario: biblioteca.html?tema=I-2#material -> #material/I con ese tema abierto
+  const pt = new URLSearchParams(location.search).get('tema');
+  if (pt && _temario.byId[pt] && !leerRuta().sub) { resaltar = pt; history.replaceState(null, '', location.pathname + '#material/' + bloqueOf(pt)); }
+  ruta(false); cargaMaterial();
 }
 init();
 </script>
