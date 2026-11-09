@@ -1,0 +1,283 @@
+{
+  "titulo": "Test 08: Constitución Española (artículos 159–165)",
+  "tema": "I-1",
+  "fecha": "2026-11-09",
+  "preguntas": [
+    {
+      "ref": "Artículo 159.1",
+      "q": "Según el artículo 159.1 CE, señale la distribución correcta de las propuestas para el nombramiento de los miembros del Tribunal Constitucional.",
+      "opciones": [
+        "Cuatro por el Congreso, cuatro por el Senado, dos por el Gobierno y dos por el Consejo General del Poder Judicial.",
+        "Cuatro por el Congreso, cuatro por el Senado, dos por el presidente del Gobierno y dos por el Tribunal Supremo.",
+        "Cuatro por el Congreso, cuatro por el Senado, dos por el Gobierno y dos por el Consejo de Estado.",
+        "Cinco por el Congreso, tres por el Senado, dos por el Gobierno y dos por el Consejo General del Poder Judicial."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 159.1",
+      "q": "En relación con las mayorías para proponer miembros del Tribunal Constitucional, ¿qué dispone expresamente el artículo 159.1 CE?",
+      "opciones": [
+        "El Congreso propone cuatro por mayoría absoluta y el Senado otros cuatro por tres quintos.",
+        "El Congreso y el Senado proponen cuatro cada uno por mayoría de tres quintos de sus miembros.",
+        "El Congreso y el Senado proponen cuatro cada uno por mayoría de dos tercios de sus miembros.",
+        "El Congreso propone seis por tres quintos y el Senado dos por mayoría absoluta."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 159.2",
+      "q": "¿Qué requisito de experiencia exige la Constitución para ser nombrado miembro del Tribunal Constitucional?",
+      "opciones": [
+        "Un mínimo de quince años de servicio público, con independencia de la profesión.",
+        "Quince años exactos de actividad jurisdiccional como mínimo.",
+        "Ser jurista de reconocida competencia con más de quince años de ejercicio profesional.",
+        "Ser magistrado o fiscal con más de quince años de antigüedad, excluyendo las demás profesiones."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 159.2",
+      "q": "Identifique la relación de categorías profesionales que reproduce correctamente el artículo 159.2 CE.",
+      "opciones": [
+        "Magistrados, fiscales, profesores de instituto, funcionarios públicos y abogados.",
+        "Magistrados, fiscales, procuradores, profesores de Universidad y abogados.",
+        "Jueces, notarios, registradores, profesores universitarios y abogados.",
+        "Magistrados y fiscales, profesores de Universidad, funcionarios públicos y abogados."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 159.3",
+      "q": "En cuanto al mandato y renovación de los miembros del Tribunal Constitucional, señale la opción correcta.",
+      "opciones": [
+        "Son designados por nueve años y se renuevan por terceras partes cada tres.",
+        "Son designados por tres años y se renuevan íntegramente cada nueve.",
+        "Son designados por nueve años y se renuevan por mitades cada cuatro años y medio.",
+        "Son designados por seis años y se renuevan por terceras partes cada dos."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 159.4–5",
+      "q": "De las siguientes afirmaciones sobre los miembros del Tribunal Constitucional, señale la correcta.",
+      "opciones": [
+        "La condición de miembro es compatible con el ejercicio activo de la carrera fiscal si se suspende toda militancia política.",
+        "El ejercicio de cualquier actividad profesional o mercantil resulta incompatible, y sus miembros son independientes e inamovibles en el ejercicio del mandato.",
+        "El empleo al servicio de un sindicato es compatible siempre que no se desempeñen funciones directivas.",
+        "Solo se aplican las incompatibilidades enumeradas en el artículo 159.4, sin remisión a otras."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 160",
+      "q": "El presidente del Tribunal Constitucional, de acuerdo con el artículo 160 CE, será:",
+      "opciones": [
+        "Propuesto por el Gobierno entre los miembros del Tribunal y nombrado por el Rey por tres años.",
+        "Elegido por las Cortes Generales entre los magistrados del Tribunal y nombrado por el Rey por nueve años.",
+        "Nombrado por el Rey entre los miembros del Tribunal, a propuesta del propio Tribunal en pleno, por tres años.",
+        "Nombrado por el Pleno del Tribunal a propuesta del Rey, por tres años."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 159 y 160",
+      "q": "¿Cuál de las siguientes combinaciones es conforme con los artículos 159 y 160 CE?",
+      "opciones": [
+        "Los magistrados son nombrados por las Cortes por nueve años y el presidente por el Rey por tres.",
+        "Los magistrados son nombrados por el Rey por tres años y el presidente por el Pleno por nueve.",
+        "Los magistrados se renuevan por mitades cada tres años y el presidente cada nueve.",
+        "Los miembros son nombrados por el Rey y tienen mandato de nueve años; el presidente también es nombrado por el Rey, por tres años."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 161.1.a)",
+      "q": "Según el artículo 161.1.a) CE, el recurso de inconstitucionalidad se dirige contra:",
+      "opciones": [
+        "Leyes y disposiciones normativas con fuerza de ley.",
+        "Todas las disposiciones generales de cualquier rango.",
+        "Exclusivamente leyes orgánicas y estatutos de autonomía.",
+        "Sentencias firmes dictadas en aplicación de leyes inconstitucionales."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 161.1.a)",
+      "q": "Conforme al artículo 161.1.a) CE, la declaración de inconstitucionalidad de una norma jurídica con rango de ley interpretada por la jurisprudencia:",
+      "opciones": [
+        "Dejará sin efecto todas las sentencias anteriores en que se hubiera aplicado.",
+        "Afectará a dicha jurisprudencia, si bien las sentencias recaídas no perderán el valor de cosa juzgada.",
+        "No afectará a la jurisprudencia, pero anulará automáticamente las sentencias anteriores.",
+        "Afectará exclusivamente a las sentencias que no hayan sido recurridas."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 161.1.b)–d)",
+      "q": "Señale la afirmación correcta respecto de las competencias del Tribunal Constitucional recogidas en el artículo 161.1.",
+      "opciones": [
+        "El amparo comprende automáticamente todos los derechos reconocidos en el Título I.",
+        "Los conflictos entre cualquier par de entidades locales están expresamente incluidos en la letra c).",
+        "El Tribunal conoce de los conflictos de competencia entre el Estado y las comunidades autónomas o entre estas, y de otras materias atribuidas por la Constitución o las leyes orgánicas.",
+        "La atribución de nuevas competencias al Tribunal Constitucional solo puede hacerse mediante reglamentos del Gobierno."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 161.2",
+      "q": "El Gobierno impugna ante el Tribunal Constitucional una resolución adoptada por un órgano autonómico al amparo del artículo 161.2 CE. ¿Qué consecuencia establece este precepto?",
+      "opciones": [
+        "La suspensión solo se producirá si previamente la acuerda el Senado.",
+        "El recurso producirá la nulidad definitiva de la resolución sin necesidad de sentencia.",
+        "La suspensión deberá mantenerse hasta que recaiga sentencia firme, sin posibilidad de levantamiento anterior.",
+        "La impugnación producirá la suspensión, que el Tribunal deberá ratificar o levantar, en su caso, dentro de un plazo no superior a cinco meses."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 161.2",
+      "q": "El plazo de cinco meses establecido en el artículo 161.2 CE se refiere específicamente a:",
+      "opciones": [
+        "La ratificación o levantamiento de la suspensión de la disposición o resolución autonómica impugnada.",
+        "La resolución definitiva, necesariamente mediante sentencia, de cualquier recurso de inconstitucionalidad.",
+        "El plazo para que cualquier ciudadano impugne una disposición autonómica.",
+        "La duración mínima de la suspensión acordada por el Tribunal Constitucional."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 162.1.a)",
+      "q": "¿Cuál de las siguientes relaciones de sujetos está integrada exclusivamente por legitimados para interponer recurso de inconstitucionalidad conforme al artículo 162.1.a) CE?",
+      "opciones": [
+        "Presidente del Gobierno, Defensor del Pueblo, Ministerio Fiscal y cincuenta senadores.",
+        "Presidente del Gobierno, Defensor del Pueblo, cincuenta diputados y cincuenta senadores.",
+        "Gobierno, Ministerio Fiscal, Defensor del Pueblo y cincuenta diputados.",
+        "Presidente del Gobierno, Defensor del Pueblo, veinticinco diputados y veinticinco senadores."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 162.1.a)",
+      "q": "Conforme al artículo 162.1.a) CE, también pueden interponer recurso de inconstitucionalidad:",
+      "opciones": [
+        "Los presidentes de las diputaciones provinciales y, en su caso, los alcaldes.",
+        "Los órganos ejecutivos unipersonales de las comunidades autónomas y el Ministerio Fiscal.",
+        "Los órganos colegiados ejecutivos de las comunidades autónomas y, en su caso, las asambleas de las mismas.",
+        "Las asambleas de las comunidades autónomas únicamente si actúan de acuerdo con cincuenta diputados."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 162.1.b)",
+      "q": "¿Quiénes están legitimados constitucionalmente para interponer recurso de amparo?",
+      "opciones": [
+        "Únicamente las personas físicas con nacionalidad española, el Defensor del Pueblo y el Ministerio Fiscal.",
+        "El presidente del Gobierno, cincuenta diputados y cincuenta senadores.",
+        "Toda persona natural o jurídica, sin necesidad de invocar interés legítimo, y el Defensor del Pueblo.",
+        "Toda persona natural o jurídica que invoque interés legítimo, así como el Defensor del Pueblo y el Ministerio Fiscal."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 162.2",
+      "q": "Respecto de los procedimientos no incluidos en las dos letras del artículo 162.1 CE, la determinación de las personas y órganos legitimados corresponde:",
+      "opciones": [
+        "A la ley orgánica.",
+        "A un reglamento del Tribunal Constitucional.",
+        "A una ley ordinaria de las Cortes Generales, necesariamente.",
+        "A una decisión del Ministerio Fiscal en cada caso."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 163",
+      "q": "En un procedimiento judicial surge una duda sobre la constitucionalidad de una norma. ¿Qué conjunto de requisitos exige el artículo 163 CE para plantear la cuestión?",
+      "opciones": [
+        "Que sea una norma reglamentaria, aplicable al caso y relevante para la resolución.",
+        "Que se trate de una norma con rango de ley, aplicable al caso, de cuya validez dependa el fallo y que pueda ser contraria a la Constitución.",
+        "Que se cuestione una norma con fuerza de ley, aunque su validez no influya en el fallo.",
+        "Que cualquiera de las partes invoque una vulneración de derechos, sin necesidad de decisión del órgano judicial."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 162 y 163",
+      "q": "Señale la afirmación correcta sobre la cuestión de inconstitucionalidad y el recurso de inconstitucionalidad.",
+      "opciones": [
+        "Ambos pueden ser interpuestos directamente por cualquier persona que invoque interés legítimo.",
+        "La cuestión puede plantearla el Ministerio Fiscal, por sí solo y directamente ante el Tribunal Constitucional, fuera de un proceso judicial.",
+        "La cuestión la plantea un órgano judicial en un proceso, mientras que el recurso se interpone por los sujetos legitimados del artículo 162.1.a).",
+        "El recurso exige que exista un proceso judicial pendiente y que de la validez de la norma dependa su fallo."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 163 y art. 35 LOTC",
+      "q": "En materia de efectos del planteamiento de la cuestión de inconstitucionalidad, ¿cuál es la interpretación correcta de la regla constitucional «que en ningún caso serán suspensivos»?",
+      "opciones": [
+        "La cuestión provoca automáticamente la suspensión de la vigencia general de la ley hasta que el TC resuelva.",
+        "La cuestión suspende todas las sentencias firmes que hayan aplicado la norma cuestionada.",
+        "La cuestión excluye legalmente cualquier suspensión del proceso judicial en que se plantea.",
+        "La cuestión no produce por sí misma la suspensión de la vigencia general de la ley, sin perjuicio de las reglas de suspensión del proceso concreto previstas en la LOTC."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 164.1",
+      "q": "Según el artículo 164.1 CE, las sentencias del Tribunal Constitucional:",
+      "opciones": [
+        "Se publican en el BOE con los votos particulares, si los hubiere, y tienen valor de cosa juzgada desde el día siguiente de su publicación.",
+        "Se publican en el BOE solo si declaran inconstitucional una ley, y producen cosa juzgada desde su firma.",
+        "Se publican en el BOE con los votos particulares en todo caso, y producen cosa juzgada desde la notificación a las partes.",
+        "Se publican exclusivamente en el boletín autonómico de la comunidad afectada, con eficacia desde el mismo día."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 164.1",
+      "q": "Conforme al artículo 164.1 CE, señale la afirmación correcta sobre las sentencias del Tribunal Constitucional.",
+      "opciones": [
+        "Pueden recurrirse ante el Tribunal Supremo cuando resuelven recursos de amparo.",
+        "No cabe recurso alguno contra ellas.",
+        "Solo cabe recurso de casación si se ha declarado inconstitucional una ley orgánica.",
+        "Cabe recurso de apelación ante el Pleno si las dicta una Sala."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 164.1",
+      "q": "¿Qué sentencias del Tribunal Constitucional tienen plenos efectos frente a todos según el artículo 164.1 CE?",
+      "opciones": [
+        "Únicamente las que reconocen la vulneración subjetiva de un derecho en recurso de amparo.",
+        "Todas las sentencias, sin distinción de objeto o contenido.",
+        "Las que declaren inconstitucional una ley o norma con fuerza de ley y las que no se limiten a la estimación subjetiva de un derecho.",
+        "Solo las que declaren inconstitucional la totalidad de una ley estatal."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 164.2",
+      "q": "El Tribunal Constitucional declara inconstitucional una parte de una ley. Según el artículo 164.2 CE, como regla general:",
+      "opciones": [
+        "La totalidad de la ley pierde vigencia desde la publicación de la sentencia.",
+        "Solo subsiste la parte no afectada si el Gobierno la confirma mediante decreto.",
+        "La parte no afectada queda suspendida durante cinco meses.",
+        "Subsistirá la vigencia de la parte no afectada por la inconstitucionalidad, salvo que el fallo disponga otra cosa."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 165",
+      "q": "Según el artículo 165 CE, una ley orgánica regulará:",
+      "opciones": [
+        "El funcionamiento del Tribunal Constitucional, el estatuto de sus miembros, el procedimiento ante el mismo y las condiciones para el ejercicio de las acciones.",
+        "Solo el funcionamiento y la composición del Tribunal, quedando el procedimiento reservado a reglamentos.",
+        "El funcionamiento del Tribunal y el estatuto de sus miembros, pero no las condiciones para el ejercicio de las acciones.",
+        "El procedimiento ante el Tribunal, mientras que las incompatibilidades y el estatuto se regularán por ley ordinaria. ⸻"
+      ],
+      "correcta": 0
+    }
+  ],
+  "fuente": "ChatGPT"
+}
