@@ -55,6 +55,7 @@ const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx:
 const id = new URLSearchParams(location.search).get('id') || '';
 const doc = bibDocs[id];
 const msgEl = $('v-msg'), pagsEl = $('v-pags'), barra = document.querySelector('.vis-barra');
+const cargaScript = src => new Promise((ok, ko) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = () => ko(new Error('No se pudo cargar ' + src)); document.head.append(e); });
 let blob = null, pdf = null, lib = null, z = 1, fit = 1, n = 0, actual = 1, base = null, falloPintado = false;
 const pags = [];                                                  // { div, estado, tarea, h, w }
 
@@ -112,7 +113,7 @@ async function abrir() {
   }
   $('v-desc').disabled = false; $('v-desc').addEventListener('click', descargar);
   if (doc.ext !== 'pdf') { aviso('Este archivo no es un PDF y el visor no puede mostrarlo. Puedes descargarlo.', false, [el('br'), botonDescargar()]); return; }
-  try { await import('./vendor/pdfjs/compat.mjs'); lib = await import('./vendor/pdfjs/pdf.min.mjs'); lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs/worker-compat.mjs', location.href).href; }
+  try { await cargaScript('vendor/pdfjs3/pdf.min.js'); lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs3/pdf.worker.min.js', location.href).href; }
   catch (e) { await falla('cargar pdf.js', e, 'Este navegador no puede cargar el visor. Puedes descargar el archivo.'); return; }
   try { pdf = await lib.getDocument({ data: new Uint8Array(await leerBuf(blob)), isEvalSupported: false }).promise; }
   catch (e) { await falla('leer el documento', e, 'No he podido abrir este PDF: puede estar dañado o protegido con contraseña.'); return; }
@@ -124,6 +125,7 @@ async function abrir() {
   z = Math.min(VIS.max, Math.max(VIS.min, +g.z || 1));
   aviso('');
   montar(); aplicaZoom(null);
+  setTimeout(() => { if (pags[0] && !pags.some(p => p.estado === 'ok') && !falloPintado) { falloPintado = true; falla('pintar la página 1', new Error('sin respuesta tras 12 s (estado: ' + (pags[0].estado || 'vacío') + ')'), 'La página no se ha podido dibujar en este navegador. Puedes descargar el archivo.'); } }, 12000);
   if (g.p > 1 && g.p <= n) irAPagina(g.p);
 }
 

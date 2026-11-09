@@ -2,15 +2,14 @@
    La web y los tests se piden SIEMPRE primero a la red (así ves la última versión) y, si no hay
    conexión o va muy lenta, se sirve la copia guardada en el dispositivo.
    Sube el número de VERSION cuando cambie la lista de archivos de PRECACHE. */
-const VERSION = 'v5';
+const VERSION = 'v6';
 const NUCLEO = 'ma-nucleo-' + VERSION;
 const DINAMICO = 'ma-dinamico';
 const PRECACHE = ['./', 'index.html', 'temario.html', 'tests.html', 'biblioteca.html', 'ajustes.html', 'test.html', 'nuevo.html', 'editar.html', 'visor.html',
   'app.js', 'vistas.js', 'biblioteca.js', 'style.css', 'temario.json',
   'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
   'fonts/literata.woff2', 'fonts/literata-italic.woff2', 'fonts/bricolage.woff2',
-  'vendor/pdfjs/pdf.min.mjs', 'vendor/pdfjs/pdf.worker.min.mjs',
-  'vendor/pdfjs/compat.mjs', 'vendor/pdfjs/worker-compat.mjs'];
+  'vendor/pdfjs3/pdf.min.js', 'vendor/pdfjs3/pdf.worker.min.js'];
 
 // la copia se guarda por ruta, sin parámetros (?t=…, ?v=…), para que test.html?t=x use la misma copia
 const clave = u => new Request(u.origin + u.pathname);

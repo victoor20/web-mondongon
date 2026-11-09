@@ -102,13 +102,12 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   (carpeta `biblioteca/` y la lista `biblioteca.json`). La lista se copia en `localStorage` (`ma2_bib`) y
   cada archivo guardado «sin conexión» va a la caché `ma-bib` del navegador, por eso la Biblioteca y el
   visor funcionan sin red con lo ya guardado.
-- `visor.html` abre los PDF con **pdf.js 6.5.438 (build legacy)**, vendorizado en `vendor/pdfjs/`
-  (`pdf.min.mjs`, `pdf.worker.min.mjs`, `LICENSE`). Versión fija: no se actualiza sola; para cambiarla,
-  `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos tres archivos desde `package/legacy/build/`.
+- `visor.html` abre los PDF con **pdf.js 3.11.174 (build legacy, scripts clásicos)**, vendorizado en
+  `vendor/pdfjs3/` (`pdf.min.js`, `pdf.worker.min.js`, `LICENSE`). Se eligió esta versión porque pdf.js 6.5
+  no dibuja páginas en el Chrome 101 de la Galaxy Tab A (2016). Versión fija: no se actualiza sola; para
+  cambiarla, `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos archivos desde
+  `package/legacy/build/`, probando siempre en la tablet antes de subir de versión.
   Recuerda la última página y el zoom por documento en `ma2_visor`.
-  `vendor/pdfjs/compat.mjs` es un polyfill (`Promise.withResolvers`) para navegadores antiguos como el
-  Chrome 101 de la Galaxy Tab A; `worker-compat.mjs` lo carga dentro del worker y es el que se usa como
-  `workerSrc`. Al actualizar pdf.js hay que revisar si hacen falta más polyfills.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 
