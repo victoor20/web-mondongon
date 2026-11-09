@@ -17,6 +17,17 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css?v=20261113">
+<style>
+.vis-diag{margin:.8rem 0 0;padding:.6rem .75rem;border-radius:10px;background:var(--sel-bg);color:var(--tinta);font:.72rem/1.5 ui-monospace,Menlo,Consolas,monospace;text-align:left;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
+.vis-diag b{display:block;margin:0 0 .3rem;font:700 .78rem/1.3 var(--sans)}
+.vis-diag div{margin:0 0 .2rem;white-space:pre-wrap}
+</style>
+<script>
+/* errores globales desde el principio (también los del worker que no pasan por un try/catch) */
+window.__errsVisor = [];
+window.addEventListener('error', function (e) { window.__errsVisor.push((e.message || 'error') + (e.filename ? ' (' + String(e.filename).split('/').pop() + ':' + e.lineno + ')' : '')); });
+window.addEventListener('unhandledrejection', function (e) { var r = e.reason; window.__errsVisor.push('promesa: ' + (r && (r.name ? r.name + ': ' : '') + (r.message || r) || r)); });
+</script>
 </head>
 <body data-pagina="biblioteca" data-enfoque>
 <div class="wrap">
@@ -44,7 +55,7 @@ const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx:
 const id = new URLSearchParams(location.search).get('id') || '';
 const doc = bibDocs[id];
 const msgEl = $('v-msg'), pagsEl = $('v-pags'), barra = document.querySelector('.vis-barra');
-let blob = null, pdf = null, z = 1, fit = 1, n = 0, actual = 1, base = null;
+let blob = null, pdf = null, lib = null, z = 1, fit = 1, n = 0, actual = 1, base = null, falloPintado = false;
 const pags = [];                                                  // { div, estado, tarea, h, w }
 
 function aviso(texto, malo, extra) {
@@ -60,6 +71,36 @@ const guardado = () => jget(localStorage, VIS.clave, {});
 let tG = 0;
 function recuerda() { clearTimeout(tG); tG = setTimeout(() => { const g = guardado(); g[id] = { p: actual, z }; jset(localStorage, VIS.clave, g); }, 400); }
 
+/* ---- diagnóstico: en qué fase falló y con qué entorno ---- */
+const corta = (t, k) => { t = String(t); return t.length > k ? t.slice(0, k) + '…' : t; };
+async function textoDetalle(fase, err) {
+  const si = x => x ? 'sí' : 'no', L = ['Detalle técnico (envíaselo a Claude)', 'Fase: ' + fase];
+  const nombre = err && err.name ? err.name : typeof err, mensaje = err && err.message !== undefined ? err.message : err;
+  L.push('Error: ' + corta(nombre + ': ' + mensaje, 300));
+  if (err && err.stack) L.push(String(err.stack).split('\n').slice(0, 3).map(s => corta(s.trim(), 200)).join('\n'));
+  L.push('pdf.js: ' + (lib && lib.version ? lib.version : 'no cargado'));
+  L.push('Navegador: ' + navigator.userAgent);
+  let cab;
+  try { cab = blob ? JSON.stringify(String.fromCharCode(...new Uint8Array(await leerBuf(blob.slice(0, 8))))) : null; } catch (e) { cab = null; }
+  L.push(blob ? `PDF: ${blob.size} bytes (la lista dice ${doc ? doc.bytes : '?'}); empieza por ${cab ? '«' + JSON.parse(cab) + '»' : '(no he podido leer los primeros bytes)'}` : 'PDF: sin datos');
+  L.push('Soporte: ' + [['Promise.withResolvers', typeof Promise.withResolvers === 'function'], ['Array.at', typeof [].at === 'function'], ['Object.hasOwn', typeof Object.hasOwn === 'function'],
+    ['structuredClone', typeof structuredClone === 'function'], ['ReadableStream', typeof ReadableStream !== 'undefined'], ['OffscreenCanvas', typeof OffscreenCanvas !== 'undefined'],
+    ['Worker', typeof Worker !== 'undefined'], ['módulos', 'noModule' in document.createElement('script')]].map(([k, v]) => k + '=' + si(v)).join(', '));
+  const g = window.__errsVisor || []; if (g.length) L.push('Errores globales: ' + g.slice(0, 2).map(s => corta(s, 200)).join(' | '));
+  return L;
+}
+async function falla(fase, err, texto) {
+  const L = await textoDetalle(fase, err);
+  const caja = el('div', 'vis-diag'); caja.setAttribute('tabindex', '0');
+  caja.append(el('b', '', L[0])); L.slice(1).forEach(l => caja.append(el('div', '', l)));
+  const cp = el('button', 'btn small ghost', 'Copiar detalle'); cp.type = 'button';
+  cp.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(L.join('\n')); cp.textContent = 'Copiado'; }
+    catch (e) { const r = document.createRange(); r.selectNodeContents(caja); const s = getSelection(); s.removeAllRanges(); s.addRange(r); cp.textContent = 'Selecciona y copia a mano'; }
+  });
+  aviso(texto, true, [el('br'), botonDescargar(), cp, caja]);
+}
+
 async function abrir() {
   if (!doc) { aviso('No encuentro este documento en este dispositivo. Abre la Biblioteca con conexión para actualizar la lista.', true, [el('br'), enlaceVolver()]); return; }
   $('v-titulo').textContent = doc.titulo; $('v-titulo').title = doc.titulo; document.title = doc.titulo + ' · Mi Academia';
@@ -71,16 +112,16 @@ async function abrir() {
   }
   $('v-desc').disabled = false; $('v-desc').addEventListener('click', descargar);
   if (doc.ext !== 'pdf') { aviso('Este archivo no es un PDF y el visor no puede mostrarlo. Puedes descargarlo.', false, [el('br'), botonDescargar()]); return; }
-  let lib;
   try { lib = await import('./vendor/pdfjs/pdf.min.mjs'); lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs/pdf.worker.min.mjs', location.href).href; }
-  catch (e) { aviso('Este navegador no puede cargar el visor. Puedes descargar el archivo.', true, [el('br'), botonDescargar()]); return; }
+  catch (e) { await falla('cargar pdf.js', e, 'Este navegador no puede cargar el visor. Puedes descargar el archivo.'); return; }
   try { pdf = await lib.getDocument({ data: new Uint8Array(await leerBuf(blob)), isEvalSupported: false }).promise; }
-  catch (e) { aviso('No he podido abrir este PDF: puede estar dañado o protegido con contraseña.', true, [el('br'), botonDescargar()]); return; }
+  catch (e) { await falla('leer el documento', e, 'No he podido abrir este PDF: puede estar dañado o protegido con contraseña.'); return; }
+  try { n = pdf.numPages; base = (await pdf.getPage(1)).getViewport({ scale: 1 }); }
+  catch (e) { await falla('pintar la página 1', e, 'No he podido leer la primera página de este PDF.'); return; }
   n = pdf.numPages; $('v-n').textContent = n; $('v-pag').max = n; $('v-pag').value = 1; $('v-pag').disabled = false;
   ['v-menos', 'v-mas', 'v-aj'].forEach(x => { $(x).disabled = false; });
   const g = guardado()[id] || {};
   z = Math.min(VIS.max, Math.max(VIS.min, +g.z || 1));
-  base = (await pdf.getPage(1)).getViewport({ scale: 1 });
   aviso('');
   montar(); aplicaZoom(null);
   if (g.p > 1 && g.p <= n) irAPagina(g.p);
@@ -119,7 +160,13 @@ async function pinta(p) {
     p.tarea = page.render({ canvasContext: c.getContext('2d'), viewport: vp });
     await p.tarea.promise; if (p.tk !== tk) return;
     p.div.replaceChildren(c); p.estado = 'ok'; p.tarea = null;
-  } catch (e) { if (p.tk === tk) { p.estado = ''; p.tarea = null; } }
+  } catch (e) {
+    if (p.tk !== tk) return;
+    p.tarea = null; p.estado = '';
+    if (e && e.name === 'RenderingCancelledException') return;
+    p.estado = 'fallo';                                            // no se reintenta hasta que se libere; el resto del visor sigue
+    if (!falloPintado) { falloPintado = true; falla('pintar la página ' + (p.i + 1), e, `No he podido mostrar la página ${p.i + 1}. El resto del documento sigue disponible.`); }
+  }
 }
 function libera(p) {                                               // las páginas lejanas devuelven su memoria
   if (!p.estado) return; p.tk = (p.tk || 0) + 1;
@@ -155,7 +202,7 @@ $('v-pag').addEventListener('change', () => irAPagina(+$('v-pag').value));
 $('v-pag').addEventListener('keydown', e => { if (e.key === 'Enter') { irAPagina(+$('v-pag').value); $('v-pag').blur(); } });
 let tR = 0, ancho0 = innerWidth;
 addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; ancho0 = innerWidth; clearTimeout(tR); tR = setTimeout(() => { const i = paginaActual(); aplicaZoom({ i, f: 0 }); }, 250); });
-abrir();
+abrir().catch(e => falla('abrir el visor', e, 'Ha ocurrido un error inesperado en el visor.'));
 </script>
 </body>
 </html>
