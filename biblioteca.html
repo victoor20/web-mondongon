@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261113">
+<link rel="stylesheet" href="style.css?v=20261114">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -64,9 +64,9 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261113"></script>
-<script src="vistas.js?v=20261113"></script>
-<script src="biblioteca.js?v=20261113"></script>
+<script src="app.js?v=20261114"></script>
+<script src="vistas.js?v=20261114"></script>
+<script src="biblioteca.js?v=20261114"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -197,7 +197,7 @@ function filaDoc(d) {
   f.append(el('span', 'doc-ext', d.ext.toUpperCase().slice(0, 4)));
   const cuerpo = el('div', 'doc-c'); cuerpo.append(el('h3', '', d.titulo));
   const off = copias.has(d.id);
-  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(' · ') + (off ? ' · guardado en este dispositivo' : '')));
+  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(' · ') + (off ? ' · disponible sin conexión' : '')));
   f.append(cuerpo);
   const ac = el('div', 'doc-ac');
   const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button';
@@ -213,7 +213,7 @@ function filaDoc(d) {
     copias = await bibCopiasIds(); renderMaterial();
   });
   ac.append(ds);
-  const of = el('button', 'mini', off ? 'Quitar copia' : 'Guardar sin conexión'); of.type = 'button';
+  const of = el('button', 'mini', off ? 'Quitar de este dispositivo' : 'Guardar sin conexión'); of.type = 'button';
   of.addEventListener('click', async () => {
     of.disabled = true;
     if (off) await bibQuitaCopia(d.id);

@@ -653,3 +653,11 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 .vis-hoja{position:relative;flex:none;margin:0 0 .7rem;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .vis-hoja canvas{display:block;width:100%;height:100%}
 @media(max-width:560px){.vis-barra{padding:.5rem}.vis-t{flex:1 1 0}}
+
+/* ---------- Tests: filtros de bloque y estado ---------- */
+.chips:empty{display:none}
+.chip .n{margin-left:.4rem;font-weight:700;opacity:.65}
+.chip[data-b]{border-left:4px solid var(--bc)}
+.chip[data-b].on{background:var(--bt);border-color:var(--bc);color:var(--tinta)}
+.chip.vacio{opacity:.4;cursor:default}
+.chips.estado{align-items:center}

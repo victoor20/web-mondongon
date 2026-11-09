@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261113">
+<link rel="stylesheet" href="style.css?v=20261114">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -32,6 +32,7 @@
     <div class="filtros hoja pad">
       <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
       <div class="chips" id="chips"></div>
+      <div class="chips estado" id="chips-estado"></div>
       <div class="chips origen" id="chips-origen"></div>
     </div>
     <div class="barra">
@@ -48,10 +49,10 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261113"></script>
-<script src="vistas.js?v=20261113"></script>
+<script src="app.js?v=20261114"></script>
+<script src="vistas.js?v=20261114"></script>
 <script>
-let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', pagina = 1;
+let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
   recientes: ['Más recientes primero', (a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id)],
   antiguos: ['Más antiguos primero', (a, b) => (a.fecha || '').localeCompare(b.fecha || '') || a.id.localeCompare(b.id)],
@@ -61,11 +62,16 @@ const ORDENES = {
 };
 const TAMANOS = [5, 10, 25, 50, 100, 0];     // 0 = todos
 const itemTemas = it => Object.keys(it.temas || {});
+function estadoDe(it) {                                         // 'curso' > 'hecho' > 'nuevo'
+  if (it.kind === 'json') { const q = it.url.slice(it.url.indexOf('?')), c = cursosRaw()[q]; if (c && !c.del) return 'curso'; }
+  return statsFor(it.id) ? 'hecho' : 'nuevo';
+}
 function matches(it) {
   if (fTema && !itemTemas(it).includes(fTema)) return false;
   if (fFuente !== 'Todos' && it.fuente !== fFuente) return false;
   if (fBloque === 'Sin clasificar') return it.kind === 'html' || !itemTemas(it).some(t => bloqueOf(t));
   if (fBloque !== 'Todos' && !itemTemas(it).some(t => bloqueOf(t) === fBloque)) return false;
+  if (fEstado !== 'Todos' && estadoDe(it) !== { 'Sin hacer': 'nuevo', 'En curso': 'curso', 'Hechos': 'hecho' }[fEstado]) return false;
   return true;
 }
 function fila(it) {
@@ -107,23 +113,37 @@ function renderList() {
 }
 function renderChips() {
   const box = $('chips'); box.replaceChildren();
-  const mk = (txt, on, fn) => { const b = el('button', 'chip' + (on ? ' on' : ''), txt); b.type = 'button'; b.addEventListener('click', fn); box.append(b); };
-  if (fTema) mk(`Tema ${codigoTema(fTema)} ✕`, true, () => { fTema = null; pagina = 1; renderChips(); renderList(); });
-  const bl = new Set();
-  items.forEach(it => { const t = itemTemas(it).map(bloqueOf).filter(Boolean); if (t.length) t.forEach(x => bl.add(x)); else bl.add('Sin clasificar'); });
-  if (bl.size >= 2 || fTema) {
-    mk('Todos', fBloque === 'Todos', () => { fBloque = 'Todos'; pagina = 1; renderChips(); renderList(); });
-    [..._temario.bloques.map(b => b.id), 'Sin clasificar'].filter(b => bl.has(b))
-      .forEach(b => mk(b === 'Sin clasificar' ? b : `Bloque ${b}`, fBloque === b, () => { fBloque = b; pagina = 1; renderChips(); renderList(); }));
+  const alt = () => { pagina = 1; renderChips(); renderList(); };
+  // contenedor, texto, contador (null = sin contador), activo, acción, id de bloque (para el color)
+  const mk = (cont, txt, n, on, fn, b) => {
+    const c = el('button', 'chip' + (on ? ' on' : '') + (n === 0 ? ' vacio' : ''), txt); c.type = 'button';
+    if (n !== null) c.append(el('span', 'n', String(n)));
+    if (b) c.dataset.b = b;
+    c.setAttribute('aria-pressed', String(!!on));
+    if (n === 0) c.disabled = true; else c.addEventListener('click', fn);
+    cont.append(c); return c;
+  };
+  if (fTema) mk(box, `Tema ${codigoTema(fTema)} ✕`, null, true, () => { fTema = null; alt(); });
+  const sinClas = it => it.kind === 'html' || !itemTemas(it).some(t => bloqueOf(t));
+  const nBloque = b => items.filter(it => b === 'Sin clasificar' ? sinClas(it) : itemTemas(it).some(t => bloqueOf(t) === b)).length;
+  if (items.length) {
+    mk(box, 'Todos', null, fBloque === 'Todos', () => { fBloque = 'Todos'; alt(); });
+    _temario.bloques.forEach(b => mk(box, `Bloque ${b.id}`, nBloque(b.id), fBloque === b.id, () => { fBloque = b.id; alt(); }, b.id));
+    const ns = nBloque('Sin clasificar');
+    if (ns) mk(box, 'Sin clasificar', ns, fBloque === 'Sin clasificar', () => { fBloque = 'Sin clasificar'; alt(); }, 'x');
+  }
+  const fe = $('chips-estado'); fe.replaceChildren();
+  if (items.length) {
+    fe.append(el('span', 'rot', 'Estado'));
+    const cuenta = { nuevo: 0, curso: 0, hecho: 0 }; items.forEach(it => { cuenta[estadoDe(it)]++; });
+    mk(fe, 'Todos', null, fEstado === 'Todos', () => { fEstado = 'Todos'; alt(); });
+    [['Sin hacer', 'nuevo'], ['En curso', 'curso'], ['Hechos', 'hecho']].forEach(([t, k]) => mk(fe, t, cuenta[k], fEstado === t, () => { fEstado = t; alt(); }));
   }
   const fb = $('chips-origen'); fb.replaceChildren();
   const fuentes = [...new Set(items.map(i => i.fuente))].sort((a, b) => a.localeCompare(b, 'es'));
   if (fuentes.length >= 2) {
     fb.append(el('span', 'rot', 'Origen'));
-    ['Todos', ...fuentes].forEach(f => {
-      const b = el('button', 'chip' + (fFuente === f ? ' on' : ''), f); b.type = 'button';
-      b.addEventListener('click', () => { fFuente = f; pagina = 1; renderChips(); renderList(); }); fb.append(b);
-    });
+    ['Todos', ...fuentes].forEach(f => mk(fb, f, null, fFuente === f, () => { fFuente = f; alt(); }));
   }
 }
 function initControles() {
