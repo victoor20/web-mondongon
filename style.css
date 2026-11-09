@@ -572,3 +572,30 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .exambar .prog strong{white-space:nowrap}
 .exambar .prog{flex:1 1 3.6rem;min-width:3.6rem}
 @media(max-width:430px){.exambar{gap:.3rem}.exambar .tbtn{min-width:2.3rem;padding:0 .5rem}.exambar .tbtn .t{min-width:2.4rem}}
+
+/* ---------- Biblioteca: material ---------- */
+.bib-barra{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:0 0 1rem}
+.bib-barra input[type=search]{flex:1 1 12rem;width:auto}
+.bib-barra select{flex:1 1 14rem;width:auto;max-width:100%}
+.bib-barra .btn{white-space:nowrap}
+.bib-form{margin:0 0 1.2rem;padding:1.2rem 1.25rem;border:1px solid var(--linea);border-radius:16px;background:var(--hoja);box-shadow:var(--sombra)}
+.bib-form h2{margin:0 0 .8rem;font:700 1.15rem/1.2 var(--display)}
+.bf-f{display:block;margin:0 0 .8rem;font-weight:600;font-size:.88rem}
+.bf-f input,.bf-f select{margin-top:.3rem;font-weight:400}
+.bf-f input[type=file]{display:block;width:100%;padding:.55rem;border:1.5px dashed var(--linea2);border-radius:9px;background:transparent;font-size:.9rem}
+.bf-fila{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.bf-ac{display:flex;gap:.6rem;margin-top:.4rem}
+@media(max-width:560px){.bf-fila{grid-template-columns:1fr}}
+.bib-msg{min-height:1.2rem;margin:0 0 .8rem;font-size:.9rem;color:var(--muted)}
+.bib-msg.mal{color:var(--ko)}
+.bib-g{margin:0 0 1.5rem}
+.bib-gt{margin:0 0 .6rem;padding-left:.7rem;border-left:4px solid var(--bc,var(--linea2));font:700 1.02rem/1.25 var(--display)}
+.doc{display:flex;align-items:center;gap:.9rem;margin:0 0 .5rem;padding:.8rem 1rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja)}
+.doc-ext{flex:none;display:grid;place-items:center;width:2.7rem;height:3.2rem;border-radius:7px;border:1.5px solid var(--bc,var(--linea2));color:var(--bc,var(--muted));font:800 .72rem/1 var(--display);letter-spacing:.02em}
+.doc-c{flex:1;min-width:0}
+.doc-c h3{margin:0 0 .15rem;font:600 1rem/1.3 var(--display);overflow-wrap:anywhere}
+.doc-c p{margin:0}
+.doc-ac{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:flex-end}
+.doc-ac .mini{cursor:pointer}
+.doc-ac .mini[disabled]{opacity:.5}
+@media(max-width:640px){.doc{flex-wrap:wrap}.doc-ac{width:100%;justify-content:flex-start}}

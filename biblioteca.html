@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261111">
+<link rel="stylesheet" href="style.css?v=20261112">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -32,11 +32,26 @@
   </div>
 
   <div role="tabpanel" id="panel-material" aria-labelledby="tab-material">
-    <div class="vacio-card">
-      <h2>Todavía no hay material</h2>
-      <p>Aquí se ordenarán los PDF, esquemas y audios de la academia, por bloque y tema. Se guardarán en un repositorio privado y se podrán leer sin conexión.</p>
+    <div class="bib-barra">
+      <input type="search" id="f-q" placeholder="Buscar por título" aria-label="Buscar documentos">
+      <select id="f-tema" aria-label="Filtrar por tema"></select>
+      <button type="button" class="btn small" id="b-subir">Subir archivo</button>
     </div>
-    <div class="bib-grid" id="bib-bloques"></div>
+
+    <form id="subir" class="bib-form hide" autocomplete="off">
+      <h2 id="subir-t">Subir material</h2>
+      <label class="bf-f" id="bf-archivo">Archivos <input type="file" id="i-archivo" multiple></label>
+      <label class="bf-f" id="bf-titulo">Título <input type="text" id="i-titulo" maxlength="120"></label>
+      <div class="bf-fila">
+        <label class="bf-f">Tema <select id="i-tema"></select></label>
+        <label class="bf-f">Tipo <select id="i-tipo"></select></label>
+      </div>
+      <p class="fine" id="subir-nota">PDF, Word, imágenes… hasta 60 MB por archivo. Se guardan en tu repositorio privado y quedan también en este dispositivo para leerlos sin conexión.</p>
+      <div class="bf-ac"><button type="submit" class="btn" id="i-ok">Subir</button><button type="button" class="btn ghost" id="i-cancel">Cancelar</button></div>
+    </form>
+
+    <p class="bib-msg" id="bib-msg" role="status" aria-live="polite"></p>
+    <div id="bib-lista"></div>
   </div>
   <div role="tabpanel" id="panel-tarjetas" aria-labelledby="tab-tarjetas" class="hide">
     <div class="vacio-card">
@@ -48,8 +63,9 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261111"></script>
-<script src="vistas.js?v=20261111"></script>
+<script src="app.js?v=20261112"></script>
+<script src="vistas.js?v=20261112"></script>
+<script src="biblioteca.js?v=20261112"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 function mostrar(t, enfocar) {
@@ -71,13 +87,117 @@ TABS.forEach((t, i) => {
     e.preventDefault(); mostrar(TABS[(i + d + TABS.length) % TABS.length], true);
   });
 });
-function renderBloques() {
-  const box = $('bib-bloques'); box.replaceChildren();
+/* ---------- Material ---------- */
+const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
+let copias = new Set(), edit = null;
+function opcionesTema(sel, todos) {
+  sel.replaceChildren();
+  sel.append(new Option(todos ? 'Todos los temas' : 'General (sin tema)', ''));
   _temario.bloques.forEach(b => {
-    const c = el('article', 'bib-bloque'); c.dataset.b = b.id;
-    c.append(el('b', 'rn', b.id), el('h3', '', b.titulo), el('p', 'fine', `${plural(b.temas.length, 'tema', 'temas')} · sin documentos`));
-    box.append(c);
+    const g = document.createElement('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
+    b.temas.forEach(t => g.append(new Option(`${codigoTema(t.id)} · ${t.corto}`, t.id)));
+    sel.append(g);
   });
+}
+function renderMaterial() {
+  const box = $('bib-lista'); box.replaceChildren();
+  const q = $('f-q').value.trim().toLowerCase(), ft = $('f-tema').value;
+  const docs = bibLista().filter(d => (!ft || d.tema === ft) && (!q || d.titulo.toLowerCase().includes(q)));
+  if (!bibLista().length) {
+    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no hay material'),
+      el('p', '', getToken() ? 'Pulsa «Subir archivo» para añadir tu primer PDF. Elige el tema al que pertenece y quedará ordenado aquí.' : 'Para subir y consultar material necesitas el token de GitHub en este dispositivo.'));
+    if (!getToken()) { const a = el('a', 'btn small', 'Configurar el token'); a.href = 'nuevo.html#token'; a.style.marginTop = '.9rem'; a.style.display = 'inline-flex'; v.append(a); }
+    box.append(v); return;
+  }
+  if (!docs.length) { box.append(el('p', 'vacio-msg', 'Ningún documento coincide con el filtro.')); return; }
+  const grupos = {}; docs.forEach(d => { (grupos[d.tema || ''] = grupos[d.tema || ''] || []).push(d); });
+  const orden = Object.keys(_temario.byId);
+  Object.keys(grupos).sort((a, b) => (a ? orden.indexOf(a) + 1 || 998 : 999) - (b ? orden.indexOf(b) + 1 || 998 : 999)).forEach(t => {
+    const g = el('section', 'bib-g'); g.dataset.b = bloqueOf(t) || 'x';
+    g.append(el('h2', 'bib-gt', t ? temaLabel(t) : 'General'));
+    grupos[t].sort((a, b) => b.t - a.t).forEach(d => g.append(filaDoc(d)));
+    box.append(g);
+  });
+}
+function filaDoc(d) {
+  const f = el('article', 'doc');
+  f.append(el('span', 'doc-ext', d.ext.toUpperCase().slice(0, 4)));
+  const cuerpo = el('div', 'doc-c'); cuerpo.append(el('h3', '', d.titulo));
+  const off = copias.has(d.id);
+  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(' · ') + (off ? ' · guardado en este dispositivo' : '')));
+  f.append(cuerpo);
+  const ac = el('div', 'doc-ac');
+  const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button'; ab.addEventListener('click', async () => { ab.disabled = true; msg(''); await bibAbrir(d, t => msg(t, true)); ab.disabled = false; copias = await bibCopiasIds(); renderMaterial(); });
+  ac.append(ab);
+  const of = el('button', 'mini', off ? 'Quitar copia' : 'Guardar sin conexión'); of.type = 'button';
+  of.addEventListener('click', async () => {
+    of.disabled = true;
+    if (off) await bibQuitaCopia(d.id);
+    else { try { msg('Descargando…'); await bibDescargar(d); msg(''); } catch (e) { msg(e.message === '401' ? ghError(401) : 'No he podido descargarlo. Comprueba la conexión.', true); } }
+    copias = await bibCopiasIds(); renderMaterial();
+  });
+  ac.append(of);
+  const ed = el('button', 'mini', 'Editar'); ed.type = 'button'; ed.addEventListener('click', () => abrirForm(d)); ac.append(ed);
+  const bo = el('button', 'mini err', 'Eliminar'); bo.type = 'button';
+  bo.addEventListener('click', async () => {
+    if (!confirm(`¿Eliminar «${d.titulo}»? Se borra del repositorio y de todos tus dispositivos.`)) return;
+    bo.disabled = true; msg('Eliminando…');
+    try { await bibBorrar(d); msg('Eliminado.'); } catch (e) { msg(e.message === '401' ? ghError(401) : navigator.onLine ? 'No he podido eliminarlo. Inténtalo de nuevo.' : 'Necesitas conexión para eliminar.', true); }
+    copias = await bibCopiasIds(); renderMaterial();
+  });
+  ac.append(bo); f.append(ac);
+  return f;
+}
+function abrirForm(d) {
+  edit = d || null; msg('');
+  if (!getToken() && !d) { msg('Para subir archivos necesitas el token de GitHub: Ajustes → Token de GitHub.', true); return; }
+  $('subir').classList.remove('hide');
+  $('subir-t').textContent = d ? 'Editar documento' : 'Subir material';
+  $('bf-archivo').classList.toggle('hide', !!d); $('subir-nota').classList.toggle('hide', !!d);
+  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : $('f-tema').value; $('i-tipo').value = d ? d.tipo : 'Ley';
+  $('i-ok').textContent = d ? 'Guardar cambios' : 'Subir'; $('i-ok').disabled = false;
+  $('subir').scrollIntoView({ block: 'nearest' }); (d ? $('i-titulo') : $('i-archivo')).focus();
+}
+const cerrarForm = () => { $('subir').classList.add('hide'); edit = null; };
+function initMaterial() {
+  opcionesTema($('f-tema'), true); opcionesTema($('i-tema'), false);
+  TIPOS.forEach(t => $('i-tipo').append(new Option(t, t)));
+  const pt = new URLSearchParams(location.search).get('tema'); if (pt && _temario.byId[pt]) $('f-tema').value = pt;
+  $('f-q').addEventListener('input', renderMaterial); $('f-tema').addEventListener('change', renderMaterial);
+  $('b-subir').addEventListener('click', () => abrirForm(null)); $('i-cancel').addEventListener('click', cerrarForm);
+  $('i-archivo').addEventListener('change', () => { const fs = $('i-archivo').files; $('bf-titulo').classList.toggle('hide', fs.length > 1); if (fs.length === 1 && !$('i-titulo').value) $('i-titulo').value = fs[0].name.replace(/\.[^.]+$/, ''); });
+  $('subir').addEventListener('submit', async e => {
+    e.preventDefault();
+    const tema = $('i-tema').value, tipo = $('i-tipo').value, ok = $('i-ok');
+    if (edit) {
+      const titulo = $('i-titulo').value.trim(); if (!titulo) { msg('Escribe un título.', true); return; }
+      ok.disabled = true; msg('Guardando…');
+      try { await bibEscribir(docs => { if (docs[edit.id]) Object.assign(docs[edit.id], { titulo, tema, tipo }); }, 'Editar documento'); msg('Cambios guardados.'); cerrarForm(); }
+      catch (er) { msg(er.message === '401' ? ghError(401) : 'No he podido guardar. Comprueba la conexión.', true); }
+      ok.disabled = false; renderMaterial(); return;
+    }
+    const fs = [...$('i-archivo').files]; if (!fs.length) { msg('Elige al menos un archivo.', true); return; }
+    if (!navigator.onLine) { msg('Necesitas conexión para subir archivos.', true); return; }
+    const grande = fs.find(f => f.size > BIB.limite); if (grande) { msg(`«${grande.name}» pesa ${tamTexto(grande.size)}; el máximo es 60 MB. Comprímelo o divídelo.`, true); return; }
+    ok.disabled = true; let hechos = 0;
+    try {
+      for (const f of fs) {
+        msg(`Subiendo ${hechos + 1} de ${fs.length}: ${f.name} (${tamTexto(f.size)})…`);
+        await bibSubir(f, { titulo: fs.length === 1 ? ($('i-titulo').value.trim() || f.name.replace(/\.[^.]+$/, '')) : f.name.replace(/\.[^.]+$/, ''), tema, tipo });
+        hechos++; renderMaterial();
+      }
+      msg(hechos === 1 ? 'Archivo subido.' : `${hechos} archivos subidos.`); cerrarForm();
+    } catch (er) {
+      const s = er.message; msg((hechos ? `Se subieron ${hechos}. ` : '') + (s === '401' || s === '403' || s === '404' ? ghError(+s) : s === '413' ? 'GitHub rechaza archivos tan grandes.' : 'No se pudo subir. Comprueba la conexión y vuelve a intentarlo.'), true);
+    }
+    ok.disabled = false; copias = await bibCopiasIds(); renderMaterial();
+  });
+}
+async function cargaMaterial() {
+  copias = await bibCopiasIds(); renderMaterial();
+  const r = await bibRefrescar();
+  if (r === 'token') msg(ghError(401), true); else if (r === 'error' && getToken()) msg('No he podido actualizar la lista; muestro la última copia guardada en este dispositivo.');
+  renderMaterial();
 }
 let notasCargadas = false;
 async function renderNotas() {
@@ -107,7 +227,7 @@ async function renderNotas() {
   notasCargadas = true;
 }
 async function init() {
-  await loadTemario(); renderBloques();
+  await loadTemario(); initMaterial(); cargaMaterial();
   mostrar(location.hash.slice(1));
 }
 init();

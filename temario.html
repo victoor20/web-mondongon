@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261111">
+<link rel="stylesheet" href="style.css?v=20261112">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -26,8 +26,8 @@
   </div>
   <div id="temario"></div>
 </div>
-<script src="app.js?v=20261111"></script>
-<script src="vistas.js?v=20261111"></script>
+<script src="app.js?v=20261112"></script>
+<script src="vistas.js?v=20261112"></script>
 <script>
 function temaRow(t) {
   const c = cnt[t.id], a = TS[t.id], r = reciente(t.id), ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
@@ -41,12 +41,16 @@ function temaRow(t) {
     det.append(el('span', '', `${plural(a.intentos, 'intento', 'intentos')}, ${haceTexto(a.ultima)}`));
   }
   row.append(det);
-  if (c) {
+  const nm = matCuenta(t.id);
+  if (c || nm) {
     const act = el('div', 'tact');
-    const pr = el('a', 'mini azul', 'Practicar'); pr.href = urlMixto(t.id); act.append(pr);
-    const vt = el('a', 'mini', 'Ver tests'); vt.href = `tests.html?tema=${encodeURIComponent(t.id)}`; act.append(vt);
-    if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
-    if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
+    if (c) {
+      const pr = el('a', 'mini azul', 'Practicar'); pr.href = urlMixto(t.id); act.append(pr);
+      const vt = el('a', 'mini', 'Ver tests'); vt.href = `tests.html?tema=${encodeURIComponent(t.id)}`; act.append(vt);
+      if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
+      if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
+    }
+    if (nm) { const m = el('a', 'mini', `Material (${nm})`); m.href = `biblioteca.html?tema=${encodeURIComponent(t.id)}#material`; act.append(m); }
     row.append(act);
   }
   return row;

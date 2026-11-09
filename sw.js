@@ -2,11 +2,11 @@
    La web y los tests se piden SIEMPRE primero a la red (así ves la última versión) y, si no hay
    conexión o va muy lenta, se sirve la copia guardada en el dispositivo.
    Sube el número de VERSION cuando cambie la lista de archivos de PRECACHE. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const NUCLEO = 'ma-nucleo-' + VERSION;
 const DINAMICO = 'ma-dinamico';
 const PRECACHE = ['./', 'index.html', 'temario.html', 'tests.html', 'biblioteca.html', 'ajustes.html', 'test.html', 'nuevo.html', 'editar.html',
-  'app.js', 'vistas.js', 'style.css', 'temario.json',
+  'app.js', 'vistas.js', 'biblioteca.js', 'style.css', 'temario.json',
   'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
   'fonts/literata.woff2', 'fonts/literata-italic.woff2', 'fonts/bricolage.woff2'];
 

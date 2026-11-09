@@ -38,3 +38,6 @@ function fraseEstado() {
   let r = 0, t = 0; Object.entries(TS).forEach(([id, a]) => { if (_temario.byId[id] && a.reciente.t) { r += a.reciente.r; t += a.reciente.t; } });
   return `Administrativo del Estado (C1). ${plural(con, 'tema con tests', 'temas con tests')} de ${temas}` + (t ? `; acierto reciente del ${Math.round(r / t * 100)} %.` : '.');
 }
+
+/* documentos de la Biblioteca por tema (lista guardada en este dispositivo) */
+const matCuenta = tema => Object.values(jget(localStorage, 'ma2_bib', {})).filter(d => d && !d.del && d.tema === tema).length;
