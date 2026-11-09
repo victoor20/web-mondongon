@@ -112,7 +112,7 @@ async function abrir() {
   }
   $('v-desc').disabled = false; $('v-desc').addEventListener('click', descargar);
   if (doc.ext !== 'pdf') { aviso('Este archivo no es un PDF y el visor no puede mostrarlo. Puedes descargarlo.', false, [el('br'), botonDescargar()]); return; }
-  try { lib = await import('./vendor/pdfjs/pdf.min.mjs'); lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs/pdf.worker.min.mjs', location.href).href; }
+  try { await import('./vendor/pdfjs/compat.mjs'); lib = await import('./vendor/pdfjs/pdf.min.mjs'); lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs/worker-compat.mjs', location.href).href; }
   catch (e) { await falla('cargar pdf.js', e, 'Este navegador no puede cargar el visor. Puedes descargar el archivo.'); return; }
   try { pdf = await lib.getDocument({ data: new Uint8Array(await leerBuf(blob)), isEvalSupported: false }).promise; }
   catch (e) { await falla('leer el documento', e, 'No he podido abrir este PDF: puede estar dañado o protegido con contraseña.'); return; }

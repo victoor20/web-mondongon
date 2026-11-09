@@ -106,6 +106,9 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   (`pdf.min.mjs`, `pdf.worker.min.mjs`, `LICENSE`). Versión fija: no se actualiza sola; para cambiarla,
   `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos tres archivos desde `package/legacy/build/`.
   Recuerda la última página y el zoom por documento en `ma2_visor`.
+  `vendor/pdfjs/compat.mjs` es un polyfill (`Promise.withResolvers`) para navegadores antiguos como el
+  Chrome 101 de la Galaxy Tab A; `worker-compat.mjs` lo carga dentro del worker y es el que se usa como
+  `workerSrc`. Al actualizar pdf.js hay que revisar si hacen falta más polyfills.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 
