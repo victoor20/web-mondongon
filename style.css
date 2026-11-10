@@ -641,8 +641,10 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 .vis-zoom button{min-width:2.25rem;min-height:2.25rem;padding:0 .6rem;border:1px solid var(--linea2);border-radius:8px;background:transparent;color:var(--tinta);font:700 1rem/1 var(--sans);cursor:pointer}
 .vis-zoom button:hover{border-color:var(--tinta)}
 .vis-zoom button:disabled{opacity:.4;cursor:default}
-.vis-zoom #v-aj{font-size:.8rem}
-.vis-zoom .z{min-width:2.9rem;text-align:center;font-variant-numeric:tabular-nums;color:var(--tinta)}
+.vis-zoom #v-ancho,.vis-zoom #v-pagina{font-size:.8rem}
+.vis-zoom button[aria-pressed=true]{border-color:var(--azul);color:var(--azul)}
+.vis-zoom .z{display:inline-flex;align-items:center;gap:.2rem;color:var(--muted)}
+.vis-zoom .z input{width:3.8rem;min-height:2.25rem;padding:.2rem .3rem;border:1.5px solid var(--linea2);border-radius:8px;background:var(--hoja);color:var(--tinta);font:600 .9rem/1 var(--sans);text-align:center;font-variant-numeric:tabular-nums}
 .vis-barra button:focus-visible,.vis-barra input:focus-visible,.vis-barra a:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 .vis-msg{margin:0 0 .8rem;padding:1rem 1.1rem;border:1.5px dashed var(--linea2);border-radius:14px}
 .vis-msg:empty{display:none}
@@ -690,11 +692,12 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 .tmp-barra i{display:block;height:100%;width:0;background:var(--azul);transition:width .3s linear}
 .tmp[data-m=descanso] .tmp-barra i{background:var(--b2)}
 .tmp-msg{min-height:1.3rem;margin:.5rem 0 0;font-size:.85rem;line-height:1.35;color:var(--tinta)}
-.tmp-acc{display:flex;gap:.5rem}
+.tmp-acc{display:flex;flex-wrap:wrap;gap:.5rem}
 .tmp-go{flex:1;min-height:2.85rem;border-radius:10px;border:1.5px solid var(--azul);background:var(--azul);color:var(--on-azul);font:700 1rem/1 var(--sans);cursor:pointer}
 .tmp-go.pausa{background:transparent;color:var(--tinta);border-color:var(--linea2)}
 .tmp-sec{min-height:2.85rem;padding:0 .8rem;border-radius:10px;border:1px solid var(--linea2);background:transparent;color:var(--tinta);font:600 .85rem/1 var(--sans);cursor:pointer}
 .tmp-sec:disabled{opacity:.4;cursor:default}
+.tmp-sec[hidden]{display:none}
 .tmp-pre{margin:.8rem 0 0;display:flex;flex-direction:column;gap:.6rem}
 .tmp-chips{display:flex;flex-wrap:wrap;gap:.4rem}
 .tmp-chip{min-height:2.3rem;padding:0 .7rem;border-radius:7px;border:1px solid var(--linea2);background:transparent;color:var(--tinta);font:600 .82rem/1 var(--sans);cursor:pointer}

@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261116">
+<link rel="stylesheet" href="style.css?v=20261117">
 <style>
 .vis-diag{margin:.8rem 0 0;padding:.6rem .75rem;border-radius:10px;background:var(--sel-bg);color:var(--tinta);font:.72rem/1.5 ui-monospace,Menlo,Consolas,monospace;text-align:left;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
 .vis-diag b{display:block;margin:0 0 .3rem;font:700 .78rem/1.3 var(--sans)}
@@ -38,9 +38,10 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
     <label class="vis-pag">pág. <input type="number" id="v-pag" min="1" step="1" inputmode="numeric" aria-label="Ir a la página" disabled> / <span id="v-n">–</span></label>
     <div class="vis-zoom">
       <button type="button" id="v-menos" aria-label="Reducir zoom" disabled>−</button>
-      <span class="z" id="v-z" aria-live="polite">100 %</span>
+      <label class="z"><input type="number" id="v-z" min="50" max="300" step="5" inputmode="numeric" aria-label="Tamaño en por ciento" value="100" disabled> %</label>
       <button type="button" id="v-mas" aria-label="Ampliar zoom" disabled>+</button>
-      <button type="button" id="v-aj" aria-label="Ajustar al ancho" disabled>Ajustar</button>
+      <button type="button" id="v-ancho" aria-label="Ajustar al ancho de la pantalla" aria-pressed="true" disabled>Ancho</button>
+      <button type="button" id="v-pagina" aria-label="Ver la página entera" aria-pressed="false" disabled>Página</button>
     </div>
   </div>
   <div class="vis-msg" id="v-msg" role="status" aria-live="polite"></div>
@@ -48,8 +49,8 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
   <noscript><p class="vis-msg">Este visor necesita JavaScript.</p></noscript>
   <script nomodule>document.getElementById('v-msg').textContent = 'Este navegador es demasiado antiguo para el visor. Vuelve a la Biblioteca y usa «Descargar».';</script>
 </div>
-<script src="app.js?v=20261116"></script>
-<script src="biblioteca.js?v=20261116"></script>
+<script src="app.js?v=20261117"></script>
+<script src="biblioteca.js?v=20261117"></script>
 <script type="module">
 const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx: 16e6 };
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -120,7 +121,7 @@ async function abrir() {
   try { n = pdf.numPages; base = (await pdf.getPage(1)).getViewport({ scale: 1 }); }
   catch (e) { await falla('pintar la página 1', e, 'No he podido leer la primera página de este PDF.'); return; }
   n = pdf.numPages; $('v-n').textContent = n; $('v-pag').max = n; $('v-pag').value = 1; $('v-pag').disabled = false;
-  ['v-menos', 'v-mas', 'v-aj'].forEach(x => { $(x).disabled = false; });
+  ['v-menos', 'v-mas', 'v-z', 'v-ancho', 'v-pagina'].forEach(x => { $(x).disabled = false; });
   const g = guardado()[id] || {};
   z = Math.min(VIS.max, Math.max(VIS.min, +g.z || 1));
   aviso('');
@@ -142,9 +143,17 @@ function medidas() {
   fit = disp / base.width; return fit * z;                         // escala CSS de las páginas
 }
 function dimensiona(p, w, h) { p.w = w; p.h = h; p.div.style.width = w + 'px'; p.div.style.height = h + 'px'; }
+function zPagina() {                                               // el tamaño con el que la hoja entera cabe de alto en la pantalla
+  if (!base || !fit) return 1;
+  const alto = (window.innerHeight || 800) - barra.offsetHeight - 24;
+  return Math.min(VIS.max, Math.max(VIS.min, alto / (base.height * fit)));
+}
 function aplicaZoom(ancla) {                                       // ancla: { i, f } página y fracción visible, para no perder el sitio
-  const s = medidas(); $('v-z').textContent = Math.round(z * 100) + ' %';
+  const s = medidas();
+  if (document.activeElement !== $('v-z')) $('v-z').value = Math.round(z * 100);
   $('v-menos').disabled = z <= VIS.min + 1e-6; $('v-mas').disabled = z >= VIS.max - 1e-6;
+  $('v-ancho').setAttribute('aria-pressed', String(Math.abs(z - 1) < .01));
+  $('v-pagina').setAttribute('aria-pressed', String(Math.abs(z - zPagina()) < .01));
   pags.forEach(p => { libera(p); if (io) io.unobserve(p.div); dimensiona(p, Math.floor(base.width * s), Math.floor(base.height * s)); });
   if (ancla) { const p = pags[ancla.i]; window.scrollTo(window.scrollX, p.div.getBoundingClientRect().top + scrollY - barra.offsetHeight - 8 + ancla.f * p.h); }
   if (io) pags.forEach(p => io.observe(p.div)); else pags.slice(Math.max(0, actual - 2), actual + 2).forEach(pinta);
@@ -199,13 +208,21 @@ let raf = 0;
 addEventListener('scroll', () => { if (!n || raf) return; raf = requestAnimationFrame(() => { raf = 0; actual = paginaActual() + 1; if (document.activeElement !== $('v-pag')) $('v-pag').value = actual; recuerda(); }); }, { passive: true });
 $('v-menos').addEventListener('click', () => cambiaZoom(z - VIS.paso));
 $('v-mas').addEventListener('click', () => cambiaZoom(z + VIS.paso));
-$('v-aj').addEventListener('click', () => cambiaZoom(1));
+$('v-ancho').addEventListener('click', () => cambiaZoom(1));
+$('v-pagina').addEventListener('click', () => cambiaZoom(zPagina()));
+function escribeZoom() {                                           // el porcentaje se puede escribir a mano
+  const v = Math.round(+$('v-z').value);
+  if (v) cambiaZoom(Math.min(VIS.max, Math.max(VIS.min, v / 100)));
+  $('v-z').value = Math.round(z * 100);
+}
+$('v-z').addEventListener('change', escribeZoom);
+$('v-z').addEventListener('keydown', e => { if (e.key === 'Enter') { escribeZoom(); $('v-z').blur(); } });
 $('v-pag').addEventListener('change', () => irAPagina(+$('v-pag').value));
 $('v-pag').addEventListener('keydown', e => { if (e.key === 'Enter') { irAPagina(+$('v-pag').value); $('v-pag').blur(); } });
 let tR = 0, ancho0 = innerWidth;
 addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; ancho0 = innerWidth; clearTimeout(tR); tR = setTimeout(() => { const i = paginaActual(); aplicaZoom({ i, f: 0 }); }, 250); });
 abrir().catch(e => falla('abrir el visor', e, 'Ha ocurrido un error inesperado en el visor.'));
 </script>
-<script src="temporizador.js?v=20261116"></script>
+<script src="temporizador.js?v=20261117"></script>
 </body>
 </html>

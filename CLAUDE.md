@@ -71,17 +71,21 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
 
 ## Modo sin conexión (sw.js)
 
-- `sw.js` es un service worker **network-first**: siempre intenta la red primero (para ver la
-  última versión) y solo sirve la copia cacheada si no hay conexión o la red tarda demasiado
-  (timeout de 3 s cuando ya hay copia guardada).
+- `sw.js` sirve el **núcleo** (lo que está en `PRECACHE`) así: las **páginas** se piden a la red con
+  un límite de 1,2 s y, si tarda más o no hay conexión, se usa la copia guardada; los **estilos,
+  guiones, fuentes e iconos** salen directamente de la copia, sin tocar la red, que es lo que hace
+  que cambiar de apartado sea casi instantáneo.
+- Las copias de estilos y guiones se guardan **con su `?v=…`**: por eso basta con subir ese número en
+  los HTML para que llegue la versión nueva, y nunca se mezcla una página nueva con estilos viejos.
+- Todo lo que NO está en `PRECACHE` (los tests de `tests/`, por ejemplo) sigue siendo **network-first**
+  con copia de respaldo y timeout de 3 s, para que un test recién subido se vea enseguida.
 - La lista `PRECACHE` dentro de `sw.js` fija qué archivos se guardan de entrada en la instalación
   (núcleo: HTML, `app.js`, `style.css`, `temario.json`, manifest, iconos, fuentes).
 - **Si cambia la lista `PRECACHE`** (se añade/quita/renombra un archivo en ella), hay que subir
   el número de `VERSION` en `sw.js`. El nombre de la caché de núcleo incluye `VERSION`
   (`ma-nucleo-<VERSION>`), y es lo que hace que el navegador borre la caché antigua y descargue
-  la nueva lista en el siguiente `activate`. Si solo cambia el contenido de un archivo ya listado
-  (sin tocar la lista), no es necesario subir `VERSION`: el propio comportamiento network-first ya
-  trae la versión nueva.
+  la nueva lista en el siguiente `activate`. Conviene subir `VERSION` también en cualquier publicación que toque
+  el núcleo, para que no se acumulen copias de versiones antiguas.
 
 ## Notas
 
@@ -107,13 +111,16 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   no dibuja páginas en el Chrome 101 de la Galaxy Tab A (2016). Versión fija: no se actualiza sola; para
   cambiarla, `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos archivos desde
   `package/legacy/build/`, probando siempre en la tablet antes de subir de versión.
-  Recuerda la última página y el zoom por documento en `ma2_visor`.
+  Recuerda la última página y el zoom por documento en `ma2_visor`. El porcentaje de la barra es un
+  campo escribible (50–300 %) y los botones «Ancho» y «Página» fijan el ajuste; el 100 % equivale a
+  «Ancho», porque la escala base es el ancho disponible (`fit = disp / base.width`).
 - Temporizador de estudio: `temporizador.js` (cargado en Inicio, Temario, Tests, Biblioteca, visor y Ajustes;
   no en `test.html`) crea un botón flotante con panel. Estado en localStorage por dispositivo (`ma2_temp`,
   `ma2_temp_cfg`, `ma2_temp_log`; no se sincroniza). Usa la hora de fin, no cuenta segundos. Alarma generada
   con Web Audio. Estilos al final de `style.css` (`.tmp*`). Se puede arrastrar (posición y estado oculto en
   `ma2_temp_ui`, por dispositivo), ocultar con la flecha y la alarma se repite en bucle hasta pararla
-  (ajuste `bucle`, 9 sonidos en `SONIDOS`).
+  (ajuste `bucle`, 9 sonidos en `SONIDOS`). El botón «Terminar» (visible solo con la cuenta en marcha o
+  en pausa) corta la sesión y suma lo estudiado a `ma2_temp_log`; «Reiniciar» también lo suma.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 

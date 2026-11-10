@@ -35,9 +35,10 @@
     escribe(K.log, log);
   }
   const hoySeg = () => leer(K.log, {})[hoyKey()] || 0;
-  function cierraRegistro() {                                   // suma lo estudiado en la sesión actual que aún no se haya contado
-    if (st.m === 'estudio' && (st.est === 'corre' || st.est === 'pausa')) sumaLog(Math.max(0, st.dur - restante() - st.reg));
-    st.reg = 0;
+  function cierraRegistro() {                                   // suma lo estudiado en la sesión actual que aún no se haya contado y devuelve esos segundos
+    let s = 0;
+    if (st.m === 'estudio' && (st.est === 'corre' || st.est === 'pausa')) { s = Math.max(0, st.dur - restante() - st.reg); sumaLog(s); }
+    st.reg = 0; return s;
   }
 
   /* ---------- sonido ---------- */
@@ -105,7 +106,11 @@
     guarda(); pidePantalla(); sync();
   }
   function pausa() { st.rest = restante(); st.est = 'pausa'; guarda(); sueltaPantalla(); sync(); }
-  function reinicia() { silencia(); cierraRegistro(); st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
+  function reinicia() { silencia(); const s = cierraRegistro(); st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); return s; }
+  function finaliza() {                                          // «Terminar»: corta la cuenta atrás y deja contado lo estudiado hasta ahora
+    const descanso = st.m === 'descanso', s = reinicia();
+    msg.textContent = descanso ? 'Descanso terminado.' : s > 0 ? 'Sumados ' + fmt(s) + ' al estudio de hoy.' : 'No había tiempo que contar.';
+  }
   function fija(min) { silencia(); cierraRegistro(); cfg[st.m] = min; escribe(K.cfg, cfg); st.dur = min * 60; st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
   function modo(m) { silencia(); cierraRegistro(); st.m = m; st.dur = (+cfg[m] || CFG0[m]) * 60; st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
   function mas(min) {
@@ -156,10 +161,12 @@
   barra.append(barI); reloj.append(tiempo, barra, msg);
   const bAl = h('button', 'tmp-alarma', 'Parar alarma'); bAl.type = 'button'; bAl.hidden = true; bAl.addEventListener('click', pararAlarma);
 
-  const acc = h('div', 'tmp-acc'), go = h('button', 'tmp-go'), bRe = h('button', 'tmp-sec', 'Reiniciar'), bMas = h('button', 'tmp-sec', '+5 min');
-  [go, bRe, bMas].forEach(b => { b.type = 'button'; }); acc.append(go, bRe, bMas);
+  const acc = h('div', 'tmp-acc'), go = h('button', 'tmp-go'), bFin = h('button', 'tmp-sec', 'Terminar'), bRe = h('button', 'tmp-sec', 'Reiniciar'), bMas = h('button', 'tmp-sec', '+5 min');
+  [go, bFin, bRe, bMas].forEach(b => { b.type = 'button'; }); bFin.hidden = true; bFin.title = 'Terminar ya y contar el tiempo estudiado'; acc.append(go, bFin, bRe, bMas);
   go.addEventListener('click', () => { if (st.est === 'corre') pausa(); else if (st.est === 'fin') siguiente(); else inicia(); if (st.est === 'corre') msg.textContent = ''; });
-  bRe.addEventListener('click', reinicia); bMas.addEventListener('click', () => mas(5));
+  bFin.addEventListener('click', finaliza);
+  bRe.addEventListener('click', () => { const s = reinicia(); msg.textContent = s > 0 ? 'Contados ' + fmt(s) + '. Temporizador a cero.' : ''; });
+  bMas.addEventListener('click', () => mas(5));
 
   const pre = h('div', 'tmp-pre'), chips = h('div', 'tmp-chips'), otro = h('form', 'tmp-otro');
   const inp = h('input'); inp.type = 'number'; inp.min = '1'; inp.max = '180'; inp.inputMode = 'numeric'; inp.placeholder = 'Otro'; inp.setAttribute('aria-label', 'Otro tiempo en minutos');
@@ -219,6 +226,7 @@
     go.textContent = st.est === 'corre' ? 'Pausar' : st.est === 'pausa' ? 'Reanudar' : st.est === 'fin' ? (st.m === 'estudio' ? 'Descansar ' + (+cfg.descanso || 5) + ' min' : 'Estudiar ' + (+cfg.estudio || 20) + ' min') : 'Iniciar';
     go.classList.toggle('pausa', st.est === 'corre');
     bRe.disabled = st.est === 'parado'; bMas.disabled = false;
+    bFin.hidden = !(st.est === 'corre' || st.est === 'pausa');    // solo cuando hay una cuenta en marcha que cortar
     hoy.textContent = 'Hoy: ' + (hoySeg() >= 60 ? minTxt(hoySeg()) : '0 min') + ' de estudio efectivo';
     if (document.activeElement !== dDe) dDe.value = cfg.descanso;
     pintaChips();
