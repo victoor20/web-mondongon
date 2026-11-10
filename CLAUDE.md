@@ -108,6 +108,10 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   cambiarla, `npm pack pdfjs-dist@X` fuera del repo y copiar los mismos archivos desde
   `package/legacy/build/`, probando siempre en la tablet antes de subir de versión.
   Recuerda la última página y el zoom por documento en `ma2_visor`.
+- Temporizador de estudio: `temporizador.js` (cargado en Inicio, Temario, Tests, Biblioteca, visor y Ajustes;
+  no en `test.html`) crea un botón flotante con panel. Estado en localStorage por dispositivo (`ma2_temp`,
+  `ma2_temp_cfg`, `ma2_temp_log`; no se sincroniza). Usa la hora de fin, no cuenta segundos. Alarma generada
+  con Web Audio. Estilos al final de `style.css` (`.tmp*`).
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 
