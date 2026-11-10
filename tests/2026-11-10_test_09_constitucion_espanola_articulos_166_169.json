@@ -1,0 +1,283 @@
+{
+  "titulo": "Test 09: Constitución Española (artículos 166–169)",
+  "tema": "I-1",
+  "fecha": "2026-11-10",
+  "preguntas": [
+    {
+      "ref": "Artículo 166 y 87.2",
+      "q": "Una asamblea legislativa autonómica pretende ejercer la iniciativa de reforma constitucional. Conforme a la remisión del artículo 166 al artículo 87 CE, ¿qué actuación se ajusta a esa previsión?",
+      "opciones": [
+        "Solicitar del Gobierno la adopción de un proyecto o remitir una proposición a la Mesa del Congreso, delegando hasta tres miembros para defenderla.",
+        "Remitir directamente una proposición al Senado, delegando hasta tres miembros para defenderla.",
+        "Solicitar del Congreso la adopción de un proyecto o remitir una proposición al Gobierno, delegando hasta tres miembros.",
+        "Remitir una proposición a la Mesa del Congreso, delegando hasta cinco miembros para defenderla."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 166",
+      "q": "¿Cuál de las siguientes afirmaciones sobre la iniciativa de reforma constitucional reproduce correctamente el alcance del artículo 166 CE?",
+      "opciones": [
+        "Remite a los apartados 1 y 3 del artículo 87, incluidos los términos de la iniciativa popular.",
+        "Remite a los apartados 1 y 2 del artículo 87, sin extenderse a la iniciativa popular del apartado 3.",
+        "Remite al artículo 87 en su integridad, con excepción de las materias de ley orgánica.",
+        "Remite al apartado 2 del artículo 87 y al artículo 92 para el ejercicio de la iniciativa."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 166 y 167",
+      "q": "Un grupo de ciudadanos pretende promover directamente una reforma constitucional reuniendo las firmas exigidas para la iniciativa legislativa popular del artículo 87.3. ¿Qué respuesta se ajusta a los artículos 166 y 167 CE?",
+      "opciones": [
+        "La iniciativa procede si posteriormente se aprueba la reforma por tres quintos de ambas Cámaras.",
+        "La iniciativa procede si la solicitud se dirige a la Mesa del Congreso, pero no a la del Senado.",
+        "La iniciativa popular no queda habilitada para la reforma constitucional por la remisión que establece el artículo 166.",
+        "La iniciativa procede cuando la reforma no afecte a materias reservadas al procedimiento agravado."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 167.1",
+      "q": "Una propuesta de reforma constitucional debe tramitarse por el procedimiento ordinario. ¿Qué mayoría de aprobación establece con carácter general el artículo 167.1?",
+      "opciones": [
+        "Tres quintos del Congreso y mayoría absoluta del Senado.",
+        "Dos tercios del Congreso y tres quintos del Senado.",
+        "Mayoría absoluta del Congreso y tres quintos del Senado.",
+        "Tres quintos de cada una de las Cámaras."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 167.1",
+      "q": "Al no existir acuerdo entre Congreso y Senado sobre un proyecto de reforma constitucional ordinaria, ¿qué mecanismo prevé el artículo 167.1?",
+      "opciones": [
+        "Una Comisión de composición paritaria de Diputados y Senadores que presentará un texto para votación de ambas Cámaras.",
+        "Una comisión mixta presidida por el Gobierno que elevará el texto definitivo al Congreso.",
+        "Una Comisión de Diputados y Senadores proporcional al tamaño de cada Cámara que aprobará el texto final.",
+        "Una Comisión de composición paritaria entre el Gobierno y el Congreso que someterá el texto al Senado."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 167.2",
+      "q": "Fracasada la aprobación por el procedimiento del artículo 167.1, el texto ha obtenido mayoría absoluta del Senado. ¿Con qué mayoría puede el Congreso aprobar finalmente la reforma conforme al 167.2?",
+      "opciones": [
+        "Tres quintos de sus miembros.",
+        "Dos tercios de sus miembros.",
+        "Mayoría absoluta de sus miembros.",
+        "Dos tercios de los votos válidamente emitidos, sin referencia al total de miembros."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 167.2",
+      "q": "Considerando únicamente las mayorías constitucionales del artículo 167 y suponiendo agotada sin éxito la vía del apartado 1, ¿qué combinación permitiría acudir a la aprobación alternativa?",
+      "opciones": [
+        "Congreso por tres quintos y Senado por mayoría absoluta.",
+        "Congreso por dos tercios y Senado por mayoría simple.",
+        "Congreso por dos tercios y Senado por mayoría absoluta.",
+        "Congreso por mayoría absoluta y Senado por dos tercios."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 167.3",
+      "q": "Tras la aprobación parlamentaria de una reforma constitucional ordinaria, ¿qué solicitud determina que sea sometida a referéndum según el artículo 167.3?",
+      "opciones": [
+        "La de una décima parte del Congreso y otra décima parte del Senado en los quince días posteriores.",
+        "La de una décima parte de cualquiera de las Cámaras en los veinte días posteriores.",
+        "La de una quinta parte de cualquiera de las Cámaras en los quince días posteriores.",
+        "La de una décima parte de los miembros de cualquiera de las Cámaras dentro de los quince días siguientes."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 167.3",
+      "q": "Una reforma ordinaria obtiene la aprobación de las Cortes y, dieciséis días después, una décima parte de los diputados pide su sometimiento a referéndum. ¿Qué conclusión resulta del artículo 167.3?",
+      "opciones": [
+        "La solicitud es extemporánea conforme al plazo constitucional de quince días.",
+        "La solicitud debe admitirse, porque el plazo constitucional es de veinte días.",
+        "La solicitud es válida si obtiene después el respaldo de una décima parte del Senado.",
+        "La solicitud es válida porque el plazo comienza con la promulgación de la reforma."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 167 y 168",
+      "q": "¿Cuál de las siguientes afirmaciones distingue correctamente el referéndum de los procedimientos de reforma de los artículos 167 y 168 CE?",
+      "opciones": [
+        "En el 167 se exige siempre ratificación popular y en el 168 basta el acuerdo de las nuevas Cortes.",
+        "En el 167 depende de la solicitud parlamentaria prevista y en el 168 se exige para la ratificación de toda reforma aprobada.",
+        "En ambos casos es obligatorio, pero en el 167 la solicitud debe presentarse en quince días.",
+        "En ambos casos depende de una solicitud parlamentaria, aunque con mayorías diferentes."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 168.1",
+      "q": "Se plantea una reforma limitada a los artículos 14 y 30 de la Constitución. Por razón exclusivamente de su ubicación sistemática, ¿qué procedimiento corresponde?",
+      "opciones": [
+        "El agravado, por afectar al Capítulo II del Título I.",
+        "El agravado, por afectar a derechos comprendidos en el artículo 53.2.",
+        "El ordinario, porque ninguno de esos artículos se encuentra en las materias específicamente protegidas por el artículo 168.1.",
+        "El agravado, porque toda reforma del Título I exige dos tercios de ambas Cámaras y disolución."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 168.1",
+      "q": "Una propuesta de reforma parcial afecta al artículo 56 de la Constitución. ¿Cuál de las siguientes consecuencias se ajusta al artículo 168.1?",
+      "opciones": [
+        "Se tramita por el artículo 167 por tratarse de una reforma parcial.",
+        "Requiere tres quintos de cada Cámara y, después, disolución inmediata.",
+        "Requiere dos tercios del Congreso y mayoría absoluta del Senado, con disolución posterior.",
+        "Exige aprobar el principio de reforma por dos tercios de cada Cámara y disolver inmediatamente las Cortes."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 168.1",
+      "q": "¿Cuál de las siguientes referencias a materias protegidas por el artículo 168.1 es exacta?",
+      "opciones": [
+        "Título preliminar; Sección 1.ª del Capítulo II del Título I; Título II.",
+        "Título preliminar; Capítulo II íntegro del Título I; Título II.",
+        "Título I íntegro; Título II; Título IX.",
+        "Título preliminar; Capítulo III del Título I; Título II."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 168.1–2",
+      "q": "En una reforma del artículo 168, ¿qué diferencia existe entre la primera aprobación y la aprobación del texto por las nuevas Cámaras?",
+      "opciones": [
+        "Las primeras Cortes aprueban el texto por dos tercios y las nuevas ratifican solo por mayoría absoluta.",
+        "Las primeras Cortes aprueban el principio por dos tercios de cada Cámara; las nuevas ratifican la decisión y aprueban el nuevo texto por dos tercios de ambas Cámaras.",
+        "Las primeras Cortes aprueban el principio por tres quintos; las nuevas aprueban el texto por dos tercios.",
+        "Las primeras Cortes aprueban el principio por dos tercios; las nuevas aprueban el texto por tres quintos."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 168.2",
+      "q": "En cuanto a la ratificación de la decisión de reforma por las Cámaras recién elegidas en el procedimiento agravado, ¿qué establece literalmente el artículo 168.2?",
+      "opciones": [
+        "Que debe efectuarse por dos tercios de ambas Cámaras, igual que el nuevo texto.",
+        "Que debe efectuarse por mayoría absoluta de ambas Cámaras, junto con el nuevo texto.",
+        "Que las Cámaras elegidas deben ratificar la decisión, sin que ese apartado fije expresamente la mayoría de dicha ratificación.",
+        "Que debe efectuarse por tres quintos de ambas Cámaras, antes de aprobar el nuevo texto por dos tercios."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 168.3",
+      "q": "Un proyecto de revisión constitucional total supera la aprobación del principio, se celebran elecciones y las nuevas Cortes aprueban el texto con las mayorías necesarias. ¿Qué trámite constitucional resta para su ratificación?",
+      "opciones": [
+        "Referéndum únicamente si lo solicita una décima parte de cualquiera de las Cámaras.",
+        "Referéndum únicamente si lo solicitan las dos Cámaras por mayoría absoluta.",
+        "Referéndum si lo solicita el presidente del Gobierno dentro de quince días.",
+        "Referéndum obligatorio de ratificación de la reforma."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 168 y 169",
+      "q": "¿Cuál de las siguientes proposiciones combina correctamente la disolución de las Cortes con los límites de iniciativa de reforma constitucional?",
+      "opciones": [
+        "El artículo 168 exige la disolución inmediata tras aprobar el principio de reforma y el 169 impide iniciar reformas en tiempo de guerra o durante los estados del artículo 116.",
+        "El artículo 168 exige disolución tras ratificar el nuevo texto y el 169 prohíbe únicamente el estado de excepción y sitio.",
+        "El artículo 168 exige disolución cuando se solicita referéndum y el 169 impide iniciar reformas solo en tiempo de guerra.",
+        "El artículo 168 exige disolución cuando se alcanza tres quintos y el 169 impide aprobar cualquier reforma durante el estado de alarma."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 169 y 55.1",
+      "q": "Al comparar los artículos 55.1 y 169 CE, ¿cuál es la diferencia correcta respecto de los estados excepcionales?",
+      "opciones": [
+        "Ambos se refieren a alarma, excepción y sitio para sus respectivos efectos.",
+        "El 55.1 menciona excepción y sitio para la suspensión de determinados derechos; el 169 incluye todos los estados del artículo 116 para impedir iniciar reformas.",
+        "El 55.1 contempla alarma y excepción; el 169 únicamente excepción y sitio.",
+        "El 55.1 contempla solamente sitio y el 169 contempla exclusivamente alarma y excepción."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 169",
+      "q": "Una reforma constitucional fue iniciada antes de la declaración de un estado de alarma. ¿Qué afirmación reproduce con mayor precisión el alcance literal del artículo 169?",
+      "opciones": [
+        "Ordena suspender automáticamente toda reforma constitucional previamente iniciada.",
+        "Permite iniciar nuevas reformas ordinarias, pero no las agravadas.",
+        "Prohíbe iniciar reformas durante la vigencia de esos estados, sin establecer literalmente una suspensión automática de las previamente iniciadas.",
+        "Autoriza iniciar reformas si se tramitan sin referéndum de ratificación."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 159.2",
+      "q": "Conforme al artículo 159 CE, un jurista de reconocida competencia que haya ejercido exactamente quince años, ¿reúne por ese solo dato el requisito temporal constitucional para ser magistrado del TC?",
+      "opciones": [
+        "Sí, porque el artículo exige al menos quince años.",
+        "Sí, siempre que proceda de la carrera fiscal.",
+        "Sí, si es propuesto por Congreso o Senado por tres quintos.",
+        "No, porque exige más de quince años de ejercicio profesional."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 159 y 160",
+      "q": "Señale la afirmación correcta sobre nombramientos y mandatos en el Tribunal Constitucional.",
+      "opciones": [
+        "El Rey nombra a sus miembros por nueve años y a su presidente, entre dichos miembros y a propuesta del Pleno, por tres.",
+        "El Rey nombra a sus miembros por nueve años y el Congreso nombra al presidente, entre ellos, por tres.",
+        "El Tribunal Constitucional nombra a los miembros por nueve años y el Rey nombra a su presidente por tres.",
+        "El Rey nombra a los miembros y al presidente por períodos de nueve años, aunque este último puede ser reelegido."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 161.2",
+      "q": "El Gobierno recurre una resolución autonómica al amparo del artículo 161.2. ¿Qué plazo máximo fija la Constitución para que el TC se pronuncie sobre la suspensión producida?",
+      "opciones": [
+        "Tres meses para dictar sentencia definitiva.",
+        "Cinco meses para ratificar o levantar la suspensión.",
+        "Cinco meses para resolver definitivamente el fondo del recurso.",
+        "Tres meses para ratificar la suspensión, sin posibilidad de levantarla."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 162",
+      "q": "¿Cuál de las siguientes combinaciones de sujetos y procedimientos se ajusta al artículo 162 CE?",
+      "opciones": [
+        "El Ministerio Fiscal está legitimado para recurso de inconstitucionalidad; el Defensor del Pueblo, solo para amparo.",
+        "Toda persona jurídica con interés legítimo puede presentar recurso de inconstitucionalidad y recurso de amparo.",
+        "El Defensor del Pueblo está legitimado para ambos recursos; el Ministerio Fiscal figura expresamente en la legitimación para amparo.",
+        "Cincuenta senadores pueden interponer recurso de amparo con carácter general; el Ministerio Fiscal no tiene esa legitimación."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 163",
+      "q": "Un juez considera contraria a la Constitución una norma con rango de ley, aplicable al proceso que conoce, pero cuya validez no afecta a la decisión del litigio. ¿Qué sucede a efectos del artículo 163?",
+      "opciones": [
+        "Puede plantear la cuestión porque basta que la norma sea aplicable al asunto.",
+        "Debe plantearla porque toda duda constitucional sobre ley aplicable exige pronunciamiento del TC.",
+        "Puede plantearla si el Ministerio Fiscal lo solicita formalmente, aunque la validez no influya en el fallo.",
+        "No reúne el requisito constitucional de que de la validez de la norma dependa el fallo."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 164.1",
+      "q": "Respecto de las sentencias del Tribunal Constitucional, indique la afirmación ajustada al artículo 164 CE.",
+      "opciones": [
+        "Tienen valor de cosa juzgada desde el día siguiente a su publicación en el BOE y no cabe recurso contra ellas.",
+        "Tienen valor de cosa juzgada desde su publicación en el BOE y admiten recurso de aclaración como apelación.",
+        "Tienen valor de cosa juzgada desde su notificación a las partes y no admiten recurso ordinario.",
+        "Tienen valor de cosa juzgada quince días después de su publicación y admiten recurso extraordinario. ---"
+      ],
+      "correcta": 0
+    }
+  ],
+  "fuente": "ChatGPT"
+}
