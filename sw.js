@@ -2,7 +2,7 @@
    La web y los tests se piden SIEMPRE primero a la red (así ves la última versión) y, si no hay
    conexión o va muy lenta, se sirve la copia guardada en el dispositivo.
    Sube el número de VERSION cuando cambie la lista de archivos de PRECACHE. */
-const VERSION = 'v7';
+const VERSION = 'v8';
 const NUCLEO = 'ma-nucleo-' + VERSION;
 const DINAMICO = 'ma-dinamico';
 const PRECACHE = ['./', 'index.html', 'temario.html', 'tests.html', 'biblioteca.html', 'ajustes.html', 'test.html', 'nuevo.html', 'editar.html', 'visor.html',

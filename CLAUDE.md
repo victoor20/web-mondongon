@@ -111,7 +111,9 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
 - Temporizador de estudio: `temporizador.js` (cargado en Inicio, Temario, Tests, Biblioteca, visor y Ajustes;
   no en `test.html`) crea un botón flotante con panel. Estado en localStorage por dispositivo (`ma2_temp`,
   `ma2_temp_cfg`, `ma2_temp_log`; no se sincroniza). Usa la hora de fin, no cuenta segundos. Alarma generada
-  con Web Audio. Estilos al final de `style.css` (`.tmp*`).
+  con Web Audio. Estilos al final de `style.css` (`.tmp*`). Se puede arrastrar (posición y estado oculto en
+  `ma2_temp_ui`, por dispositivo), ocultar con la flecha y la alarma se repite en bucle hasta pararla
+  (ajuste `bucle`, 9 sonidos en `SONIDOS`).
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 
