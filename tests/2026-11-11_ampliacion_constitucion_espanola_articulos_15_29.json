@@ -1,0 +1,200 @@
+{
+  "titulo": "Ampliación: Constitución Española (artículos 15–29)",
+  "tema": "I-1",
+  "fecha": "2026-11-11",
+  "preguntas": [
+    {
+      "ref": "Artículo 26",
+      "q": "Una consejería y un colegio profesional proyectan, cada uno en su ámbito, instituir un Tribunal de Honor. ¿En qué términos les afecta la prohibición expresa del artículo 26?",
+      "opciones": [
+        "Afecta a la consejería. En el colegio depende de que el tribunal ejerza potestades públicas delegadas.",
+        "Afecta al colegio. En la consejería depende de que el tribunal tenga atribuida potestad sancionadora.",
+        "Afecta a ambas entidades solo cuando sus tribunales tengan atribuidas funciones disciplinarias.",
+        "Afecta a ambas entidades por pertenecer a la Administración civil y a las organizaciones profesionales, respectivamente."
+      ],
+      "correcta": 3,
+      "explicacion": "La prohibición abarca a la Administración civil y a las organizaciones profesionales. La C condiciona la prohibición a que los tribunales tengan funciones disciplinarias, algo que el precepto no exige. [BOE, artículo 26](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a26)"
+    },
+    {
+      "ref": "Artículo 20.2",
+      "q": "Una autoridad somete a su aprobación el contenido de un artículo de opinión como condición para publicarlo. La medida se plantea como un control de contenido de carácter general. ¿Qué regla del artículo 20 se aplica?",
+      "opciones": [
+        "La aprobación puede exigirse si la autoridad se limita a comprobar el respeto de los límites de esas libertades.",
+        "La exigencia de aprobación constituye censura previa, que el artículo 20 prohíbe como restricción de esos derechos.",
+        "La aprobación puede exigirse si la autoridad actúa mediante una resolución motivada y susceptible de recurso.",
+        "La exigencia de aprobación constituye censura previa y cabe con la misma habilitación judicial que el secuestro."
+      ],
+      "correcta": 1,
+      "explicacion": "Someter el contenido de una opinión a aprobación antes de permitir su publicación es una forma de censura previa, prohibida por el artículo 20.2. La D traslada a la censura una exigencia de resolución judicial que el artículo 20.5 establece para el secuestro de publicaciones. [BOE, artículo 20](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a20)"
+    },
+    {
+      "ref": "Artículos 22.2 y 22.5",
+      "q": "Una asociación persigue un fin lícito, pero emplea de forma deliberada medios tipificados como delito. Otra tiene carácter paramilitar y sus medios y fines carecen de tipificación delictiva. ¿Qué calificación establece el artículo 22 para esos rasgos?",
+      "opciones": [
+        "La primera es ilegal si también persigue un fin delictivo. La segunda está expresamente prohibida.",
+        "La primera es ilegal por los medios que utiliza. La segunda está expresamente prohibida por su carácter.",
+        "La primera es ilegal por los medios que utiliza. La segunda queda prohibida si persigue un fin delictivo.",
+        "La primera es ilegal si también persigue un fin delictivo. La segunda queda prohibida si tiene carácter secreto."
+      ],
+      "correcta": 1,
+      "explicacion": "El uso de medios tipificados como delito basta para la ilegalidad del artículo 22.2. La C supedita a un fin delictivo la prohibición que el artículo 22.5 establece por el propio carácter paramilitar de la asociación. [BOE, artículo 22](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a22)"
+    },
+    {
+      "ref": "Artículo 17.3",
+      "q": "¿En qué diligencias garantiza el artículo 17.3 la asistencia de abogado a la persona detenida, en los términos que establezca la ley?",
+      "opciones": [
+        "En las diligencias policiales y en las judiciales.",
+        "En las diligencias judiciales y en las actuaciones de la fiscalía.",
+        "Solo en las diligencias judiciales; ante la policía únicamente si la persona lo solicita.",
+        "En las diligencias policiales y en la primera comparecencia judicial."
+      ],
+      "correcta": 0,
+      "explicacion": "La garantía se extiende a las diligencias ante la policía y a las judiciales, con el alcance que fije la ley. La C excluye la asistencia de abogado en las diligencias policiales, que el artículo 17.3 incluye expresamente. [BOE, artículo 17](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a17)"
+    },
+    {
+      "ref": "Artículo 23.1",
+      "q": "Según el artículo 23.1, ¿cuál de las siguientes opciones recoge las vías de participación en los asuntos públicos y las condiciones de elección de los representantes?",
+      "opciones": [
+        "Directamente o mediante representantes elegidos libremente por sufragio universal en elecciones convocadas a petición ciudadana.",
+        "Directamente o mediante representantes elegidos libremente en elecciones periódicas por sufragio directo.",
+        "Directamente o mediante representantes elegidos libremente en elecciones periódicas por sufragio universal.",
+        "Directamente o mediante representantes elegidos libremente por sufragio universal en elecciones vinculadas a cada asunto."
+      ],
+      "correcta": 2,
+      "explicacion": "La participación puede ejercerse de manera directa o mediante representantes que se eligen libremente, en comicios periódicos y por sufragio universal. La B cambia la característica del sufragio expresamente recogida en el apartado. [BOE, artículo 23](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a23)"
+    },
+    {
+      "ref": "Artículo 25.2",
+      "q": "Según el artículo 25.2, ¿qué elementos menciona la Constitución al delimitar los derechos fundamentales de quien está cumpliendo una pena de prisión?",
+      "opciones": [
+        "La duración de la pena, el contenido del fallo condenatorio y la ley penitenciaria.",
+        "El sentido de la pena, la clasificación penitenciaria y la ley penitenciaria.",
+        "El contenido del fallo condenatorio, el sentido de la pena y la clasificación penitenciaria.",
+        "El contenido del fallo condenatorio, el sentido de la pena y la ley penitenciaria."
+      ],
+      "correcta": 3,
+      "explicacion": "La persona conserva los derechos fundamentales del capítulo salvo los que resulten expresamente limitados por el fallo condenatorio, el sentido de la pena y la ley penitenciaria. La C sustituye esta última por la clasificación penitenciaria. [BOE, artículo 25](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a25)"
+    },
+    {
+      "ref": "Artículo 28.1",
+      "q": "Dos sindicatos quieren constituir una confederación y uno de ellos desea afiliarse a una organización sindical internacional ya existente. ¿Cómo encuadra ambas facultades el artículo 28.1?",
+      "opciones": [
+        "El artículo atribuye a los sindicatos tanto la constitución de confederaciones como la afiliación a organizaciones sindicales internacionales.",
+        "El artículo atribuye a los sindicatos la constitución de confederaciones y reserva a estas la afiliación a organizaciones sindicales internacionales.",
+        "El artículo atribuye a los sindicatos la afiliación a organizaciones sindicales internacionales y reserva a las federaciones la constitución de confederaciones.",
+        "El artículo atribuye a los sindicatos la constitución de confederaciones y circunscribe su actuación sindical internacional a la fundación de organizaciones."
+      ],
+      "correcta": 0,
+      "explicacion": "El segundo párrafo reconoce a los sindicatos tanto la facultad de formar confederaciones como la de afiliarse a organizaciones sindicales internacionales. La D restringe indebidamente la dimensión internacional a la fundación de organizaciones, que es otra de las facultades reconocidas. [BOE, artículo 28](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a28)"
+    },
+    {
+      "ref": "Artículo 20.1.d",
+      "q": "¿Qué dos garantías dispone el artículo 20.1.d que regule la ley en el ejercicio de las libertades que recoge esa letra?",
+      "opciones": [
+        "La cláusula de conciencia y la libertad de cátedra.",
+        "La libertad de cátedra y el secreto profesional.",
+        "El secreto profesional y el acceso a los medios de titularidad pública.",
+        "La cláusula de conciencia y el secreto profesional."
+      ],
+      "correcta": 3,
+      "explicacion": "La ley debe regular la cláusula de conciencia y el secreto profesional en el ejercicio de las libertades recogidas en esa letra. La C incorpora el acceso a determinados medios públicos, que se regula en el artículo 20.3. [BOE, artículo 20](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a20)"
+    },
+    {
+      "ref": "Artículo 27.2",
+      "q": "Conforme al artículo 27.2, ¿qué opción recoge el objeto de la educación y las dos referencias que han de respetarse al perseguirlo?",
+      "opciones": [
+        "La formación para la participación pública, respetando los principios democráticos de convivencia y los derechos y libertades fundamentales.",
+        "El pleno desarrollo de la personalidad humana, respetando los principios democráticos de convivencia y las convicciones morales de los padres.",
+        "El pleno desarrollo de la personalidad humana, respetando los principios democráticos de convivencia y los derechos y libertades fundamentales.",
+        "La formación para la participación pública, respetando los principios democráticos de convivencia y las convicciones morales de los padres."
+      ],
+      "correcta": 2,
+      "explicacion": "La educación busca desarrollar plenamente la personalidad respetando los principios de convivencia democrática y los derechos y libertades fundamentales. La B incorpora las convicciones de los padres, que el artículo 27.3 vincula a la formación religiosa y moral de sus hijos. [BOE, artículo 27](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a27)"
+    },
+    {
+      "ref": "Artículos 18.1 y 18.4",
+      "q": "Considere estas afirmaciones sobre los apartados 1 y 4 del artículo 18. ¿Cuáles se ajustan al texto constitucional? I. El apartado 1 incluye la propia imagen entre los derechos que garantiza. II. El apartado 4 menciona expresamente la propia imagen al establecer los fines de la limitación del uso de la informática. III. El apartado 1 protege tanto la intimidad personal como la familiar.",
+      "opciones": [
+        "La I y la II.",
+        "La I y la III.",
+        "La II y la III.",
+        "La I, la II y la III."
+      ],
+      "correcta": 1,
+      "explicacion": "El artículo 18.1 garantiza la propia imagen y la intimidad tanto personal como familiar. La afirmación II es errónea porque el artículo 18.4 menciona expresamente el honor, la intimidad y el ejercicio pleno de los derechos al fijar los fines de la limitación informática. [BOE, artículo 18](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a18)"
+    },
+    {
+      "ref": "Artículo 17.1",
+      "q": "En el supuesto de que una privación de libertad se acuerde en un caso previsto en la ley, pero se practique de una forma distinta de la prevista en ella, ¿qué exige el artículo 17.1?",
+      "opciones": [
+        "Basta con observar el propio artículo 17, si el supuesto de privación está previsto en la ley.",
+        "Basta con observar la forma fijada en la resolución que acuerde la privación, si el supuesto está previsto en la ley.",
+        "Deben observarse el propio artículo 17 y tanto los supuestos como la forma que prevea la ley.",
+        "Debe observarse el propio artículo 17 y la forma prevista en la ley solo cuando la privación se acuerde sin resolución judicial."
+      ],
+      "correcta": 2,
+      "explicacion": "La privación de libertad exige cumplir el artículo 17 y ajustarse al supuesto y al modo de actuación fijados por ley. La A prescinde de la forma legal cuando el supuesto de privación sí está previsto. [BOE, artículo 17](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a17)"
+    },
+    {
+      "ref": "Artículo 24.2",
+      "q": "¿Qué opción recoge las garantías que enuncia el artículo 24.2 respecto del juez y de la información que ha de recibir la persona acusada?",
+      "opciones": [
+        "Derecho al juez ordinario predeterminado por la ley y a conocer la acusación formulada en su contra.",
+        "Derecho al juez ordinario determinado por el órgano de gobierno del tribunal y a conocer la acusación formulada en su contra.",
+        "Derecho al juez ordinario predeterminado por la ley y a conocer los indicios que justificaron la investigación.",
+        "Derecho al juez ordinario determinado por el órgano de gobierno del tribunal y a conocer los indicios que justificaron la investigación."
+      ],
+      "correcta": 0,
+      "explicacion": "El precepto garantiza la predeterminación legal del juez ordinario y el derecho a que se comunique a la persona la acusación que se dirige contra ella. La C sustituye esa acusación por los indicios iniciales de la investigación. [BOE, artículo 24](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a24)"
+    },
+    {
+      "ref": "Artículo 19",
+      "q": "¿Qué enunciado recoge correctamente el alcance del primer párrafo del artículo 19?",
+      "opciones": [
+        "Atribuye a los españoles la libre elección de residencia y la libre circulación por el territorio nacional.",
+        "Atribuye a toda persona la libre elección de residencia y la libre circulación por el territorio nacional.",
+        "Atribuye a los españoles la libre circulación por el territorio nacional y limita la elección de residencia a su comunidad de origen.",
+        "Atribuye a los españoles la libre elección de residencia y sujeta la circulación entre comunidades autónomas a autorización legal."
+      ],
+      "correcta": 0,
+      "explicacion": "El primer párrafo atribuye a los españoles la libre elección de residencia y la circulación por todo el territorio nacional. La B amplía la titularidad más allá del sujeto que menciona expresamente ese párrafo. [BOE, artículo 19](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a19)"
+    },
+    {
+      "ref": "Artículo 15",
+      "q": "Atendiendo a la salvedad que figura en el propio texto del artículo 15 sobre la abolición de la pena de muerte, ¿qué tipo de norma y qué circunstancia menciona?",
+      "opciones": [
+        "La legislación penal militar para los supuestos de estado de sitio.",
+        "La legislación penal común para delitos cometidos en tiempos de guerra.",
+        "La legislación penal militar para tiempos de guerra.",
+        "La legislación penal común para los supuestos de estado de sitio."
+      ],
+      "correcta": 2,
+      "explicacion": "La salvedad que conserva el texto constitucional remite a lo que puedan disponer las leyes penales militares en tiempo de guerra. La A sustituye esa circunstancia por el estado de sitio. Aun así, la pena de muerte está abolida también en tiempo de guerra desde la Ley Orgánica 11/1995, por lo que hoy no puede imponerse en España. [BOE, artículo 15](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a15)"
+    },
+    {
+      "ref": "Artículo 25.2",
+      "q": "Según el artículo 25.2, ¿qué conjunto corresponde a los derechos que el precepto reconoce en todo caso a quien cumple una pena de prisión?",
+      "opciones": [
+        "Trabajo remunerado, beneficios de la Seguridad Social, acceso a la enseñanza básica y participación en la gestión del centro.",
+        "Trabajo remunerado, prestaciones de asistencia social, acceso a la cultura y participación en la gestión del centro.",
+        "Trabajo remunerado, prestaciones de asistencia social, acceso a la enseñanza básica y desarrollo integral de la personalidad.",
+        "Trabajo remunerado, beneficios de la Seguridad Social, acceso a la cultura y desarrollo integral de la personalidad."
+      ],
+      "correcta": 3,
+      "explicacion": "El apartado comprende el trabajo con remuneración y los beneficios de la Seguridad Social que correspondan, junto con el acceso a la cultura y el desarrollo pleno de la personalidad. La C cambia los beneficios de la Seguridad Social por prestaciones de asistencia social y sustituye el acceso a la cultura por la enseñanza básica. [BOE, artículo 25](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a25)"
+    },
+    {
+      "ref": "Artículo 27.1",
+      "q": "¿Cuál de las siguientes correspondencias entre la libertad de enseñanza y el derecho a la educación se ajusta al artículo 27.1?",
+      "opciones": [
+        "Reconoce a todos el derecho a la educación y remite el reconocimiento de la libertad de enseñanza a lo que disponga la ley.",
+        "Reconoce a todos el derecho a la educación y recoge de manera expresa, en el mismo apartado, la libertad de enseñanza.",
+        "Atribuye a todos la libertad de enseñanza y circunscribe el derecho a la educación a la etapa básica.",
+        "Atribuye a todos el derecho a la educación y circunscribe la libertad de enseñanza a quienes crean centros docentes."
+      ],
+      "correcta": 1,
+      "explicacion": "El apartado atribuye el derecho a la educación a todas las personas y reconoce expresamente la libertad de enseñanza. La C traslada al alcance general del derecho una referencia a la enseñanza básica que el artículo 27.4 emplea para establecer su obligatoriedad y gratuidad. [BOE, artículo 27](https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229#a27)"
+    }
+  ],
+  "fuente": "ChatGPT"
+}
