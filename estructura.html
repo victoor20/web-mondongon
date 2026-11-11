@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261122">
+<link rel="stylesheet" href="style.css?v=20261123">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -28,8 +28,8 @@
   <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
   <div id="e-box"></div>
 </div>
-<script src="app.js?v=20261122"></script>
-<script src="vistas.js?v=20261122"></script>
+<script src="app.js?v=20261123"></script>
+<script src="vistas.js?v=20261123"></script>
 <script>
 /* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
    para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
@@ -93,7 +93,7 @@ async function copia(texto) {
 const BOE = { CE: 'https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229', LOTC: 'https://www.boe.es/buscar/act.php?id=BOE-A-1979-23709' };
 function promptMas(d, h, x) {
   const t = _temario.byId[EST.tema], b = t ? _temario.bloques.find(bb => bb.temas.indexOf(t) >= 0) : null;
-  let max = 0; QA.forEach(z => { const m = /Test\s*0*(\d+)/i.exec(z.q.testTitulo || ''); if (m) max = Math.max(max, +m[1]); });
+  let max = 0; QA.forEach(z => { const m = /Ampliaci[oó]n\s*0*(\d+)/i.exec(z.q.testTitulo || ''); if (m) max = Math.max(max, +m[1]); });
   const nn = String(max + 1).padStart(2, '0'), nombre = EST.nombre.replace(/ de \d{4}$/, '');
   const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h;
@@ -116,8 +116,8 @@ function promptMas(d, h, x) {
   L.push('Si no hay contenido nuevo suficiente para 20 preguntas sin repeticiones sustanciales, entrega menos. Prefiero pocas y distintas a muchas parecidas.', '');
   L.push('3. DIFICULTAD Y ALTERNATIVAS');
   L.push('- Dificultad objetivo: alta y realista, comparable en precisión, literalidad y capacidad de discriminación a las preguntas exigentes de los exámenes oficiales del INAP para Administrativo C1. Prioriza distinciones jurídicas sutiles entre alternativas plausibles: la correcta no debe poder identificarse por descarte, por longitud ni por estar mejor redactada. No confundas dificultad con ambigüedad: cada pregunta tiene una única respuesta inequívoca y verificable en el BOE vigente.');
-  L.push('- Varía el enfoque: enunciado directo, «señale la opción INCORRECTA», comparación entre dos artículos próximos, diferencias entre obligación, facultad y prohibición, plazos y mayorías, sujetos y órganos competentes, supuestos breves y, en algunas, tres afirmaciones numeradas (1, 2, 3) con opciones que combinan cuáles son ciertas. No hace falta usarlos todos.');
-  L.push('- Los tres distractores deben ser jurídicamente plausibles, próximos a la norma real e incorrectos por una diferencia concreta que se pueda explicar con el artículo.');
+  L.push('- Varía el enfoque: enunciado directo, «señale la opción INCORRECTA», comparación entre dos artículos próximos, diferencias entre obligación, facultad y prohibición, plazos y mayorías, sujetos y órganos competentes, supuestos breves y, en algunas, tres afirmaciones numeradas con I, II y III (nunca con 1, 2, 3) y opciones que combinan cuáles son ciertas. No hace falta usarlos todos.');
+  L.push('- Los tres distractores deben ser jurídicamente plausibles, próximos a la norma real e incorrectos por una diferencia concreta que se pueda explicar con el artículo. Una opción no puede ser incorrecta solo por ser más incompleta que la correcta: si omite parte de lo que dice el artículo pero lo que afirma es cierto, se puede defender y debe evitarse.');
   L.push('- Evita opciones absurdas, «todas las anteriores» y «ninguna de las anteriores», el uso mecánico de «siempre», «nunca» o «únicamente», y que la correcta destaque por ser más larga o más cuidada.');
   L.push('- Reparte la letra correcta de forma equilibrada entre A, B, C y D, sin secuencias predecibles (ABCD repetido, AABB…).', '');
   L.push('4. REVISIÓN ANTES DE ENTREGAR');
@@ -125,7 +125,7 @@ function promptMas(d, h, x) {
   if (ej) L.push('Ejemplos de preguntas reales del estilo que quiero. Imita su nivel y el tipo de trampa, sin copiar su contenido:', ej, '');
   L.push('5. FORMATO DE ENTREGA');
   L.push('Entrégalo como UN documento en Markdown con exactamente esta estructura, sin texto antes ni después:', '');
-  L.push('# TEST ' + nn + ' — ' + nombre.toUpperCase() + ' (' + rg + ')');
+  L.push('# AMPLIACIÓN ' + nn + ' — ' + nombre.toUpperCase() + ' (' + rg + ')');
   L.push('**Bloque ' + (b ? b.id : 'I') + ':** ' + (b ? b.titulo : ''));
   L.push('**Tema ' + (t ? t.n : 1) + ':** ' + (t ? t.corto : ''));
   L.push('**Fecha:** ' + fecha);
@@ -133,7 +133,7 @@ function promptMas(d, h, x) {
   L.push('# PREGUNTAS', '**1. Enunciado de la pregunta.**', 'A) Opción', 'B) Opción', 'C) Opción', 'D) Opción', '');
   L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + ' |', '');
   L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases: apartado exacto del artículo y por qué falla la opción incorrecta más tentadora.', '');
-  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; no reveles respuestas en la sección PREGUNTAS; escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
+  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; no reveles respuestas en la sección PREGUNTAS; si una pregunta enumera afirmaciones, numéralas I, II, III (con 1., 2., 3. el documento no se lee bien); escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
   return L.join('\n');
 }
 function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
@@ -261,6 +261,6 @@ $('e-volver').addEventListener('click', ev => {                    // vuelve a l
 window.addEventListener('hashchange', ruta);
 init();
 </script>
-<script src="temporizador.js?v=20261122"></script>
+<script src="temporizador.js?v=20261123"></script>
 </body>
 </html>

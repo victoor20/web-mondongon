@@ -621,7 +621,7 @@ function parseMarkdownTest(md) {
       }
     } else if (section === 'q') {
       if ((m = /^([A-F])[).]\s+(.+)$/.exec(plain)) && cur) { cur.letters.push(m[1]); cur.opciones.push(m[2].trim()); }
-      else if ((m = /^(\d+)[.)]\s+(.+)$/.exec(plain))) { cur = { n: +m[1], q: m[2].trim(), opciones: [], letters: [] }; qs.push(cur); }
+      else if ((m = /^(\d+)[.)]\s+(.+)$/.exec(plain)) && !(cur && cur.opciones.length < 2)) { cur = { n: +m[1], q: m[2].trim(), opciones: [], letters: [] }; qs.push(cur); }
       else if (cur) {                                               // línea de continuación
         if (cur.opciones.length) cur.opciones[cur.opciones.length - 1] += ' ' + plain;
         else cur.q += ' ' + plain;
