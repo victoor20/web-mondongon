@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261121">
+<link rel="stylesheet" href="style.css?v=20261122">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -27,9 +27,18 @@
 
   <div id="continuar"></div>
 
-  <section class="hoy-sec" aria-labelledby="hoy-t">
-    <h2 class="h-sec" id="hoy-t">Para hoy</h2>
-    <div class="hoy-grid" id="empezar"></div>
+  <section class="inicio-top" aria-label="Hoy">
+    <div class="sesion" id="sesion"></div>
+    <div class="estudio-card" id="estudio"></div>
+  </section>
+
+  <section class="hoy-sec" aria-labelledby="rep-t">
+    <h2 class="h-sec" id="rep-t">Para repasar</h2>
+    <div class="rep-grid" id="repasar"></div>
+  </section>
+
+  <section class="hoy-sec" id="sec-sug" aria-labelledby="sug-t">
+    <h2 class="h-sec" id="sug-t">Qué reforzar</h2>
     <div id="sugerencias"></div>
   </section>
 
@@ -53,34 +62,64 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261121"></script>
-<script src="vistas.js?v=20261121"></script>
+<script src="app.js?v=20261122"></script>
+<script src="vistas.js?v=20261122"></script>
 <script>
 let selTema = null, primera = true;
 
 function renderEstado() { $('estado').textContent = fraseEstado(); }
 
-function renderEmpezar() {
-  const box = $('empezar'); box.replaceChildren();
-  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, total = totalPreguntas();
-  const m = el('div', 'mixto' + (total ? '' : ' off'));
-  const bub = el('div', 'mixto-bub'); bub.setAttribute('aria-hidden', 'true');
-  ['A', 'B', 'C', 'D'].forEach((l, i) => bub.append(el('i', i === 2 ? 'x' : '', l)));
-  m.append(bub, el('h3', '', 'Test mixto'),
-    el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
-  const ch = el('div', 'nchips');
-  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}`; ch.append(a); });
-  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}`; ch.append(a); }
-  m.append(ch);
-  const lado = el('div', 'hoy-lado');
-  const tarjeta = (n, titulo, vacio, lleno, href) => {
-    const a = el('a', 'accion' + (n ? '' : ' off')); a.href = href;
+const fmtT = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
+function temaFlojoAhora() {
+  const conDatos = Object.entries(TS).filter(([t]) => _temario.byId[t] && cnt[t]);
+  const flojos = conDatos.filter(([, a]) => a.reciente.t >= 10).sort((x, y) => pct(x[1].reciente) - pct(y[1].reciente));
+  return flojos.length && pct(flojos[0][1].reciente) < 85 ? flojos[0][0] : null;
+}
+function renderSesion() {                                        // un orden sencillo para hoy, sin objetivos ni contadores de cumplimiento
+  const box = $('sesion'); box.replaceChildren();
+  const nTj = getTarjetas().filter(tarjetaToca).length, nErr = Object.keys(getErr()).length, total = totalPreguntas(), flojo = temaFlojoAhora();
+  box.append(el('h2', 'sesion-t', 'Sesión de hoy'), el('p', 'sesion-s', 'Un orden sencillo para empezar. Haz lo que te dé tiempo.'));
+  const pasos = [];
+  if (nTj) pasos.push(['Repasa tus tarjetas', plural(nTj, 'tarjeta toca', 'tarjetas tocan') + ' hoy.', 'biblioteca.html#tarjetas', 'Repasar']);
+  if (nErr) pasos.push(['Repasa tus errores', plural(nErr, 'pregunta fallada', 'preguntas falladas') + ' pendientes.', 'test.html?t=errores', 'Repasar']);
+  if (flojo) pasos.push(['Test corto de ' + temaLabel(flojo), 'Es tu tema más flojo ahora: ' + pct(TS[flojo].reciente) + ' % en tus últimos intentos.', urlMixto(flojo), 'Empezar']);
+  else if (total) pasos.push(['Test mixto de 20 preguntas', 'Preguntas al azar de todos tus tests.', 'test.html?t=mixto&n=20', 'Empezar']);
+  if (!pasos.length) { box.append(el('p', 'vacio-msg', 'Cuando haya tests publicados, aquí verás por dónde empezar.')); return; }
+  const ol = el('ol', 'sesion-pasos');
+  pasos.forEach(p => {
+    const li = el('li', 'paso'), tx = el('div', 'paso-tx'), a = el('a', 'btn small', p[3]); a.href = p[2];
+    tx.append(el('strong', '', p[0]), el('span', '', p[1])); li.append(tx, a); ol.append(li);
+  });
+  box.append(ol);
+  const mas = el('a', 'sesion-mas', 'Más formas de practicar en Tests'); mas.href = 'tests.html'; box.append(mas);
+}
+function renderEstudio() {
+  const box = $('estudio'); box.replaceChildren();
+  const est = estudioSemana(), hoy = hoyISO(), max = Math.max.apply(null, est.dias.map(d => d.s).concat([1])), L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  box.append(el('h2', 'sesion-t', 'Tu estudio'));
+  const cifras = el('div', 'est-hs');
+  [['Hoy', est.hoy], ['Esta semana', est.total]].forEach(([n, s]) => { const c = el('div', 'est-h'); c.append(el('b', '', s >= 60 ? fmtT(s) : '0 min'), el('span', '', n)); cifras.append(c); });
+  box.append(cifras);
+  const dias = el('div', 'est-dias'); dias.setAttribute('role', 'img');
+  dias.setAttribute('aria-label', 'Estudio de cada día de esta semana: ' + est.dias.map((d, i) => L[i] + ' ' + (d.s >= 60 ? fmtT(d.s) : '0 min')).join(', '));
+  est.dias.forEach((d, i) => {
+    const c = el('div', 'est-dia' + (d.f === hoy ? ' hoy' : '')), b = el('i');
+    b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px';
+    c.append(b, el('span', '', L[i])); dias.append(c);
+  });
+  box.append(dias, el('p', 'fine', 'Tiempo de estudio efectivo medido con el temporizador, de todos tus dispositivos.'));
+}
+function renderRepasar() {
+  const box = $('repasar'); box.replaceChildren();
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, nTj = getTarjetas().filter(tarjetaToca).length;
+  const tarjeta = (cls, n, titulo, vacio, lleno, href) => {
+    const a = el('a', 'accion ' + cls + (n ? '' : ' off')); a.href = href;
     a.append(el('span', 'accion-n', String(n)), el('h3', '', titulo), el('p', '', n ? lleno : vacio)); return a;
   };
-  lado.append(
-    tarjeta(nErr, 'Errores', 'Nada pendiente de repasar.', `${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.`, 'test.html?t=errores'),
-    tarjeta(nDud, 'Dudas', 'Ninguna pregunta marcada con la estrella.', `${plural(nDud, 'pregunta marcada', 'preguntas marcadas')} con la estrella.`, 'test.html?t=dudosas'));
-  box.append(m, lado);
+  box.append(
+    tarjeta('a-err', nErr, 'Errores', 'Nada pendiente de repasar.', plural(nErr, 'pregunta fallada', 'preguntas falladas') + ' por repasar.', 'test.html?t=errores'),
+    tarjeta('a-dud', nDud, 'Dudas', 'Ninguna pregunta marcada con la estrella.', plural(nDud, 'pregunta marcada', 'preguntas marcadas') + ' con la estrella.', 'test.html?t=dudosas'),
+    tarjeta('a-tj', nTj, 'Tarjetas', 'Ninguna tarjeta toca hoy.', plural(nTj, 'tarjeta', 'tarjetas') + ' para repasar hoy.', 'biblioteca.html#tarjetas'));
 }
 function renderSugerencias() {
   const box = $('sugerencias'); box.replaceChildren();
@@ -93,6 +132,7 @@ function renderSugerencias() {
   if (viejo) filas.push([`${temaLabel(viejo[0])}. Lo practicaste por última vez ${haceTexto(viejo[1].ultima)}.`, 'Practicar', urlMixto(viejo[0])]);
   const sinIntento = Object.keys(cnt).filter(t => _temario.byId[t] && !TS[t]);
   if (sinIntento.length && Object.keys(TS).length) filas.push([`${plural(sinIntento.length, 'tema tiene', 'temas tienen')} tests que aún no has hecho.`, 'Ver el primero', urlMixto(sinIntento[0])]);
+  $('sec-sug').classList.toggle('hide', !filas.length);
   filas.forEach(([txt, bt, href]) => {
     const f = el('div', 'hoy-fila'), a = el('a', 'btn small ghost', bt); a.href = href;
     f.append(el('p', '', txt), a); box.append(f);
@@ -163,7 +203,7 @@ function renderUltimos() {
   });
   box.append(lista);
 }
-function refresh() { computeData(); renderEstado(); renderEmpezar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
+function refresh() { computeData(); renderEstado(); renderSesion(); renderEstudio(); renderRepasar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
 async function sincronizar() {
   const r = await syncNow();
   if (r.cambioLocal) refresh();
@@ -181,6 +221,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261121"></script>
+<script src="temporizador.js?v=20261122"></script>
 </body>
 </html>

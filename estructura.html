@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261121">
+<link rel="stylesheet" href="style.css?v=20261122">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -28,8 +28,8 @@
   <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
   <div id="e-box"></div>
 </div>
-<script src="app.js?v=20261121"></script>
-<script src="vistas.js?v=20261121"></script>
+<script src="app.js?v=20261122"></script>
+<script src="vistas.js?v=20261122"></script>
 <script>
 /* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
    para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
@@ -110,12 +110,12 @@ function promptMas(d, h, x) {
   L.push('- Fuente principal: texto consolidado vigente en el BOE' + (BOE[EST.norma] ? ' (' + BOE[EST.norma] + ')' : '') + '. No inventes competencias, plazos, mayorías ni requisitos; si no puedes verificar un dato, descarta esa pregunta.', '');
   L.push('2. PREGUNTAS QUE YA TENGO');
   if (x.preg.length) {
-    L.push('Mi banco tiene ' + x.preg.length + ' preguntas en este ámbito (entre corchetes, el artículo que citan; al final, la respuesta correcta). Antes de escribir, analiza qué apartados y conceptos ya están evaluados y busca los que no. No repitas ninguna ni hagas variantes que evalúen la misma distinción jurídica con otras palabras. Puedes tratar un artículo ya evaluado si examinas un aspecto sustancialmente distinto: otro apartado, una excepción, un sujeto, un plazo, una relación con otro artículo o un supuesto práctico breve.');
-    x.preg.forEach(z => L.push('- [' + (String(z.q.ref || '').replace(/\s+/g, ' ').trim() || 'sin referencia') + '] ' + String(z.q.q).replace(/\s+/g, ' ').trim() + ' Correcta: ' + String((z.q.opciones || [])[z.q.correcta] || '').replace(/\s+/g, ' ').trim().slice(0, 160)));
+    L.push('Mi banco tiene ' + x.preg.length + ' preguntas en este ámbito (entre corchetes, el artículo que citan; al final, la respuesta correcta). Antes de escribir, analiza qué apartados y conceptos ya están evaluados y busca los que no. No repitas ninguna ni hagas variantes que evalúen la misma distinción jurídica con otras palabras. Puedes tratar un artículo ya evaluado si examinas un aspecto sustancialmente distinto: otro apartado, una excepción, un sujeto, un plazo, una relación con otro artículo o un supuesto práctico breve. Analiza también la cobertura de los apartados concretos de cada artículo, no solo del artículo completo: un artículo con varias preguntas puede tener apartados sin evaluar. Prioriza las disposiciones relevantes aún no evaluadas (sujetos, garantías, prohibiciones, excepciones, condiciones, obligaciones o remisiones) y no hagas más preguntas sobre un apartado ya bien cubierto si hay otros sin evaluar.');
+    x.preg.forEach(z => L.push('- [' + (String(z.q.ref || '').replace(/\s+/g, ' ').trim() || 'sin referencia') + '] ' + String(z.q.q).replace(/\s+/g, ' ').trim() + ' Correcta: ' + String((z.q.opciones || [])[z.q.correcta] || '').replace(/\s+/g, ' ').trim()));
   } else L.push('Todavía no tengo preguntas de este ámbito.');
   L.push('Si no hay contenido nuevo suficiente para 20 preguntas sin repeticiones sustanciales, entrega menos. Prefiero pocas y distintas a muchas parecidas.', '');
   L.push('3. DIFICULTAD Y ALTERNATIVAS');
-  L.push('- Dificultad: ' + (x.flojos.length ? 'alta, la de las preguntas más difíciles de un examen oficial' : 'media-alta, más exigente que un test básico') + '. Que proceda del conocimiento de la norma, no de enunciados enrevesados ni de ambigüedades.');
+  L.push('- Dificultad objetivo: alta y realista, comparable en precisión, literalidad y capacidad de discriminación a las preguntas exigentes de los exámenes oficiales del INAP para Administrativo C1. Prioriza distinciones jurídicas sutiles entre alternativas plausibles: la correcta no debe poder identificarse por descarte, por longitud ni por estar mejor redactada. No confundas dificultad con ambigüedad: cada pregunta tiene una única respuesta inequívoca y verificable en el BOE vigente.');
   L.push('- Varía el enfoque: enunciado directo, «señale la opción INCORRECTA», comparación entre dos artículos próximos, diferencias entre obligación, facultad y prohibición, plazos y mayorías, sujetos y órganos competentes, supuestos breves y, en algunas, tres afirmaciones numeradas (1, 2, 3) con opciones que combinan cuáles son ciertas. No hace falta usarlos todos.');
   L.push('- Los tres distractores deben ser jurídicamente plausibles, próximos a la norma real e incorrectos por una diferencia concreta que se pueda explicar con el artículo.');
   L.push('- Evita opciones absurdas, «todas las anteriores» y «ninguna de las anteriores», el uso mecánico de «siempre», «nunca» o «únicamente», y que la correcta destaque por ser más larga o más cuidada.');
@@ -261,6 +261,6 @@ $('e-volver').addEventListener('click', ev => {                    // vuelve a l
 window.addEventListener('hashchange', ruta);
 init();
 </script>
-<script src="temporizador.js?v=20261121"></script>
+<script src="temporizador.js?v=20261122"></script>
 </body>
 </html>

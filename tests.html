@@ -16,19 +16,25 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261121">
+<link rel="stylesheet" href="style.css?v=20261122">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
   <div class="pagehead pagehead-fila">
     <div>
       <h1 class="titular">Tests</h1>
-      <p class="entradilla">Todos tus tests. Ábrelos para hacerlos, o edítalos si hay algo que corregir.</p>
+      <p class="entradilla">Practica con preguntas mezcladas o abre un test concreto.</p>
     </div>
     <a class="btn" href="nuevo.html">Añadir test</a>
   </div>
 
+  <section class="practica-sec" aria-labelledby="pr-t">
+    <h2 class="h-sec" id="pr-t">Practicar</h2>
+    <div class="hoy-grid" id="practica"></div>
+  </section>
+
   <section id="seccion-tests">
+    <h2 class="h-sec">Todos tus tests</h2>
     <div class="filtros hoja pad">
       <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
       <div class="chips" id="chips"></div>
@@ -49,8 +55,8 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261121"></script>
-<script src="vistas.js?v=20261121"></script>
+<script src="app.js?v=20261122"></script>
+<script src="vistas.js?v=20261122"></script>
 <script>
 let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
@@ -158,16 +164,38 @@ function initControles() {
   $('sig').addEventListener('click', () => { pagina++; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
   $('buscar').addEventListener('input', () => { pagina = 1; renderList(); });
 }
+function renderPractica() {
+  const box = $('practica'); box.replaceChildren();
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, total = totalPreguntas();
+  const m = el('div', 'mixto' + (total ? '' : ' off'));
+  const bub = el('div', 'mixto-bub'); bub.setAttribute('aria-hidden', 'true');
+  ['A', 'B', 'C', 'D'].forEach((l, i) => bub.append(el('i', i === 2 ? 'x' : '', l)));
+  m.append(bub, el('h3', '', 'Test mixto'),
+    el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
+  const ch = el('div', 'nchips');
+  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}`; ch.append(a); });
+  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}`; ch.append(a); }
+  m.append(ch);
+  const lado = el('div', 'hoy-lado');
+  const tarjeta = (n, titulo, vacio, lleno, href) => {
+    const a = el('a', 'accion' + (n ? '' : ' off')); a.href = href;
+    a.append(el('span', 'accion-n', String(n)), el('h3', '', titulo), el('p', '', n ? lleno : vacio)); return a;
+  };
+  lado.append(
+    tarjeta(nErr, 'Errores', 'Nada pendiente de repasar.', `${plural(nErr, 'pregunta fallada', 'preguntas falladas')} por repasar.`, 'test.html?t=errores'),
+    tarjeta(nDud, 'Dudas', 'Ninguna pregunta marcada con la estrella.', `${plural(nDud, 'pregunta marcada', 'preguntas marcadas')} con la estrella.`, 'test.html?t=dudosas'));
+  box.append(m, lado);
+}
 async function init() {
   initControles();
   await loadTemario();
   const r = await cargarCatalogo();
   if (!r.ok) { $('lista').replaceChildren(el('p', 'aviso', 'No se pudo cargar la lista de tests. Puede ser el límite de la API de GitHub; recarga en unos minutos.')); return; }
-  renderChips(); renderList();
+  renderChips(); renderList(); renderPractica();
   if (r.invalid.length) $('avisos').append(el('p', 'aviso', 'Estos archivos tienen errores y no se muestran: ' + r.invalid.join(', ') + '. Revísalos en «Añadir test».'));
 }
 init();
 </script>
-<script src="temporizador.js?v=20261121"></script>
+<script src="temporizador.js?v=20261122"></script>
 </body>
 </html>
