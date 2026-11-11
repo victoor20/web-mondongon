@@ -7,7 +7,7 @@
    a la primera; si la red tarda más o no hay, se usa la copia.
    Los tests y lo que no esté en la lista siguen pidiéndose primero a la red.
    Sube VERSION cuando cambie la lista PRECACHE: así se borran las copias antiguas. */
-const VERSION = 'v11';
+const VERSION = 'v12';
 const NUCLEO = 'ma-nucleo-' + VERSION;
 const DINAMICO = 'ma-dinamico';
 const ESPERA_PAGINA = 1200;

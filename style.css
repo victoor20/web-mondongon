@@ -605,7 +605,9 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .est-ej textarea{display:block;width:100%;margin:.7rem 0 .4rem}
 @media(max-width:560px){.est-hero{grid-template-columns:1fr}.est-rn{font-size:2.6rem}}
 .est-barra{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.2rem}
-.est-msg textarea{display:block;margin-top:.5rem}
+.est-msg textarea{display:block;width:100%;margin-top:.5rem}
+.est-aviso{display:flex;gap:.8rem;align-items:center;justify-content:space-between}
+.est-aviso .mini{flex:none;cursor:pointer}
 .est-sin{margin:-.4rem 0 1.2rem}
 .est-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr));gap:.8rem}
 .est-tr{margin:0;border-left:5px solid var(--bc)}

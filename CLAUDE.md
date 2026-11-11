@@ -133,6 +133,9 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   primera vez se migra el antiguo `ma2_temp_log`, que ya no se usa. Llega al resto cuando ese dispositivo sincroniza.
 - **Notas libres** (Biblioteca → Notas): apuntes propios con título, texto, tema y etiqueta, en `LS.libres`
   (`getLibres`, `setLibre`, `delLibre`), sincronizados con `mergeMap` y con tumbas al borrar. `SYNC_VER = 2`.
+- **Tarjetas de repaso** (Biblioteca → Tarjetas): pregunta y respuesta con tema y etiqueta, en `LS.tarjetas`
+  (`getTarjetas`, `setTarjeta`, `delTarjeta`, `repasaTarjeta`), sincronizadas con `mergeMap` y tumbas. Repaso espaciado por cajas
+  (`CAJAS` = días hasta el siguiente repaso; fallar vuelve a la caja 0). «Pegar varias» admite `pregunta | respuesta` por línea.
 - **Estructura de la norma** (`estructura.html?n=ce`, se abre desde el tema I-1 del Temario): Título → Capítulo → Sección con
   sus preguntas, sacadas de la `ref` de cada pregunta (`refInfo` en `app.js`; la norma es LOTC si la ref o el título del test
   lo dicen, si no CE). Los tramos están en `estructura-ce.json` (para otra norma: otro `estructura-xx.json` y una línea en

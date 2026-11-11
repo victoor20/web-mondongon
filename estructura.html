@@ -74,15 +74,23 @@ function datos(d, h) {
 }
 
 /* ---------- pedir más preguntas a ChatGPT ---------- */
+let tMsg = 0;
 async function copia(texto) {
-  const msg = $('e-msg'); msg.replaceChildren();
-  try { await navigator.clipboard.writeText(texto); msg.textContent = 'Copiado. Pégalo en ChatGPT y, cuando tengas el documento, súbelo en «Añadir test».'; }
+  const msg = $('e-msg'); clearTimeout(tMsg); msg.replaceChildren();
+  const cierra = () => { clearTimeout(tMsg); msg.replaceChildren(); };
+  const fila = txt => {
+    const f = el('div', 'est-aviso'), x = el('button', 'mini', 'Cerrar');
+    x.type = 'button'; x.setAttribute('aria-label', 'Cerrar el aviso'); x.addEventListener('click', cierra);
+    f.append(el('span', '', txt), x); return f;
+  };
+  try { await navigator.clipboard.writeText(texto); msg.append(fila('Copiado. Pégalo en ChatGPT y, cuando tengas el documento, súbelo en «Añadir test».')); tMsg = setTimeout(cierra, 7000); }
   catch (e) {
-    msg.textContent = 'No he podido copiarlo solo. Selecciona este texto y cópialo a mano:';
-    const ta = el('textarea'); ta.readOnly = true; ta.value = texto; ta.rows = 10; msg.append(el('br'), ta); ta.focus(); ta.select();
+    msg.append(fila('No he podido copiarlo solo. Selecciona este texto y cópialo a mano:'));
+    const ta = el('textarea'); ta.readOnly = true; ta.value = texto; ta.rows = 10; msg.append(ta); ta.focus(); ta.select();
   }
   msg.scrollIntoView({ block: 'nearest' });
 }
+const BOE = { CE: 'https://www.boe.es/buscar/act.php?id=BOE-A-1978-31229', LOTC: 'https://www.boe.es/buscar/act.php?id=BOE-A-1979-23709' };
 function promptMas(d, h, x) {
   const t = _temario.byId[EST.tema], b = t ? _temario.bloques.find(bb => bb.temas.indexOf(t) >= 0) : null;
   let max = 0; QA.forEach(z => { const m = /Test\s*0*(\d+)/i.exec(z.q.testTitulo || ''); if (m) max = Math.max(max, +m[1]); });
@@ -90,36 +98,42 @@ function promptMas(d, h, x) {
   const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h;
   const ej = (getPrefs().ejemplosInap || '').trim(), L = [];
-  L.push('Eres redactor de preguntas para el examen de ingreso libre al Cuerpo General Administrativo de la Administración del Estado (C1, INAP). Redacta un test sobre la ' + EST.nombre + '.', '');
+  L.push('Actúa como redactor y revisor jurídico de preguntas para las oposiciones de ingreso libre al Cuerpo General Administrativo de la Administración del Estado (C1, INAP). Toma como referencia el estilo, la precisión y la dificultad de los cuestionarios oficiales del INAP. Las preguntas que redactes son de elaboración propia, no oficiales.', '');
   L.push('Formato del examen real: 4 opciones (A–D) con una sola correcta; cada error resta un tercio, así que las opciones incorrectas deben ser tentadoras y no absurdas.', '');
-  L.push('Ámbito: ' + rango(d, h).toLowerCase() + '. Todas las preguntas deben ser de artículos de ese tramo.');
-  L.push('Número de preguntas: 20.');
-  L.push('Dificultad: ' + (x.flojos.length ? 'alta, la de las preguntas más difíciles de un examen oficial.' : 'media-alta, más exigente que un test básico.'));
-  if (x.sin.length) L.push('Artículos de este tramo que todavía no tienen ninguna pregunta (dales prioridad): ' + comprime(x.sin) + '.');
-  if (x.flojos.length) L.push('Artículos en los que más fallo (refuérzalos con preguntas de matiz): ' + x.flojos.sort((a, c) => a - c).join(', ') + '.');
-  L.push('');
+  L.push('1. DATOS');
+  L.push('- Norma: ' + EST.nombre + '.');
+  if (t) L.push('- Bloque ' + (b ? b.id : 'I') + ', tema ' + t.n + ': ' + t.corto + '.');
+  L.push('- Ámbito: ' + rango(d, h).toLowerCase() + '. Respeta estrictamente ese ámbito; puedes relacionar artículos comprendidos dentro de él.');
+  L.push('- Preguntas nuevas: hasta 20 (es un objetivo, no una obligación).');
+  if (x.sin.length) L.push('- Artículos de este tramo sin ninguna pregunta (prioritarios): ' + comprime(x.sin) + '.');
+  if (x.flojos.length) L.push('- Artículos en los que más fallo (refuérzalos con preguntas de matiz): ' + x.flojos.sort((a, c) => a - c).join(', ') + '.');
+  L.push('- Fuente principal: texto consolidado vigente en el BOE' + (BOE[EST.norma] ? ' (' + BOE[EST.norma] + ')' : '') + '. No inventes competencias, plazos, mayorías ni requisitos; si no puedes verificar un dato, descarta esa pregunta.', '');
+  L.push('2. PREGUNTAS QUE YA TENGO');
   if (x.preg.length) {
-    L.push('Ya tengo estas ' + x.preg.length + ' preguntas. No repitas ninguna ni hagas variantes que pregunten lo mismo con otras palabras:');
-    x.preg.forEach(z => L.push('- ' + String(z.q.q).replace(/\s+/g, ' ').trim().slice(0, 150)));
-    L.push('');
-  }
-  L.push('Criterios de calidad:');
-  L.push('- Basa cada pregunta en el texto literal y vigente del artículo. No inventes contenido; si dudas de un dato, no hagas esa pregunta.');
-  L.push('- Mezcla estilos: enunciado directo, «señale la opción INCORRECTA» y, en algunas, tres afirmaciones numeradas (1, 2, 3) con opciones que combinan cuáles son ciertas.');
-  L.push('- Construye los distractores con las trampas típicas: cambiar un número, un plazo, una mayoría (simple, absoluta, tres quintos), el órgano competente, el sujeto, «podrá» por «deberá», o añadir «siempre», «únicamente» o «todos».');
-  L.push('- Exige precisión: las cuatro opciones deben sonar correctas a quien ha estudiado superficialmente. No uses «todas las anteriores» ni «ninguna de las anteriores».');
-  L.push('- Reparte la letra correcta de forma equilibrada entre A, B, C y D, y varía la longitud de las opciones para que la correcta no sea siempre la más larga.', '');
+    L.push('Mi banco tiene ' + x.preg.length + ' preguntas en este ámbito (entre corchetes, el artículo que citan; al final, la respuesta correcta). Antes de escribir, analiza qué apartados y conceptos ya están evaluados y busca los que no. No repitas ninguna ni hagas variantes que evalúen la misma distinción jurídica con otras palabras. Puedes tratar un artículo ya evaluado si examinas un aspecto sustancialmente distinto: otro apartado, una excepción, un sujeto, un plazo, una relación con otro artículo o un supuesto práctico breve.');
+    x.preg.forEach(z => L.push('- [' + (String(z.q.ref || '').replace(/\s+/g, ' ').trim() || 'sin referencia') + '] ' + String(z.q.q).replace(/\s+/g, ' ').trim() + ' Correcta: ' + String((z.q.opciones || [])[z.q.correcta] || '').replace(/\s+/g, ' ').trim().slice(0, 160)));
+  } else L.push('Todavía no tengo preguntas de este ámbito.');
+  L.push('Si no hay contenido nuevo suficiente para 20 preguntas sin repeticiones sustanciales, entrega menos. Prefiero pocas y distintas a muchas parecidas.', '');
+  L.push('3. DIFICULTAD Y ALTERNATIVAS');
+  L.push('- Dificultad: ' + (x.flojos.length ? 'alta, la de las preguntas más difíciles de un examen oficial' : 'media-alta, más exigente que un test básico') + '. Que proceda del conocimiento de la norma, no de enunciados enrevesados ni de ambigüedades.');
+  L.push('- Varía el enfoque: enunciado directo, «señale la opción INCORRECTA», comparación entre dos artículos próximos, diferencias entre obligación, facultad y prohibición, plazos y mayorías, sujetos y órganos competentes, supuestos breves y, en algunas, tres afirmaciones numeradas (1, 2, 3) con opciones que combinan cuáles son ciertas. No hace falta usarlos todos.');
+  L.push('- Los tres distractores deben ser jurídicamente plausibles, próximos a la norma real e incorrectos por una diferencia concreta que se pueda explicar con el artículo.');
+  L.push('- Evita opciones absurdas, «todas las anteriores» y «ninguna de las anteriores», el uso mecánico de «siempre», «nunca» o «únicamente», y que la correcta destaque por ser más larga o más cuidada.');
+  L.push('- Reparte la letra correcta de forma equilibrada entre A, B, C y D, sin secuencias predecibles (ABCD repetido, AABB…).', '');
+  L.push('4. REVISIÓN ANTES DE ENTREGAR');
+  L.push('Para cada pregunta comprueba que está en el ámbito, que no duplica mi banco, que la correcta coincide con el texto vigente, que las otras tres son incorrectas por motivos identificables, que no hay una segunda respuesta defendible, que el artículo y apartado del solucionario son exactos y que la explicación no contradice la solución. Si una pregunta no lo supera, corrígela o sustitúyela.', '');
   if (ej) L.push('Ejemplos de preguntas reales del estilo que quiero. Imita su nivel y el tipo de trampa, sin copiar su contenido:', ej, '');
+  L.push('5. FORMATO DE ENTREGA');
   L.push('Entrégalo como UN documento en Markdown con exactamente esta estructura, sin texto antes ni después:', '');
   L.push('# TEST ' + nn + ' — ' + nombre.toUpperCase() + ' (' + rg + ')');
   L.push('**Bloque ' + (b ? b.id : 'I') + ':** ' + (b ? b.titulo : ''));
   L.push('**Tema ' + (t ? t.n : 1) + ':** ' + (t ? t.corto : ''));
   L.push('**Fecha:** ' + fecha);
-  L.push('**Preguntas:** 20', '');
+  L.push('**Preguntas:** (número real de preguntas que entregues)', '');
   L.push('# PREGUNTAS', '**1. Enunciado de la pregunta.**', 'A) Opción', 'B) Opción', 'C) Opción', 'D) Opción', '');
   L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + ' |', '');
   L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases: apartado exacto del artículo y por qué falla la opción incorrecta más tentadora.', '');
-  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
+  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; no reveles respuestas en la sección PREGUNTAS; escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
   return L.join('\n');
 }
 function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
