@@ -564,6 +564,12 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .nota-card{margin:0 0 .65rem;padding:1rem 1.1rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja)}
 .nota-q{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 .55rem;font:500 .95rem/1.5 var(--serif);color:var(--muted)}
 .nota-x{margin:0 0 .75rem;padding:.5rem .75rem;border-radius:8px;background:var(--subraya-suave);white-space:pre-wrap}
+.nota-libre{border-left:5px solid var(--bc)}
+.nota-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem .7rem;margin:0 0 .55rem}
+.nota-ti{margin:0;font:700 1.02rem/1.3 var(--display)}
+.nota-et{padding:.15rem .6rem;border-radius:999px;background:var(--bt);font:600 .76rem/1.3 var(--sans);color:var(--tinta)}
+.nota-ac{display:flex;flex-wrap:wrap;gap:.5rem}
+.nota-ac .mini{cursor:pointer}
 @media(max-width:560px){.tabs{display:flex}.tabs button{flex:1}}
 .exambar .meter>i,.off-prog::-webkit-progress-value{background:var(--azul)}
 .off-prog::-moz-progress-bar{background:var(--azul)}

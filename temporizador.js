@@ -27,14 +27,8 @@
   const sonando = () => st.al > Date.now();                     // alarma activa (compartida entre pestañas)
   const minTxt = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 
-  /* ---------- registro de tiempo de estudio efectivo (por día, en este dispositivo) ---------- */
-  function sumaLog(seg, dia) {                                  // dia (AAAA-MM-DD) solo se usa al añadir tiempo a mano
-    if (seg <= 0) return;
-    const log = leer(K.log, {}), k = dia || hoyKey(); log[k] = (log[k] || 0) + seg;
-    Object.keys(log).sort().slice(0, -60).forEach(x => { delete log[x]; });
-    escribe(K.log, log);
-  }
-  const hoySeg = () => leer(K.log, {})[hoyKey()] || 0;
+  /* ---------- registro de tiempo de estudio efectivo: vive en app.js (estudioAdd / estudioSemana) y se sincroniza entre dispositivos ---------- */
+  function sumaLog(seg, dia) { estudioAdd(seg, dia); }          // dia (AAAA-MM-DD) solo se usa al añadir tiempo a mano
   function cierraRegistro() {                                   // suma lo estudiado en la sesión actual que aún no se haya contado y devuelve esos segundos
     let s = 0;
     if (st.m === 'estudio' && (st.est === 'corre' || st.est === 'pausa')) { s = Math.max(0, st.dur - restante() - st.reg); sumaLog(s); }
@@ -261,7 +255,8 @@
     go.classList.toggle('pausa', st.est === 'corre');
     bRe.disabled = st.est === 'parado'; bMas.disabled = false;
     bFin.hidden = !(st.est === 'corre' || st.est === 'pausa');    // solo cuando hay una cuenta en marcha que cortar
-    hoy.textContent = 'Hoy: ' + (hoySeg() >= 60 ? minTxt(hoySeg()) : '0 min') + ' de estudio efectivo';
+    const sem = estudioSemana();
+    hoy.textContent = 'Estudio efectivo · Hoy: ' + (sem.hoy >= 60 ? minTxt(sem.hoy) : '0 min') + ' · Esta semana: ' + (sem.total >= 60 ? minTxt(sem.total) : '0 min');
     if (document.activeElement !== dDe) dDe.value = cfg.descanso;
     pintaChips();
   }

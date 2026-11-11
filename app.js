@@ -12,7 +12,7 @@ const CFG = {
 const FUENTES = ['ChatGPT', 'Claude', 'Gemini', 'Propio', 'Academia'];
 // ----------------------------------------------------------------------
 
-const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', cursoT: 'ma2_cursos_t', bloc2: 'ma2_bloc2', sync: 'ma2_sync' };
+const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', cursoT: 'ma2_cursos_t', bloc2: 'ma2_bloc2', sync: 'ma2_sync', estudio: 'ma2_estudio', libres: 'ma2_libres' };
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 const $ = id => document.getElementById(id);
@@ -284,6 +284,50 @@ function blocRaw() {
 const getBloc = () => blocRaw().x;
 function setBloc(t) { jset(localStorage, LS.bloc2, { x: t, t: nowT() }); scheduleSync(); }
 
+/* ---------- tiempo de estudio (se suma entre dispositivos) ----------
+   Un dato por día y dispositivo (clave «AAAA-MM-DD|id»): cada dispositivo solo toca el suyo, así nunca se pisan. */
+const hoyISO = (d) => { d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+function devId() {
+  let d = '';
+  try { d = localStorage.getItem('ma2_dev') || ''; if (!d) { d = Math.random().toString(36).slice(2, 8); localStorage.setItem('ma2_dev', d); } } catch (e) { d = d || 'x'; }
+  return d;
+}
+function estudioRaw() {
+  let raw = jget(localStorage, LS.estudio, null);
+  if (raw) return raw;
+  raw = {};                                                        // primera vez: pasa aquí el registro antiguo de este dispositivo
+  const old = jget(localStorage, 'ma2_temp_log', {}), d = devId();
+  Object.keys(old).forEach(f => { if (old[f] > 0) raw[f + '|' + d] = { s: old[f], t: nowT() }; });
+  jset(localStorage, LS.estudio, raw);
+  return raw;
+}
+function estudioAdd(seg, dia) {
+  if (!(seg > 0)) return;
+  const raw = estudioRaw(), k = (dia || hoyISO()) + '|' + devId(), e = raw[k] || { s: 0 };
+  raw[k] = { s: (e.s || 0) + Math.round(seg), t: nowT() };
+  jset(localStorage, LS.estudio, raw); scheduleSync();
+}
+function estudioSemana() {                                         // semana actual, de lunes a domingo, sumando todos los dispositivos
+  const dias = {};
+  Object.entries(estudioRaw()).forEach(([k, v]) => { const f = k.split('|')[0]; dias[f] = (dias[f] || 0) + ((v && v.s) || 0); });
+  const h = new Date(), lun = new Date(h.getFullYear(), h.getMonth(), h.getDate() - ((h.getDay() + 6) % 7)), out = [];
+  for (let i = 0; i < 7; i++) { const f = hoyISO(new Date(lun.getFullYear(), lun.getMonth(), lun.getDate() + i)); out.push({ f: f, s: dias[f] || 0 }); }
+  return { dias: out, total: out.reduce((a, x) => a + x.s, 0), hoy: dias[hoyISO()] || 0 };
+}
+
+/* ---------- notas libres (apuntes propios, sincronizados) ---------- */
+const libresRaw = () => jget(localStorage, LS.libres, {});
+const getLibres = () => Object.entries(vivos(libresRaw())).map(([id, v]) => ({ ...v, id: id })).sort((a, b) => (b.t || 0) - (a.t || 0));
+function setLibre(id, d) {
+  const raw = libresRaw(); id = id || ('n' + nowT().toString(36) + Math.random().toString(36).slice(2, 5));
+  raw[id] = { ti: (d.ti || '').trim(), x: d.x || '', tema: d.tema || '', et: (d.et || '').trim(), t: nowT() };
+  jset(localStorage, LS.libres, raw); scheduleSync(); return id;
+}
+function delLibre(id) {
+  const raw = libresRaw();
+  if (raw[id] && !raw[id].del) { raw[id] = { del: true, t: nowT() }; jset(localStorage, LS.libres, raw); scheduleSync(); }
+}
+
 function statsFor(id) {                                              // resultados de un test concreto
   const h = getHist().filter(x => x.id === id);
   if (!h.length) return null;
@@ -315,7 +359,7 @@ function haceTexto(iso) {
 /* ---------- sincronización entre dispositivos ----------
    Guarda tu progreso, errores, dudas y notas en un repositorio PRIVADO (CFG.datos) usando tu token.
    Fusiona sin perder nada: gana siempre el cambio más reciente de cada elemento. */
-const SYNC_VER = 1;
+const SYNC_VER = 2;
 const canon = v => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)) ? Object.fromEntries(Object.keys(x).sort().map(key => [key, x[key]])) : x);
 /* tests sin terminar: se sincronizan como el resto (clave = parte «?t=…» de la dirección) */
 const cursoKeys = () => Object.keys(localStorage).filter(k => k.startsWith(LS.curso));
@@ -336,7 +380,7 @@ function cursoDel(key) {
 }
 let _thr = null;
 function scheduleSyncSoon(ms) { if (!getToken() || _thr) return; _thr = setTimeout(() => { _thr = null; syncNow(); }, ms || 30000); }
-function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), cursos: cursosRaw() }; }
+function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), cursos: cursosRaw(), estudio: estudioRaw(), libres: libresRaw() }; }
 function mergeMap(a, b) {
   const out = {}, limite = Date.now() - 90 * 864e5;
   new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(k => {
@@ -353,11 +397,12 @@ function mergeSnap(a, b) {
   [...(a.hist || []), ...(b.hist || [])].forEach(e => { const k = e.date + '|' + e.id; if (!vistos.has(k)) { vistos.add(k); hist.push(e); } });
   hist.sort((x, y) => (y.date || '').localeCompare(x.date || ''));
   const ba = a.bloc || { x: '', t: 0 }, bb = b.bloc || { x: '', t: 0 };
-  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), cursos: mergeMap(a.cursos, b.cursos), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
+  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), cursos: mergeMap(a.cursos, b.cursos), estudio: mergeMap(a.estudio, b.estudio), libres: mergeMap(a.libres, b.libres), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
 }
 function applySnap(s) {
   jset(localStorage, LS.hist, s.hist); jset(localStorage, LS.err, s.err); jset(localStorage, LS.dud, s.dud);
   jset(localStorage, LS.notas, s.notas); jset(localStorage, LS.bloc2, s.bloc);
+  jset(localStorage, LS.estudio, s.estudio || {}); jset(localStorage, LS.libres, s.libres || {});
   const tumbas = {};
   Object.entries(s.cursos || {}).forEach(([q, v]) => {
     const k = LS.curso + q;
@@ -437,7 +482,7 @@ function migrarTrasEditar(oldQs, newQs) {
 }
 
 function exportProgress() {
-  const data = { version: 4, historial: getHist(), errores: jget(localStorage, LS.err, {}), dudosas: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw() };
+  const data = { version: 4, historial: getHist(), errores: jget(localStorage, LS.err, {}), dudosas: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), estudio: estudioRaw(), libres: libresRaw() };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = el('a'); a.href = URL.createObjectURL(blob);
   a.download = `mi-academia-progreso-${new Date().toISOString().slice(0, 10)}.json`;
@@ -454,6 +499,8 @@ function importProgress(file, done) {
       jset(localStorage, LS.err, d.errores);
       if (d.dudosas && typeof d.dudosas === 'object') jset(localStorage, LS.dud, d.dudosas);
       if (d.notas && typeof d.notas === 'object') jset(localStorage, LS.notas, d.notas);
+      if (d.estudio && typeof d.estudio === 'object') jset(localStorage, LS.estudio, mergeMap(estudioRaw(), d.estudio));
+      if (d.libres && typeof d.libres === 'object') jset(localStorage, LS.libres, mergeMap(libresRaw(), d.libres));
       if (typeof d.bloc === 'string') jset(localStorage, LS.bloc2, { x: d.bloc, t: nowT() });
       else if (d.bloc && typeof d.bloc === 'object') jset(localStorage, LS.bloc2, d.bloc);
       done(true);

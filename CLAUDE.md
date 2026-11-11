@@ -127,6 +127,12 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   flotante y con un aviso en el panel; elegir o iniciar un descanso de más de 20 min pregunta si es estudio, y
   «Terminar» en un descanso de 10 min o más ofrece contarlo como estudio. En Ajustes del panel se puede añadir
   tiempo estudiado a mano (minutos y día) con `sumaLog(seg, dia)`.
+  **El tiempo de estudio SÍ se sincroniza**: vive en `app.js` (`LS.estudio`, `estudioAdd`, `estudioSemana`),
+  un dato por día y dispositivo (clave `AAAA-MM-DD|idDispositivo`, `ma2_dev`), fusionado con `mergeMap`; así
+  nunca se pisan y el panel muestra Hoy y Esta semana (lunes a domingo) sumando todos los dispositivos. La
+  primera vez se migra el antiguo `ma2_temp_log`, que ya no se usa. Llega al resto cuando ese dispositivo sincroniza.
+- **Notas libres** (Biblioteca → Notas): apuntes propios con título, texto, tema y etiqueta, en `LS.libres`
+  (`getLibres`, `setLibre`, `delLibre`), sincronizados con `mergeMap` y con tumbas al borrar. `SYNC_VER = 2`.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 

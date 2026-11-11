@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261118">
+<link rel="stylesheet" href="style.css?v=20261119">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -61,12 +61,25 @@
     </div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
+    <div class="bib-barra"><button type="button" class="btn small" id="n-nueva">Nueva nota</button></div>
+    <form id="n-form" class="bib-form hide" autocomplete="off">
+      <h2 id="n-form-t">Nueva nota</h2>
+      <label class="bf-f">Título (opcional) <input type="text" id="n-ti" maxlength="120"></label>
+      <label class="bf-f">Texto <textarea id="n-x" rows="7"></textarea></label>
+      <div class="bf-fila">
+        <label class="bf-f">Tema <select id="n-tema"></select></label>
+        <label class="bf-f">Etiqueta <input type="text" id="n-et" list="n-ets" maxlength="40" placeholder="Apuntes"></label>
+      </div>
+      <datalist id="n-ets"><option value="Apuntes"><option value="Fallos de test propio"><option value="Dudas"><option value="Resumen"></datalist>
+      <p class="bib-msg" id="n-msg" role="alert"></p>
+      <div class="bf-ac"><button type="submit" class="btn">Guardar nota</button><button type="button" class="btn ghost" id="n-cancel">Cancelar</button></div>
+    </form>
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261118"></script>
-<script src="vistas.js?v=20261118"></script>
-<script src="biblioteca.js?v=20261118"></script>
+<script src="app.js?v=20261119"></script>
+<script src="vistas.js?v=20261119"></script>
+<script src="biblioteca.js?v=20261119"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -299,35 +312,73 @@ async function cargaMaterial() {
   if (r === 'token') msg(ghError(401), true); else if (r === 'error' && getToken()) msg('No he podido actualizar la lista; muestro la última copia guardada en este dispositivo.');
   if (JSON.stringify(bibDocs) !== antes) renderMaterial();         // solo si la lista cambió (así no se pierde el resaltado ni el scroll)
 }
-let notasCargadas = false;
-async function renderNotas() {
-  const box = $('notas'); if (notasCargadas) return;
-  const notas = getNotas(), keys = Object.keys(notas);
+let notasCargadas = false, qsNotas = null, libreEdit = null;
+async function renderNotas(forzar) {
+  const box = $('notas'); if (notasCargadas && !forzar) return;
+  const notas = getNotas(), keys = Object.keys(notas), libres = getLibres();
   box.replaceChildren();
-  if (!keys.length) {
-    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes notas'), el('p', '', 'Cuando escribas una nota en una pregunta durante un test, aparecerá aquí agrupada por tema.')); box.append(v); notasCargadas = true; return;
+  if (!keys.length && !libres.length) {
+    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes notas'), el('p', '', 'Escribe una con «Nueva nota», o desde una pregunta durante un test. Aparecerán aquí agrupadas por tema y se sincronizan entre tus dispositivos.')); box.append(v); notasCargadas = true; return;
   }
-  box.append(el('p', 'vacio-msg', 'Cargando notas…'));
-  const qs = {}; (await todasLasPreguntas()).forEach(q => { qs[q.key] = q; });
-  box.replaceChildren();
-  const grupos = {};
-  keys.forEach(k => { const q = qs[k], t = q ? q.tema : 'General'; (grupos[t] = grupos[t] || []).push({ k, q, texto: notas[k] }); });
+  if (keys.length && !qsNotas) {
+    box.append(el('p', 'vacio-msg', 'Cargando notas…'));
+    qsNotas = {}; (await todasLasPreguntas()).forEach(q => { qsNotas[q.key] = q; });
+    box.replaceChildren();
+  }
+  const grupos = {}, aT = t => (grupos[t] = grupos[t] || []);
+  libres.forEach(n => aT(n.tema && _temario.byId[n.tema] ? n.tema : 'General').push({ libre: n }));
+  keys.forEach(k => { const q = qsNotas && qsNotas[k]; aT(q ? q.tema : 'General').push({ k: k, q: q, texto: notas[k] }); });
   const orden = Object.keys(_temario.byId), ids = Object.keys(grupos).sort((a, b) => (orden.indexOf(a) + 1 || 999) - (orden.indexOf(b) + 1 || 999));
   ids.forEach(t => {
     const g = el('section', 'notas-g'); g.dataset.b = bloqueOf(t) || 'x';
     g.append(el('h2', 'notas-t', temaLabel(t)));
     grupos[t].forEach(n => {
+      if (n.libre) { g.append(tarjetaLibre(n.libre)); return; }
       const c = el('article', 'nota-card');
       c.append(el('p', 'nota-q', n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.'), el('p', 'nota-x', n.texto));
-      if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = `test.html?t=${encodeURIComponent(n.q.testId)}`; c.append(a); }
+      if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = 'test.html?t=' + encodeURIComponent(n.q.testId); c.append(a); }
       g.append(c);
     });
     box.append(g);
   });
   notasCargadas = true;
 }
+function tarjetaLibre(n) {
+  const c = el('article', 'nota-card nota-libre'), cab = el('div', 'nota-cab');
+  if (n.ti) cab.append(el('h3', 'nota-ti', n.ti));
+  if (n.et) cab.append(el('span', 'nota-et', n.et));
+  const ac = el('div', 'nota-ac'), bE = el('button', 'mini', 'Editar'), bB = el('button', 'mini err', 'Borrar');
+  bE.type = 'button'; bB.type = 'button';
+  bE.addEventListener('click', () => abreNota(n));
+  let tB = 0;
+  bB.addEventListener('click', () => {                              // dos pulsaciones seguidas: sin ventanas emergentes
+    if (!tB) { bB.textContent = '¿Seguro? Pulsa otra vez'; tB = setTimeout(() => { tB = 0; bB.textContent = 'Borrar'; }, 3500); return; }
+    clearTimeout(tB); delLibre(n.id); if (libreEdit === n.id) cierraNota(); renderNotas(true);
+  });
+  ac.append(bE, bB); c.append(cab);
+  if (n.x) c.append(el('p', 'nota-x', n.x));
+  c.append(ac); return c;
+}
+function abreNota(n) {
+  libreEdit = n ? n.id : null;
+  $('n-form-t').textContent = n ? 'Editar nota' : 'Nueva nota';
+  $('n-ti').value = n ? n.ti || '' : ''; $('n-x').value = n ? n.x || '' : ''; $('n-et').value = n ? n.et || '' : '';
+  $('n-tema').value = n && n.tema && _temario.byId[n.tema] ? n.tema : ''; $('n-msg').textContent = '';
+  $('n-form').classList.remove('hide'); $('n-nueva').classList.add('hide');
+  $('n-form').scrollIntoView({ block: 'nearest' }); $('n-x').focus();
+}
+function cierraNota() { libreEdit = null; $('n-form').classList.add('hide'); $('n-nueva').classList.remove('hide'); }
+$('n-nueva').addEventListener('click', () => abreNota(null));
+$('n-cancel').addEventListener('click', cierraNota);
+$('n-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const x = $('n-x').value.trim();
+  if (!x) { $('n-msg').textContent = 'Escribe el texto de la nota.'; $('n-x').focus(); return; }
+  setLibre(libreEdit, { ti: $('n-ti').value, x: $('n-x').value, tema: $('n-tema').value, et: $('n-et').value });
+  cierraNota(); renderNotas(true);
+});
 async function init() {
-  await loadTemario(); initMaterial();
+  await loadTemario(); initMaterial(); opcionesTema($('n-tema'));
   // enlace antiguo del temario: biblioteca.html?tema=I-2#material -> #material/I con ese tema abierto
   const pt = new URLSearchParams(location.search).get('tema');
   if (pt && _temario.byId[pt] && !leerRuta().sub) { resaltar = pt; history.replaceState(null, '', location.pathname + '#material/' + bloqueOf(pt)); }
@@ -335,6 +386,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261118"></script>
+<script src="temporizador.js?v=20261119"></script>
 </body>
 </html>
