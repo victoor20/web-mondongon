@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261124">
+<link rel="stylesheet" href="style.css?v=20261125">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -84,7 +84,7 @@
     <div id="tarjetas"></div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
-    <div class="bib-barra"><button type="button" class="btn small" id="n-nueva">Nueva nota</button></div>
+    <div class="bib-barra"><button type="button" class="btn small" id="n-nueva">Nueva nota</button> <button type="button" class="btn small ghost" id="n-todas">Abrir todas</button></div>
     <form id="n-form" class="bib-form hide" autocomplete="off">
       <h2 id="n-form-t">Nueva nota</h2>
       <label class="bf-f">Título (opcional) <input type="text" id="n-ti" maxlength="120"></label>
@@ -100,9 +100,9 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261124"></script>
-<script src="vistas.js?v=20261124"></script>
-<script src="biblioteca.js?v=20261124"></script>
+<script src="app.js?v=20261125"></script>
+<script src="vistas.js?v=20261125"></script>
+<script src="biblioteca.js?v=20261125"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -355,17 +355,26 @@ async function renderNotas(forzar) {
   const orden = Object.keys(_temario.byId), ids = Object.keys(grupos).sort((a, b) => (orden.indexOf(a) + 1 || 999) - (orden.indexOf(b) + 1 || 999));
   ids.forEach(t => {
     const g = el('section', 'notas-g'); g.dataset.b = bloqueOf(t) || 'x';
-    g.append(el('h2', 'notas-t', temaLabel(t)));
+    const h = el('h2', 'notas-t'), tt = _temario.byId[t], num = grupos[t].length;
+    if (tt) h.append(el('span', 'notas-cod', codigoTema(t)), el('span', 'notas-nom', tt.corto)); else h.append(el('span', 'notas-nom', 'Sin tema'));
+    h.append(el('span', 'notas-n', num + (num === 1 ? ' nota' : ' notas')));
+    g.append(h);
     grupos[t].forEach(n => {
       if (n.libre) { g.append(tarjetaLibre(n.libre)); return; }
-      const c = el('article', 'nota-card');
-      c.append(el('p', 'nota-q', n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.'), notaHtml(n.texto));
-      if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = 'test.html?t=' + encodeURIComponent(n.q.testId); c.append(a); }
+      const c = notaDesplegable(n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.', 'De un test', true);
+      c.querySelector('.nota-cuerpo').append(notaHtml(n.texto));
+      if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = 'test.html?t=' + encodeURIComponent(n.q.testId); c.querySelector('.nota-cuerpo').append(a); }
       g.append(c);
     });
     box.append(g);
   });
   notasCargadas = true;
+}
+function notaDesplegable(titulo, etiqueta, deTest) {                // nota plegada: solo se ve el título; al abrirla, el contenido
+  const c = el('details', 'nota-card' + (deTest ? ' nota-test' : ' nota-libre')), s = el('summary', 'nota-sum');
+  s.append(el('span', 'nota-st', titulo));
+  if (etiqueta) s.append(el('span', 'nota-et', etiqueta));
+  c.append(s, el('div', 'nota-cuerpo')); return c;
 }
 const esFilaTabla = l => /^\s*\|.+\|\s*$/.test(l) || (l.indexOf('\t') > 0 && l.split('\t').filter(c => c.trim()).length >= 2);
 const celdasFila = l => l.indexOf('\t') > 0 && l.trim().charAt(0) !== '|' ? l.split('\t').map(c => c.trim()) : l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
@@ -415,9 +424,8 @@ $('n-x').addEventListener('paste', ev => {
   ev.preventDefault(); const ta = ev.target; ta.setRangeText(htmlATexto(html), ta.selectionStart, ta.selectionEnd, 'end');
 });
 function tarjetaLibre(n) {
-  const c = el('article', 'nota-card nota-libre'), cab = el('div', 'nota-cab');
-  if (n.ti) cab.append(el('h3', 'nota-ti', n.ti));
-  if (n.et) cab.append(el('span', 'nota-et', n.et));
+  const prim = String(n.x || '').split('\n').map(l => l.replace(/^[\s|*-]+/, '').trim()).find(l => l && !/^:?-{3,}/.test(l)) || '';
+  const c = notaDesplegable(n.ti || (prim ? prim.slice(0, 90) : 'Nota sin título'), n.et, false), cuerpo = c.querySelector('.nota-cuerpo');
   const ac = el('div', 'nota-ac'), bE = el('button', 'mini', 'Editar'), bB = el('button', 'mini err', 'Borrar');
   bE.type = 'button'; bB.type = 'button';
   bE.addEventListener('click', () => abreNota(n));
@@ -426,10 +434,14 @@ function tarjetaLibre(n) {
     if (!tB) { bB.textContent = '¿Seguro? Pulsa otra vez'; tB = setTimeout(() => { tB = 0; bB.textContent = 'Borrar'; }, 3500); return; }
     clearTimeout(tB); delLibre(n.id); if (libreEdit === n.id) cierraNota(); renderNotas(true);
   });
-  ac.append(bE, bB); c.append(cab);
-  if (n.x) c.append(notaHtml(n.x));
-  c.append(ac); return c;
+  ac.append(bE, bB);
+  if (n.x) cuerpo.append(notaHtml(n.x));
+  cuerpo.append(ac); return c;
 }
+$('n-todas').addEventListener('click', () => {                      // abrir o cerrar todas las notas de golpe
+  const ds = Array.prototype.slice.call(document.querySelectorAll('#notas details.nota-card')), abrir = ds.some(d => !d.open);
+  ds.forEach(d => { d.open = abrir; }); $('n-todas').textContent = abrir ? 'Cerrar todas' : 'Abrir todas';
+});
 function abreNota(n) {
   libreEdit = n ? n.id : null;
   $('n-form-t').textContent = n ? 'Editar nota' : 'Nueva nota';
@@ -565,6 +577,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261124"></script>
+<script src="temporizador.js?v=20261125"></script>
 </body>
 </html>
