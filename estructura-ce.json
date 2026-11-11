@@ -1,0 +1,39 @@
+{
+  "norma": "CE",
+  "nombre": "Constitución Española de 1978",
+  "corto": "Constitución",
+  "tema": "I-1",
+  "ultimo": 169,
+  "titulos": [
+    { "id": "TP", "rn": "Prel.", "titulo": "Título Preliminar", "desde": 1, "hasta": 9 },
+    { "id": "T1", "rn": "I", "titulo": "Título I. De los derechos y deberes fundamentales", "desde": 10, "hasta": 55, "grupos": [
+      { "titulo": "Artículo 10", "desde": 10, "hasta": 10 },
+      { "titulo": "Capítulo I. De los españoles y los extranjeros", "desde": 11, "hasta": 13 },
+      { "titulo": "Capítulo II. Derechos y libertades", "desde": 14, "hasta": 38, "tramos": [
+        { "titulo": "Artículo 14", "desde": 14, "hasta": 14 },
+        { "titulo": "Sección 1.ª. De los derechos fundamentales y de las libertades públicas", "desde": 15, "hasta": 29 },
+        { "titulo": "Sección 2.ª. De los derechos y deberes de los ciudadanos", "desde": 30, "hasta": 38 }
+      ] },
+      { "titulo": "Capítulo III. De los principios rectores de la política social y económica", "desde": 39, "hasta": 52 },
+      { "titulo": "Capítulo IV. De las garantías de las libertades y derechos fundamentales", "desde": 53, "hasta": 54 },
+      { "titulo": "Capítulo V. De la suspensión de los derechos y libertades", "desde": 55, "hasta": 55 }
+    ] },
+    { "id": "T2", "rn": "II", "titulo": "Título II. De la Corona", "desde": 56, "hasta": 65 },
+    { "id": "T3", "rn": "III", "titulo": "Título III. De las Cortes Generales", "desde": 66, "hasta": 96, "grupos": [
+      { "titulo": "Capítulo I. De las Cámaras", "desde": 66, "hasta": 80 },
+      { "titulo": "Capítulo II. De la elaboración de las leyes", "desde": 81, "hasta": 92 },
+      { "titulo": "Capítulo III. De los Tratados Internacionales", "desde": 93, "hasta": 96 }
+    ] },
+    { "id": "T4", "rn": "IV", "titulo": "Título IV. Del Gobierno y de la Administración", "desde": 97, "hasta": 107 },
+    { "id": "T5", "rn": "V", "titulo": "Título V. De las relaciones entre el Gobierno y las Cortes Generales", "desde": 108, "hasta": 116 },
+    { "id": "T6", "rn": "VI", "titulo": "Título VI. Del Poder Judicial", "desde": 117, "hasta": 127 },
+    { "id": "T7", "rn": "VII", "titulo": "Título VII. Economía y Hacienda", "desde": 128, "hasta": 136 },
+    { "id": "T8", "rn": "VIII", "titulo": "Título VIII. De la Organización Territorial del Estado", "desde": 137, "hasta": 158, "grupos": [
+      { "titulo": "Capítulo I. Principios generales", "desde": 137, "hasta": 139 },
+      { "titulo": "Capítulo II. De la Administración Local", "desde": 140, "hasta": 142 },
+      { "titulo": "Capítulo III. De las Comunidades Autónomas", "desde": 143, "hasta": 158 }
+    ] },
+    { "id": "T9", "rn": "IX", "titulo": "Título IX. Del Tribunal Constitucional", "desde": 159, "hasta": 165 },
+    { "id": "T10", "rn": "X", "titulo": "Título X. De la reforma constitucional", "desde": 166, "hasta": 169 }
+  ]
+}

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Biblioteca · Mi Academia</title>
+<title>Biblioteca - Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
 <meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261119">
+<link rel="stylesheet" href="style.css?v=20261120">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -77,9 +77,9 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261119"></script>
-<script src="vistas.js?v=20261119"></script>
-<script src="biblioteca.js?v=20261119"></script>
+<script src="app.js?v=20261120"></script>
+<script src="vistas.js?v=20261120"></script>
+<script src="biblioteca.js?v=20261120"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -125,7 +125,7 @@ function opcionesTema(sel) {
   sel.append(new Option('General (sin tema)', ''));
   _temario.bloques.forEach(b => {
     const g = document.createElement('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
-    b.temas.forEach(t => g.append(new Option(`${codigoTema(t.id)} · ${t.corto}`, t.id)));
+    b.temas.forEach(t => g.append(new Option(`${codigoTema(t.id)}: ${t.corto}`, t.id)));
     sel.append(g);
   });
 }
@@ -167,7 +167,7 @@ function vistaBloques(box) {
   };
   _temario.bloques.forEach(b => {
     const n = docs.filter(d => !esGeneral(d) && bloqueOf(d.tema) === b.id).length;
-    grid.append(tarjeta(b.id, b.id, b.titulo, `${plural(b.temas.length, 'tema', 'temas')} · ${n ? plural(n, 'documento', 'documentos') : 'sin documentos'}`));
+    grid.append(tarjeta(b.id, b.id, b.titulo, `${plural(b.temas.length, 'tema', 'temas')}, ${n ? plural(n, 'documento', 'documentos') : 'sin documentos'}`));
   });
   const g = docs.filter(esGeneral).length;
   if (g) grid.append(tarjeta('x', 'G', 'General', `${plural(g, 'documento', 'documentos')} sin tema`));
@@ -210,7 +210,7 @@ function filaDoc(d) {
   f.append(el('span', 'doc-ext', d.ext.toUpperCase().slice(0, 4)));
   const cuerpo = el('div', 'doc-c'); cuerpo.append(el('h3', '', d.titulo));
   const off = copias.has(d.id);
-  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(' · ') + (off ? ' · disponible sin conexión' : '')));
+  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(', ') + (off ? ', disponible sin conexión' : '')));
   f.append(cuerpo);
   const ac = el('div', 'doc-ac');
   const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button';
@@ -386,6 +386,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261119"></script>
+<script src="temporizador.js?v=20261120"></script>
 </body>
 </html>

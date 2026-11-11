@@ -133,6 +133,13 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   primera vez se migra el antiguo `ma2_temp_log`, que ya no se usa. Llega al resto cuando ese dispositivo sincroniza.
 - **Notas libres** (Biblioteca → Notas): apuntes propios con título, texto, tema y etiqueta, en `LS.libres`
   (`getLibres`, `setLibre`, `delLibre`), sincronizados con `mergeMap` y con tumbas al borrar. `SYNC_VER = 2`.
+- **Estructura de la norma** (`estructura.html?n=ce`, se abre desde el tema I-1 del Temario): Título → Capítulo → Sección con
+  sus preguntas, sacadas de la `ref` de cada pregunta (`refInfo` en `app.js`; la norma es LOTC si la ref o el título del test
+  lo dicen, si no CE). Los tramos están en `estructura-ce.json` (para otra norma: otro `estructura-xx.json` y una línea en
+  `NORMA_URL`). «Hacer test» abre `test.html?t=mixto&art=CE.15-29` (filtro `art=NORMA.desde-hasta`, también con `t=errores`).
+  «Pedir más preguntas» copia un prompt para ChatGPT con el tramo, las preguntas que ya existen y los artículos sin cubrir.
+  El acierto por tramo sale de `ar` (acierto por artículo) que desde ahora guarda cada intento en el historial. En las
+  `ref` de los tests nuevos, los artículos van con cifras («Artículo 22.4»), y los de la LOTC con «LOTC» en la ref y en el título.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 

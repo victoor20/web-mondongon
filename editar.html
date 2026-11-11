@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Editar test · Mi Academia</title>
+<title>Editar test - Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
 <meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261119">
+<link rel="stylesheet" href="style.css?v=20261120">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-<script src="app.js?v=20261119"></script>
+<script src="app.js?v=20261120"></script>
 <script>
 const ID = new URLSearchParams(location.search).get('t');
 let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0;
@@ -214,7 +214,7 @@ window.addEventListener('beforeunload', e => { if (sucio) { e.preventDefault(); 
   try { data = await loadRawTest(ID); }
   catch (e) { $('sub').textContent = e.message; return; }
   if (!Array.isArray(data.preguntas)) { $('sub').textContent = 'Este archivo no tiene el formato esperado; edítalo a mano en GitHub.'; return; }
-  document.title = 'Editar: ' + data.titulo + ' · Mi Academia';
+  document.title = 'Editar: ' + data.titulo + ' - Mi Academia';
   $('sub').textContent = `${data.titulo}. Archivo: ${ID}.json`;
   baseCanon = canon(data);
   oldQs = data.preguntas.map(p => ({ key: qkey(ID, p.q), tema: p.tema || data.tema || 'General' }));

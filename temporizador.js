@@ -245,7 +245,7 @@
     pillT.textContent = al ? '¡Tiempo!' : fmt(r); pillM.textContent = st.m === 'descanso' && !al ? 'Descanso' : '';
     raiz.dataset.m = st.m; raiz.dataset.e = st.est; raiz.dataset.al = al ? '1' : '0';
     pill.setAttribute('aria-label', 'Temporizador de ' + ETQ[st.m].toLowerCase() + ': ' + (st.est === 'fin' ? 'terminado' : 'quedan ' + fmt(r)) + (al ? '. Toca para parar la alarma' : '. Abrir'));
-    if (al) { document.title = '🔔 ¡Tiempo! · ' + titulo0; tituloPuesto = true; } else if (st.est === 'corre') { document.title = '⏱ ' + fmt(r) + ' · ' + titulo0; tituloPuesto = true; } else if (tituloPuesto) { document.title = titulo0; tituloPuesto = false; }
+    if (al) { document.title = '🔔 ¡Tiempo! - ' + titulo0; tituloPuesto = true; } else if (st.est === 'corre') { document.title = '⏱ ' + fmt(r) + ' - ' + titulo0; tituloPuesto = true; } else if (tituloPuesto) { document.title = titulo0; tituloPuesto = false; }
     if (clave === ultimo) return; ultimo = clave;
     if (!abierto()) return;
     Object.keys(bm).forEach(m => { bm[m].classList.toggle('on', st.m === m); bm[m].setAttribute('aria-pressed', String(st.m === m)); });
@@ -256,7 +256,7 @@
     bRe.disabled = st.est === 'parado'; bMas.disabled = false;
     bFin.hidden = !(st.est === 'corre' || st.est === 'pausa');    // solo cuando hay una cuenta en marcha que cortar
     const sem = estudioSemana();
-    hoy.textContent = 'Estudio efectivo · Hoy: ' + (sem.hoy >= 60 ? minTxt(sem.hoy) : '0 min') + ' · Esta semana: ' + (sem.total >= 60 ? minTxt(sem.total) : '0 min');
+    hoy.textContent = 'Hoy: ' + (sem.hoy >= 60 ? minTxt(sem.hoy) : '0 min') + ' de estudio efectivo\nEsta semana: ' + (sem.total >= 60 ? minTxt(sem.total) : '0 min');
     if (document.activeElement !== dDe) dDe.value = cfg.descanso;
     pintaChips();
   }

@@ -95,6 +95,22 @@ function validateTest(d, temaIds) {
   return { errors, warnings };
 }
 
+/* ---------- artículos citados en la referencia de una pregunta (para ordenar por Título, Capítulo y Sección) ---------- */
+function refInfo(q) {
+  const lotcTest = /LOTC/i.test(q.testTitulo || ''), out = [];
+  String(q.ref || '').split(/\s+y\s+|\s*\/\s*|\s*;\s*/).forEach(p => {
+    const m = /(\d+)/.exec(p); if (!m) return;
+    out.push({ n: +m[1], norma: /LOTC/i.test(p) ? 'LOTC' : /\bCE\b/.test(p) ? 'CE' : lotcTest ? 'LOTC' : 'CE' });
+  });
+  return out;
+}
+const parteArt = spec => { const m = /^([A-Za-z]+)\.(\d+)-(\d+)$/.exec(spec || ''); return m ? { norma: m[1].toUpperCase(), d: +m[2], h: +m[3] } : null; };
+const enRango = (q, spec) => { const p = parteArt(spec); return !p || refInfo(q).some(r => r.norma === p.norma && r.n >= p.d && r.n <= p.h); };
+function nombreAmbito(spec) {
+  const p = parteArt(spec); if (!p) return '';
+  return (p.norma === 'CE' ? 'Constitución' : p.norma) + ': ' + (p.d === p.h ? 'artículo ' + p.d : 'artículos ' + p.d + ' a ' + p.h);
+}
+
 function normalizeTest(id, d) {
   return d.preguntas.map(p => ({
     key: qkey(id, p.q), testId: id, testTitulo: d.titulo, tema: p.tema || d.tema || 'General',

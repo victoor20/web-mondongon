@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estructura - Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261120">
+</head>
+<body data-pagina="temario">
+<div class="wrap">
+  <div class="pagehead">
+    <h1 class="titular" id="e-h1">Constitución Española</h1>
+    <p class="entradilla" id="e-ent">Cargando…</p>
+  </div>
+  <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
+  <div id="e-box"></div>
+</div>
+<script src="app.js?v=20261120"></script>
+<script src="vistas.js?v=20261120"></script>
+<script>
+/* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
+   para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
+const NORMA_URL = { ce: 'estructura-ce.json' };
+const N = (new URLSearchParams(location.search).get('n') || 'ce').toLowerCase();
+const COLORES = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+let EST = null, QA = [];                                           // QA: cada pregunta con los artículos de esta norma que cita
+
+const rango = (d, h) => d === h ? 'Artículo ' + d : 'Artículos ' + d + ' a ' + h;
+const espec = (d, h) => EST.norma + '.' + d + '-' + h;
+function comprime(nums) {                                          // [22,23,24,30] -> «22 a 24, 30»
+  const out = []; let i = 0;
+  while (i < nums.length) {
+    let j = i; while (j + 1 < nums.length && nums[j + 1] === nums[j] + 1) j++;
+    out.push(j - i >= 2 ? nums[i] + ' a ' + nums[j] : nums.slice(i, j + 1).join(', ')); i = j + 1;
+  }
+  return out.join(', ');
+}
+function acierto(d, h) {                                           // acierto en los últimos 3 intentos que tocaron este tramo
+  const hist = getHist().slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')), esL = EST.norma === 'LOTC';
+  let r = 0, t = 0, usados = 0;
+  for (const e of hist) {
+    if (!e.ar) continue;
+    let er = 0, et = 0;
+    Object.keys(e.ar).forEach(k => {
+      if ((k.charAt(0) === 'L') !== esL) return;
+      const n = parseInt(esL ? k.slice(1) : k, 10);
+      if (n >= d && n <= h) { er += e.ar[k][0]; et += e.ar[k][1]; }
+    });
+    if (et) { r += er; t += et; if (++usados === 3) break; }
+  }
+  return t ? { p: Math.round(r / t * 100), intentos: usados } : null;
+}
+function datos(d, h) {
+  const preg = QA.filter(x => x.arts.some(a => a >= d && a <= h)), cub = new Set(), err = getErr(), porArt = {};
+  QA.forEach(x => x.arts.forEach(a => { if (a >= d && a <= h) cub.add(a); }));
+  const sin = []; for (let a = d; a <= h; a++) if (!cub.has(a)) sin.push(a);
+  let ne = 0;
+  preg.forEach(x => { if (err[x.q.key]) { ne++; x.arts.forEach(a => { if (a >= d && a <= h) porArt[a] = (porArt[a] || 0) + 1; }); } });
+  const flojos = Object.keys(porArt).map(Number).sort((a, b) => porArt[b] - porArt[a] || a - b).slice(0, 5);
+  return { n: preg.length, preg: preg, cubiertos: cub.size, total: h - d + 1, sin: sin, ne: ne, flojos: flojos, acc: acierto(d, h) };
+}
+
+/* ---------- pedir más preguntas a ChatGPT ---------- */
+async function copia(texto) {
+  const msg = $('e-msg'); msg.replaceChildren();
+  try { await navigator.clipboard.writeText(texto); msg.textContent = 'Copiado. Pégalo en ChatGPT y, cuando tengas el documento, súbelo en «Añadir test».'; }
+  catch (e) {
+    msg.textContent = 'No he podido copiarlo solo. Selecciona este texto y cópialo a mano:';
+    const ta = el('textarea'); ta.readOnly = true; ta.value = texto; ta.rows = 10; msg.append(el('br'), ta); ta.focus(); ta.select();
+  }
+  msg.scrollIntoView({ block: 'nearest' });
+}
+function promptMas(d, h, x) {
+  const t = _temario.byId[EST.tema], b = t ? _temario.bloques.find(bb => bb.temas.indexOf(t) >= 0) : null;
+  let max = 0; QA.forEach(z => { const m = /Test\s*0*(\d+)/i.exec(z.q.testTitulo || ''); if (m) max = Math.max(max, +m[1]); });
+  const nn = String(max + 1).padStart(2, '0'), nombre = EST.nombre.replace(/ de \d{4}$/, '');
+  const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+  const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h;
+  const L = [];
+  L.push('Redacta un test de oposición (Administrativo del Estado, C1) sobre la ' + EST.nombre + '.', '');
+  L.push('Ámbito: ' + rango(d, h).toLowerCase() + '. Todas las preguntas deben ser de artículos de ese tramo.');
+  L.push('Número de preguntas: 20.');
+  L.push('Dificultad: ' + (x.flojos.length ? 'media-alta, con opciones muy plausibles (números, plazos, mayorías, órganos competentes).' : 'media, algo más exigente que un test básico.'));
+  if (x.sin.length) L.push('Artículos de este tramo que todavía no tienen ninguna pregunta (dales prioridad): ' + comprime(x.sin) + '.');
+  if (x.flojos.length) L.push('Artículos en los que más fallo (refuérzalos con preguntas de matiz): ' + x.flojos.sort((a, c) => a - c).join(', ') + '.');
+  L.push('');
+  if (x.preg.length) {
+    L.push('Ya tengo estas ' + x.preg.length + ' preguntas. No repitas ninguna ni hagas variantes que pregunten lo mismo con otras palabras:');
+    x.preg.forEach(z => L.push('- ' + String(z.q.q).replace(/\s+/g, ' ').trim().slice(0, 150)));
+    L.push('');
+  }
+  L.push('Entrégalo como UN documento en Markdown con exactamente esta estructura, sin texto antes ni después:', '');
+  L.push('# TEST ' + nn + ' — ' + nombre.toUpperCase() + ' (' + rg + ')');
+  L.push('**Bloque ' + (b ? b.id : 'I') + ':** ' + (b ? b.titulo : ''));
+  L.push('**Tema ' + (t ? t.n : 1) + ':** ' + (t ? t.corto : ''));
+  L.push('**Fecha:** ' + fecha);
+  L.push('**Preguntas:** 20', '');
+  L.push('# PREGUNTAS', '**1. Enunciado de la pregunta.**', 'A) Opción', 'B) Opción', 'C) Opción', 'D) Opción', '');
+  L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + ' |', '');
+  L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases.', '');
+  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
+  return L.join('\n');
+}
+function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
+
+/* ---------- tarjetas ---------- */
+function botones(d, h, x, completo) {
+  const ac = el('div', 'nota-ac');
+  if (x.n) { const a = el('a', 'mini azul', completo ? 'Hacer test de este título' : 'Hacer test'); a.href = 'test.html?t=mixto&art=' + espec(d, h) + '&n=20'; ac.append(a); }
+  if (x.ne) { const e = el('a', 'mini err', 'Errores (' + x.ne + ')'); e.href = 'test.html?t=errores&art=' + espec(d, h); ac.append(e); }
+  const m = el('button', 'mini', 'Pedir más preguntas'); m.type = 'button'; m.addEventListener('click', () => pideMas(d, h)); ac.append(m);
+  return ac;
+}
+function tarjetaTramo(titulo, d, h) {
+  const x = datos(d, h), c = el('article', 'nota-card est-tr');
+  c.append(el('h3', 'est-t', titulo));
+  if (titulo !== rango(d, h)) c.append(el('p', 'fine', rango(d, h)));
+  c.append(el('p', 'est-m', x.n ? plural(x.n, 'pregunta', 'preguntas') + '. ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Sin preguntas todavía.'));
+  if (x.n) {
+    const m = el('span', 'meter est-cob'), f = el('i'); f.style.width = Math.round(x.cubiertos / x.total * 100) + '%'; m.append(f); c.append(m);
+    if (x.sin.length) c.append(el('p', 'fine', 'Sin pregunta: ' + comprime(x.sin) + '.'));
+    c.append(el('p', 'fine', x.acc ? 'Acierto reciente: ' + x.acc.p + ' % (' + plural(x.acc.intentos, 'intento', 'intentos') + ').' : 'Todavía no hay datos de acierto en este tramo.'));
+  }
+  c.append(botones(d, h, x, false));
+  return c;
+}
+
+/* ---------- vistas ---------- */
+function vistaRaiz() {
+  const box = $('e-box'), tot = datos(1, EST.ultimo);
+  document.title = 'Estructura - Mi Academia';
+  $('e-h1').textContent = EST.nombre;
+  $('e-ent').textContent = tot.n ? plural(tot.n, 'pregunta', 'preguntas') + ' cubren ' + tot.cubiertos + ' de ' + EST.ultimo + ' artículos (una pregunta puede citar más de uno). Abre un título para ver sus capítulos, practicar un tramo o pedir más preguntas.' : 'Todavía no hay preguntas de esta norma.';
+  box.replaceChildren();
+  const barra = el('div', 'est-barra');
+  if (tot.n) { const a = el('a', 'btn small', 'Test de toda la ' + EST.corto); a.href = 'test.html?t=mixto&art=' + espec(1, EST.ultimo) + '&n=20'; barra.append(a); }
+  const t0 = el('a', 'btn small ghost', 'Volver al temario'); t0.href = 'temario.html#tema-' + EST.tema; barra.append(t0);
+  box.append(barra);
+  const grid = el('div', 'bib-grid');
+  EST.titulos.forEach((t, i) => {
+    const x = datos(t.desde, t.hasta), a = el('a', 'bib-bloque'); a.dataset.b = COLORES[i % COLORES.length]; a.href = '#' + t.id;
+    a.append(el('span', 'rn', t.rn), el('h3', '', t.titulo.replace(/^Título [IVX]+\.\s*/, '')), el('p', 'fine', rango(t.desde, t.hasta)),
+      el('p', 'fine', x.n ? plural(x.n, 'pregunta', 'preguntas') + '. ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Sin preguntas todavía.'), el('span', 'bib-flecha'));
+    grid.append(a);
+  });
+  box.append(grid);
+}
+function vistaTitulo(t, i) {
+  const box = $('e-box'), x = datos(t.desde, t.hasta), color = COLORES[i % COLORES.length];
+  document.title = t.titulo + ' - Mi Academia';
+  $('e-h1').textContent = t.titulo;
+  $('e-ent').textContent = rango(t.desde, t.hasta) + '. ' + (x.n ? plural(x.n, 'pregunta', 'preguntas') + ', ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Todavía no hay preguntas de este título.');
+  box.replaceChildren();
+  const barra = botones(t.desde, t.hasta, x, true); barra.classList.add('est-barra');
+  const v = el('a', 'btn small ghost', 'Todos los títulos'); v.href = '#'; barra.prepend(v);
+  box.append(barra);
+  if (x.sin.length && x.n) box.append(el('p', 'fine est-sin', 'Artículos sin ninguna pregunta: ' + comprime(x.sin) + '.'));
+  const grupos = t.grupos || [{ titulo: t.titulo, desde: t.desde, hasta: t.hasta, solo: true }];
+  grupos.forEach(g => {
+    const sec = el('section', 'notas-g'); sec.dataset.b = color;
+    if (!g.solo && g.titulo !== rango(g.desde, g.hasta)) sec.append(el('h2', 'notas-t', g.titulo));
+    const lista = el('div', 'est-lista');
+    (g.tramos || [g]).forEach(s => lista.append(tarjetaTramo(g.solo ? rango(g.desde, g.hasta) : (g.tramos ? s.titulo : rango(s.desde, s.hasta)), s.desde, s.hasta)));
+    sec.append(lista); box.append(sec);
+  });
+}
+function ruta() {
+  if (!EST) return;
+  $('e-msg').replaceChildren();
+  const id = decodeURIComponent(location.hash.slice(1)), i = EST.titulos.findIndex(t => t.id === id);
+  if (i >= 0) vistaTitulo(EST.titulos[i], i); else vistaRaiz();
+  window.scrollTo(0, 0);
+}
+async function init() {
+  await loadTemario();
+  const url = NORMA_URL[N];
+  try {
+    if (!url) throw new Error('norma');
+    const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); EST = await r.json();
+  } catch (e) { $('e-ent').textContent = 'No he podido cargar la estructura. Comprueba la conexión e inténtalo de nuevo.'; return; }
+  const qs = await todasLasPreguntas();
+  QA = qs.map(q => ({ q: q, arts: refInfo(q).filter(r => r.norma === EST.norma).map(r => r.n) }));
+  ruta();
+}
+window.addEventListener('hashchange', ruta);
+init();
+</script>
+<script src="temporizador.js?v=20261120"></script>
+</body>
+</html>
