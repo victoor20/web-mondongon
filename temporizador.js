@@ -28,9 +28,9 @@
   const minTxt = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 
   /* ---------- registro de tiempo de estudio efectivo (por día, en este dispositivo) ---------- */
-  function sumaLog(seg) {
+  function sumaLog(seg, dia) {                                  // dia (AAAA-MM-DD) solo se usa al añadir tiempo a mano
     if (seg <= 0) return;
-    const log = leer(K.log, {}), k = hoyKey(); log[k] = (log[k] || 0) + seg;
+    const log = leer(K.log, {}), k = dia || hoyKey(); log[k] = (log[k] || 0) + seg;
     Object.keys(log).sort().slice(0, -60).forEach(x => { delete log[x]; });
     escribe(K.log, log);
   }
@@ -108,10 +108,18 @@
   function pausa() { st.rest = restante(); st.est = 'pausa'; guarda(); sueltaPantalla(); sync(); }
   function reinicia() { silencia(); const s = cierraRegistro(); st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); return s; }
   function finaliza() {                                          // «Terminar»: corta la cuenta atrás y deja contado lo estudiado hasta ahora
-    const descanso = st.m === 'descanso', s = reinicia();
-    msg.textContent = descanso ? 'Descanso terminado.' : s > 0 ? 'Sumados ' + fmt(s) + ' al estudio de hoy.' : 'No había tiempo que contar.';
+    const descanso = st.m === 'descanso', hecho = Math.max(0, st.dur - restante()), s = reinicia();
+    if (!descanso) { msg.textContent = s > 0 ? 'Sumados ' + fmt(s) + ' al estudio de hoy.' : 'No había tiempo que contar.'; return; }
+    msg.textContent = 'Descanso terminado.';
+    if (hecho >= 600) pregunta('Llevabas ' + minTxt(hecho) + ' en Descanso, y el descanso no suma al estudio. ¿Lo cuentas como estudio?',
+      'Sí, contar como estudio', () => { sumaLog(hecho); msg.textContent = 'Sumados ' + fmt(hecho) + ' al estudio de hoy.'; ultimo = ''; pinta(); }, 'No');
   }
-  function fija(min) { silencia(); cierraRegistro(); cfg[st.m] = min; escribe(K.cfg, cfg); st.dur = min * 60; st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
+  function fija(min, seguro) {
+    if (st.m === 'descanso' && min > 20 && !seguro) {            // un descanso largo casi siempre es un despiste: se pregunta antes
+      pregunta(min + ' min es mucho para un descanso. ¿Es tiempo de estudio?', 'Sí, pasar a Estudio', () => { modo('estudio'); fija(min, true); }, 'No, es un descanso', () => fija(min, true));
+      return;
+    }
+    silencia(); cierraRegistro(); cfg[st.m] = min; escribe(K.cfg, cfg); st.dur = min * 60; st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
   function modo(m) { silencia(); cierraRegistro(); st.m = m; st.dur = (+cfg[m] || CFG0[m]) * 60; st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); }
   function mas(min) {
     silencia();
@@ -149,7 +157,7 @@
   bOc.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
   const pill = h('button', 'tmp-pill'); pill.type = 'button'; pill.setAttribute('aria-expanded', 'false'); pill.setAttribute('aria-controls', 'tmp-panel');
   pill.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>';
-  const pillT = h('span', 'tmp-pt'); pill.append(pillT);
+  const pillM = h('span', 'tmp-pm'), pillT = h('span', 'tmp-pt'); pill.append(pillM, pillT);
   const panel = h('div', 'tmp-panel'); panel.id = 'tmp-panel'; panel.hidden = true; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Temporizador de estudio');
   mov.append(bOc, pill); raiz.append(panel, mov);
 
@@ -158,12 +166,25 @@
   cab.append(modos, cierra);
 
   const reloj = h('div', 'tmp-reloj'), tiempo = h('b', 'tmp-t'), barra = h('div', 'tmp-barra'), barI = h('i'), msg = h('p', 'tmp-msg'); msg.setAttribute('role', 'status'); msg.setAttribute('aria-live', 'polite');
-  barra.append(barI); reloj.append(tiempo, barra, msg);
+  const modoAv = h('p', 'tmp-modoav', 'Descanso: este tiempo no se cuenta como estudio.');
+  const ask = h('div', 'tmp-ask'), askT = h('p'), askB = h('div', 'tmp-ask-b'), askSi = h('button', 'tmp-sec'), askNo = h('button', 'tmp-sec');
+  [askSi, askNo].forEach(b => { b.type = 'button'; }); askB.append(askSi, askNo); ask.append(askT, askB); ask.hidden = true; ask.setAttribute('role', 'alert');
+  function pregunta(texto, txtSi, fnSi, txtNo, fnNo) {           // pregunta corta dentro del panel, sin ventanas emergentes
+    askT.textContent = texto; askSi.textContent = txtSi; askNo.textContent = txtNo; ask.hidden = false;
+    askSi.onclick = () => { ask.hidden = true; fnSi(); }; askNo.onclick = () => { ask.hidden = true; if (fnNo) fnNo(); };
+  }
+  barra.append(barI); reloj.append(tiempo, barra, modoAv, msg, ask);
   const bAl = h('button', 'tmp-alarma', 'Parar alarma'); bAl.type = 'button'; bAl.hidden = true; bAl.addEventListener('click', pararAlarma);
 
-  const acc = h('div', 'tmp-acc'), go = h('button', 'tmp-go'), bFin = h('button', 'tmp-sec', 'Terminar'), bRe = h('button', 'tmp-sec', 'Reiniciar'), bMas = h('button', 'tmp-sec', '+5 min');
+  const acc = h('div', 'tmp-acc'), go = h('button', 'tmp-go'), bFin = h('button', 'tmp-sec tmp-fin', 'Terminar'), bRe = h('button', 'tmp-sec', 'Reiniciar'), bMas = h('button', 'tmp-sec', '+5 min');
   [go, bFin, bRe, bMas].forEach(b => { b.type = 'button'; }); bFin.hidden = true; bFin.title = 'Terminar ya y contar el tiempo estudiado'; acc.append(go, bFin, bRe, bMas);
-  go.addEventListener('click', () => { if (st.est === 'corre') pausa(); else if (st.est === 'fin') siguiente(); else inicia(); if (st.est === 'corre') msg.textContent = ''; });
+  go.addEventListener('click', () => {
+    if (st.est === 'parado' && st.m === 'descanso' && st.dur > 1200) {       // descanso largo guardado de antes: se pregunta antes de empezar
+      pregunta(minTxt(st.dur) + ' es mucho para un descanso. ¿Es tiempo de estudio?', 'Sí, pasar a Estudio', () => { const m = Math.round(st.dur / 60); modo('estudio'); fija(m, true); inicia(); msg.textContent = ''; }, 'No, es un descanso', () => { inicia(); msg.textContent = ''; });
+      return;
+    }
+    if (st.est === 'corre') pausa(); else if (st.est === 'fin') siguiente(); else inicia(); if (st.est === 'corre') msg.textContent = '';
+  });
   bFin.addEventListener('click', finaliza);
   bRe.addEventListener('click', () => { const s = reinicia(); msg.textContent = s > 0 ? 'Contados ' + fmt(s) + '. Temporizador a cero.' : ''; });
   bMas.addEventListener('click', () => mas(5));
@@ -198,7 +219,20 @@
   const dDe = h('input'); dDe.type = 'number'; dDe.min = '1'; dDe.max = '180'; dDe.inputMode = 'numeric';
   dDe.addEventListener('change', () => { const v = Math.round(+dDe.value); if (v >= 1 && v <= 180) { cfg.descanso = v; escribe(K.cfg, cfg); if (st.m === 'descanso' && st.est === 'parado') { st.dur = v * 60; st.rest = st.dur; guarda(); } sync(); } else dDe.value = cfg.descanso; });
   const sonFila = h('div', 'tmp-fila'); sonFila.append(h('span', '', 'Sonido'), sel, prueba);
-  aj.append(ajs, sonFila, lBuc, fila('Volumen', vol), fila('Duración del descanso (min)', dDe), lAut, lVib, lNot, lPan, esqFila);
+  const maBox = h('div', 'tmp-ma'), maF = h('div', 'tmp-ma-f'), maMsg = h('p', 'tmp-ma-r'); maMsg.setAttribute('role', 'status');
+  const maMin = h('input'); maMin.type = 'number'; maMin.min = '1'; maMin.max = '600'; maMin.inputMode = 'numeric'; maMin.placeholder = 'min'; maMin.setAttribute('aria-label', 'Minutos de estudio que quieres añadir');
+  const maDia = h('input'); maDia.type = 'date'; maDia.setAttribute('aria-label', 'Día al que se añaden');
+  const bMa = h('button', 'tmp-sec', 'Añadir'); bMa.type = 'button';
+  bMa.addEventListener('click', () => {
+    const m = Math.round(+maMin.value), d = maDia.value || hoyKey();
+    if (!(m >= 1 && m <= 600)) { maMsg.textContent = 'Escribe entre 1 y 600 minutos.'; return; }
+    if (d > hoyKey()) { maMsg.textContent = 'No se puede añadir tiempo a un día que aún no ha llegado.'; return; }
+    sumaLog(m * 60, d); maMin.value = '';
+    maMsg.textContent = 'Añadidos ' + minTxt(m * 60) + (d === hoyKey() ? ' al estudio de hoy.' : ' al día ' + d.split('-').reverse().join('/') + '.');
+    ultimo = ''; pinta();
+  });
+  maF.append(maMin, h('span', '', 'min'), maDia, bMa); maBox.append(h('span', '', 'Añadir tiempo estudiado a mano'), maF, maMsg);
+  aj.append(ajs, sonFila, lBuc, fila('Volumen', vol), fila('Duración del descanso (min)', dDe), lAut, lVib, lNot, lPan, esqFila, maBox);
   if (!navigator.vibrate) lVib.hidden = true;
   if (!('Notification' in window)) lNot.hidden = true;
   if (!('wakeLock' in navigator)) lPan.hidden = true;
@@ -214,7 +248,7 @@
   let ultimo = '';
   function pinta() {
     const r = restante(), al = sonando(), clave = [st.m, st.est, st.dur, r, cfg.descanso, abierto(), al].join('|');
-    pillT.textContent = al ? '¡Tiempo!' : fmt(r);
+    pillT.textContent = al ? '¡Tiempo!' : fmt(r); pillM.textContent = st.m === 'descanso' && !al ? 'Descanso' : '';
     raiz.dataset.m = st.m; raiz.dataset.e = st.est; raiz.dataset.al = al ? '1' : '0';
     pill.setAttribute('aria-label', 'Temporizador de ' + ETQ[st.m].toLowerCase() + ': ' + (st.est === 'fin' ? 'terminado' : 'quedan ' + fmt(r)) + (al ? '. Toca para parar la alarma' : '. Abrir'));
     if (al) { document.title = '🔔 ¡Tiempo! · ' + titulo0; tituloPuesto = true; } else if (st.est === 'corre') { document.title = '⏱ ' + fmt(r) + ' · ' + titulo0; tituloPuesto = true; } else if (tituloPuesto) { document.title = titulo0; tituloPuesto = false; }
@@ -235,7 +269,7 @@
   function abre(enfoca, texto) {
     panel.hidden = false; pill.setAttribute('aria-expanded', 'true'); ultimo = '';
     if (texto != null) msg.textContent = texto; else if (enfoca) msg.textContent = '';
-    cfgUI(); orienta(); pinta(); if (enfoca) (sonando() ? bAl : go).focus();
+    maDia.value = hoyKey(); maDia.max = hoyKey(); cfgUI(); orienta(); pinta(); if (enfoca) (sonando() ? bAl : go).focus();
   }
   function cierraPanel(devuelve) { panel.hidden = true; pill.setAttribute('aria-expanded', 'false'); if (devuelve) pill.focus(); }
   function cfgUI() { sel.value = SONIDOS[cfg.sonido] ? cfg.sonido : 'arpa'; vol.value = cfg.vol; cVib.checked = !!cfg.vibrar; cNot.checked = !!cfg.notif; cPan.checked = !!cfg.pantalla; cAut.checked = !!cfg.auto; cBuc.checked = cfg.bucle !== false; dDe.value = cfg.descanso; }

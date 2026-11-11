@@ -733,3 +733,23 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 @media(prefers-reduced-motion:reduce){.tmp[data-al="1"] .tmp-pill{animation:none}}
 .tmp-alarma{display:block;width:100%;min-height:2.85rem;margin:0 0 .6rem;border-radius:10px;border:1.5px solid var(--azul);background:var(--azul);color:var(--on-azul);font:700 1rem/1 var(--sans);cursor:pointer}
 .tmp-alarma[hidden]{display:none}
+
+/* descanso bien distinguible, Terminar en rojo, preguntas y añadir tiempo a mano */
+.tmp-sec.tmp-fin{background:var(--ko);border-color:var(--ko);color:var(--on-azul);font-weight:700}
+.tmp-pm{font-weight:700}
+.tmp-pm:empty{display:none}
+.tmp[data-m=descanso][data-e=parado] .tmp-pill,.tmp[data-m=descanso][data-e=pausa] .tmp-pill{background:var(--b2t);border-color:var(--b2);color:var(--tinta)}
+.tmp[data-m=descanso] .tmp-panel{background:var(--b2t);border-color:var(--b2);box-shadow:inset 0 5px 0 var(--b2),0 8px 28px rgba(10,15,30,.3)}
+.tmp[data-m=descanso] .tmp-modo.on{background:var(--b2);color:var(--on-azul)}
+.tmp-modoav{display:none;margin:.45rem 0 0;font:600 .85rem/1.3 var(--sans);color:var(--tinta)}
+.tmp[data-m=descanso] .tmp-modoav{display:block}
+.tmp-ask{margin:.6rem 0 0;padding:.7rem;border:1.5px solid var(--azul);border-radius:10px;background:var(--hoja);color:var(--tinta)}
+.tmp-ask[hidden]{display:none}
+.tmp-ask p{margin:0 0 .55rem;font-size:.88rem;line-height:1.35}
+.tmp-ask-b{display:flex;flex-wrap:wrap;gap:.5rem}
+.tmp-ma{margin:.7rem 0 0;padding-top:.6rem;border-top:1px solid var(--linea);font-size:.85rem}
+.tmp-ma-f{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.45rem 0 0}
+.tmp-ma-f input{min-height:2.4rem;padding:.3rem .5rem;font-size:1rem}
+.tmp-ma-f input[type=number]{width:5rem}
+.tmp-ma-r{margin:.4rem 0 0;color:var(--ok)}
+.tmp-ma-r:empty{display:none}

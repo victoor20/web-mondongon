@@ -113,14 +113,20 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   `package/legacy/build/`, probando siempre en la tablet antes de subir de versión.
   Recuerda la última página y el zoom por documento en `ma2_visor`. El porcentaje de la barra es un
   campo escribible (50–300 %) y los botones «Ancho» y «Página» fijan el ajuste; el 100 % equivale a
-  «Ancho», porque la escala base es el ancho disponible (`fit = disp / base.width`).
+  «Ancho», porque la escala base es el ancho disponible (`fit = disp / base.width`). El ancho se mide
+  antes de que aparezca la barra de desplazamiento vertical, por eso `visor.html` reserva su hueco con
+  `html{scrollbar-gutter:stable}` (sin eso, en escritorio la hoja salía 15 px más ancha al abrir).
 - Temporizador de estudio: `temporizador.js` (cargado en Inicio, Temario, Tests, Biblioteca, visor y Ajustes;
   no en `test.html`) crea un botón flotante con panel. Estado en localStorage por dispositivo (`ma2_temp`,
   `ma2_temp_cfg`, `ma2_temp_log`; no se sincroniza). Usa la hora de fin, no cuenta segundos. Alarma generada
   con Web Audio. Estilos al final de `style.css` (`.tmp*`). Se puede arrastrar (posición y estado oculto en
   `ma2_temp_ui`, por dispositivo), ocultar con la flecha y la alarma se repite en bucle hasta pararla
   (ajuste `bucle`, 9 sonidos en `SONIDOS`). El botón «Terminar» (visible solo con la cuenta en marcha o
-  en pausa) corta la sesión y suma lo estudiado a `ma2_temp_log`; «Reiniciar» también lo suma.
+  en pausa, en rojo) corta la sesión y suma lo estudiado a `ma2_temp_log`; «Reiniciar» también lo suma.
+  El modo Descanso NO suma al estudio: por eso se distingue con color, con la palabra «Descanso» en el botón
+  flotante y con un aviso en el panel; elegir o iniciar un descanso de más de 20 min pregunta si es estudio, y
+  «Terminar» en un descanso de 10 min o más ofrece contarlo como estudio. En Ajustes del panel se puede añadir
+  tiempo estudiado a mano (minutos y día) con `sumaLog(seg, dia)`.
 - **Al cambiar algo**: sube `VERSION` en `sw.js` si cambia la lista `PRECACHE`, y sube el parámetro
   `?v=` de los recursos (`style.css?v=…`, `app.js?v=…`…) en **todas** las páginas HTML para forzar la recarga.
 
