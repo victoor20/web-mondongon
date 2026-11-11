@@ -97,8 +97,9 @@ function validateTest(d, temaIds) {
 
 /* ---------- artículos citados en la referencia de una pregunta (para ordenar por Título, Capítulo y Sección) ---------- */
 function refInfo(q) {
-  const lotcTest = /LOTC/i.test(q.testTitulo || ''), out = [];
-  String(q.ref || '').split(/\s+y\s+|\s*\/\s*|\s*;\s*/).forEach(p => {
+  const ref = String(q.ref || ''), out = [];
+  const lotcTest = /LOTC|Ley Org[áa]nica\s*2\/1979/i.test(q.testTitulo || '') || (/LOTC/i.test(ref) && !/\bCE\b/.test(ref));
+  ref.split(/\s+y\s+|\s*\/\s*|\s*;\s*/).forEach(p => {
     const m = /(\d+)/.exec(p); if (!m) return;
     out.push({ n: +m[1], norma: /LOTC/i.test(p) ? 'LOTC' : /\bCE\b/.test(p) ? 'CE' : lotcTest ? 'LOTC' : 'CE' });
   });
@@ -106,6 +107,12 @@ function refInfo(q) {
 }
 const parteArt = spec => { const m = /^([A-Za-z]+)\.(\d+)-(\d+)$/.exec(spec || ''); return m ? { norma: m[1].toUpperCase(), d: +m[2], h: +m[3] } : null; };
 const enRango = (q, spec) => { const p = parteArt(spec); return !p || refInfo(q).some(r => r.norma === p.norma && r.n >= p.d && r.n <= p.h); };
+function etiquetasTest(titulo) {                                  // «Ampliación 01 - Constitución…» -> ['Constitución', 'Ampliación']
+  const t = String(titulo || ''), out = [];
+  if (/LOTC|Ley Org[áa]nica\s*2\/1979/i.test(t)) out.push('LOTC'); else if (/Constituci[oó]n/i.test(t)) out.push('Constitución');
+  if (/^Ampliaci[oó]n/i.test(t)) out.push('Ampliación');
+  return out;
+}
 function nombreAmbito(spec) {
   const p = parteArt(spec); if (!p) return '';
   return (p.norma === 'CE' ? 'Constitución' : p.norma) + ': ' + (p.d === p.h ? 'artículo ' + p.d : 'artículos ' + p.d + ' a ' + p.h);

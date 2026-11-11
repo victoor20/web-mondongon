@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261123">
+<link rel="stylesheet" href="style.css?v=20261124">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -100,9 +100,9 @@
     <div id="notas"></div>
   </div>
 </div>
-<script src="app.js?v=20261123"></script>
-<script src="vistas.js?v=20261123"></script>
-<script src="biblioteca.js?v=20261123"></script>
+<script src="app.js?v=20261124"></script>
+<script src="vistas.js?v=20261124"></script>
+<script src="biblioteca.js?v=20261124"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -359,7 +359,7 @@ async function renderNotas(forzar) {
     grupos[t].forEach(n => {
       if (n.libre) { g.append(tarjetaLibre(n.libre)); return; }
       const c = el('article', 'nota-card');
-      c.append(el('p', 'nota-q', n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.'), el('p', 'nota-x', n.texto));
+      c.append(el('p', 'nota-q', n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.'), notaHtml(n.texto));
       if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = 'test.html?t=' + encodeURIComponent(n.q.testId); c.append(a); }
       g.append(c);
     });
@@ -367,6 +367,53 @@ async function renderNotas(forzar) {
   });
   notasCargadas = true;
 }
+const esFilaTabla = l => /^\s*\|.+\|\s*$/.test(l) || (l.indexOf('\t') > 0 && l.split('\t').filter(c => c.trim()).length >= 2);
+const celdasFila = l => l.indexOf('\t') > 0 && l.trim().charAt(0) !== '|' ? l.split('\t').map(c => c.trim()) : l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+function conNegrita(p, txt) {                                       // **texto** -> negrita, sin tocar el resto
+  txt.split(/(\*\*[^*]+\*\*)/).forEach(s => { if (/^\*\*[^*]+\*\*$/.test(s)) p.append(el('strong', '', s.slice(2, -2))); else if (s) p.append(document.createTextNode(s)); });
+  return p;
+}
+function notaHtml(txt) {                                            // párrafos, tablas (| a | b |, o celdas con tabulador) y negritas
+  const box = el('div', 'nota-x'); let par = [], tab = [];
+  const cierraPar = () => { if (par.length) { box.append(conNegrita(el('p'), par.join('\n'))); par = []; } };
+  const cierraTab = () => {
+    if (!tab.length) return;
+    const raya = r => r.every(c => /^:?-{3,}:?$/.test(c));
+    let filas = tab.map(celdasFila), cab = null;
+    if (filas.length > 1 && raya(filas[1])) { cab = filas[0]; filas = filas.slice(2); } else filas = filas.filter(r => !raya(r));
+    const w = el('div', 'tabla'), t = el('table');
+    if (cab) { const tr = el('tr'), th = el('thead'); cab.forEach(c => tr.append(conNegrita(el('th'), c))); th.append(tr); t.append(th); }
+    const tb = el('tbody'); filas.forEach(r => { const tr = el('tr'); r.forEach(c => tr.append(conNegrita(el('td'), c))); tb.append(tr); }); t.append(tb);
+    w.append(t); box.append(w); tab = [];
+  };
+  String(txt || '').replace(/\r\n?/g, '\n').split('\n').forEach(l => {
+    if (esFilaTabla(l)) { cierraPar(); tab.push(l); } else { cierraTab(); if (l.trim()) par.push(l); else cierraPar(); }
+  });
+  cierraTab(); cierraPar(); return box;
+}
+function htmlATexto(html) {                                         // lo copiado de ChatGPT trae tablas HTML: se pasan a | a | b |
+  const doc = new DOMParser().parseFromString(html, 'text/html'), out = [], A = Array.prototype;
+  const hijos = n => A.map.call(n.childNodes, dentro).join('');
+  const dentro = n => n.nodeType === 3 ? n.nodeValue.replace(/\s+/g, ' ') : n.nodeType !== 1 ? '' : /^(STRONG|B)$/.test(n.tagName) ? '**' + hijos(n).trim() + '**' : n.tagName === 'BR' ? ' ' : hijos(n);
+  const bloque = n => {
+    if (n.nodeType === 3) { const t = n.nodeValue.replace(/\s+/g, ' ').trim(); if (t) out.push(t, ''); return; }
+    if (n.nodeType !== 1 || /^(STYLE|SCRIPT)$/.test(n.tagName)) return;
+    if (n.tagName === 'TABLE') {
+      const filas = A.map.call(n.querySelectorAll('tr'), tr => A.map.call(tr.children, c => hijos(c).replace(/\s+/g, ' ').replace(/\|/g, '/').trim()));
+      filas.forEach((f, i) => { out.push('| ' + f.join(' | ') + ' |'); if (i === 0) out.push('|' + f.map(() => '---').join('|') + '|'); });
+      out.push(''); return;
+    }
+    if (n.querySelector('table,p,li,div,h1,h2,h3,h4,h5,h6')) { A.forEach.call(n.childNodes, bloque); return; }
+    const t = hijos(n).trim(); if (t) out.push(n.tagName === 'LI' ? '- ' + t : t); if (n.tagName !== 'LI') out.push('');
+  };
+  A.forEach.call(doc.body.childNodes, bloque);
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+$('n-x').addEventListener('paste', ev => {
+  const cd = ev.clipboardData, html = cd ? cd.getData('text/html') : '';
+  if (!html || !/<table/i.test(html)) return;                       // sin tabla, el pegado normal ya sirve
+  ev.preventDefault(); const ta = ev.target; ta.setRangeText(htmlATexto(html), ta.selectionStart, ta.selectionEnd, 'end');
+});
 function tarjetaLibre(n) {
   const c = el('article', 'nota-card nota-libre'), cab = el('div', 'nota-cab');
   if (n.ti) cab.append(el('h3', 'nota-ti', n.ti));
@@ -380,7 +427,7 @@ function tarjetaLibre(n) {
     clearTimeout(tB); delLibre(n.id); if (libreEdit === n.id) cierraNota(); renderNotas(true);
   });
   ac.append(bE, bB); c.append(cab);
-  if (n.x) c.append(el('p', 'nota-x', n.x));
+  if (n.x) c.append(notaHtml(n.x));
   c.append(ac); return c;
 }
 function abreNota(n) {
@@ -518,6 +565,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261123"></script>
+<script src="temporizador.js?v=20261124"></script>
 </body>
 </html>

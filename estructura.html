@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261123">
+<link rel="stylesheet" href="style.css?v=20261124">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -28,12 +28,12 @@
   <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
   <div id="e-box"></div>
 </div>
-<script src="app.js?v=20261123"></script>
-<script src="vistas.js?v=20261123"></script>
+<script src="app.js?v=20261124"></script>
+<script src="vistas.js?v=20261124"></script>
 <script>
 /* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
    para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
-const NORMA_URL = { ce: 'estructura-ce.json' };
+const NORMA_URL = { ce: 'estructura-ce.json', lotc: 'estructura-lotc.json' };
 const N = (new URLSearchParams(location.search).get('n') || 'ce').toLowerCase();
 const COLORES = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 let EST = null, QA = [];                                           // QA: cada pregunta con los artículos de esta norma que cita
@@ -96,7 +96,7 @@ function promptMas(d, h, x) {
   let max = 0; QA.forEach(z => { const m = /Ampliaci[oó]n\s*0*(\d+)/i.exec(z.q.testTitulo || ''); if (m) max = Math.max(max, +m[1]); });
   const nn = String(max + 1).padStart(2, '0'), nombre = EST.nombre.replace(/ de \d{4}$/, '');
   const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-  const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h;
+  const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h, suf = EST.norma === 'LOTC' ? ' LOTC' : '';
   const ej = (getPrefs().ejemplosInap || '').trim(), L = [];
   L.push('Actúa como redactor y revisor jurídico de preguntas para las oposiciones de ingreso libre al Cuerpo General Administrativo de la Administración del Estado (C1, INAP). Toma como referencia el estilo, la precisión y la dificultad de los cuestionarios oficiales del INAP. Las preguntas que redactes son de elaboración propia, no oficiales.', '');
   L.push('Formato del examen real: 4 opciones (A–D) con una sola correcta; cada error resta un tercio, así que las opciones incorrectas deben ser tentadoras y no absurdas.', '');
@@ -131,9 +131,9 @@ function promptMas(d, h, x) {
   L.push('**Fecha:** ' + fecha);
   L.push('**Preguntas:** (número real de preguntas que entregues)', '');
   L.push('# PREGUNTAS', '**1. Enunciado de la pregunta.**', 'A) Opción', 'B) Opción', 'C) Opción', 'D) Opción', '');
-  L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + ' |', '');
-  L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases: apartado exacto del artículo y por qué falla la opción incorrecta más tentadora.', '');
-  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; no reveles respuestas en la sección PREGUNTAS; si una pregunta enumera afirmaciones, numéralas I, II, III (con 1., 2., 3. el documento no se lee bien); escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
+  L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + suf + ' |', '');
+  L.push('**1. Respuesta D — Artículo ' + d + suf + '.** Explicación de 1-2 frases: apartado exacto del artículo y por qué falla la opción incorrecta más tentadora.', '');
+  L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; no reveles respuestas en la sección PREGUNTAS; si una pregunta enumera afirmaciones, numéralas I, II, III (con 1., 2., 3. el documento no se lee bien); escribe siempre el número del artículo con cifras (22.4), nunca con letras.' + (suf ? ' Termina siempre cada referencia con LOTC (por ejemplo, «Artículo 2.1.a LOTC»), también en la tabla del solucionario; si citas también la Constitución, añade CE a esa parte.' : ''));
   return L.join('\n');
 }
 function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
@@ -147,7 +147,7 @@ function botones(d, h, x, completo) {
   return ac;
 }
 function partes(t) {                                               // «Capítulo II. Derechos y libertades» -> ['Capítulo II', 'Derechos y libertades']
-  const m = /^((?:Cap[ií]tulo|Secci[oó]n|T[ií]tulo)\s+[^\s.]+(?:\.ª)?)\.\s+(.+)$/.exec(t);
+  const m = /^((?:Cap[ií]tulo|Secci[oó]n|T[ií]tulo)\s+[^\s.]+(?:\s+bis)?(?:\.ª)?)\.\s+(.+)$/.exec(t);
   return m ? [m[1], m[2]] : ['', t];
 }
 function cifras(x) {                                               // tres cifras grandes: preguntas, artículos con pregunta y acierto
@@ -208,13 +208,16 @@ function vistaRaiz() {
   $('e-ent').textContent = tot.n ? plural(tot.n, 'pregunta', 'preguntas') + ' cubren ' + tot.cubiertos + ' de ' + EST.ultimo + ' artículos (una pregunta puede citar más de uno). Abre un título para ver sus capítulos, practicar un tramo o pedir más preguntas.' : 'Todavía no hay preguntas de esta norma.';
   box.replaceChildren();
   const barra = el('div', 'est-barra');
+  const sel = el('div', 'est-norma');                               // cambiar entre las normas del tema
+  [['ce', 'Constitución'], ['lotc', 'LOTC']].forEach(k => { const a = el('a', 'btn small' + (k[0] === N ? '' : ' ghost'), k[1]); a.href = 'estructura.html?n=' + k[0]; if (k[0] === N) a.setAttribute('aria-current', 'page'); sel.append(a); });
+  barra.append(sel);
   if (tot.n) { const a = el('a', 'btn small', 'Test de toda la ' + EST.corto); a.href = 'test.html?t=mixto&art=' + espec(1, EST.ultimo) + '&n=20'; barra.append(a); }
   const t0 = el('a', 'btn small ghost', 'Volver al temario'); t0.href = 'temario.html#tema-' + EST.tema; barra.append(t0);
   box.append(barra);
   const grid = el('div', 'bib-grid');
   EST.titulos.forEach((t, i) => {
     const x = datos(t.desde, t.hasta), a = el('a', 'bib-bloque'); a.dataset.b = COLORES[i % COLORES.length]; a.href = '#' + t.id;
-    a.append(el('span', 'rn', t.rn), el('h3', '', t.titulo.replace(/^Título [IVX]+\.\s*/, '')), el('p', 'fine', rango(t.desde, t.hasta)),
+    a.append(el('span', 'rn', t.rn), el('h3', '', t.titulo.replace(/^Título [IVX]+(?: bis)?\.\s*/, '')), el('p', 'fine', rango(t.desde, t.hasta)),
       el('p', 'fine', x.n ? plural(x.n, 'pregunta', 'preguntas') + '. ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Sin preguntas todavía.'), el('span', 'bib-flecha'));
     grid.append(a);
   });
@@ -261,6 +264,6 @@ $('e-volver').addEventListener('click', ev => {                    // vuelve a l
 window.addEventListener('hashchange', ruta);
 init();
 </script>
-<script src="temporizador.js?v=20261123"></script>
+<script src="temporizador.js?v=20261124"></script>
 </body>
 </html>

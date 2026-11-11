@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261123">
+<link rel="stylesheet" href="style.css?v=20261124">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -55,8 +55,8 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261123"></script>
-<script src="vistas.js?v=20261123"></script>
+<script src="app.js?v=20261124"></script>
+<script src="vistas.js?v=20261124"></script>
 <script>
 let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
@@ -90,6 +90,8 @@ function fila(it) {
   if (ts.length > 1) ins.append(el('small', '', `+${ts.length - 1}`));
   const main = el('div'), meta = el('div', 'fmeta'), day = fmtDay(it.fecha);
   const corto = _temario.byId[it.tema] ? _temario.byId[it.tema].corto : (it.kind === 'html' ? 'Sin clasificar' : it.tema);
+  const et = etiquetasTest(it.titulo);
+  if (et.length) { const tg = el('span', 'tags'); et.forEach(x => tg.append(el('span', 'ntag n-' + x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''), x))); meta.append(tg); }
   meta.append(el('span', '', corto), el('span', 'org', it.fuente));
   if (it.n) meta.append(el('span', '', `${it.n} preguntas`));
   if (day) meta.append(el('span', '', `${day.d} ${day.m}`));
@@ -103,7 +105,7 @@ function fila(it) {
 function renderList() {
   const q = $('buscar').value.trim().toLowerCase(), prefs = getPrefs();
   const orden = ORDENES[prefs.orden] ? prefs.orden : 'recientes', pp = TAMANOS.includes(prefs.pp) ? prefs.pp : 10;
-  const vis = items.filter(it => matches(it) && (it.titulo + ' ' + itemTemas(it).map(temaLabel).join(' ') + ' ' + it.fuente + ' ' + fmtDate(it.fecha)).toLowerCase().includes(q)).sort(ORDENES[orden][1]);
+  const vis = items.filter(it => matches(it) && (it.titulo + ' ' + etiquetasTest(it.titulo).join(' ') + ' ' + itemTemas(it).map(temaLabel).join(' ') + ' ' + it.fuente + ' ' + fmtDate(it.fecha)).toLowerCase().includes(q)).sort(ORDENES[orden][1]);
   const paginas = pp ? Math.max(1, Math.ceil(vis.length / pp)) : 1;
   if (pagina > paginas) pagina = paginas;
   const trozo = pp ? vis.slice((pagina - 1) * pp, pagina * pp) : vis;
@@ -196,6 +198,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261123"></script>
+<script src="temporizador.js?v=20261124"></script>
 </body>
 </html>

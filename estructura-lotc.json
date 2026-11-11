@@ -1,0 +1,162 @@
+{
+ "norma": "LOTC",
+ "nombre": "Ley Orgánica 2/1979 del Tribunal Constitucional",
+ "corto": "LOTC",
+ "tema": "I-1",
+ "ultimo": 102,
+ "titulos": [
+  {
+   "id": "T1",
+   "rn": "I",
+   "titulo": "Título I. Del Tribunal Constitucional",
+   "desde": 1,
+   "hasta": 26,
+   "grupos": [
+    {
+     "titulo": "Capítulo I. Del Tribunal Constitucional, su organización y atribuciones",
+     "desde": 1,
+     "hasta": 15
+    },
+    {
+     "titulo": "Capítulo II. De los Magistrados del Tribunal Constitucional",
+     "desde": 16,
+     "hasta": 26
+    }
+   ]
+  },
+  {
+   "id": "T2",
+   "rn": "II",
+   "titulo": "Título II. De los procedimientos de declaración de inconstitucionalidad",
+   "desde": 27,
+   "hasta": 40,
+   "grupos": [
+    {
+     "titulo": "Capítulo I. Disposiciones generales",
+     "desde": 27,
+     "hasta": 30
+    },
+    {
+     "titulo": "Capítulo II. Del recurso de inconstitucionalidad",
+     "desde": 31,
+     "hasta": 34
+    },
+    {
+     "titulo": "Capítulo III. De la cuestión de inconstitucionalidad promovida por Jueces o Tribunales",
+     "desde": 35,
+     "hasta": 37
+    },
+    {
+     "titulo": "Capítulo IV. De la sentencia en procedimientos de inconstitucionalidad y de sus efectos",
+     "desde": 38,
+     "hasta": 40
+    }
+   ]
+  },
+  {
+   "id": "T3",
+   "rn": "III",
+   "titulo": "Título III. Del recurso de amparo constitucional",
+   "desde": 41,
+   "hasta": 58,
+   "grupos": [
+    {
+     "titulo": "Capítulo I. De la procedencia e interposición del recurso de amparo constitucional",
+     "desde": 41,
+     "hasta": 47
+    },
+    {
+     "titulo": "Capítulo II. De la tramitación de los recursos de amparo constitucional",
+     "desde": 48,
+     "hasta": 52
+    },
+    {
+     "titulo": "Capítulo III. De la resolución de los recursos de amparo constitucional y sus efectos",
+     "desde": 53,
+     "hasta": 58
+    }
+   ]
+  },
+  {
+   "id": "T4",
+   "rn": "IV",
+   "titulo": "Título IV. De los conflictos constitucionales",
+   "desde": 59,
+   "hasta": 75,
+   "grupos": [
+    {
+     "titulo": "Capítulo I. Disposiciones generales",
+     "desde": 59,
+     "hasta": 59
+    },
+    {
+     "titulo": "Capítulo II. De los conflictos entre el Estado y las Comunidades Autónomas o de éstas entre sí",
+     "desde": 60,
+     "hasta": 72,
+     "tramos": [
+      {
+       "titulo": "Artículos 60 y 61",
+       "desde": 60,
+       "hasta": 61
+      },
+      {
+       "titulo": "Sección 1.ª. Conflictos positivos",
+       "desde": 62,
+       "hasta": 67
+      },
+      {
+       "titulo": "Sección 2.ª. Conflictos negativos",
+       "desde": 68,
+       "hasta": 72
+      }
+     ]
+    },
+    {
+     "titulo": "Capítulo III. De los conflictos entre órganos constitucionales del Estado",
+     "desde": 73,
+     "hasta": 75
+    },
+    {
+     "titulo": "Capítulo IV. De los conflictos en defensa de la autonomía local",
+     "desde": 75,
+     "hasta": 75
+    }
+   ]
+  },
+  {
+   "id": "T5",
+   "rn": "V",
+   "titulo": "Título V. De la impugnación de disposiciones sin fuerza de Ley y resoluciones de las Comunidades Autónomas prevista en el artículo 161.2 de la Constitución",
+   "desde": 76,
+   "hasta": 77
+  },
+  {
+   "id": "T6",
+   "rn": "VI",
+   "titulo": "Título VI. De la declaración sobre la constitucionalidad de los tratados internacionales",
+   "desde": 78,
+   "hasta": 78
+  },
+  {
+   "id": "T6B",
+   "rn": "VI bis",
+   "titulo": "Título VI bis. Del recurso previo de inconstitucionalidad contra Proyectos de Estatutos de Autonomía y contra Propuestas de Reforma de Estatutos de Autonomía",
+   "desde": 79,
+   "hasta": 79
+  },
+  {
+   "id": "T7",
+   "rn": "VII",
+   "titulo": "Título VII. De las disposiciones comunes sobre procedimiento",
+   "desde": 80,
+   "hasta": 95
+  },
+  {
+   "id": "T8",
+   "rn": "VIII",
+   "titulo": "Título VIII. Del personal al servicio del Tribunal Constitucional",
+   "desde": 96,
+   "hasta": 102
+  }
+ ]
+}
