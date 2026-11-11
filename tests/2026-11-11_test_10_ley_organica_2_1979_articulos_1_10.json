@@ -1,0 +1,393 @@
+{
+  "titulo": "Test 10: Ley Orgánica 2/1979 (artículos 1–10)",
+  "tema": "I-1",
+  "fecha": "2026-11-11",
+  "preguntas": [
+    {
+      "ref": "Artículo 1.1 LOTC",
+      "q": "Según el artículo 1.1 LOTC, señale la caracterización correcta del Tribunal Constitucional.",
+      "opciones": [
+        "Es el intérprete supremo de la Constitución, independiente de los demás órganos constitucionales y sometido a la Constitución y a su ley orgánica.",
+        "Es el órgano jurisdiccional superior en todos los órdenes, independiente del Tribunal Supremo y sometido a la Constitución.",
+        "Es el intérprete supremo del ordenamiento jurídico, sometido a la Constitución y a los acuerdos del Consejo General del Poder Judicial.",
+        "Es el órgano superior de garantías constitucionales, sometido exclusivamente a la Constitución y a los reglamentos que dicte su Pleno."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 1.2 LOTC",
+      "q": "El artículo 1.2 LOTC dispone que el Tribunal Constitucional:",
+      "opciones": [
+        "Es único en su orden y extiende su jurisdicción a las comunidades autónomas que hayan asumido competencias jurisdiccionales.",
+        "Es único en su orden y extiende su jurisdicción a todo el territorio nacional.",
+        "Extiende su jurisdicción a todo el territorio nacional, sin perjuicio de los tribunales constitucionales autonómicos.",
+        "Es único en su orden y conoce exclusivamente de asuntos promovidos por órganos estatales."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 2.1.a LOTC",
+      "q": "En relación con las competencias enumeradas en el artículo 2.1 LOTC, ¿qué objeto se incluye en el recurso y la cuestión de inconstitucionalidad?",
+      "opciones": [
+        "Únicamente leyes orgánicas y leyes ordinarias aprobadas por las Cortes Generales.",
+        "Leyes y reglamentos que desarrollen directamente un derecho fundamental, con independencia de su rango.",
+        "Leyes, disposiciones normativas o actos con fuerza de ley.",
+        "Leyes y cualquier disposición general administrativa cuya invalidez determine el fallo."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 2.1.b LOTC",
+      "q": "El recurso de amparo cuya competencia reconoce el artículo 2.1.b LOTC protege:",
+      "opciones": [
+        "Todos los derechos y principios enumerados en el Título I de la Constitución.",
+        "Solo los derechos de la Sección Primera del Capítulo Segundo del Título I, sin excepciones.",
+        "Los derechos del artículo 53.3 CE que se invocan ante los tribunales ordinarios.",
+        "Los derechos y libertades públicos relacionados en el artículo 53.2 de la Constitución."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 2.1.c–d LOTC",
+      "q": "¿Cuál de los siguientes emparejamientos de competencias y sujetos se ajusta al artículo 2.1 LOTC?",
+      "opciones": [
+        "Letra c): conflictos constitucionales de competencia Estado–CC. AA. o entre CC. AA.; letra d): conflictos entre órganos constitucionales del Estado.",
+        "Letra c): conflictos entre órganos constitucionales del Estado; letra d): conflictos Estado–CC. AA.",
+        "Letra c): conflictos en defensa de la autonomía local; letra d): impugnaciones del artículo 161.2 CE.",
+        "Letra c): conflictos entre entidades locales; letra d): declaración sobre constitucionalidad de tratados."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 2.1.d bis LOTC",
+      "q": "¿Cuál es la competencia atribuida a la letra d) bis del artículo 2.1 LOTC?",
+      "opciones": [
+        "El control previo de proyectos y propuestas de reforma de estatutos de autonomía.",
+        "La declaración sobre constitucionalidad de tratados internacionales.",
+        "Los conflictos entre órganos constitucionales del Estado.",
+        "Los conflictos en defensa de la autonomía local."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 2.1.e–e bis LOTC",
+      "q": "Señale la afirmación correcta respecto de las letras e) y e) bis del artículo 2.1 LOTC.",
+      "opciones": [
+        "La letra e) regula la impugnación del Gobierno frente a actuaciones autonómicas y la e) bis el control de tratados.",
+        "La letra e) contempla declaraciones sobre constitucionalidad de tratados, y la e) bis el control previo del supuesto del artículo 79 LOTC.",
+        "La letra e) regula el control previo de estatutos y la e) bis la declaración sobre tratados.",
+        "La letra e) comprende tratados y leyes ordinarias; la e) bis permite el control previo general de cualquier ley orgánica."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 2.1.f–g LOTC",
+      "q": "Según el artículo 2.1 LOTC, ¿qué distribución de atribuciones es correcta?",
+      "opciones": [
+        "Letra f): verificar nombramientos de magistrados; letra g): impugnaciones autonómicas del 161.2 CE.",
+        "Letra f): recursos de amparo; letra g): verificación de requisitos para el nombramiento de magistrados.",
+        "Letra f): impugnaciones del artículo 161.2 CE; letra g): verificación de nombramientos de magistrados del TC.",
+        "Letra f): conflictos entre órganos constitucionales; letra g): verificación de los presupuestos del Tribunal."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 2.2 LOTC",
+      "q": "El Tribunal Constitucional acuerda aprobar un reglamento relativo a su personal. ¿Cuál de estas exigencias se ajusta al artículo 2.2 LOTC?",
+      "opciones": [
+        "Lo aprueba el Pleno, lo autoriza su presidente y se publica en el BOE.",
+        "Lo aprueba el presidente, lo autoriza el Pleno y se publica en el BOE.",
+        "Lo aprueba el Pleno y se remite al Consejo General del Poder Judicial para su autorización.",
+        "Lo aprueban las dos Salas conjuntamente y lo promulga el Gobierno para su publicación."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 2.2 y 10.1.m LOTC",
+      "q": "¿Cuál de las siguientes afirmaciones relaciona correctamente los artículos 2.2 y 10.1.m LOTC?",
+      "opciones": [
+        "El Pleno aprueba reglamentos de organización, pero su modificación corresponde exclusivamente al presidente.",
+        "Las Salas pueden modificar los reglamentos internos cuando afecten solo al personal de su Sala.",
+        "El Gobierno autoriza toda modificación de los reglamentos aprobados por el Pleno.",
+        "El Pleno tiene atribuida la aprobación y modificación de los reglamentos del Tribunal, dentro del ámbito de la LOTC."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 3 LOTC",
+      "q": "Durante un proceso constitucional surge una cuestión jurídica incidental ajena al orden constitucional y directamente relacionada con el litigio principal. ¿Qué alcance atribuye el artículo 3 LOTC al Tribunal?",
+      "opciones": [
+        "Puede resolverla definitivamente con eficacia general, siempre que sea directamente relacionada.",
+        "Puede conocerla y decidirla a los solos efectos del enjuiciamiento constitucional de la materia principal.",
+        "Solo puede elevarla al Tribunal Supremo, pues nunca puede decidir cuestiones ajenas al orden constitucional.",
+        "Puede examinarla si una parte la plantea, pero no decidirla ni siquiera para resolver el asunto constitucional."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 3 LOTC y 163 CE",
+      "q": "¿Cuál es la distinción correcta entre la facultad del artículo 3 LOTC y la cuestión de inconstitucionalidad del artículo 163 CE?",
+      "opciones": [
+        "Ambas son procedimientos que deben plantear órganos judiciales cuando dudan de una norma con rango de ley.",
+        "Ambas permiten al TC examinar cualquier reglamento aunque sea irrelevante para el litigio.",
+        "El artículo 3 permite examinar cuestiones prejudiciales o incidentales conexas; el artículo 163 regula una cuestión planteada por un órgano judicial respecto de una norma con rango de ley de cuya validez dependa el fallo.",
+        "El artículo 3 permite interponer recursos directos de inconstitucionalidad; el artículo 163 permite al TC plantearlos de oficio."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 4.1 LOTC",
+      "q": "De acuerdo con el artículo 4.1 LOTC, ¿cómo puede apreciar el Tribunal Constitucional su competencia o incompetencia?",
+      "opciones": [
+        "De oficio o a instancia de parte.",
+        "Únicamente de oficio, sin intervención de las partes.",
+        "A instancia del Ministerio Fiscal, pero no de cualquier parte del procedimiento.",
+        "Solo mediante cuestión de competencia promovida ante él por un órgano judicial."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 4.1–2 LOTC",
+      "q": "Respecto a la relación entre la jurisdicción del TC y otros órganos jurisdiccionales del Estado, ¿qué afirmación es correcta?",
+      "opciones": [
+        "Puede promoverse cuestión de competencia ante el TC cuando la suscita el Tribunal Supremo.",
+        "Las resoluciones del TC pueden ser enjuiciadas por otro órgano judicial si no son sentencias.",
+        "El TC delimita su jurisdicción, pero no puede adoptar medidas para preservarla mediante nulidad.",
+        "No cabe promoverle cuestión de jurisdicción o competencia, y sus resoluciones no pueden ser enjuiciadas por ningún órgano jurisdiccional del Estado."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 4.3 LOTC",
+      "q": "El TC decide anular una resolución que menoscaba su jurisdicción. Según el artículo 4.3 LOTC, esa decisión exige:",
+      "opciones": [
+        "Motivación y audiencia previa únicamente del órgano autor de la resolución.",
+        "Motivación y audiencia previa exclusivamente del Ministerio Fiscal.",
+        "Motivación y audiencia previa del Ministerio Fiscal y del órgano autor del acto o resolución.",
+        "Autorización previa del Ministerio Fiscal y conformidad del órgano autor de la resolución."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 5 LOTC y 159 CE",
+      "q": "Una propuesta sostiene que el TC debe tener diez magistrados, además de presidente y vicepresidente. ¿Qué respuesta se ajusta a la LOTC?",
+      "opciones": [
+        "Es correcta, porque presidente y vicepresidente son cargos ajenos a los doce magistrados.",
+        "Es incorrecta: son doce miembros con título de Magistrados del TC, incluidos quienes ocupen la presidencia y vicepresidencia.",
+        "Es correcta si el Pleno decide distribuir los diez magistrados entre las dos Salas.",
+        "Es incorrecta porque la LOTC establece catorce magistrados, dos de ellos suplentes."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 6.1 y 7 LOTC",
+      "q": "Según los artículos 6 y 7 LOTC, el Tribunal Constitucional:",
+      "opciones": [
+        "Actúa en Pleno, Sala o Sección; cuenta con dos Salas de seis magistrados cada una.",
+        "Actúa en Pleno o Sala, y las Secciones son órganos externos de apoyo administrativo.",
+        "Actúa en Pleno, Sala o Sección; cuenta con tres Salas de cuatro magistrados cada una.",
+        "Actúa en Pleno y Sala, y el Pleno tiene seis miembros distintos de los que integran las Salas."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 6.2 LOTC",
+      "q": "Faltan el presidente y el vicepresidente del TC en una reunión del Pleno. Dos magistrados tienen igual antigüedad en el cargo y son los más antiguos. ¿Quién preside?",
+      "opciones": [
+        "El más joven, por la regla ordinaria de prelación.",
+        "Quien haya sido designado presidente de la Sala Primera.",
+        "El que obtenga mayoría absoluta de los magistrados presentes.",
+        "El de mayor edad entre los magistrados empatados en antigüedad."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 6 y 7 LOTC",
+      "q": "¿Qué afirmación diferencia correctamente la sustitución de quien preside el Pleno y de quien preside la Sala Primera?",
+      "opciones": [
+        "En ambos casos corresponde primero al vicepresidente del TC.",
+        "En el Pleno sustituye primero el vicepresidente; en la Sala Primera, al faltar su presidente, preside el magistrado más antiguo.",
+        "En el Pleno y en la Sala Primera sustituye siempre el magistrado de mayor edad.",
+        "En el Pleno sustituye el magistrado más antiguo y en la Sala Primera el vicepresidente."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 7.1 LOTC",
+      "q": "El Rey acaba de nombrar a una persona magistrada del Tribunal Constitucional. ¿Qué órgano determina, conforme al artículo 7.1 LOTC, su integración en una de las dos Salas?",
+      "opciones": [
+        "El Rey mediante un nombramiento adicional para la Sala.",
+        "El presidente del TC mediante designación directa.",
+        "El Tribunal Constitucional en Pleno.",
+        "El Consejo General del Poder Judicial mediante propuesta vinculante."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 7.3 LOTC",
+      "q": "La Sala Segunda debe celebrar una sesión y su presidente ordinario está ausente. ¿Quién la presidirá conforme al artículo 7.3?",
+      "opciones": [
+        "El presidente del Tribunal Constitucional por su superioridad institucional.",
+        "El magistrado de la Sala Primera más antiguo, aunque no pertenezca a la Segunda.",
+        "El magistrado de mayor edad de la Sala Segunda, sin atender antes a la antigüedad.",
+        "El magistrado más antiguo y, si existe igualdad de antigüedad, el de mayor edad."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 8.1 LOTC",
+      "q": "De acuerdo con el artículo 8.1 LOTC, la composición de las Secciones es:",
+      "opciones": [
+        "El respectivo presidente o quien lo sustituya y dos magistrados.",
+        "Tres magistrados de igual antigüedad designados siempre por el presidente del TC.",
+        "Dos magistrados y el vicepresidente en todas las Secciones del Tribunal.",
+        "El presidente correspondiente y tres magistrados, salvo que el asunto sea de amparo."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 8.1 LOTC",
+      "q": "Según el artículo 8.1 LOTC, las Secciones se constituyen para:",
+      "opciones": [
+        "Resolver el fondo de todos los recursos y cuestiones de inconstitucionalidad, salvo avocación del Pleno.",
+        "El despacho ordinario y la decisión o propuesta, según proceda, sobre admisibilidad o inadmisibilidad de procesos constitucionales.",
+        "Examinar exclusivamente asuntos de amparo que hayan sido estimados previamente por las Salas.",
+        "Ejercer las funciones reglamentarias del Pleno cuando no pueda reunirse."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 8.2 LOTC",
+      "q": "Una Sección formula una propuesta de inadmisión relativa a un asunto de competencia del Pleno. ¿Qué dispone el artículo 8.2?",
+      "opciones": [
+        "Debe remitirla directamente a la Sala Segunda para que resuelva su admisión.",
+        "Debe consultar al presidente, quien decide en lugar del Pleno.",
+        "Debe darse cuenta al Pleno de la propuesta.",
+        "La propuesta surte automáticamente el mismo efecto que una resolución definitiva del Pleno."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 8.3 LOTC",
+      "q": "¿Cuál es la condición prevista en el artículo 8.3 para que una Sección conozca y resuelva determinados asuntos de amparo?",
+      "opciones": [
+        "Que los promueva el Defensor del Pueblo, sin intervención de la Sala.",
+        "Que el recurrente solicite su remisión a Sección y la admisión sea firme.",
+        "Que el Ministerio Fiscal proponga su resolución por Sección.",
+        "Que la Sala correspondiente le defiera el asunto conforme a la LOTC."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 9.1 LOTC",
+      "q": "En la elección de presidente del TC, ¿qué combinación de órgano elector, forma de elección y nombramiento es la prevista por la LOTC?",
+      "opciones": [
+        "Elección por el Pleno entre sus miembros mediante voto secreto y propuesta al Rey para su nombramiento.",
+        "Elección por las dos Salas mediante voto público y nombramiento por el presidente saliente.",
+        "Elección por Congreso y Senado en sesión conjunta y nombramiento por el Rey.",
+        "Designación directa del Rey entre los magistrados propuestos por el Pleno sin votación secreta."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 9.2 LOTC",
+      "q": "En la elección del presidente ningún candidato obtiene mayoría absoluta en primera votación. En la segunda, el candidato A obtiene cinco votos y B cuatro; los restantes votos se reparten entre otros candidatos. ¿Qué ocurre?",
+      "opciones": [
+        "Se repite la votación hasta que algún candidato alcance siete votos.",
+        "Se celebra necesariamente una tercera votación entre A y B.",
+        "Se propone a A, por haber obtenido el mayor número de votos en segunda votación.",
+        "Se propone al magistrado más antiguo, porque ninguno alcanza mayoría absoluta."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 9.2 LOTC",
+      "q": "Dos candidatos empatan en la segunda votación y vuelven a empatar en la última. Uno tiene más antigüedad en el cargo, pero el otro tiene mayor edad. ¿A quién se propone?",
+      "opciones": [
+        "Al de mayor edad, por ser el último criterio de desempate.",
+        "Al de mayor antigüedad en el cargo.",
+        "Al que hubiera obtenido más votos en primera votación.",
+        "A ninguno, porque deberá convocarse obligatoriamente una nueva elección."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 9.3–4 LOTC",
+      "q": "Respecto a la presidencia y vicepresidencia del Tribunal Constitucional, señale la afirmación correcta conforme al artículo 9.",
+      "opciones": [
+        "Ambos tienen mandatos de nueve años porque coinciden con su condición de magistrados.",
+        "El vicepresidente lo elige la Sala Segunda por tres años, mientras que el presidente es elegido por el Pleno.",
+        "El presidente puede ser reelegido ilimitadamente y el vicepresidente únicamente una vez.",
+        "El presidente es nombrado por tres años y puede ser reelegido una sola vez; el vicepresidente lo elige el Pleno por el mismo período de tres años."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 10.1.b–c LOTC",
+      "q": "¿Cuál de las siguientes afirmaciones es conforme con las reglas del artículo 10.1.b) y c) LOTC?",
+      "opciones": [
+        "Los recursos de mera aplicación de doctrina pueden atribuirse a una Sala en admisión, señalando el Pleno la doctrina aplicable; las cuestiones no reservadas al Pleno se deferirán a las Salas por turno objetivo.",
+        "Todos los recursos y todas las cuestiones de inconstitucionalidad deben resolverse necesariamente por el Pleno, sin excepciones.",
+        "El presidente puede atribuir directamente cualquier recurso a una Sala sin señalar doctrina; todas las cuestiones se tramitan por Secciones.",
+        "Solo las cuestiones de constitucionalidad de mera aplicación de doctrina pueden atribuirse a Salas; los recursos permanecen siempre en el Pleno."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 10.1.d bis LOTC",
+      "q": "¿Qué asunto se atribuye expresamente al Pleno por el artículo 10.1.d) bis LOTC?",
+      "opciones": [
+        "Todo recurso previo contra cualquier proyecto de ley orgánica.",
+        "La declaración de constitucionalidad de tratados internacionales antes de su firma.",
+        "El recurso previo de inconstitucionalidad contra proyectos de estatutos de autonomía y propuestas de reforma de estos.",
+        "Los conflictos en defensa de la autonomía local que no puedan conocer las Salas."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 10.1.k y m LOTC",
+      "q": "El Pleno debe decidir sobre una recusación de un magistrado y modificar un reglamento interno. ¿Qué letras del artículo 10.1 recogen esas dos competencias, respectivamente?",
+      "opciones": [
+        "Las letras j) y k).",
+        "Las letras k) y m).",
+        "Las letras i) y l).",
+        "Las letras l) y n)."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 10.1.n LOTC",
+      "q": "Una cuestión inicialmente asignada a una Sala plantea especial interés y se propone que el Pleno asuma su conocimiento. ¿Quién puede promover esa iniciativa conforme al artículo 10.1.n)?",
+      "opciones": [
+        "El presidente o una tercera parte de los magistrados.",
+        "El vicepresidente o tres magistrados, exclusivamente.",
+        "El Ministerio Fiscal o el presidente del Tribunal.",
+        "El presidente o tres magistrados."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 10.2 LOTC",
+      "q": "En el trámite de admisión de determinados asuntos del artículo 10.1 LOTC, ¿qué letras permiten atribuir a una Sala la decisión de fondo, con comunicación a las partes?",
+      "opciones": [
+        "Las letras d), e) y f).",
+        "Las letras b), c) y d).",
+        "Las letras d), f) y g).",
+        "Las letras e), f) y h)."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 10.3 LOTC",
+      "q": "¿Cuál es la formulación correcta sobre el presupuesto del Tribunal Constitucional, conforme al artículo 10.3 LOTC?",
+      "opciones": [
+        "Lo elabora el presidente y se aprueba fuera de los Presupuestos Generales del Estado.",
+        "Lo elaboran las Salas y se integra en la sección correspondiente al Poder Judicial.",
+        "Lo elabora el Pleno y se integra como sección independiente dentro de los Presupuestos Generales del Estado.",
+        "Lo elabora el Gobierno a propuesta del Pleno y se incorpora a la sección del Consejo General del Poder Judicial."
+      ],
+      "correcta": 2
+    }
+  ],
+  "fuente": "ChatGPT"
+}
