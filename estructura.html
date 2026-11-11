@@ -16,10 +16,11 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261120">
+<link rel="stylesheet" href="style.css?v=20261121">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
+  <a class="est-volver" id="e-volver" href="temario.html"><span aria-hidden="true">←</span> Atrás</a>
   <div class="pagehead">
     <h1 class="titular" id="e-h1">Constitución Española</h1>
     <p class="entradilla" id="e-ent">Cargando…</p>
@@ -27,8 +28,8 @@
   <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
   <div id="e-box"></div>
 </div>
-<script src="app.js?v=20261120"></script>
-<script src="vistas.js?v=20261120"></script>
+<script src="app.js?v=20261121"></script>
+<script src="vistas.js?v=20261121"></script>
 <script>
 /* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
    para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
@@ -88,11 +89,12 @@ function promptMas(d, h, x) {
   const nn = String(max + 1).padStart(2, '0'), nombre = EST.nombre.replace(/ de \d{4}$/, '');
   const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   const rg = d === h ? 'ARTÍCULO ' + d : 'ARTÍCULOS ' + d + '–' + h;
-  const L = [];
-  L.push('Redacta un test de oposición (Administrativo del Estado, C1) sobre la ' + EST.nombre + '.', '');
+  const ej = (getPrefs().ejemplosInap || '').trim(), L = [];
+  L.push('Eres redactor de preguntas para el examen de ingreso libre al Cuerpo General Administrativo de la Administración del Estado (C1, INAP). Redacta un test sobre la ' + EST.nombre + '.', '');
+  L.push('Formato del examen real: 4 opciones (A–D) con una sola correcta; cada error resta un tercio, así que las opciones incorrectas deben ser tentadoras y no absurdas.', '');
   L.push('Ámbito: ' + rango(d, h).toLowerCase() + '. Todas las preguntas deben ser de artículos de ese tramo.');
   L.push('Número de preguntas: 20.');
-  L.push('Dificultad: ' + (x.flojos.length ? 'media-alta, con opciones muy plausibles (números, plazos, mayorías, órganos competentes).' : 'media, algo más exigente que un test básico.'));
+  L.push('Dificultad: ' + (x.flojos.length ? 'alta, la de las preguntas más difíciles de un examen oficial.' : 'media-alta, más exigente que un test básico.'));
   if (x.sin.length) L.push('Artículos de este tramo que todavía no tienen ninguna pregunta (dales prioridad): ' + comprime(x.sin) + '.');
   if (x.flojos.length) L.push('Artículos en los que más fallo (refuérzalos con preguntas de matiz): ' + x.flojos.sort((a, c) => a - c).join(', ') + '.');
   L.push('');
@@ -101,6 +103,13 @@ function promptMas(d, h, x) {
     x.preg.forEach(z => L.push('- ' + String(z.q.q).replace(/\s+/g, ' ').trim().slice(0, 150)));
     L.push('');
   }
+  L.push('Criterios de calidad:');
+  L.push('- Basa cada pregunta en el texto literal y vigente del artículo. No inventes contenido; si dudas de un dato, no hagas esa pregunta.');
+  L.push('- Mezcla estilos: enunciado directo, «señale la opción INCORRECTA» y, en algunas, tres afirmaciones numeradas (1, 2, 3) con opciones que combinan cuáles son ciertas.');
+  L.push('- Construye los distractores con las trampas típicas: cambiar un número, un plazo, una mayoría (simple, absoluta, tres quintos), el órgano competente, el sujeto, «podrá» por «deberá», o añadir «siempre», «únicamente» o «todos».');
+  L.push('- Exige precisión: las cuatro opciones deben sonar correctas a quien ha estudiado superficialmente. No uses «todas las anteriores» ni «ninguna de las anteriores».');
+  L.push('- Reparte la letra correcta de forma equilibrada entre A, B, C y D, y varía la longitud de las opciones para que la correcta no sea siempre la más larga.', '');
+  if (ej) L.push('Ejemplos de preguntas reales del estilo que quiero. Imita su nivel y el tipo de trampa, sin copiar su contenido:', ej, '');
   L.push('Entrégalo como UN documento en Markdown con exactamente esta estructura, sin texto antes ni después:', '');
   L.push('# TEST ' + nn + ' — ' + nombre.toUpperCase() + ' (' + rg + ')');
   L.push('**Bloque ' + (b ? b.id : 'I') + ':** ' + (b ? b.titulo : ''));
@@ -109,7 +118,7 @@ function promptMas(d, h, x) {
   L.push('**Preguntas:** 20', '');
   L.push('# PREGUNTAS', '**1. Enunciado de la pregunta.**', 'A) Opción', 'B) Opción', 'C) Opción', 'D) Opción', '');
   L.push('# SOLUCIONARIO Y EXPLICACIONES', '| Nº | Correcta | Artículo |', '|---|---|---|', '| 1 | D | ' + d + ' |', '');
-  L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases.', '');
+  L.push('**1. Respuesta D — Artículo ' + d + '.** Explicación de 1-2 frases: apartado exacto del artículo y por qué falla la opción incorrecta más tentadora.', '');
   L.push('Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; no cambies los encabezados ni el orden de las secciones; escribe siempre el número del artículo con cifras (22.4), nunca con letras.');
   return L.join('\n');
 }
@@ -118,23 +127,63 @@ function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
 /* ---------- tarjetas ---------- */
 function botones(d, h, x, completo) {
   const ac = el('div', 'nota-ac');
-  if (x.n) { const a = el('a', 'mini azul', completo ? 'Hacer test de este título' : 'Hacer test'); a.href = 'test.html?t=mixto&art=' + espec(d, h) + '&n=20'; ac.append(a); }
+  if (x.n) { const a = el('a', 'mini azul', typeof completo === 'string' ? completo : completo ? 'Hacer test de este título' : 'Hacer test'); a.href = 'test.html?t=mixto&art=' + espec(d, h) + '&n=20'; ac.append(a); }
   if (x.ne) { const e = el('a', 'mini err', 'Errores (' + x.ne + ')'); e.href = 'test.html?t=errores&art=' + espec(d, h); ac.append(e); }
   const m = el('button', 'mini', 'Pedir más preguntas'); m.type = 'button'; m.addEventListener('click', () => pideMas(d, h)); ac.append(m);
   return ac;
 }
-function tarjetaTramo(titulo, d, h) {
-  const x = datos(d, h), c = el('article', 'nota-card est-tr');
-  c.append(el('h3', 'est-t', titulo));
-  if (titulo !== rango(d, h)) c.append(el('p', 'fine', rango(d, h)));
-  c.append(el('p', 'est-m', x.n ? plural(x.n, 'pregunta', 'preguntas') + '. ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Sin preguntas todavía.'));
+function partes(t) {                                               // «Capítulo II. Derechos y libertades» -> ['Capítulo II', 'Derechos y libertades']
+  const m = /^((?:Cap[ií]tulo|Secci[oó]n|T[ií]tulo)\s+[^\s.]+(?:\.ª)?)\.\s+(.+)$/.exec(t);
+  return m ? [m[1], m[2]] : ['', t];
+}
+function cifras(x) {                                               // tres cifras grandes: preguntas, artículos con pregunta y acierto
+  const f = el('div', 'est-cifras');
+  const c = (n, t) => { const s = el('span', 'est-cifra'); s.append(el('b', '', String(n)), document.createTextNode(' ' + t)); return s; };
+  f.append(c(x.n, x.n === 1 ? 'pregunta' : 'preguntas'), c(x.cubiertos + ' de ' + x.total, x.total === 1 ? 'artículo con pregunta' : 'artículos con pregunta'));
+  if (x.acc) f.append(c(x.acc.p + ' %', 'de acierto reciente'));
+  return f;
+}
+function medidor(x) { const m = el('span', 'meter est-cob'), f = el('i'); f.style.width = Math.round(x.cubiertos / x.total * 100) + '%'; m.append(f); return m; }
+function cuerpo(c, x, d, h, etiquetaTest) {
   if (x.n) {
-    const m = el('span', 'meter est-cob'), f = el('i'); f.style.width = Math.round(x.cubiertos / x.total * 100) + '%'; m.append(f); c.append(m);
-    if (x.sin.length) c.append(el('p', 'fine', 'Sin pregunta: ' + comprime(x.sin) + '.'));
-    c.append(el('p', 'fine', x.acc ? 'Acierto reciente: ' + x.acc.p + ' % (' + plural(x.acc.intentos, 'intento', 'intentos') + ').' : 'Todavía no hay datos de acierto en este tramo.'));
-  }
-  c.append(botones(d, h, x, false));
+    c.append(cifras(x), medidor(x));
+    if (x.sin.length) c.append(el('p', 'fine est-sin', 'Sin pregunta: ' + comprime(x.sin) + '.'));
+    if (!x.acc) c.append(el('p', 'fine', 'Todavía no hay datos de acierto en este tramo.'));
+  } else c.append(el('p', 'est-m', 'Sin preguntas todavía.'));
+  c.append(botones(d, h, x, etiquetaTest));
+}
+function tarjetaTramo(titulo, d, h) {                              // nivel más bajo: una sección o un artículo suelto
+  const x = datos(d, h), c = el('article', 'nota-card est-tr'), [et, nombre] = partes(titulo);
+  if (et) c.append(el('span', 'est-etq', et));
+  c.append(el('h3', 'est-t', nombre));
+  if (titulo !== rango(d, h)) c.append(el('p', 'fine est-rg', rango(d, h)));
+  cuerpo(c, x, d, h, false);
   return c;
+}
+function bloqueCap(g, color) {                                     // nivel intermedio: un capítulo con sus secciones dentro
+  const sec = el('section', 'est-cap'), x = datos(g.desde, g.hasta), [et, nombre] = partes(g.titulo);
+  sec.dataset.b = color;
+  const cab = el('header', 'est-cap-cab');
+  if (et) cab.append(el('span', 'est-etq', et));
+  cab.append(el('h2', 'est-cap-t', nombre));
+  if (g.titulo !== rango(g.desde, g.hasta)) cab.append(el('p', 'fine est-rg', rango(g.desde, g.hasta)));
+  sec.append(cab);
+  cuerpo(sec, x, g.desde, g.hasta, g.tramos ? 'Hacer test del capítulo' : false);
+  if (g.tramos) {
+    const subs = el('div', 'est-subs');
+    g.tramos.forEach(s => subs.append(tarjetaTramo(s.titulo, s.desde, s.hasta)));
+    sec.append(subs);
+  }
+  return sec;
+}
+function cajaEjemplos() {
+  const d = el('details', 'est-ej'), ta = el('textarea');
+  ta.rows = 8; ta.value = getPrefs().ejemplosInap || '';
+  ta.placeholder = 'Pega aquí de 3 a 5 preguntas de exámenes oficiales del INAP, con sus opciones.';
+  ta.addEventListener('input', () => setPref('ejemplosInap', ta.value));
+  d.append(el('summary', '', 'Ejemplos de preguntas reales para imitar el estilo (opcional)'), ta, el('p', 'fine', 'Se añaden a cada «Pedir más preguntas». Se guardan solo en este dispositivo.'));
+  if (ta.value.trim()) d.open = true;
+  return d;
 }
 
 /* ---------- vistas ---------- */
@@ -155,7 +204,7 @@ function vistaRaiz() {
       el('p', 'fine', x.n ? plural(x.n, 'pregunta', 'preguntas') + '. ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Sin preguntas todavía.'), el('span', 'bib-flecha'));
     grid.append(a);
   });
-  box.append(grid);
+  box.append(grid, cajaEjemplos());
 }
 function vistaTitulo(t, i) {
   const box = $('e-box'), x = datos(t.desde, t.hasta), color = COLORES[i % COLORES.length];
@@ -163,18 +212,15 @@ function vistaTitulo(t, i) {
   $('e-h1').textContent = t.titulo;
   $('e-ent').textContent = rango(t.desde, t.hasta) + '. ' + (x.n ? plural(x.n, 'pregunta', 'preguntas') + ', ' + x.cubiertos + ' de ' + plural(x.total, 'artículo', 'artículos') + ' con pregunta.' : 'Todavía no hay preguntas de este título.');
   box.replaceChildren();
-  const barra = botones(t.desde, t.hasta, x, true); barra.classList.add('est-barra');
-  const v = el('a', 'btn small ghost', 'Todos los títulos'); v.href = '#'; barra.prepend(v);
-  box.append(barra);
-  if (x.sin.length && x.n) box.append(el('p', 'fine est-sin', 'Artículos sin ninguna pregunta: ' + comprime(x.sin) + '.'));
-  const grupos = t.grupos || [{ titulo: t.titulo, desde: t.desde, hasta: t.hasta, solo: true }];
-  grupos.forEach(g => {
-    const sec = el('section', 'notas-g'); sec.dataset.b = color;
-    if (!g.solo && g.titulo !== rango(g.desde, g.hasta)) sec.append(el('h2', 'notas-t', g.titulo));
-    const lista = el('div', 'est-lista');
-    (g.tramos || [g]).forEach(s => lista.append(tarjetaTramo(g.solo ? rango(g.desde, g.hasta) : (g.tramos ? s.titulo : rango(s.desde, s.hasta)), s.desde, s.hasta)));
-    sec.append(lista); box.append(sec);
-  });
+  const hero = el('section', 'est-hero'); hero.dataset.b = color;
+  const hc = el('div', 'est-hero-c');
+  hero.append(el('span', 'est-rn', t.rn), hc);
+  cuerpo(hc, x, t.desde, t.hasta, true);
+  box.append(hero);
+  const grupos = t.grupos || [];
+  if (!grupos.length) box.append(el('p', 'fine', 'Este título no se divide en capítulos.'));
+  grupos.forEach(g => box.append(bloqueCap(g, color)));
+  box.append(cajaEjemplos());
 }
 function ruta() {
   if (!EST) return;
@@ -194,9 +240,13 @@ async function init() {
   QA = qs.map(q => ({ q: q, arts: refInfo(q).filter(r => r.norma === EST.norma).map(r => r.n) }));
   ruta();
 }
+$('e-volver').addEventListener('click', ev => {                    // vuelve a la página de antes; si no hay, al temario
+  ev.preventDefault();
+  if (history.length > 1) history.back(); else location.href = 'temario.html#tema-' + (EST ? EST.tema : 'I-1');
+});
 window.addEventListener('hashchange', ruta);
 init();
 </script>
-<script src="temporizador.js?v=20261120"></script>
+<script src="temporizador.js?v=20261121"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@ const CFG = {
 const FUENTES = ['ChatGPT', 'Claude', 'Gemini', 'Propio', 'Academia'];
 // ----------------------------------------------------------------------
 
-const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', cursoT: 'ma2_cursos_t', bloc2: 'ma2_bloc2', sync: 'ma2_sync', estudio: 'ma2_estudio', libres: 'ma2_libres' };
+const LS = { hist: 'ma2_historial', err: 'ma2_errores', list: 'ma2_lista', dud: 'ma2_dudosas', notas: 'ma2_notas', prefs: 'ma2_prefs', bloc: 'ma2_bloc', curso: 'ma2_curso:', cursoT: 'ma2_cursos_t', bloc2: 'ma2_bloc2', sync: 'ma2_sync', estudio: 'ma2_estudio', libres: 'ma2_libres', tarjetas: 'ma2_tarjetas' };
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 const $ = id => document.getElementById(id);
@@ -344,6 +344,27 @@ function delLibre(id) {
   if (raw[id] && !raw[id].del) { raw[id] = { del: true, t: nowT() }; jset(localStorage, LS.libres, raw); scheduleSync(); }
 }
 
+/* ---------- tarjetas de repaso (pregunta y respuesta, sincronizadas; repaso espaciado por cajas) ---------- */
+const tarjetasRaw = () => jget(localStorage, LS.tarjetas, {});
+const getTarjetas = () => Object.entries(vivos(tarjetasRaw())).map(([id, v]) => ({ ...v, id: id })).sort((a, b) => (a.t || 0) - (b.t || 0));
+const CAJAS = [0, 1, 3, 7, 14, 30];                                  // días hasta el siguiente repaso según la caja (0 = vuelve hoy)
+const tarjetaToca = k => !k.s || k.s <= hoyISO();
+function setTarjeta(id, d) {
+  const raw = tarjetasRaw(), ant = id && raw[id] && !raw[id].del ? raw[id] : {};
+  id = id || ('k' + nowT().toString(36) + Math.random().toString(36).slice(2, 5));
+  raw[id] = { p: (d.p || '').trim(), r: (d.r || '').trim(), tema: d.tema || '', et: (d.et || '').trim(), c: ant.c || 0, s: ant.s || '', t: nowT() };
+  jset(localStorage, LS.tarjetas, raw); scheduleSync(); return id;
+}
+function delTarjeta(id) {
+  const raw = tarjetasRaw();
+  if (raw[id] && !raw[id].del) { raw[id] = { del: true, t: nowT() }; jset(localStorage, LS.tarjetas, raw); scheduleSync(); }
+}
+function repasaTarjeta(id, sabia) {
+  const raw = tarjetasRaw(), k = raw[id]; if (!k || k.del) return;
+  const c = sabia ? Math.min((k.c || 0) + 1, CAJAS.length - 1) : 0, f = new Date(); f.setDate(f.getDate() + CAJAS[c]);
+  raw[id] = { ...k, c: c, s: hoyISO(f), t: nowT() }; jset(localStorage, LS.tarjetas, raw); scheduleSync();
+}
+
 function statsFor(id) {                                              // resultados de un test concreto
   const h = getHist().filter(x => x.id === id);
   if (!h.length) return null;
@@ -396,7 +417,7 @@ function cursoDel(key) {
 }
 let _thr = null;
 function scheduleSyncSoon(ms) { if (!getToken() || _thr) return; _thr = setTimeout(() => { _thr = null; syncNow(); }, ms || 30000); }
-function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), cursos: cursosRaw(), estudio: estudioRaw(), libres: libresRaw() }; }
+function snapshot() { return { v: SYNC_VER, hist: getHist(), err: jget(localStorage, LS.err, {}), dud: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), cursos: cursosRaw(), estudio: estudioRaw(), libres: libresRaw(), tarjetas: tarjetasRaw() }; }
 function mergeMap(a, b) {
   const out = {}, limite = Date.now() - 90 * 864e5;
   new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(k => {
@@ -413,12 +434,12 @@ function mergeSnap(a, b) {
   [...(a.hist || []), ...(b.hist || [])].forEach(e => { const k = e.date + '|' + e.id; if (!vistos.has(k)) { vistos.add(k); hist.push(e); } });
   hist.sort((x, y) => (y.date || '').localeCompare(x.date || ''));
   const ba = a.bloc || { x: '', t: 0 }, bb = b.bloc || { x: '', t: 0 };
-  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), cursos: mergeMap(a.cursos, b.cursos), estudio: mergeMap(a.estudio, b.estudio), libres: mergeMap(a.libres, b.libres), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
+  return { v: SYNC_VER, hist: hist.slice(0, 1000), err: mergeMap(a.err, b.err), dud: mergeMap(a.dud, b.dud), notas: mergeMap(a.notas, b.notas), cursos: mergeMap(a.cursos, b.cursos), estudio: mergeMap(a.estudio, b.estudio), libres: mergeMap(a.libres, b.libres), tarjetas: mergeMap(a.tarjetas, b.tarjetas), bloc: (bb.t || 0) > (ba.t || 0) ? bb : ba };
 }
 function applySnap(s) {
   jset(localStorage, LS.hist, s.hist); jset(localStorage, LS.err, s.err); jset(localStorage, LS.dud, s.dud);
   jset(localStorage, LS.notas, s.notas); jset(localStorage, LS.bloc2, s.bloc);
-  jset(localStorage, LS.estudio, s.estudio || {}); jset(localStorage, LS.libres, s.libres || {});
+  jset(localStorage, LS.estudio, s.estudio || {}); jset(localStorage, LS.libres, s.libres || {}); jset(localStorage, LS.tarjetas, s.tarjetas || {});
   const tumbas = {};
   Object.entries(s.cursos || {}).forEach(([q, v]) => {
     const k = LS.curso + q;
@@ -498,7 +519,7 @@ function migrarTrasEditar(oldQs, newQs) {
 }
 
 function exportProgress() {
-  const data = { version: 4, historial: getHist(), errores: jget(localStorage, LS.err, {}), dudosas: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), estudio: estudioRaw(), libres: libresRaw() };
+  const data = { version: 4, historial: getHist(), errores: jget(localStorage, LS.err, {}), dudosas: jget(localStorage, LS.dud, {}), notas: notasRaw(), bloc: blocRaw(), estudio: estudioRaw(), libres: libresRaw(), tarjetas: tarjetasRaw() };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
   const a = el('a'); a.href = URL.createObjectURL(blob);
   a.download = `mi-academia-progreso-${new Date().toISOString().slice(0, 10)}.json`;
@@ -517,6 +538,7 @@ function importProgress(file, done) {
       if (d.notas && typeof d.notas === 'object') jset(localStorage, LS.notas, d.notas);
       if (d.estudio && typeof d.estudio === 'object') jset(localStorage, LS.estudio, mergeMap(estudioRaw(), d.estudio));
       if (d.libres && typeof d.libres === 'object') jset(localStorage, LS.libres, mergeMap(libresRaw(), d.libres));
+      if (d.tarjetas && typeof d.tarjetas === 'object') jset(localStorage, LS.tarjetas, mergeMap(tarjetasRaw(), d.tarjetas));
       if (typeof d.bloc === 'string') jset(localStorage, LS.bloc2, { x: d.bloc, t: nowT() });
       else if (d.bloc && typeof d.bloc === 'object') jset(localStorage, LS.bloc2, d.bloc);
       done(true);
