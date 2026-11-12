@@ -1,0 +1,8 @@
+# Ajustes locales de Claude Code (los de equipo están en .claude/settings.json)
+.claude/settings.local.json
+# Sistema y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+node_modules/

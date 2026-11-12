@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261127">
+<link rel="stylesheet" href="style.css?v=20261128">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -40,14 +40,29 @@
 
   <section class="hoja sync" id="est-box" style="margin-top:1rem">
     <h2>Tiempo de estudio</h2>
-    <p class="estado-s">Elige un día y escribe cuántos minutos estudiaste en total. Sustituye lo que había, así que sirve para quitar tiempo de más o añadir el que falta.</p>
-    <div class="ce-dias" id="est-dias"></div>
-    <form class="ce-f" id="est-form" autocomplete="off">
-      <label>Día <input type="date" id="est-dia"></label>
-      <label>Total ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
-      <button type="submit" class="btn small">Guardar</button>
-    </form>
-    <p class="estado-s" id="est-msg" role="status" style="margin-top:.6rem"></p>
+    <p class="estado-s">Lo que llevas con el temporizador, sumando todos tus dispositivos.</p>
+    <div class="est-hs" id="est-res"></div>
+    <div id="est-sem"></div>
+    <button type="button" class="btn small ghost" id="est-abre" aria-expanded="false" aria-controls="est-corr">Corregir un día</button>
+    <div id="est-corr" class="est-corr hide">
+      <p class="estado-s">Elige un día del calendario y escribe cuántos minutos estudiaste en total. Sustituye lo que había: sirve para quitar tiempo de más o añadir el que falta.</p>
+      <div class="cal">
+        <div class="cal-cab">
+          <button type="button" class="cal-nav" id="cal-ant" aria-label="Mes anterior"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <b class="cal-t" id="cal-t" aria-live="polite"></b>
+          <button type="button" class="cal-nav" id="cal-sig" aria-label="Mes siguiente"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="cal-sem" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+        <div class="cal-dias" id="cal-dias"></div>
+      </div>
+      <button type="button" class="mini" id="cal-hoy">Ir a hoy</button>
+      <p class="ce-sel" id="est-sel"></p>
+      <form class="ce-f" id="est-form" autocomplete="off">
+        <label>Total ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
+        <button type="submit" class="btn small">Guardar</button>
+      </form>
+      <p class="estado-s" id="est-msg" role="status" style="margin-top:.6rem"></p>
+    </div>
   </section>
 
   <section class="hoja sync" id="off-box" style="margin-top:1rem">
@@ -102,8 +117,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261127"></script>
-<script src="vistas.js?v=20261127"></script>
+<script src="app.js?v=20261128"></script>
+<script src="vistas.js?v=20261128"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -172,32 +187,60 @@ const tamSel = $('tam'); tamSel.value = getPrefs().texto || 'normal';
 tamSel.addEventListener('change', () => { setPref('texto', tamSel.value); applyTam(tamSel.value); });
 $('act-btn').addEventListener('click', e => refrescarTodo(e.currentTarget));
 const minTx = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
-const etiquetaDia = f => new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-function pintaEst() {                                               // los últimos 14 días; tocar uno lo elige para corregirlo
-  const box = $('est-dias'); box.replaceChildren();
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(); d.setDate(d.getDate() - i); const f = hoyISO(d), s = estudioDia(f);
-    const b = el('button', 'ce-d' + (f === $('est-dia').value ? ' on' : '')); b.type = 'button';
-    b.append(el('span', '', i === 0 ? 'Hoy' : etiquetaDia(f)), el('b', '', s >= 60 ? minTx(s) : '0 min'));
-    b.addEventListener('click', () => { $('est-dia').value = f; cargaDia(); });
-    box.append(b);
+const txMin = s => (s >= 60 ? minTx(s) : '0 min');
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const diaLargo = f => new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const diaCorto = f => new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+let diaSel = hoyISO(), calMes = new Date(); calMes = new Date(calMes.getFullYear(), calMes.getMonth(), 1);
+function pintaRes() {                                               // cifras y gráfico de la semana
+  const sem = estudioSemana(), hoy = hoyISO(), max = Math.max.apply(null, sem.dias.map(d => d.s).concat([1])), L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  let t7 = 0; for (let i = 0; i < 7; i++) { const d = new Date(); d.setDate(d.getDate() - i); t7 += estudioDia(hoyISO(d)); }
+  const cif = $('est-res'); cif.replaceChildren();
+  [['Hoy', sem.hoy], ['Esta semana', sem.total], ['Media diaria (7 días)', t7 / 7]].forEach(([n, s]) => { const c = el('div', 'est-h'); c.append(el('b', '', txMin(s)), el('span', '', n)); cif.append(c); });
+  const g = el('div', 'est-dias'); g.setAttribute('role', 'img');
+  g.setAttribute('aria-label', 'Estudio de cada día de esta semana: ' + sem.dias.map((d, i) => L[i] + ' ' + txMin(d.s)).join(', '));
+  sem.dias.forEach((d, i) => {
+    const c = el('div', 'est-dia' + (d.f === hoy ? ' hoy' : '')), b = el('i');
+    b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px'; c.append(b, el('span', '', L[i])); g.append(c);
+  });
+  $('est-sem').replaceChildren(g);
+}
+function pintaCal() {                                               // calendario del mes con el mes y el año siempre a la vista
+  const y = calMes.getFullYear(), mes = calMes.getMonth(), hoy = hoyISO(), h = new Date(), box = $('cal-dias');
+  $('cal-t').textContent = cap(calMes.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }));
+  $('cal-sig').disabled = y > h.getFullYear() || (y === h.getFullYear() && mes >= h.getMonth());
+  box.replaceChildren();
+  for (let i = (calMes.getDay() + 6) % 7; i > 0; i--) box.append(el('span'));
+  for (let d = 1, n = new Date(y, mes + 1, 0).getDate(); d <= n; d++) {
+    const f = hoyISO(new Date(y, mes, d)), s = estudioDia(f), b = el('button', 'cal-d' + (f === diaSel ? ' on' : '') + (f === hoy ? ' hoy' : '') + (s >= 60 ? ' tiene' : ''), String(d));
+    b.type = 'button'; b.disabled = f > hoy; b.setAttribute('aria-label', diaCorto(f) + ': ' + (s >= 60 ? minTx(s) : 'sin estudio')); b.setAttribute('aria-pressed', f === diaSel ? 'true' : 'false');
+    b.addEventListener('click', () => { diaSel = f; cargaDia(); }); box.append(b);
   }
 }
-function cargaDia() { const f = $('est-dia').value || hoyISO(); $('est-min').value = Math.round(estudioDia(f) / 60); $('est-msg').textContent = ''; pintaEst(); }
-$('est-dia').value = hoyISO(); $('est-dia').max = hoyISO(); $('est-dia').addEventListener('change', cargaDia);
+function cargaDia() {
+  $('est-min').value = Math.round(estudioDia(diaSel) / 60); $('est-msg').textContent = '';
+  $('est-sel').textContent = cap(diaLargo(diaSel)) + ' · ' + txMin(estudioDia(diaSel)); pintaCal();
+}
+$('est-abre').addEventListener('click', () => {
+  const abre = $('est-corr').classList.toggle('hide') === false;
+  $('est-abre').setAttribute('aria-expanded', abre ? 'true' : 'false'); $('est-abre').textContent = abre ? 'Ocultar la corrección' : 'Corregir un día';
+});
+$('cal-ant').addEventListener('click', () => { calMes = new Date(calMes.getFullYear(), calMes.getMonth() - 1, 1); pintaCal(); });
+$('cal-sig').addEventListener('click', () => { calMes = new Date(calMes.getFullYear(), calMes.getMonth() + 1, 1); pintaCal(); });
+$('cal-hoy').addEventListener('click', () => { const h = new Date(); diaSel = hoyISO(); calMes = new Date(h.getFullYear(), h.getMonth(), 1); cargaDia(); });
 $('est-form').addEventListener('submit', e => {
-  e.preventDefault(); const f = $('est-dia').value, txt = $('est-min').value.trim(), m = Math.round(+txt), msg = $('est-msg');
-  if (!f) { msg.textContent = 'Elige un día.'; return; }
+  e.preventDefault(); const f = diaSel, txt = $('est-min').value.trim(), m = Math.round(+txt), msg = $('est-msg');
   if (f > hoyISO()) { msg.textContent = 'No se puede poner tiempo en un día que aún no ha llegado.'; return; }
   if (txt === '' || !(m >= 0 && m <= 1440)) { msg.textContent = 'Escribe entre 0 y 1440 minutos.'; return; }
-  estudioCorrige(f, m * 60); pintaEst();
-  msg.textContent = 'Guardado: ' + (m >= 60 ? minTx(m * 60) : m + ' min') + ' el ' + etiquetaDia(f) + '.';
+  estudioCorrige(f, m * 60); pintaRes(); pintaCal(); $('est-sel').textContent = cap(diaLargo(f)) + ' · ' + txMin(m * 60);
+  msg.textContent = 'Guardado: ' + (m >= 60 ? minTx(m * 60) : m + ' min') + ' el ' + diaCorto(f) + '.';
   if (window.MaTemporizador && window.MaTemporizador.repinta) window.MaTemporizador.repinta();
 });
+pintaRes();
 cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261127"></script>
+<script src="temporizador.js?v=20261128"></script>
 </body>
 </html>

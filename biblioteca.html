@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261127">
+<link rel="stylesheet" href="style.css?v=20261128">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -56,31 +56,41 @@
   </div>
   <div role="tabpanel" id="panel-tarjetas" aria-labelledby="tab-tarjetas" class="hide">
     <div class="tj-barra">
-      <button type="button" class="btn small" id="t-repasar">Repasar</button>
-      <select id="t-filtro" aria-label="Repasar solo un tema"></select>
+      <button type="button" class="btn small" id="t-repasar">Estudiar hoy</button>
+      <button type="button" class="btn small ghost" id="t-todas">Estudiar todas</button>
+      <select id="t-filtro" aria-label="Filtrar por tema"></select>
       <button type="button" class="btn small" id="t-nueva">Nueva tarjeta</button>
       <button type="button" class="btn small ghost" id="t-varias">Pegar varias</button>
     </div>
-    <div id="t-rep" class="tj-rep hide" aria-live="polite"></div>
+    <div class="fc-ops">
+      <label class="fc-op"><input type="checkbox" id="t-azar"> Orden aleatorio</label>
+      <label class="fc-op"><input type="checkbox" id="t-inv"> Mostrar primero la respuesta</label>
+    </div>
+    <div id="t-ets-f" class="fc-chips hide" role="group" aria-label="Filtrar por etiqueta"></div>
+    <div id="t-rep" class="fc-estudio hide"></div>
     <form id="t-form" class="bib-form hide" autocomplete="off">
       <h2 id="t-form-t">Nueva tarjeta</h2>
       <label class="bf-f">Pregunta o concepto <textarea id="t-p" rows="3"></textarea></label>
       <label class="bf-f">Respuesta <textarea id="t-r" rows="4"></textarea></label>
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="t-tema"></select></label>
-        <label class="bf-f">Etiqueta <input type="text" id="t-et" list="t-ets" maxlength="40" placeholder="Definición"></label>
+        <label class="bf-f">Etiqueta <input type="text" id="t-et" maxlength="40" placeholder="Elige una o escribe una nueva"></label>
       </div>
-      <datalist id="t-ets"><option value="Definición"><option value="Plazo o número"><option value="Órgano o competencia"><option value="Lista"></datalist>
+      <div class="fc-chips" id="t-et-ch" aria-label="Etiquetas disponibles"></div>
       <p class="bib-msg" id="t-msg" role="alert"></p>
       <div class="bf-ac"><button type="submit" class="btn">Guardar tarjeta</button><button type="button" class="btn ghost" id="t-cancel">Cancelar</button></div>
     </form>
     <form id="t-form2" class="bib-form hide" autocomplete="off">
       <h2>Pegar varias tarjetas</h2>
       <label class="bf-f">Una por línea, con la pregunta y la respuesta separadas por una barra vertical (|) <textarea id="t-lote" rows="8" placeholder="Plazo para interponer recurso de alzada | Un mes si el acto es expreso"></textarea></label>
-      <label class="bf-f">Tema <select id="t-tema2"></select></label>
+      <div class="bf-fila">
+        <label class="bf-f">Tema <select id="t-tema2"></select></label>
+        <label class="bf-f">Etiqueta (opcional) <input type="text" id="t-et2" maxlength="40" placeholder="Para todas las tarjetas"></label>
+      </div>
       <p class="bib-msg" id="t-msg2" role="alert"></p>
       <div class="bf-ac"><button type="submit" class="btn">Crear tarjetas</button><button type="button" class="btn ghost" id="t-cancel2">Cancelar</button></div>
     </form>
+    <div id="t-stats" class="est-hs fc-stats hide"></div>
     <div id="tarjetas"></div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
@@ -103,9 +113,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261127"></script>
-<script src="vistas.js?v=20261127"></script>
-<script src="biblioteca.js?v=20261127"></script>
+<script src="app.js?v=20261128"></script>
+<script src="vistas.js?v=20261128"></script>
+<script src="biblioteca.js?v=20261128"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -488,53 +498,103 @@ $('n-form').addEventListener('submit', e => {
   setLibre(libreEdit, { ti: $('n-ti').value, x: $('n-x').value, tema: $('n-tema').value, et: $('n-et').value });
   cierraNota(); renderNotas(true);
 });
-/* ---------- tarjetas ---------- */
-let tjEdit = null, cola = [], tjHechas = 0, tjFallos = 0;
+/* ---------- tarjetas: se giran para ver la respuesta; modo estudio con ✕ / ✓ y repaso espaciado ---------- */
+let tjEdit = null, tjEtq = '', est = null;                          // est = sesión de estudio: { ids, i, res: { id: 's' | 'n' } }
 const fechaCorta = f => new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+const ETQ_BASE = ['Definición', 'Plazo o número', 'Órgano o competencia', 'Lista'];
+const ESTADO_TX = { nueva: 'Nueva', aprendiendo: 'Aprendiendo', dominada: 'Dominada' };
+const tjTema = k => (k.tema && _temario.byId[k.tema] ? k.tema : 'General');
+const tjEstado = k => (!k.s ? 'nueva' : (k.c || 0) >= 4 ? 'dominada' : 'aprendiendo');
+const tjEtiquetas = () => { const s = []; getTarjetas().forEach(k => { if (k.et && s.indexOf(k.et) < 0) s.push(k.et); }); return s.sort((a, b) => a.localeCompare(b, 'es')); };
+const etqTodas = () => { const t = ETQ_BASE.slice(); tjEtiquetas().forEach(e => { if (!t.some(x => x.toLowerCase() === e.toLowerCase())) t.push(e); }); return t; };
+const normEt = v => { v = v.trim(); return etqTodas().find(x => x.toLowerCase() === v.toLowerCase()) || v; };
+const filtraTj = lista => { const t = $('t-filtro').value; return lista.filter(k => (!t || tjTema(k) === t) && (!tjEtq || (k.et || '') === tjEtq)); };
+const mezcla = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)), x = a[i]; a[i] = a[j]; a[j] = x; } return a; };
+const SVG = {
+  x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  iz: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  de: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+};
+const tjCifras = (cont, pares) => { cont.replaceChildren(); pares.forEach(([n, v]) => { const c = el('div', 'est-h'); c.append(el('b', '', String(v)), el('span', '', n)); cont.append(c); }); };
+
+/* la tarjeta: delante la pregunta, detrás la respuesta; al tocarla (o con espacio) da la vuelta */
+function carta(k, grande) {
+  const inv = grande && $('t-inv').checked, c = el('div', 'fc' + (grande ? ' fc-g' : ''));
+  c.dataset.b = bloqueOf(k.tema) || 'x'; c.tabIndex = 0; c.setAttribute('role', 'button'); c.setAttribute('aria-pressed', 'false');
+  const cara = (cls, lado, txt, pista) => {
+    const f = el('div', 'fc-cara ' + cls), cab = el('div', 'fc-cab');
+    cab.append(el('span', 'fc-lado', lado)); if (k.et) cab.append(el('span', 'fc-et', k.et));
+    f.append(cab, el('p', 'fc-txt', txt)); if (pista) f.append(el('span', 'fc-pista', pista)); return f;
+  };
+  const a = cara('fc-frente', inv ? 'Respuesta' : 'Pregunta', inv ? k.r : k.p, grande ? 'Toca la tarjeta o pulsa espacio para girarla' : 'Toca para girar');
+  const b = cara('fc-dorso', inv ? 'Pregunta' : 'Respuesta', inv ? k.p : k.r, ''), int = el('div', 'fc-int');
+  b.setAttribute('aria-hidden', 'true'); int.append(a, b); c.append(int);
+  const gira = () => { const v = c.classList.toggle('vuelta'); c.setAttribute('aria-pressed', v ? 'true' : 'false'); a.setAttribute('aria-hidden', v ? 'true' : 'false'); b.setAttribute('aria-hidden', v ? 'false' : 'true'); };
+  c.addEventListener('click', gira);
+  c.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); gira(); } });
+  c.gira = gira; return c;
+}
+
 function renderTarjetas() {
-  const box = $('tarjetas'), todas = getTarjetas(), toca = todas.filter(tarjetaToca);
+  const box = $('tarjetas'), todas = getTarjetas();
   box.replaceChildren();
   const sel = $('t-filtro'), prev = sel.value, temas = [];
-  todas.forEach(k => { const t = k.tema && _temario.byId[k.tema] ? k.tema : 'General'; if (temas.indexOf(t) < 0) temas.push(t); });
+  todas.forEach(k => { const t = tjTema(k); if (temas.indexOf(t) < 0) temas.push(t); });
   const orden = Object.keys(_temario.byId); temas.sort((a, b) => (orden.indexOf(a) + 1 || 999) - (orden.indexOf(b) + 1 || 999));
   sel.replaceChildren(new Option('Todos los temas', ''));
   temas.forEach(t => sel.append(new Option(t === 'General' ? 'Sin tema' : temaLabel(t), t)));
   sel.value = temas.indexOf(prev) >= 0 ? prev : '';
-  const pend = filtraTj(toca).length;
-  $('t-repasar').textContent = pend ? 'Repasar (' + pend + ')' : 'Repasar';
-  $('t-repasar').disabled = !todas.length;
+  const ets = tjEtiquetas(); if (tjEtq && ets.indexOf(tjEtq) < 0) tjEtq = '';
+  const fe = $('t-ets-f'); fe.replaceChildren(); fe.classList.toggle('hide', !ets.length);
+  [''].concat(ets).forEach(e => {
+    const b = el('button', 'fc-chip' + (e === tjEtq ? ' on' : ''), e || 'Todas las etiquetas'); b.type = 'button'; b.setAttribute('aria-pressed', e === tjEtq ? 'true' : 'false');
+    b.addEventListener('click', () => { tjEtq = e; renderTarjetas(); }); fe.append(b);
+  });
+  const vis = filtraTj(todas), pend = vis.filter(tarjetaToca).length, dom = vis.filter(k => tjEstado(k) === 'dominada').length;
+  $('t-repasar').textContent = pend ? 'Estudiar hoy (' + pend + ')' : 'Estudiar hoy';
+  $('t-todas').textContent = vis.length ? 'Estudiar todas (' + vis.length + ')' : 'Estudiar todas';
+  $('t-repasar').disabled = $('t-todas').disabled = !vis.length;
+  const st = $('t-stats'); st.classList.toggle('hide', !todas.length); tjCifras(st, [['Tarjetas', vis.length], ['Para hoy', pend], ['Dominadas', dom]]);
   if (!todas.length) {
-    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes tarjetas'), el('p', '', 'Crea una con «Nueva tarjeta» o pega varias de golpe. Cada día te saldrán para repasar las que toquen: las que fallas vuelven antes. Se sincronizan entre tus dispositivos.')); box.append(v); return;
+    const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes tarjetas'), el('p', '', 'Crea una con «Nueva tarjeta» o pega varias de golpe. Cada tarjeta tiene la pregunta delante y la respuesta detrás: pruébate, gírala y marca si la sabías. Las que fallas vuelven antes. Se sincronizan entre tus dispositivos.')); box.append(v); return;
   }
+  if (!vis.length) { const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Ninguna tarjeta con ese filtro'), el('p', '', 'Cambia el tema o la etiqueta para ver más.')); box.append(v); return; }
   const grupos = {};
-  todas.forEach(k => { const t = k.tema && _temario.byId[k.tema] ? k.tema : 'General'; (grupos[t] = grupos[t] || []).push(k); });
-  temas.forEach(t => {
-    const g = el('section', 'notas-g'); g.dataset.b = bloqueOf(t) || 'x';
+  vis.forEach(k => { (grupos[tjTema(k)] = grupos[tjTema(k)] || []).push(k); });
+  temas.filter(t => grupos[t]).forEach(t => {
+    const g = el('section', 'notas-g'), gr = el('div', 'fc-grid'); g.dataset.b = bloqueOf(t) || 'x';
     g.append(el('h2', 'notas-t', t === 'General' ? 'Sin tema' : temaLabel(t)));
-    grupos[t].forEach(k => g.append(tarjetaTj(k)));
-    box.append(g);
+    grupos[t].forEach(k => gr.append(itemTj(k))); g.append(gr); box.append(g);
   });
 }
-const filtraTj = lista => { const t = $('t-filtro').value; return t ? lista.filter(k => (k.tema && _temario.byId[k.tema] ? k.tema : 'General') === t) : lista; };
-function tarjetaTj(k) {
-  const c = el('article', 'nota-card nota-libre'), cab = el('div', 'nota-cab');
-  if (k.et) cab.append(el('span', 'nota-et', k.et));
-  c.append(cab, el('p', 'nota-q', k.p), el('p', 'nota-x', k.r));
-  c.append(el('p', 'tj-meta', tarjetaToca(k) ? 'Toca repasarla hoy.' : 'Próximo repaso: ' + fechaCorta(k.s) + '.'));
-  const ac = el('div', 'nota-ac'), bE = el('button', 'mini', 'Editar'), bB = el('button', 'mini err', 'Borrar');
+function itemTj(k) {
+  const w = el('div', 'fc-item'), m = el('div', 'fc-meta'), e = tjEstado(k);
+  m.append(el('span', 'fc-st fc-st-' + e, ESTADO_TX[e]), el('span', '', e === 'nueva' ? 'Sin repasar' : tarjetaToca(k) ? 'Toca hoy' : 'Próximo repaso: ' + fechaCorta(k.s)));
+  const ac = el('div', 'fc-ac'), bE = el('button', 'mini', 'Editar'), bB = el('button', 'mini err', 'Borrar');
   bE.type = 'button'; bB.type = 'button';
   bE.addEventListener('click', () => abreTj(k));
   let tB = 0;
   bB.addEventListener('click', () => {
     if (!tB) { bB.textContent = '¿Seguro? Pulsa otra vez'; tB = setTimeout(() => { tB = 0; bB.textContent = 'Borrar'; }, 3500); return; }
-    clearTimeout(tB); delTarjeta(k.id); if (tjEdit === k.id) cierraTj(); renderTarjetas();
+    clearTimeout(tB); delTarjeta(k.id); if (tjEdit === k.id) cierraTj(); renderTarjetas(); quitaEst(k.id);
   });
-  ac.append(bE, bB); c.append(ac); return c;
+  ac.append(bE, bB); w.append(carta(k, false), m, ac); return w;
 }
+
+/* formulario: tarjeta nueva o editada */
+function pintaChipsEt() {
+  const box = $('t-et-ch'), v = $('t-et').value.trim().toLowerCase(); box.replaceChildren();
+  etqTodas().forEach(e => {
+    const on = e.toLowerCase() === v, b = el('button', 'fc-chip' + (on ? ' on' : ''), e); b.type = 'button'; b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.addEventListener('click', () => { $('t-et').value = on ? '' : e; pintaChipsEt(); }); box.append(b);
+  });
+}
+$('t-et').addEventListener('input', pintaChipsEt);
 function abreTj(k) {
   tjEdit = k ? k.id : null; cierraLote();
   $('t-form-t').textContent = k ? 'Editar tarjeta' : 'Nueva tarjeta';
-  $('t-p').value = k ? k.p : ''; $('t-r').value = k ? k.r : ''; $('t-et').value = k ? k.et || '' : '';
+  $('t-p').value = k ? k.p : ''; $('t-r').value = k ? k.r : ''; $('t-et').value = k ? k.et || '' : ''; pintaChipsEt();
   $('t-tema').value = k && k.tema && _temario.byId[k.tema] ? k.tema : ''; $('t-msg').textContent = '';
   $('t-form').classList.remove('hide'); $('t-form').scrollIntoView({ block: 'nearest' }); $('t-p').focus();
 }
@@ -548,53 +608,89 @@ $('t-filtro').addEventListener('change', renderTarjetas);
 $('t-form').addEventListener('submit', e => {
   e.preventDefault();
   if (!$('t-p').value.trim() || !$('t-r').value.trim()) { $('t-msg').textContent = 'Escribe la pregunta y la respuesta.'; ($('t-p').value.trim() ? $('t-r') : $('t-p')).focus(); return; }
-  setTarjeta(tjEdit, { p: $('t-p').value, r: $('t-r').value, tema: $('t-tema').value, et: $('t-et').value });
-  cierraTj(); renderTarjetas();
+  setTarjeta(tjEdit, { p: $('t-p').value, r: $('t-r').value, tema: $('t-tema').value, et: normEt($('t-et').value) });
+  cierraTj(); renderTarjetas(); if (est) pintaEst();
 });
 $('t-form2').addEventListener('submit', e => {
   e.preventDefault();
-  let ok = 0, mal = 0;
+  let ok = 0, mal = 0; const et = normEt($('t-et2').value);
   $('t-lote').value.split(/\r?\n/).forEach(l => {
     if (!l.trim()) return;
     const i = l.indexOf('|'), p = i > 0 ? l.slice(0, i).trim() : '', r = i > 0 ? l.slice(i + 1).trim() : '';
-    if (p && r) { setTarjeta(null, { p: p, r: r, tema: $('t-tema2').value, et: '' }); ok++; } else mal++;
+    if (p && r) { setTarjeta(null, { p: p, r: r, tema: $('t-tema2').value, et: et }); ok++; } else mal++;
   });
   if (!ok) { $('t-msg2').textContent = 'No he encontrado ninguna línea con pregunta | respuesta.'; return; }
-  $('t-lote').value = ''; cierraLote(); renderTarjetas();
+  $('t-lote').value = ''; cierraLote(); est = null; renderTarjetas();
   $('t-msg2').textContent = '';
-  const m = $('t-rep'); m.classList.remove('hide'); m.replaceChildren(el('p', 'tj-prog', 'Se han creado ' + plural(ok, 'tarjeta', 'tarjetas') + (mal ? '. ' + plural(mal, 'línea', 'líneas') + ' sin barra vertical, ignoradas.' : '.')));
+  const m = $('t-rep'); m.classList.remove('hide'); m.replaceChildren(el('p', 'fc-msg', 'Se han creado ' + plural(ok, 'tarjeta', 'tarjetas') + (mal ? '. ' + plural(mal, 'línea', 'líneas') + ' sin barra vertical, ignoradas.' : '.')));
 });
-/* modo repaso: se ve la pregunta, se pide la respuesta y se marca si se sabía; las falladas vuelven al final de la cola */
-function repasar(todas) {
-  const lista = filtraTj(todas ? getTarjetas() : getTarjetas().filter(tarjetaToca));
+
+/* modo estudio: una tarjeta grande; se gira, se marca ✕ (no la sabía) o ✓ (la sabía) y se pasa a la siguiente */
+function estudiar(todas) {
+  const base = filtraTj(getTarjetas()), lista = todas ? base : base.filter(tarjetaToca);
   cierraTj(); cierraLote();
-  if (!lista.length) { const m = $('t-rep'); m.classList.remove('hide'); m.replaceChildren(el('p', 'tj-prog', 'No hay tarjetas pendientes hoy. Vuelve mañana o repasa todas a la vez.')); const b = el('button', 'btn small', 'Repasar todas'); b.type = 'button'; b.addEventListener('click', () => repasar(true)); m.append(b); return; }
-  cola = lista.map(k => k.id).sort(() => Math.random() - .5); tjHechas = 0; tjFallos = 0; pintaRep(false);
-}
-function pintaRep(mostrada) {
-  const m = $('t-rep'); m.classList.remove('hide'); m.replaceChildren();
-  if (!cola.length) {
-    m.append(el('h2', '', 'Repaso terminado'), el('p', '', 'Has repasado ' + plural(tjHechas, 'tarjeta', 'tarjetas') + (tjFallos ? ' y has fallado ' + plural(tjFallos, 'vez', 'veces') + '. Las falladas vuelven a salir antes.' : ' sin fallar ninguna.')));
-    const b = el('button', 'btn small', 'Cerrar'); b.type = 'button'; b.addEventListener('click', () => { m.classList.add('hide'); renderTarjetas(); }); m.append(b); return;
+  if (!lista.length) {
+    est = null; const m = $('t-rep'); m.classList.remove('hide'); m.replaceChildren(el('p', 'fc-msg', 'No hay tarjetas pendientes hoy. Vuelve mañana o estudia todas a la vez.'));
+    const ac = el('div', 'fc-fin-ac'), b = el('button', 'btn small', 'Estudiar todas'), c = el('button', 'btn small ghost', 'Cerrar'); b.type = 'button'; c.type = 'button';
+    b.addEventListener('click', () => estudiar(true)); c.addEventListener('click', cierraEst); ac.append(b, c); m.append(ac); return;
   }
-  const id = cola[0], k = tarjetasRaw()[id];
-  if (!k || k.del) { cola.shift(); return pintaRep(false); }
-  m.append(el('p', 'tj-prog', 'Quedan ' + plural(cola.length, 'tarjeta', 'tarjetas') + (k.et ? '. ' + k.et : '')), el('p', 'tj-cara', k.p));
-  const ac = el('div', 'tj-ac');
-  if (!mostrada) {
-    const b = el('button', 'btn', 'Ver respuesta'); b.type = 'button'; b.addEventListener('click', () => pintaRep(true)); ac.append(b); b.focus();
-    const s = el('button', 'btn ghost', 'Salir'); s.type = 'button'; s.addEventListener('click', () => { cola = []; m.classList.add('hide'); renderTarjetas(); }); ac.append(s);
-  } else {
-    m.append(el('p', 'tj-resp', k.r));
-    const no = el('button', 'btn ghost', 'No la sabía'), si = el('button', 'btn', 'La sabía');
-    no.type = 'button'; si.type = 'button';
-    no.addEventListener('click', () => { repasaTarjeta(id, false); tjFallos++; cola.push(cola.shift()); pintaRep(false); });
-    si.addEventListener('click', () => { repasaTarjeta(id, true); tjHechas++; cola.shift(); pintaRep(false); });
-    ac.append(no, si); si.focus();
-  }
-  m.append(ac);
+  empieza(lista.map(k => k.id));
 }
-$('t-repasar').addEventListener('click', () => repasar(false));
+function empieza(ids) { est = { ids: $('t-azar').checked ? mezcla(ids) : ids.slice(), i: 0, res: {} }; pintaEst(); $('t-rep').scrollIntoView({ block: 'nearest' }); }
+function cierraEst() { est = null; const m = $('t-rep'); m.classList.add('hide'); m.classList.remove('fin'); m.replaceChildren(); renderTarjetas(); }
+function quitaEst(id) {
+  if (!est) return; const j = est.ids.indexOf(id); if (j < 0) return;
+  est.ids.splice(j, 1); if (j < est.i) est.i--; delete est.res[id]; pintaEst();
+}
+function marca(ok) { const id = est.ids[est.i], v = ok ? 's' : 'n'; if (est.res[id] !== v) { repasaTarjeta(id, ok); est.res[id] = v; } est.i++; pintaEst(); }
+function pintaEst() {
+  const m = $('t-rep'); m.classList.remove('hide', 'fin'); m.replaceChildren();
+  if (!est || !est.ids.length) return cierraEst();
+  if (est.i >= est.ids.length) return pintaFin(m);
+  const id = est.ids[est.i], k = getTarjetas().find(x => x.id === id);
+  if (!k) { est.ids.splice(est.i, 1); delete est.res[id]; return pintaEst(); }
+  const n = est.ids.length, cuenta = v => Object.keys(est.res).filter(x => est.res[x] === v).length;
+  const top = el('div', 'fc-top'), salir = el('button', 'btn small ghost', 'Salir'), ed = el('button', 'mini', 'Editar'), t = tjTema(k);
+  salir.type = 'button'; ed.type = 'button'; salir.addEventListener('click', cierraEst); ed.addEventListener('click', () => abreTj(k));
+  top.append(salir, el('span', 'fc-pos', (est.i + 1) + ' / ' + n), el('span', 'fc-tema', t === 'General' ? 'Sin tema' : temaLabel(t)), ed);
+  const barra = el('div', 'fc-barra'), bi = el('i'); bi.style.width = Math.round((est.i + 1) / n * 100) + '%'; barra.append(bi);
+  const c = carta(k, true);
+  let x0 = null;                                                    // deslizar con el dedo: izquierda = siguiente, derecha = anterior
+  c.addEventListener('touchstart', e => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  c.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 70) { if (dx < 0) { est.i++; pintaEst(); } else if (est.i > 0) { est.i--; pintaEst(); } } }, { passive: true });
+  const ctl = el('div', 'fc-ctl'), iz = el('button', 'fc-nav'), de = el('button', 'fc-nav'), no = el('button', 'fc-no' + (est.res[id] === 'n' ? ' on' : '')), si = el('button', 'fc-si' + (est.res[id] === 's' ? ' on' : ''));
+  [iz, de, no, si].forEach(b => { b.type = 'button'; });
+  iz.innerHTML = SVG.iz; iz.setAttribute('aria-label', 'Tarjeta anterior'); iz.disabled = est.i === 0; iz.addEventListener('click', () => { est.i--; pintaEst(); });
+  de.innerHTML = SVG.de; de.setAttribute('aria-label', 'Tarjeta siguiente'); de.addEventListener('click', () => { est.i++; pintaEst(); });
+  no.innerHTML = SVG.x; no.append(el('span', '', 'No la sabía'), el('b', 'fc-n', String(cuenta('n')))); no.addEventListener('click', () => marca(false));
+  si.innerHTML = SVG.ok; si.append(el('span', '', 'La sabía'), el('b', 'fc-n', String(cuenta('s')))); si.addEventListener('click', () => marca(true));
+  ctl.append(iz, no, si, de);
+  m.append(top, barra, c, ctl, el('p', 'fc-ayuda', 'Espacio: girar. Flechas: moverte. Las que marques como no sabidas volverán antes.'));
+  c.focus({ preventScroll: true });
+}
+function pintaFin(m) {
+  const s = est.ids.filter(id => est.res[id] === 's'), f = est.ids.filter(id => est.res[id] === 'n'), sin = est.ids.length - s.length - f.length;
+  const cif = el('div', 'est-hs fc-stats'); tjCifras(cif, [['Sabías', s.length], ['Falladas', f.length]].concat(sin ? [['Sin marcar', sin]] : []));
+  m.classList.add('fin'); m.append(el('h2', 'fc-fin-t', 'Sesión terminada'), cif);
+  if (f.length) m.append(el('p', 'fc-msg', 'Las falladas volverán a salir antes en tus repasos.'));
+  const ac = el('div', 'fc-fin-ac');
+  if (f.length) { const b = el('button', 'btn small', 'Repasar las falladas (' + f.length + ')'); b.type = 'button'; b.addEventListener('click', () => empieza(f)); ac.append(b); }
+  const b2 = el('button', 'btn small ghost', 'Estudiar de nuevo'), b3 = el('button', 'btn small ghost', 'Cerrar'); b2.type = 'button'; b3.type = 'button';
+  b2.addEventListener('click', () => empieza(est.ids)); b3.addEventListener('click', cierraEst); ac.append(b2, b3); m.append(ac);
+  renderTarjetas(); b3.focus({ preventScroll: true });
+}
+$('t-repasar').addEventListener('click', () => estudiar(false));
+$('t-todas').addEventListener('click', () => estudiar(true));
+$('t-azar').checked = !!getPrefs().tjAzar; $('t-inv').checked = !!getPrefs().tjInv;
+$('t-azar').addEventListener('change', () => setPref('tjAzar', $('t-azar').checked));
+$('t-inv').addEventListener('change', () => { setPref('tjInv', $('t-inv').checked); if (est) pintaEst(); });
+document.addEventListener('keydown', e => {                          // flechas y espacio, solo con el modo estudio abierto
+  if (!est || e.ctrlKey || e.metaKey || e.altKey || $('panel-tarjetas').classList.contains('hide') || est.i >= est.ids.length) return;
+  if (e.target.closest && e.target.closest('input,textarea,select,form')) return;
+  if (e.key === 'ArrowRight') { est.i++; pintaEst(); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft' && est.i > 0) { est.i--; pintaEst(); e.preventDefault(); }
+  else if (e.key === ' ' && !(e.target.closest && e.target.closest('button,[role=button],summary,a'))) { const c = $('t-rep').querySelector('.fc'); if (c) { c.gira(); e.preventDefault(); } }
+});
 
 async function init() {
   await loadTemario(); initMaterial(); opcionesTema($('n-tema')); opcionesTema($('t-tema')); opcionesTema($('t-tema2'));
@@ -605,6 +701,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261127"></script>
+<script src="temporizador.js?v=20261128"></script>
 </body>
 </html>

@@ -7,6 +7,8 @@ GitHub Pages con dominio propio `mondongon.com` (ver `CNAME`).
 
 ## Estructura
 
+(El mapa completo de carpetas y archivos está en `README.md`; esta lista resume solo lo esencial.)
+
 - `index.html` — portada: mapa del temario, "para hoy", listado/filtro de tests, sincronización.
 - `test.html` — motor de test: resuelve preguntas, calcula aciertos, guarda historial.
 - `nuevo.html` — formulario para crear un test nuevo (JSON) y publicarlo en `tests/`.
@@ -133,9 +135,18 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   primera vez se migra el antiguo `ma2_temp_log`, que ya no se usa. Llega al resto cuando ese dispositivo sincroniza.
 - **Notas libres** (Biblioteca → Notas): apuntes propios con título, texto, tema y etiqueta, en `LS.libres`
   (`getLibres`, `setLibre`, `delLibre`), sincronizados con `mergeMap` y con tumbas al borrar. `SYNC_VER = 2`.
-- **Tarjetas de repaso** (Biblioteca → Tarjetas): pregunta y respuesta con tema y etiqueta, en `LS.tarjetas`
+- **Tarjetas** (Biblioteca → Tarjetas): pregunta y respuesta con tema y etiqueta, en `LS.tarjetas`
   (`getTarjetas`, `setTarjeta`, `delTarjeta`, `repasaTarjeta`), sincronizadas con `mergeMap` y tumbas. Repaso espaciado por cajas
   (`CAJAS` = días hasta el siguiente repaso; fallar vuelve a la caja 0). «Pegar varias» admite `pregunta | respuesta` por línea.
+  Todo el código está en `biblioteca.html` (bloque «tarjetas»). `carta(k, grande)` crea la tarjeta que se gira (CSS `.fc*`: 3D con
+  `perspective`, `backface-visibility`, sin `:has` ni `color-mix` por el Chrome 101 de la tablet). En la cuadrícula cada tarjeta se gira al
+  tocarla; «Estudiar hoy / Estudiar todas» abre el modo estudio (`est`, `pintaEst`): tarjeta grande, ✕ «No la sabía» / ✓ «La sabía»
+  (llaman a `repasaTarjeta`), flechas y deslizar para moverse, espacio para girar, pantalla final con «Repasar las falladas».
+  Opciones guardadas en `ma2_prefs` (`tjAzar`, `tjInv`). Estado de cada tarjeta: Nueva (sin `s`), Aprendiendo, Dominada (caja 4 o más).
+  Las etiquetas son texto libre; se sugieren las ya usadas más cuatro base (`ETQ_BASE`) y sirven de filtro.
+- **Ajustes → Tiempo de estudio**: resumen plegado (hoy, semana, media de 7 días y gráfico); «Corregir un día» abre un calendario propio
+  (mes y año siempre visibles, `pintaCal`) y llama a `estudioCorrige`. No se usa `<input type=date>` porque el selector del navegador no
+  indica en qué mes se está al desplazarse.
 - **Estructura de la norma** (`estructura.html?n=ce`, se abre desde el tema I-1 del Temario): Título → Capítulo → Sección con
   sus preguntas, sacadas de la `ref` de cada pregunta (`refInfo` en `app.js`; la norma es LOTC si la ref o el título del test
   lo dicen, si no CE). Los tramos están en `estructura-ce.json` (para otra norma: otro `estructura-xx.json` y una línea en
@@ -159,3 +170,5 @@ hace `git pull --ff-only` al empezar. Reglas:
    el resumen, y después commit y push.
 4. **Solo se suben archivos de la web**, nunca material de la academia ni tokens.
 5. **Si va a tocar `sw.js` o la lista `PRECACHE`**, recordar al usuario que hay que subir `VERSION`.
+6. **No arrancar servidores ni procesos en segundo plano** (`npx serve`, `python -m http.server`…) salvo que el
+   usuario lo pida; si hace falta uno de prueba, cerrarlo al terminar. El usuario no usa servidores locales.
