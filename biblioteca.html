@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261128">
+<link rel="stylesheet" href="style.css?v=20261129">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -55,6 +55,12 @@
     <div id="bib-lista"></div>
   </div>
   <div role="tabpanel" id="panel-tarjetas" aria-labelledby="tab-tarjetas" class="hide">
+    <section class="ib" aria-label="Qué es Tarjetas">
+      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>Tarjetas</h2>
+      <p class="ib-t">Para recordar sin mirar</p>
+      <p class="ib-x">Preguntas y respuestas breves sobre datos, plazos, números, órganos, competencias y definiciones.</p>
+      <p class="ib-ej">Ejemplo: ¿qué cuórum exige el Pleno? Dos tercios de sus miembros.</p>
+    </section>
     <div class="tj-barra">
       <button type="button" class="btn small" id="t-repasar">Estudiar hoy</button>
       <button type="button" class="btn small ghost" id="t-todas">Estudiar todas</button>
@@ -65,6 +71,11 @@
     <div class="fc-ops">
       <label class="fc-op"><input type="checkbox" id="t-azar"> Orden aleatorio</label>
       <label class="fc-op"><input type="checkbox" id="t-inv"> Mostrar primero la respuesta</label>
+    </div>
+    <div class="bib-barra">
+      <input type="search" id="t-q" placeholder="Buscar en las tarjetas" aria-label="Buscar en las tarjetas" autocomplete="off">
+      <select id="t-est" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="nueva">Nuevas</option><option value="aprendiendo">Aprendiendo</option><option value="dominada">Dominadas</option></select>
+      <button type="button" class="btn small ghost" id="t-abrir">Abrir todo</button>
     </div>
     <div id="t-ets-f" class="fc-chips hide" role="group" aria-label="Filtrar por etiqueta"></div>
     <div id="t-rep" class="fc-estudio hide"></div>
@@ -94,6 +105,12 @@
     <div id="tarjetas"></div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
+    <section class="ib" aria-label="Qué es Notas">
+      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>Notas</h2>
+      <p class="ib-t">Para comprender y consultar</p>
+      <p class="ib-x">Explicaciones, ejemplos, comparaciones, confusiones, errores y conceptos que necesitan contexto.</p>
+      <p class="ib-ej">Ejemplo: diferencia entre cuórum y mayoría de votación, explicada con una situación práctica.</p>
+    </section>
     <div class="bib-barra"><button type="button" class="btn small" id="n-nueva">Nueva nota</button> <button type="button" class="btn small ghost" id="n-todas">Abrir todo</button>
       <input type="search" id="n-q" placeholder="Buscar en las notas" aria-label="Buscar en las notas" autocomplete="off">
       <select id="n-fet" aria-label="Filtrar por etiqueta"><option value="">Todas las etiquetas</option></select></div>
@@ -113,9 +130,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261128"></script>
-<script src="vistas.js?v=20261128"></script>
-<script src="biblioteca.js?v=20261128"></script>
+<script src="app.js?v=20261129"></script>
+<script src="vistas.js?v=20261129"></script>
+<script src="biblioteca.js?v=20261129"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -508,7 +525,10 @@ const tjEstado = k => (!k.s ? 'nueva' : (k.c || 0) >= 4 ? 'dominada' : 'aprendie
 const tjEtiquetas = () => { const s = []; getTarjetas().forEach(k => { if (k.et && s.indexOf(k.et) < 0) s.push(k.et); }); return s.sort((a, b) => a.localeCompare(b, 'es')); };
 const etqTodas = () => { const t = ETQ_BASE.slice(); tjEtiquetas().forEach(e => { if (!t.some(x => x.toLowerCase() === e.toLowerCase())) t.push(e); }); return t; };
 const normEt = v => { v = v.trim(); return etqTodas().find(x => x.toLowerCase() === v.toLowerCase()) || v; };
-const filtraTj = lista => { const t = $('t-filtro').value; return lista.filter(k => (!t || tjTema(k) === t) && (!tjEtq || (k.et || '') === tjEtq)); };
+const filtraTj = lista => {
+  const t = $('t-filtro').value, e = $('t-est').value, q = normaBusca($('t-q').value.trim());
+  return lista.filter(k => (!t || tjTema(k) === t) && (!tjEtq || (k.et || '') === tjEtq) && (!e || tjEstado(k) === e) && (!q || normaBusca(k.p + ' ' + k.r + ' ' + (k.et || '')).indexOf(q) >= 0));
+};
 const mezcla = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)), x = a[i]; a[i] = a[j]; a[j] = x; } return a; };
 const SVG = {
   x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
@@ -536,6 +556,15 @@ function carta(k, grande) {
   c.gira = gira; return c;
 }
 
+const TJ_UI = 'ma2_tjui';                                          // temas abiertos y bloques cerrados; solo en este dispositivo
+const tjAb = new Set(), tjCe = new Set();                           // ab: temas abiertos · ce: bloques cerrados
+try { const u = JSON.parse(localStorage.getItem(TJ_UI) || '{}'); (u.ab || []).forEach(x => tjAb.add(x)); (u.ce || []).forEach(x => tjCe.add(x)); } catch (e) { /* sin datos guardados */ }
+const tjGuardaUi = () => { try { localStorage.setItem(TJ_UI, JSON.stringify({ ab: Array.from(tjAb), ce: Array.from(tjCe) })); } catch (e) { /* sin espacio */ } };
+const tjActivo = () => !!($('t-q').value.trim() || tjEtq || $('t-filtro').value || $('t-est').value);   // con filtros activos se abre todo lo que coincide
+function etiquetaAbrir() {
+  const ds = document.querySelectorAll('#tarjetas details.fc-tm');
+  $('t-abrir').textContent = Array.prototype.some.call(ds, d => !d.open) ? 'Abrir todo' : 'Cerrar todo'; $('t-abrir').disabled = !ds.length;
+}
 function renderTarjetas() {
   const box = $('tarjetas'), todas = getTarjetas();
   box.replaceChildren();
@@ -559,14 +588,38 @@ function renderTarjetas() {
   if (!todas.length) {
     const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes tarjetas'), el('p', '', 'Crea una con «Nueva tarjeta» o pega varias de golpe. Cada tarjeta tiene la pregunta delante y la respuesta detrás: pruébate, gírala y marca si la sabías. Las que fallas vuelven antes. Se sincronizan entre tus dispositivos.')); box.append(v); return;
   }
-  if (!vis.length) { const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Ninguna tarjeta con ese filtro'), el('p', '', 'Cambia el tema o la etiqueta para ver más.')); box.append(v); return; }
-  const grupos = {};
-  vis.forEach(k => { (grupos[tjTema(k)] = grupos[tjTema(k)] || []).push(k); });
-  temas.filter(t => grupos[t]).forEach(t => {
-    const g = el('section', 'notas-g'), gr = el('div', 'fc-grid'); g.dataset.b = bloqueOf(t) || 'x';
-    g.append(el('h2', 'notas-t', t === 'General' ? 'Sin tema' : temaLabel(t)));
-    grupos[t].forEach(k => gr.append(itemTj(k))); g.append(gr); box.append(g);
+  if (!vis.length) { const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Ninguna tarjeta coincide'), el('p', '', 'Cambia la búsqueda, el tema, la etiqueta o el estado para ver más.')); box.append(v); etiquetaAbrir(); return; }
+  const activo = tjActivo(), porB = {}, ordenT = Object.keys(_temario.byId);
+  vis.forEach(k => { const t = tjTema(k), bq = bloqueOf(t) || 'x'; porB[bq] = porB[bq] || {}; (porB[bq][t] = porB[bq][t] || []).push(k); });
+  const resumen = l => { const h = l.filter(tarjetaToca).length; return l.length + (l.length === 1 ? ' tarjeta' : ' tarjetas') + (h ? ' · ' + h + ' hoy' : ''); };
+  const prog = l => { const p = el('span', 'fc-prog'), i = el('i'); i.style.width = Math.round(l.filter(k => tjEstado(k) === 'dominada').length / l.length * 100) + '%'; p.title = 'Dominadas'; p.setAttribute('aria-hidden', 'true'); p.append(i); return p; };
+  const botones = (l, txt) => {                                     // estudiar solo lo de este grupo
+    const ac = el('div', 'fc-grp-ac'), h = l.filter(tarjetaToca), b1 = el('button', 'btn small', 'Estudiar ' + txt + ' (' + l.length + ')');
+    b1.type = 'button'; b1.addEventListener('click', () => { cierraTj(); cierraLote(); empieza(l.map(k => k.id)); }); ac.append(b1);
+    if (h.length && h.length < l.length) { const b2 = el('button', 'btn small ghost', 'Solo las de hoy (' + h.length + ')'); b2.type = 'button'; b2.addEventListener('click', () => { cierraTj(); cierraLote(); empieza(h.map(k => k.id)); }); ac.append(b2); }
+    return ac;
+  };
+  const grupoTema = (t, l, bq) => {
+    const g = el('details', 'nt-g fc-tm'), tt = _temario.byId[t], h = el('summary', 'notas-t nt-sum');
+    g.dataset.b = bq; g.dataset.t = t; g.open = activo || tjAb.has(t);
+    if (tt) h.append(el('span', 'notas-cod', codigoTema(t)), el('span', 'notas-nom', tt.corto)); else h.append(el('span', 'notas-nom', 'Sin tema'));
+    h.append(prog(l), el('span', 'notas-n', resumen(l)));
+    h.addEventListener('click', () => setTimeout(() => { if (!tjActivo()) { if (g.open) tjAb.add(t); else tjAb.delete(t); tjGuardaUi(); } etiquetaAbrir(); }, 0));
+    const gr = el('div', 'fc-grid'); l.forEach(k => gr.append(itemTj(k)));
+    g.append(h, botones(l, tt ? 'este tema' : 'las tarjetas sin tema'), gr); return g;
+  };
+  _temario.bloques.filter(bq => porB[bq.id]).forEach(bq => {
+    const temas = Object.keys(porB[bq.id]).sort((x, y) => ordenT.indexOf(x) - ordenT.indexOf(y)), todas = [].concat.apply([], temas.map(t => porB[bq.id][t]));
+    const B = el('details', 'fc-bq'), s = el('summary', 'fc-bq-sum'), cu = el('div', 'fc-bq-cuerpo');
+    B.dataset.b = bq.id; B.dataset.bq = bq.id; B.open = activo || !tjCe.has(bq.id);
+    s.append(el('span', 'fc-bq-cod', 'Bloque ' + bq.id), el('span', 'fc-bq-nom', bq.titulo), prog(todas), el('span', 'notas-n', resumen(todas)));
+    s.addEventListener('click', () => setTimeout(() => { if (!tjActivo()) { if (B.open) tjCe.delete(bq.id); else tjCe.add(bq.id); tjGuardaUi(); } }, 0));
+    if (temas.length > 1) cu.append(botones(todas, 'este bloque'));
+    temas.forEach(t => cu.append(grupoTema(t, porB[bq.id][t], bq.id)));
+    B.append(s, cu); box.append(B);
   });
+  if (porB.x) Object.keys(porB.x).forEach(t => box.append(grupoTema(t, porB.x[t], 'x')));
+  etiquetaAbrir();
 }
 function itemTj(k) {
   const w = el('div', 'fc-item'), m = el('div', 'fc-meta'), e = tjEstado(k);
@@ -605,6 +658,13 @@ $('t-cancel').addEventListener('click', cierraTj);
 $('t-varias').addEventListener('click', () => { cierraTj(); $('t-msg2').textContent = ''; $('t-form2').classList.remove('hide'); $('t-lote').focus(); });
 $('t-cancel2').addEventListener('click', cierraLote);
 $('t-filtro').addEventListener('change', renderTarjetas);
+$('t-q').addEventListener('input', renderTarjetas); $('t-est').addEventListener('change', renderTarjetas);
+$('t-abrir').addEventListener('click', () => {                      // abrir o cerrar todos los temas de golpe
+  const ds = Array.prototype.slice.call(document.querySelectorAll('#tarjetas details.fc-tm')), abrir = ds.some(d => !d.open), libre = !tjActivo();
+  ds.forEach(d => { d.open = abrir; if (libre) { if (abrir) tjAb.add(d.dataset.t); else tjAb.delete(d.dataset.t); } });
+  if (abrir) document.querySelectorAll('#tarjetas details.fc-bq').forEach(d => { d.open = true; if (libre) tjCe.delete(d.dataset.bq); });
+  if (libre) tjGuardaUi(); etiquetaAbrir();
+});
 $('t-form').addEventListener('submit', e => {
   e.preventDefault();
   if (!$('t-p').value.trim() || !$('t-r').value.trim()) { $('t-msg').textContent = 'Escribe la pregunta y la respuesta.'; ($('t-p').value.trim() ? $('t-r') : $('t-p')).focus(); return; }
@@ -701,6 +761,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261128"></script>
+<script src="temporizador.js?v=20261129"></script>
 </body>
 </html>

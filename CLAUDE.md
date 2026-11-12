@@ -139,7 +139,10 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   (`getTarjetas`, `setTarjeta`, `delTarjeta`, `repasaTarjeta`), sincronizadas con `mergeMap` y tumbas. Repaso espaciado por cajas
   (`CAJAS` = días hasta el siguiente repaso; fallar vuelve a la caja 0). «Pegar varias» admite `pregunta | respuesta` por línea.
   Todo el código está en `biblioteca.html` (bloque «tarjetas»). `carta(k, grande)` crea la tarjeta que se gira (CSS `.fc*`: 3D con
-  `perspective`, `backface-visibility`, sin `:has` ni `color-mix` por el Chrome 101 de la tablet). En la cuadrícula cada tarjeta se gira al
+  `perspective`, `backface-visibility`, sin `:has` ni `color-mix` por el Chrome 101 de la tablet). Las tarjetas se agrupan en Bloque (abierto por defecto) > Tema (cerrado por defecto); lo abierto se recuerda en `ma2_tjui` (solo en el
+  dispositivo, no se sincroniza). Con búsqueda o filtros activos se abre todo lo que coincide. Hay buscador, filtros por tema, etiqueta y
+  estado, y «Estudiar este tema / bloque». Cada pestaña (Notas, Tarjetas) abre con una tarjeta `.ib` que explica para qué sirve.
+  En la cuadrícula cada tarjeta se gira al
   tocarla; «Estudiar hoy / Estudiar todas» abre el modo estudio (`est`, `pintaEst`): tarjeta grande, ✕ «No la sabía» / ✓ «La sabía»
   (llaman a `repasaTarjeta`), flechas y deslizar para moverse, espacio para girar, pantalla final con «Repasar las falladas».
   Opciones guardadas en `ma2_prefs` (`tjAzar`, `tjInv`). Estado de cada tarjeta: Nueva (sin `s`), Aprendiendo, Dominada (caja 4 o más).
