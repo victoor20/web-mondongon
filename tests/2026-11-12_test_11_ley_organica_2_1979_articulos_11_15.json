@@ -1,0 +1,184 @@
+{
+  "titulo": "Test 11: Ley Orgánica 2/1979 (artículos 11–15)",
+  "tema": "I-1",
+  "fecha": "2026-11-12",
+  "preguntas": [
+    {
+      "ref": "Artículo 11.1 LOTC",
+      "q": "Conforme al artículo 11.1 LOTC, ¿qué criterio delimita con carácter general los asuntos de los que conocen las Salas?",
+      "opciones": [
+        "Los que el presidente les asigne mediante acuerdo específico, aunque la ley los reserve al Pleno.",
+        "Los que no hayan sido atribuidos previamente a una Sección, aunque sean competencia del Pleno.",
+        "Los asuntos atribuidos a la justicia constitucional que no sean competencia del Pleno.",
+        "Los asuntos de amparo y las cuestiones de constitucionalidad, sin atender a su asignación legal."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 11.2 LOTC",
+      "q": "Una cuestión atribuida al conocimiento de una Sección plantea una dificultad de especial importancia. ¿Qué permite expresamente el artículo 11.2 LOTC?",
+      "opciones": [
+        "Que la Sala conozca de ella si entiende que por su importancia debe resolverla.",
+        "Que el presidente remita necesariamente el asunto al Pleno al apreciar esa importancia.",
+        "Que la Sección eleve automáticamente la cuestión al Pleno sin intervención de la Sala.",
+        "Que la Sala asuma el asunto solo si los tres magistrados de la Sección discrepan."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 8.3 y 11.2 LOTC",
+      "q": "¿Qué relación entre los artículos 8.3 y 11.2 LOTC es correcta?",
+      "opciones": [
+        "Ambos permiten a una Sección reclamar para sí la resolución de asuntos atribuidos a una Sala.",
+        "El artículo 8.3 permite a una Sala deferir cualquier asunto del Pleno a una Sección; el 11.2 permite devolverlo.",
+        "El artículo 8.3 obliga a todas las Salas a deferir los asuntos de amparo a una Sección; el 11.2 permite recuperar solo los inadmitidos.",
+        "El artículo 8.3 permite a una Sección resolver determinados asuntos de amparo deferidos por una Sala; el 11.2 permite que una Sala conozca de cuestiones atribuidas a una Sección por su importancia."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 12 LOTC",
+      "q": "Según el artículo 12 LOTC, la distribución de asuntos entre las Salas se efectúa mediante un turno:",
+      "opciones": [
+        "Establecido por el presidente y ratificado posteriormente por el Pleno.",
+        "Establecido por el Pleno, a propuesta del presidente del Tribunal Constitucional.",
+        "Acordado conjuntamente por los presidentes de ambas Salas y autorizado por el Pleno.",
+        "Aprobado por las Salas mediante acuerdo conjunto, a propuesta del Pleno."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 12 LOTC",
+      "q": "El presidente del Tribunal propone un turno de distribución de asuntos entre las dos Salas. ¿Cuál es la consecuencia que puede extraerse del artículo 12?",
+      "opciones": [
+        "Su propuesta entra en vigor directamente, salvo oposición de la Sala Segunda.",
+        "El Pleno únicamente puede revisar el turno cuando exista una reclamación de los magistrados.",
+        "El presidente determina mediante su propuesta la competencia material de las Salas, sustituyendo a la LOTC.",
+        "Corresponde al Pleno establecer el turno, sin que la propuesta presidencial constituya por sí sola su aprobación."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 13 LOTC",
+      "q": "Una Sala entiende necesario apartarse de una doctrina constitucional precedente únicamente respecto de una parte de su razonamiento. ¿Qué exige el artículo 13 LOTC?",
+      "opciones": [
+        "Que se trate de un cambio completo de doctrina para someterlo al Pleno.",
+        "Que se someta la cuestión a la decisión del Pleno, aunque el apartamiento afecte solo a un punto.",
+        "Que se acuerde primero el cambio en la Sala y después se informe de él al Pleno.",
+        "Que la Sala aplique la doctrina previa hasta que otra Sala haya confirmado la interpretación nueva."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 13 LOTC",
+      "q": "¿Qué actuación, considerada aisladamente, NO activa la exigencia específica del artículo 13 LOTC?",
+      "opciones": [
+        "Resolver conforme a una doctrina constitucional precedente, sin considerar necesario apartarse de ella.",
+        "Considerar necesario modificar una parte de la doctrina constitucional precedente.",
+        "Considerar necesario apartarse de un criterio precedente del TC en un aspecto concreto.",
+        "Someter al Pleno una cuestión por considerar necesario abandonar un punto de doctrina constitucional."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 14 LOTC",
+      "q": "El Pleno del Tribunal Constitucional está compuesto en ese momento por doce miembros y asisten siete. ¿Qué consecuencia se desprende del artículo 14?",
+      "opciones": [
+        "Puede adoptar acuerdos si los siete votan favorablemente y preside el presidente.",
+        "Puede adoptar acuerdos si la sesión fue convocada regularmente y se trata de un asunto ordinario.",
+        "No alcanza la presencia mínima de dos tercios exigida para adoptar acuerdos.",
+        "Puede adoptar acuerdos salvo que alguna de las partes haya promovido una recusación."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 14 LOTC",
+      "q": "Una Sala está integrada en ese momento por seis magistrados. Comparecen cuatro y existe discrepancia entre ellos sobre la decisión. ¿Qué establece el artículo 14?",
+      "opciones": [
+        "La Sala debe reunir obligatoriamente a los seis magistrados por existir discrepancia.",
+        "La exigencia de presencia se cumple; la regla especial de asistencia de todos por discrepancia se establece para las Secciones.",
+        "La Sala necesita un quinto magistrado, puesto que cuatro solo bastan cuando la decisión es unánime.",
+        "El cuórum será suficiente únicamente si la propuesta obtiene el voto de dos tercios de la composición completa."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo 14 LOTC",
+      "q": "En una Sección del TC, dos de sus tres magistrados están presentes y mantienen criterios contrarios sobre una decisión. ¿Qué requisito de presencia impone el artículo 14?",
+      "opciones": [
+        "Que acuda el magistrado más antiguo de la Sala, aunque no pertenezca a esa Sección.",
+        "Que el presidente del Tribunal resuelva por sí mismo el empate.",
+        "Que la cuestión se transfiera al Pleno, que deberá resolver con dos tercios de sus miembros.",
+        "Que esté presente el tercer integrante de la Sección."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 14 LOTC",
+      "q": "Si el Pleno estuviera compuesto en un momento determinado por nueve magistrados, ¿cuál sería la presencia mínima exigible conforme a la expresión del artículo 14 LOTC?",
+      "opciones": [
+        "Ocho, porque es el mínimo legal permanente del Pleno del TC.",
+        "Cinco, por ser la mayoría absoluta de los nueve magistrados que lo componen.",
+        "Seis, porque equivale a dos tercios de los miembros que en ese momento lo componen.",
+        "Siete, porque el mínimo de presencia nunca puede ser inferior a la mayoría absoluta de doce."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 14 LOTC",
+      "q": "En una reunión del Pleno se cumple el mínimo de presencia previsto por el artículo 14. ¿Cuál es la conclusión jurídicamente correcta?",
+      "opciones": [
+        "Se cumple el requisito de presencia para adoptar acuerdos, sin que ello determine por sí solo cuántos votos favorables requiere una decisión concreta.",
+        "Cualquier decisión queda aprobada automáticamente cuando se alcanza la presencia mínima.",
+        "Todos los acuerdos requieren necesariamente el voto favorable de dos tercios de los magistrados asistentes.",
+        "El cumplimiento del cuórum obliga a que todos los magistrados presentes voten favorablemente."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 15 y 7 LOTC",
+      "q": "¿Cuál de las siguientes afirmaciones distingue correctamente la convocatoria y presidencia de los órganos del TC?",
+      "opciones": [
+        "El presidente convoca y preside ambas Salas; el vicepresidente preside únicamente el Pleno cuando falta aquel.",
+        "El presidente convoca el Pleno y las Salas; el vicepresidente preside ordinariamente la Sala Primera.",
+        "El presidente convoca el Pleno y la Sala Primera; el vicepresidente convoca exclusivamente la Segunda.",
+        "El presidente convoca y preside el Pleno y convoca las Salas; ordinariamente la Sala Segunda la preside el vicepresidente."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo 15 LOTC y 159 CE",
+      "q": "Un puesto de magistrado del TC queda vacante. ¿Qué función atribuye el artículo 15 LOTC al presidente en relación con esa vacante?",
+      "opciones": [
+        "Comunicarla al órgano correspondiente entre las Cámaras, el Gobierno o el CGPJ, sin que ello le atribuya el nombramiento del magistrado.",
+        "Nombrar provisionalmente a un magistrado tras comunicarlo al órgano proponente correspondiente.",
+        "Presentar por sí mismo al Rey una candidatura, salvo que la vacante proceda de la propuesta del Senado.",
+        "Comunicar la vacante en todo caso al Gobierno, para que este determine qué órgano debe proponer al sustituto."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo 15 LOTC",
+      "q": "En relación con el personal del Tribunal Constitucional, ¿qué conjunto de actuaciones corresponde expresamente a su presidente conforme al artículo 15?",
+      "opciones": [
+        "Nombrar a los magistrados y letrados, y convocar concursos únicamente para funcionarios.",
+        "Nombrar letrados y magistrados suplentes, y autorizar los concursos del personal laboral convocados por el Pleno.",
+        "Nombrar letrados, convocar concursos para plazas de funcionarios y puestos de personal laboral, y ejercer potestades administrativas sobre el personal.",
+        "Designar a los letrados por propuesta de las Salas y convocar concursos solo previa aprobación del CGPJ."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo 10.1.m y 15 LOTC",
+      "q": "El presidente considera necesaria una modificación del reglamento interno del Tribunal para mejorar su funcionamiento. ¿Qué distribución de funciones resulta conforme a la LOTC?",
+      "opciones": [
+        "El presidente puede aprobarla directamente por su competencia de adoptar medidas para el funcionamiento del Tribunal.",
+        "La aprobación y modificación del reglamento corresponde al Pleno; las funciones organizativas del presidente no sustituyen esa competencia.",
+        "La modificación corresponde conjuntamente a los presidentes de las dos Salas, mientras que el Pleno solo aprueba reglamentos iniciales.",
+        "La modificación corresponde al presidente siempre que no altere competencias jurisdiccionales del Pleno."
+      ],
+      "correcta": 1
+    }
+  ],
+  "fuente": "ChatGPT"
+}
