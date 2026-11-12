@@ -16,19 +16,38 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261126">
+<link rel="stylesheet" href="style.css?v=20261127">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
+  <div class="volver"><a class="btn small ghost" href="index.html" data-atras>← Volver</a></div>
   <div class="pagehead">
     <h1 class="titular">Ajustes</h1>
-    <p class="entradilla">Aspecto, uso sin conexión y sincronización entre tus dispositivos.</p>
+    <p class="entradilla">Aspecto, tiempo de estudio, uso sin conexión y sincronización entre tus dispositivos.</p>
   </div>
 
   <section class="hoja sync" style="margin-top:0">
     <h2>Aspecto</h2>
     <p class="estado-s">Claro, oscuro o como el sistema.</p>
     <div style="margin-top:.7rem"><div data-tema-ctl></div></div>
+  </section>
+
+  <section class="hoja sync" style="margin-top:1rem">
+    <h2>Tamaño del texto</h2>
+    <p class="estado-s">Útil en pantallas pequeñas. Se guarda solo en este dispositivo.</p>
+    <div style="margin-top:.7rem;max-width:16rem"><select id="tam" aria-label="Tamaño del texto"><option value="normal">Normal</option><option value="grande">Grande</option><option value="mayor">Muy grande</option></select></div>
+  </section>
+
+  <section class="hoja sync" id="est-box" style="margin-top:1rem">
+    <h2>Tiempo de estudio</h2>
+    <p class="estado-s">Elige un día y escribe cuántos minutos estudiaste en total. Sustituye lo que había, así que sirve para quitar tiempo de más o añadir el que falta.</p>
+    <div class="ce-dias" id="est-dias"></div>
+    <form class="ce-f" id="est-form" autocomplete="off">
+      <label>Día <input type="date" id="est-dia"></label>
+      <label>Total ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
+      <button type="submit" class="btn small">Guardar</button>
+    </form>
+    <p class="estado-s" id="est-msg" role="status" style="margin-top:.6rem"></p>
   </section>
 
   <section class="hoja sync" id="off-box" style="margin-top:1rem">
@@ -69,6 +88,12 @@
     </details>
   </section>
 
+  <section class="hoja sync" style="margin-top:1rem">
+    <h2>Actualizar la web</h2>
+    <p class="estado-s">Descarga la última versión, sincroniza tu progreso y recarga la página.</p>
+    <div class="acciones" style="margin-top:.7rem"><button type="button" class="btn small" id="act-btn">Actualizar ahora</button></div>
+  </section>
+
   <div class="pie">
     <span class="fine" style="flex:1 1 16rem">Copia manual de tu progreso, por si no usas la sincronización.</span>
     <button type="button" class="btn small ghost" id="exp">Exportar</button>
@@ -77,8 +102,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261126"></script>
-<script src="vistas.js?v=20261126"></script>
+<script src="app.js?v=20261127"></script>
+<script src="vistas.js?v=20261127"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -143,9 +168,36 @@ $('impfile').addEventListener('change', e => {
   if (!confirm('Esto reemplaza el progreso guardado en este navegador. ¿Continuar?')) { e.target.value = ''; return; }
   importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'El archivo no es válido.'; if (ok) scheduleSync(); e.target.value = ''; });
 });
+const tamSel = $('tam'); tamSel.value = getPrefs().texto || 'normal';
+tamSel.addEventListener('change', () => { setPref('texto', tamSel.value); applyTam(tamSel.value); });
+$('act-btn').addEventListener('click', e => refrescarTodo(e.currentTarget));
+const minTx = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
+const etiquetaDia = f => new Date(f + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+function pintaEst() {                                               // los últimos 14 días; tocar uno lo elige para corregirlo
+  const box = $('est-dias'); box.replaceChildren();
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i); const f = hoyISO(d), s = estudioDia(f);
+    const b = el('button', 'ce-d' + (f === $('est-dia').value ? ' on' : '')); b.type = 'button';
+    b.append(el('span', '', i === 0 ? 'Hoy' : etiquetaDia(f)), el('b', '', s >= 60 ? minTx(s) : '0 min'));
+    b.addEventListener('click', () => { $('est-dia').value = f; cargaDia(); });
+    box.append(b);
+  }
+}
+function cargaDia() { const f = $('est-dia').value || hoyISO(); $('est-min').value = Math.round(estudioDia(f) / 60); $('est-msg').textContent = ''; pintaEst(); }
+$('est-dia').value = hoyISO(); $('est-dia').max = hoyISO(); $('est-dia').addEventListener('change', cargaDia);
+$('est-form').addEventListener('submit', e => {
+  e.preventDefault(); const f = $('est-dia').value, txt = $('est-min').value.trim(), m = Math.round(+txt), msg = $('est-msg');
+  if (!f) { msg.textContent = 'Elige un día.'; return; }
+  if (f > hoyISO()) { msg.textContent = 'No se puede poner tiempo en un día que aún no ha llegado.'; return; }
+  if (txt === '' || !(m >= 0 && m <= 1440)) { msg.textContent = 'Escribe entre 0 y 1440 minutos.'; return; }
+  estudioCorrige(f, m * 60); pintaEst();
+  msg.textContent = 'Guardado: ' + (m >= 60 ? minTx(m * 60) : m + ' min') + ' el ' + etiquetaDia(f) + '.';
+  if (window.MaTemporizador && window.MaTemporizador.repinta) window.MaTemporizador.repinta();
+});
+cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261126"></script>
+<script src="temporizador.js?v=20261127"></script>
 </body>
 </html>

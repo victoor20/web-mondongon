@@ -99,7 +99,13 @@
     st.est = 'corre'; st.fin = Date.now() + st.rest * 1000; st.sonado = false;
     guarda(); pidePantalla(); sync();
   }
-  function pausa() { st.rest = restante(); st.est = 'pausa'; guarda(); sueltaPantalla(); sync(); }
+  function vuelca() {                                            // cuenta ya lo estudiado hasta ahora sin parar nada: así no se pierde si se cierra la web
+    const s0 = leer(K.st, ST0); if (s0.m !== 'estudio' || !(s0.est === 'corre' || s0.est === 'pausa')) return;
+    st = s0; const s = Math.max(0, st.dur - restante() - st.reg);
+    if (s >= 1) { sumaLog(s); st.reg += s; guarda(); }
+    if (typeof getToken === 'function' && getToken() && typeof syncNow === 'function') syncNow();      // sube el tiempo ya, sin esperar
+  }
+  function pausa() { vuelca(); st.rest = restante(); st.est = 'pausa'; guarda(); sueltaPantalla(); sync(); }
   function reinicia() { silencia(); const s = cierraRegistro(); st.rest = st.dur; st.est = 'parado'; st.sonado = false; guarda(); sueltaPantalla(); sync(); return s; }
   function finaliza() {                                          // «Terminar»: corta la cuenta atrás y deja contado lo estudiado hasta ahora
     const descanso = st.m === 'descanso', hecho = Math.max(0, st.dur - restante()), s = reinicia();
@@ -192,7 +198,7 @@
 
   const hoy = h('p', 'tmp-hoy');
 
-  const aj = h('details', 'tmp-aj'), ajs = h('summary', '', 'Ajustes');
+  const aj = h('details', 'tmp-aj'), ajs = h('summary'); ajs.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>'; ajs.title = 'Ajustes del temporizador'; ajs.setAttribute('aria-label', 'Ajustes del temporizador');   // icono fijo
   const fila = (txt, ctl) => { const l = h('label', 'tmp-fila'); l.append(h('span', '', txt), ctl); return l; };
   const sel = h('select'); Object.keys(SONIDOS).forEach(k => { const o = h('option', '', SONIDOS[k][0]); o.value = k; sel.append(o); });
   sel.addEventListener('change', () => { cfg.sonido = sel.value; escribe(K.cfg, cfg); audio(); suena(false); });
@@ -336,7 +342,8 @@
 
   /* ---------- bucle y sincronización ---------- */
   let timer = 0, tituloPuesto = false; const titulo0 = document.title;
-  function tick() { if (st.est === 'corre' && restante() === 0) { termina(); return; } if (alarmaNodo && !sonando()) paraSonido(); if (timer && st.est !== 'corre' && !sonando()) { sync(); return; } pinta(); }
+  let ultVuelca = Date.now();
+  function tick() { if (st.est === 'corre' && restante() === 0) { termina(); return; } if (st.est === 'corre' && Date.now() - ultVuelca > 60000) { ultVuelca = Date.now(); vuelca(); } if (alarmaNodo && !sonando()) paraSonido(); if (timer && st.est !== 'corre' && !sonando()) { sync(); return; } pinta(); }
   function sync() {                                              // reajusta el bucle al estado actual
     const vivo = st.est === 'corre' || sonando();
     if (vivo && !timer) timer = setInterval(tick, 250);
@@ -348,6 +355,8 @@
     else if (e.key === K.ui) { ui = leer(K.ui, UI0); aplicaUi(); }
     else if (e.key === K.cfg) { cfg = leer(K.cfg, CFG0); cfgUI(); ultimo = ''; pinta(); }
   });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && (st.est === 'corre' || st.est === 'pausa')) vuelca(); });
+  window.addEventListener('pagehide', () => { if (st.est === 'corre' || st.est === 'pausa') vuelca(); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (st.est === 'corre') pidePantalla(); tick(); } });
   function situa() {                                             // por encima de la barra inferior en móvil
     const tb = document.querySelector('.tabbar'), alto = tb && tb.offsetHeight ? tb.offsetHeight : 0;
@@ -362,5 +371,5 @@
     setTimeout(situa, 600);                                      // la barra inferior se crea justo después de cargar
   }
   if (document.body) arranca(); else document.addEventListener('DOMContentLoaded', arranca);
-  window.MaTemporizador = { abre: () => abre(true) };
+  window.MaTemporizador = { abre: () => abre(true), repinta: () => { ultimo = ''; pinta(); } };
 })();

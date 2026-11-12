@@ -330,6 +330,16 @@ function estudioAdd(seg, dia) {
   raw[k] = { s: (e.s || 0) + Math.round(seg), t: nowT() };
   jset(localStorage, LS.estudio, raw); scheduleSync();
 }
+function estudioDia(dia) {                                         // total de ese día, sumando todos los dispositivos
+  let t = 0;
+  Object.entries(estudioRaw()).forEach(([k, v]) => { if (k.split('|')[0] === dia) t += (v && v.s) || 0; });
+  return Math.max(0, t);
+}
+function estudioCorrige(dia, objetivoSeg) {                        // deja el total de ese día en «objetivoSeg» (también si es menos que antes); solo toca la entrada de este dispositivo
+  const raw = estudioRaw(), k = dia + '|' + devId(), e = raw[k] || { s: 0 };
+  raw[k] = { s: (e.s || 0) + Math.round(objetivoSeg) - estudioDia(dia), t: nowT() };
+  jset(localStorage, LS.estudio, raw); scheduleSync();
+}
 function estudioSemana() {                                         // semana actual, de lunes a domingo, sumando todos los dispositivos
   const dias = {};
   Object.entries(estudioRaw()).forEach(([k, v]) => { const f = k.split('|')[0]; dias[f] = (dias[f] || 0) + ((v && v.s) || 0); });
@@ -722,7 +732,7 @@ const ICO = {
   temario: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.6 6.5h.01M4.6 12h.01M4.6 17.5h.01"/>',
   tests: '<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="m8.4 12.2 2.5 2.5 4.7-5.2"/>',
   biblioteca: '<path d="M4 5.8A1.8 1.8 0 0 1 5.8 4H11v16H5.8A1.8 1.8 0 0 1 4 18.2z"/><path d="M20 5.8A1.8 1.8 0 0 0 18.2 4H13v16h5.2a1.8 1.8 0 0 0 1.8-1.8z"/>',
-  ajustes: '<path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/>',
+  ajustes: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
   refrescar: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'
 };
 const NAV = [['inicio', 'Inicio', 'index.html'], ['temario', 'Temario', 'temario.html'], ['tests', 'Tests', 'tests.html'], ['biblioteca', 'Biblioteca', 'biblioteca.html']];
@@ -747,9 +757,7 @@ function montarShell() {
   const nav = el('nav', 'nav'); nav.setAttribute('aria-label', 'Secciones');
   NAV.forEach(([id, txt, href]) => nav.append(enlace(id, txt, href, 'nav-i')));
   const pie = el('div', 'rail-pie');
-  const tc = el('div'); tc.dataset.temaCtl = '';
-  const fila = el('div', 'rail-fila'); if (!enfoque) fila.append(crearRefresco()); fila.append(tc);
-  pie.append(fila, enlace('ajustes', 'Ajustes', 'ajustes.html', 'nav-i'));
+  pie.append(enlace('ajustes', 'Ajustes', 'ajustes.html', 'nav-i'));
   rail.append(brand, nav, pie);
   // móvil: barra superior y barra de pestañas
   const main = el('div', 'main'), top = el('header', 'topbar'), tb = el('a', 'brand'); tb.href = 'index.html'; tb.insertAdjacentHTML('beforeend', marca);
@@ -780,6 +788,9 @@ montarAvisoRed();
 pintaAvisoToken();
 
 applyTema(getPrefs().tema);
+const TAM_TEXTO = { normal: '', grande: '112.5%', mayor: '125%' };
+function applyTam(v) { document.documentElement.style.fontSize = TAM_TEXTO[v] || ''; }
+applyTam(getPrefs().texto);
 
 // «← Atrás»: vuelve a la página anterior de esta web; si se abrió directamente, va al inicio
 document.addEventListener('click', e => {

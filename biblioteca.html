@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261126">
+<link rel="stylesheet" href="style.css?v=20261127">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -58,7 +58,7 @@
     <div class="tj-barra">
       <button type="button" class="btn small" id="t-repasar">Repasar</button>
       <select id="t-filtro" aria-label="Repasar solo un tema"></select>
-      <button type="button" class="btn small ghost" id="t-nueva">Nueva tarjeta</button>
+      <button type="button" class="btn small" id="t-nueva">Nueva tarjeta</button>
       <button type="button" class="btn small ghost" id="t-varias">Pegar varias</button>
     </div>
     <div id="t-rep" class="tj-rep hide" aria-live="polite"></div>
@@ -103,9 +103,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261126"></script>
-<script src="vistas.js?v=20261126"></script>
-<script src="biblioteca.js?v=20261126"></script>
+<script src="app.js?v=20261127"></script>
+<script src="vistas.js?v=20261127"></script>
+<script src="biblioteca.js?v=20261127"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -605,6 +605,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261126"></script>
+<script src="temporizador.js?v=20261127"></script>
 </body>
 </html>
