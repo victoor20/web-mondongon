@@ -657,6 +657,14 @@ details[open]>.nota-sum .nota-st{display:block;-webkit-line-clamp:unset}
 .notas-cod{flex:none;font:800 .95rem/1.25 var(--display);color:var(--bc);font-variant-numeric:tabular-nums}
 .notas-nom{flex:1 1 12rem;min-width:0}
 .notas-n{flex:none;margin-left:auto;font:600 .78rem/1.3 var(--sans);color:var(--muted)}
+.nt-g{margin:0 0 .9rem}
+.nt-sum{cursor:pointer;list-style:none;position:relative;padding-right:2.4rem;margin-bottom:0}
+.nt-g[open]>.nt-sum{margin-bottom:.7rem}
+.nt-sum::-webkit-details-marker{display:none}
+.nt-sum::after{content:"";position:absolute;right:1rem;top:50%;width:.55rem;height:.55rem;margin-top:-.4rem;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .18s}
+.nt-g[open]>.nt-sum::after{transform:rotate(225deg);margin-top:-.1rem}
+.nt-sum:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+.notas-n{margin-right:.2rem}
 @media(max-width:560px){.est-hero{grid-template-columns:1fr}.est-rn{font-size:2.6rem}}
 .est-barra{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.2rem}
 .est-msg textarea{display:block;width:100%;margin-top:.5rem}
