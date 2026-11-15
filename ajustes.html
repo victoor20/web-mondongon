@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261205"></script>
+<script src="puerta.js?v=20261206"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ajustes - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261205">
+<link rel="stylesheet" href="style.css?v=20261206">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -123,8 +123,10 @@
 
   <section class="hoja sync" style="margin-top:1rem">
     <h2>Ocultar la web</h2>
-    <p class="estado-s">En este dispositivo la web mostrará un «404 Not Found» hasta que la desbloquees de nuevo (toca tres veces seguidas el «0»). No borra nada ni afecta a la sincronización.</p>
-    <div class="acciones" style="margin-top:.7rem"><button type="button" class="btn small ghost" id="ocultar">Ocultar en este dispositivo</button></div>
+    <p class="estado-s">Cuando la web está tapada, este dispositivo muestra un «404» hasta que toques tres veces seguidas el «0». No borra nada ni afecta a la sincronización.</p>
+    <label class="bf-f" style="margin-top:.7rem">Volver a taparla
+      <select id="pu-modo"><option value="sesion">Al cerrar la app</option><option value="15">Tras 15 minutos fuera</option><option value="nunca">Nunca (solo con el botón)</option></select></label>
+    <div class="acciones" style="margin-top:.7rem"><button type="button" class="btn small ghost" id="ocultar">Ocultar ahora</button></div>
   </section>
 
   <div class="pie">
@@ -135,8 +137,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261205"></script>
-<script src="vistas.js?v=20261205"></script>
+<script src="app.js?v=20261206"></script>
+<script src="vistas.js?v=20261206"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -212,7 +214,11 @@ $('impfile').addEventListener('change', e => {
 const tamSel = $('tam'); tamSel.value = getPrefs().texto || 'normal';
 tamSel.addEventListener('change', () => { setPref('texto', tamSel.value); applyTam(tamSel.value); });
 $('act-btn').addEventListener('click', e => refrescarTodo(e.currentTarget));
-$('ocultar').addEventListener('click', () => { try { localStorage.removeItem('ma2_ok'); } catch (e) { /* nada */ } location.href = './'; });
+try { $('pu-modo').value = localStorage.getItem('ma2_puerta') || 'sesion'; } catch (e) { /* nada */ }
+$('pu-modo').addEventListener('change', e => {                    // cambia cuándo se vuelve a tapar; ahora mismo sigues dentro
+  try { localStorage.setItem('ma2_puerta', e.target.value); localStorage.setItem('ma2_ok', '1'); localStorage.setItem('ma2_ok_t', String(Date.now())); sessionStorage.setItem('ma2_ses', '1'); } catch (er) { /* nada */ }
+});
+$('ocultar').addEventListener('click', () => { try { localStorage.removeItem('ma2_ok'); sessionStorage.removeItem('ma2_ses'); } catch (e) { /* nada */ } location.href = './'; });
 const minTx = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 const txMin = s => (s >= 60 ? minTx(s) : '0 min');
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -268,6 +274,6 @@ cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261205"></script>
+<script src="temporizador.js?v=20261206"></script>
 </body>
 </html>

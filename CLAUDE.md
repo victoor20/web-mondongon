@@ -122,7 +122,7 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
 - **Puerta de entrada** (`puerta.js`, primer script de cada HTML + `404.html`): si el dispositivo no tiene
   `localStorage.ma2_ok = '1'`, la página se sustituye por un «404 Not Found» (`window.stop()` + reemplazo del DOM; `app.js` lanza
   un error si `window.__PUERTA`, por si acaso). Se desbloquea tocando tres veces seguidas el «0»; Ajustes → «Ocultar la web»
-  vuelve a cerrarla. Es despiste, no seguridad (el código y los tests públicos siguen en el repo público). Los HTML nuevos
+  vuelve a cerrarla; el selector «Volver a taparla» (clave `ma2_puerta`: `sesion` por defecto = al cerrar la app, `15` = tras 15 min fuera, `nunca`) decide cuándo se pide de nuevo el triple toque. Es despiste, no seguridad (el código y los tests públicos siguen en el repo público). Los HTML nuevos
   deben llevar `<script src="puerta.js?v=…"></script>` justo después de `<meta charset>`, y `puerta.js` va en PRECACHE.
 - Temario y Estructura tienen un selector «Origen de las preguntas» (Todos, Academia, ChatGPT…; pref
   `fuenteVista`, solo en ese dispositivo). Se activa con `usaFuente = true` en la página (vistas.js:
