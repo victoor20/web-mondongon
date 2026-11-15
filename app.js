@@ -452,8 +452,8 @@ function statsFor(id) {                                              // resultad
   return { intentos: h.length, ultimo: ult, ultimoPct: Math.round(ult.right / ult.total * 100), mejor: Math.max(...h.map(x => x.right / x.total)) };
 }
 // Por tema: acierto RECIENTE (últimos 3 intentos, refleja lo que sabes ahora) y datos de uso
-function temaStats() {
-  const h = getHist().slice().sort((a, b) => a.date.localeCompare(b.date)), por = {}, out = {};
+function temaStats(ok) {                                          // ok: filtro opcional de intentos (por origen)
+  const h = getHist().filter(ok || (() => true)).sort((a, b) => a.date.localeCompare(b.date)), por = {}, out = {};
   h.forEach(e => Object.entries(e.byTema || {}).forEach(([t, v]) => { (por[t] = por[t] || []).push({ date: e.date, r: v.r, t: v.t }); }));
   Object.entries(por).forEach(([t, arr]) => {
     const rec = arr.slice(-3);

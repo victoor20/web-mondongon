@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261203">
+<link rel="stylesheet" href="style.css?v=20261204">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -24,17 +24,18 @@
     <h1 class="titular">Temario</h1>
     <p class="entradilla">6 bloques y 45 temas. Abre un bloque para ver sus temas, practicar y repasar errores. El porcentaje es tu acierto en los últimos 3 intentos de cada tema.</p>
   </div>
+  <div class="chips origen bib-or" id="t-origen"></div>
   <div id="temario"></div>
 </div>
-<script src="app.js?v=20261203"></script>
-<script src="vistas.js?v=20261203"></script>
+<script src="app.js?v=20261204"></script>
+<script src="vistas.js?v=20261204"></script>
 <script>
 function temaRow(t) {
   const c = cnt[t.id], a = TS[t.id], r = reciente(t.id), ne = errC[t.id] || 0, nd = dudC[t.id] || 0;
   const row = el('div', 'tema' + (c ? '' : ' vacio')); row.id = 'tema-' + t.id; row.title = t.oficial;
   row.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto));
   const det = el('div', 'tdet');
-  det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests'));
+  det.append(el('span', '', c ? `${plural(c.tests, 'test', 'tests')}, ${c.preguntas} preguntas` : 'Sin tests' + (fuenteSel() !== 'Todos' ? ' de ' + fuenteSel() : '')));
   if (r) {
     const pf = el('span', 'perf'), m = el('span', 'meter'), f = el('i', pct(r) < 60 ? 'low' : '');
     f.style.width = pct(r) + '%'; m.append(f); pf.append(m, el('span', 'tab', pct(r) + ' %')); det.append(pf);
@@ -47,9 +48,9 @@ function temaRow(t) {
     if (c) {
       const pr = el('a', 'mini azul', 'Practicar'); pr.href = urlMixto(t.id); act.append(pr);
       if (t.id === 'I-1') [['ce', 'Estructura CE'], ['lotc', 'Estructura LOTC']].forEach(k => { const es = el('a', 'mini', k[1]); es.href = 'estructura.html?n=' + k[0]; act.append(es); });
-      const vt = el('a', 'mini', 'Ver tests'); vt.href = `tests.html?tema=${encodeURIComponent(t.id)}`; act.append(vt);
-      if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}`; act.append(e); }
-      if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}`; act.append(d); }
+      const vt = el('a', 'mini', 'Ver tests'); vt.href = `tests.html?tema=${encodeURIComponent(t.id)}${qFuente()}`; act.append(vt);
+      if (ne) { const e = el('a', 'mini err', `Errores (${ne})`); e.href = `test.html?t=errores&tema=${encodeURIComponent(t.id)}${qFuente()}`; act.append(e); }
+      if (nd) { const d = el('a', 'mini', `Dudas (${nd})`); d.href = `test.html?t=dudosas&tema=${encodeURIComponent(t.id)}${qFuente()}`; act.append(d); }
     }
     if (nm) { const m = el('a', 'mini', `Material (${nm})`); m.href = `biblioteca.html?tema=${encodeURIComponent(t.id)}#material`; act.append(m); }
     row.append(act);
@@ -73,7 +74,7 @@ function renderTemario() {
     d.append(sum);
     if (con) {
       const bp = el('div', 'bpract'), a = el('a', 'mini azul', 'Practicar este bloque');
-      a.href = `test.html?t=mixto&bloque=${b.id}&n=20`; bp.append(a); d.append(bp);
+      a.href = `test.html?t=mixto&bloque=${b.id}&n=20${qFuente()}`; bp.append(a); d.append(bp);
     }
     b.temas.forEach(t => d.append(temaRow(t)));
     box.append(d);
@@ -86,13 +87,15 @@ function irAHash() {
   row.scrollIntoView({ block: 'center' });
   row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
 }
+function pintaOrigen() { chipsFuente($('t-origen'), () => { computeData(); renderTemario(); pintaOrigen(); }); }
 async function init() {
+  usaFuente = true;
   await loadTemario(); computeData(); renderTemario(); irAHash();
-  await cargarCatalogo(); renderTemario(); irAHash();
+  await cargarCatalogo(); renderTemario(); pintaOrigen(); irAHash();
 }
 window.addEventListener('hashchange', irAHash);
 init();
 </script>
-<script src="temporizador.js?v=20261203"></script>
+<script src="temporizador.js?v=20261204"></script>
 </body>
 </html>

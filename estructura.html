@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261203">
+<link rel="stylesheet" href="style.css?v=20261204">
 </head>
 <body data-pagina="temario">
 <div class="wrap">
@@ -25,17 +25,19 @@
     <h1 class="titular" id="e-h1">Constitución Española</h1>
     <p class="entradilla" id="e-ent">Cargando…</p>
   </div>
+  <div class="chips origen bib-or" id="e-origen"></div>
   <p class="bib-msg est-msg" id="e-msg" role="status" aria-live="polite"></p>
   <div id="e-box"></div>
 </div>
-<script src="app.js?v=20261203"></script>
-<script src="vistas.js?v=20261203"></script>
+<script src="app.js?v=20261204"></script>
+<script src="vistas.js?v=20261204"></script>
 <script>
 /* Estructura de una norma (Título, Capítulo, Sección) con sus preguntas. Los datos de la norma están en estructura-XX.json:
    para añadir otra norma (por ejemplo la LOTC) basta otro archivo y una línea en NORMA_URL. */
 const NORMA_URL = { ce: 'estructura-ce.json', lotc: 'estructura-lotc.json' };
 const N = (new URLSearchParams(location.search).get('n') || 'ce').toLowerCase();
 const COLORES = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+usaFuente = true;
 let EST = null, QA = [];                                           // QA: cada pregunta con los artículos de esta norma que cita
 
 const rango = (d, h) => d === h ? 'Artículo ' + d : 'Artículos ' + d + ' a ' + h;
@@ -49,7 +51,7 @@ function comprime(nums) {                                          // [22,23,24,
   return out.join(', ');
 }
 function acierto(d, h) {                                           // acierto en los últimos 3 intentos que tocaron este tramo
-  const hist = getHist().slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')), esL = EST.norma === 'LOTC';
+  const hist = getHist().filter(histOk).sort((a, b) => (b.date || '').localeCompare(a.date || '')), esL = EST.norma === 'LOTC';
   let r = 0, t = 0, usados = 0;
   for (const e of hist) {
     if (!e.ar) continue;
@@ -140,8 +142,8 @@ function pideMas(d, h) { copia(promptMas(d, h, datos(d, h))); }
 /* ---------- tarjetas ---------- */
 function botones(d, h, x, completo) {
   const ac = el('div', 'nota-ac');
-  if (x.n) { const a = el('a', 'mini azul', typeof completo === 'string' ? completo : completo ? 'Hacer test de este título' : 'Hacer test'); a.href = 'test.html?t=mixto&art=' + espec(d, h) + '&n=20'; ac.append(a); }
-  if (x.ne) { const e = el('a', 'mini err', 'Errores (' + x.ne + ')'); e.href = 'test.html?t=errores&art=' + espec(d, h); ac.append(e); }
+  if (x.n) { const a = el('a', 'mini azul', typeof completo === 'string' ? completo : completo ? 'Hacer test de este título' : 'Hacer test'); a.href = 'test.html?t=mixto&art=' + espec(d, h) + '&n=20' + qFuente(); ac.append(a); }
+  if (x.ne) { const e = el('a', 'mini err', 'Errores (' + x.ne + ')'); e.href = 'test.html?t=errores&art=' + espec(d, h) + qFuente(); ac.append(e); }
   const m = el('button', 'mini', 'Pedir más preguntas'); m.type = 'button'; m.addEventListener('click', () => pideMas(d, h)); ac.append(m);
   return ac;
 }
@@ -201,7 +203,7 @@ function vistaRaiz() {
   const sel = el('div', 'est-norma');                               // cambiar entre las normas del tema
   [['ce', 'Constitución'], ['lotc', 'LOTC']].forEach(k => { const a = el('a', 'btn small' + (k[0] === N ? '' : ' ghost'), k[1]); a.href = 'estructura.html?n=' + k[0]; if (k[0] === N) a.setAttribute('aria-current', 'page'); sel.append(a); });
   barra.append(sel);
-  if (tot.n) { const a = el('a', 'btn small', 'Test de toda la ' + EST.corto); a.href = 'test.html?t=mixto&art=' + espec(1, EST.ultimo) + '&n=20'; barra.append(a); }
+  if (tot.n) { const a = el('a', 'btn small', 'Test de toda la ' + EST.corto); a.href = 'test.html?t=mixto&art=' + espec(1, EST.ultimo) + '&n=20' + qFuente(); barra.append(a); }
   const t0 = el('a', 'btn small ghost', 'Volver al temario'); t0.href = 'temario.html#tema-' + EST.tema; barra.append(t0);
   box.append(barra);
   const grid = el('div', 'bib-grid');
@@ -235,6 +237,11 @@ function ruta() {
   if (i >= 0) vistaTitulo(EST.titulos[i], i); else vistaRaiz();
   window.scrollTo(0, 0);
 }
+async function cargaQA() {
+  const qs = await todasLasPreguntas();
+  QA = qs.map(q => ({ q: q, arts: refInfo(q).filter(r => r.norma === EST.norma).map(r => r.n) }));
+}
+function pintaOrigen() { chipsFuente($('e-origen'), async () => { await cargaQA(); pintaOrigen(); ruta(); }); }
 async function init() {
   await loadTemario();
   const url = NORMA_URL[N];
@@ -242,9 +249,7 @@ async function init() {
     if (!url) throw new Error('norma');
     const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); EST = await r.json();
   } catch (e) { $('e-ent').textContent = 'No he podido cargar la estructura. Comprueba la conexión e inténtalo de nuevo.'; return; }
-  const qs = await todasLasPreguntas();
-  QA = qs.map(q => ({ q: q, arts: refInfo(q).filter(r => r.norma === EST.norma).map(r => r.n) }));
-  ruta();
+  await cargaQA(); pintaOrigen(); ruta();
 }
 $('e-volver').addEventListener('click', ev => {                    // vuelve a la página de antes; si no hay, al temario
   ev.preventDefault();
@@ -253,6 +258,6 @@ $('e-volver').addEventListener('click', ev => {                    // vuelve a l
 window.addEventListener('hashchange', ruta);
 init();
 </script>
-<script src="temporizador.js?v=20261203"></script>
+<script src="temporizador.js?v=20261204"></script>
 </body>
 </html>

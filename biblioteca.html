@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261203">
+<link rel="stylesheet" href="style.css?v=20261204">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -134,9 +134,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261203"></script>
-<script src="vistas.js?v=20261203"></script>
-<script src="biblioteca.js?v=20261203"></script>
+<script src="app.js?v=20261204"></script>
+<script src="vistas.js?v=20261204"></script>
+<script src="biblioteca.js?v=20261204"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -277,7 +277,7 @@ function vistaBloque(box, sub) {
   } else {
     b.temas.forEach(t => {
       const lista = docs.filter(d => d.tema === t.id), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
-      det.open = t.id in abierto ? abierto[t.id] : lista.length > 0;
+      det.open = !!abierto[t.id];                                   // todo plegado al entrar; se abre lo que tú abras
       det.addEventListener('toggle', () => { abierto[t.id] = det.open; });
       const sum = el('summary', 'bib-ts');
       sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : 'sin documentos'), el('span', 'chev'));
@@ -298,7 +298,7 @@ function filaDoc(d) {
   f.append(el('span', 'doc-ext', d.ext.toUpperCase().slice(0, 4)));
   const cuerpo = el('div', 'doc-c'); cuerpo.append(el('h3', '', d.titulo));
   const off = copias.has(d.id), meta = el('p', 'fine doc-meta');
-  meta.append(el('span', 'org org-' + slugOrigen(origenDe(d)), origenDe(d)), el('span', '', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(', ') + (off ? ', disponible sin conexión' : '')));
+  meta.append(el('span', 'org org-' + slugOrigen(origenDe(d)), origenDe(d)), el('span', 'doc-tipo', '- ' + d.tipo), el('span', 'doc-det', [tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(', ') + (off ? ', disponible sin conexión' : '')));
   cuerpo.append(meta);
   f.append(cuerpo);
   const ac = el('div', 'doc-ac');
@@ -800,6 +800,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261203"></script>
+<script src="temporizador.js?v=20261204"></script>
 </body>
 </html>

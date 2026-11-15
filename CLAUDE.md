@@ -119,6 +119,10 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   nombre (esquema, anexo, test, mp3/m4a = audio); lo que no reconoce usa los valores del formulario.
   Hay filtro de origen en Material y etiqueta de origen en cada documento; en Tests, la etiqueta `.org-academia`
   (verde) y el botón «Quitar filtros». Tarjetas y Notas son siempre propias y no llevan origen.
+- Temario y Estructura tienen un selector «Origen de las preguntas» (Todos, Academia, ChatGPT…; pref
+  `fuenteVista`, solo en ese dispositivo). Se activa con `usaFuente = true` en la página (vistas.js:
+  `fuenteSel`, `qFuente`, `itemsSel`, `enFuente`, `histOk`, `chipsFuente`); filtra tests, preguntas, aciertos,
+  errores y dudas, y los enlaces a test.html/tests.html llevan `&fuente=`. Inicio y Tests no lo usan.
 - Los archivos de material **no están en este repo**: viven en el repositorio privado `mondongon-datos`
   (carpeta `biblioteca/` y la lista `biblioteca.json`). La lista se copia en `localStorage` (`ma2_bib`) y
   cada archivo guardado «sin conexión» va a la caché `ma-bib` del navegador, por eso la Biblioteca y el

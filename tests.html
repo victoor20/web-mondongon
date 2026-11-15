@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261203">
+<link rel="stylesheet" href="style.css?v=20261204">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -56,10 +56,10 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261203"></script>
-<script src="vistas.js?v=20261203"></script>
+<script src="app.js?v=20261204"></script>
+<script src="vistas.js?v=20261204"></script>
 <script>
-let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
+let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = new URLSearchParams(location.search).get('fuente') || 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
   recientes: ['Más recientes primero', (a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id)],
   antiguos: ['Más antiguos primero', (a, b) => (a.fecha || '').localeCompare(b.fecha || '') || a.id.localeCompare(b.id)],
@@ -153,6 +153,7 @@ function renderChips() {
   }
   const fb = $('chips-origen'); fb.replaceChildren();
   const fuentes = [...new Set(items.map(i => i.fuente))].sort((a, b) => a.localeCompare(b, 'es'));
+  if (fFuente !== 'Todos' && !fuentes.includes(fFuente)) fFuente = 'Todos';
   if (fuentes.length >= 2) {
     fb.append(el('span', 'rot', 'Origen'));
     ['Todos', ...fuentes].forEach(f => { const c = mk(fb, f, null, fFuente === f, () => { fFuente = f; alt(); }); if (f !== 'Todos') c.classList.add('o-' + slugOrigen(f)); });
@@ -208,6 +209,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261203"></script>
+<script src="temporizador.js?v=20261204"></script>
 </body>
 </html>

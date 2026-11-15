@@ -338,6 +338,8 @@ ol.pasos li{margin:.4rem 0}
 .barra .limpiar{min-height:2.25rem;padding:.3rem .8rem;font-size:.82rem}
 .bib-or{margin:0 0 1rem}
 .doc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .5rem}
+.doc-tipo{font-weight:600;color:var(--tinta)}
+.doc-det{flex-basis:100%}
 .bf-prev{margin:0 0 .8rem;padding:0;list-style:none;display:grid;gap:.25rem;font-size:.82rem;color:var(--muted)}
 .bf-prev b{color:var(--tinta);font-weight:600;overflow-wrap:anywhere}
 .bf-auto{margin:0 0 .6rem}
