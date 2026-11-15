@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261129">
+<link rel="stylesheet" href="style.css?v=20261130">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -30,6 +30,17 @@
     <h2>Aspecto</h2>
     <p class="estado-s">Claro, oscuro o como el sistema.</p>
     <div style="margin-top:.7rem"><div data-tema-ctl></div></div>
+  </section>
+
+  <section class="hoja sync" id="examen" style="margin-top:1rem">
+    <h2>Fecha del examen</h2>
+    <p class="estado-s">Se muestra bajo «Tu preparación» en Inicio. Mientras no haya convocatoria, es una estimación. Se guarda solo en este dispositivo.</p>
+    <div style="margin-top:.7rem;display:flex;flex-wrap:wrap;align-items:center;gap:.7rem">
+      <input type="date" id="ex-f" aria-label="Fecha del examen" style="width:auto;max-width:100%">
+      <label style="display:flex;align-items:center;gap:.45rem"><input type="checkbox" id="ex-e"> Es una estimación</label>
+      <button type="button" class="btn small ghost" id="ex-r">Volver a la estimación</button>
+    </div>
+    <p class="fine" id="ex-v" style="margin:.6rem 0 0"></p>
   </section>
 
   <section class="hoja sync" style="margin-top:1rem">
@@ -117,8 +128,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261129"></script>
-<script src="vistas.js?v=20261129"></script>
+<script src="app.js?v=20261130"></script>
+<script src="vistas.js?v=20261130"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -183,6 +194,14 @@ $('impfile').addEventListener('change', e => {
   if (!confirm('Esto reemplaza el progreso guardado en este navegador. ¿Continuar?')) { e.target.value = ''; return; }
   importProgress(f, ok => { $('impmsg').textContent = ok ? 'Progreso importado.' : 'El archivo no es válido.'; if (ok) scheduleSync(); e.target.value = ''; });
 });
+{
+  const ef = $('ex-f'), ee = $('ex-e'), ev = $('ex-v');
+  const pinta = () => { const c = examenCfg(); ef.value = c.fecha || ''; ee.checked = c.estimada !== false; const f = fraseExamen(); ev.textContent = f ? 'En Inicio: ' + f.texto : 'Sin fecha: Inicio no muestra cuenta atrás.'; };
+  const guarda = () => { setPref('examenF', ef.value); setPref('examenE', ee.checked); pinta(); };
+  ef.addEventListener('change', guarda); ee.addEventListener('change', guarda);
+  $('ex-r').addEventListener('click', () => { const p = getPrefs(); delete p.examenF; delete p.examenE; jset(localStorage, LS.prefs, p); pinta(); });
+  pinta();
+}
 const tamSel = $('tam'); tamSel.value = getPrefs().texto || 'normal';
 tamSel.addEventListener('change', () => { setPref('texto', tamSel.value); applyTam(tamSel.value); });
 $('act-btn').addEventListener('click', e => refrescarTodo(e.currentTarget));
@@ -241,6 +260,6 @@ cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261129"></script>
+<script src="temporizador.js?v=20261130"></script>
 </body>
 </html>

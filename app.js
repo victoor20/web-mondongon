@@ -298,6 +298,22 @@ const getNotas = () => { const o = {}; Object.entries(notasRaw()).forEach(([k, v
 function setNota(key, text) { const raw = notasRaw(); raw[key] = { x: text || '', t: nowT() }; jset(localStorage, LS.notas, raw); scheduleSync(); }
 const getPrefs = () => jget(localStorage, LS.prefs, {});             // preferencias de ESTE dispositivo (no se sincronizan)
 function setPref(k, v) { const p = getPrefs(); p[k] = v; jset(localStorage, LS.prefs, p); }
+
+/* fecha del examen: valor por defecto aquí; cada dispositivo puede cambiarlo en Ajustes (preferencias de ese dispositivo) */
+const EXAMEN = { fecha: '2027-05-22', estimada: true };            // OEP 2026 sin convocatoria: la anterior salió el 22-12-2025 y el examen fue el 23-5-2026
+const MESES_L = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const DIAS_L = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+function examenCfg() { const p = getPrefs(); return p.examenF !== undefined ? { fecha: p.examenF, estimada: p.examenE !== false } : EXAMEN; }
+function fraseExamen() {                                           // null si no hay fecha válida
+  const c = examenCfg(), m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(c.fecha || ''); if (!m) return null;
+  const y = +m[1], mo = +m[2], d = +m[3], f = new Date(y, mo - 1, d), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  if (f.getMonth() !== mo - 1) return null;
+  const dias = Math.round((f - hoy) / 864e5), mes = MESES_L[mo - 1] + ' de ' + y, nota = c.estimada ? 'Es una estimación hasta que salga la convocatoria.' : '';
+  if (dias < 0) return { texto: c.estimada ? 'La fecha estimada del examen ya ha pasado.' : 'El examen fue el ' + d + ' de ' + mes + '.', nota: c.estimada ? 'Actualízala en Ajustes.' : '' };
+  const cab = c.estimada ? 'Examen estimado: ' + mes : 'Examen: ' + DIAS_L[f.getDay()] + ' ' + d + ' de ' + mes;
+  const falta = dias === 0 ? 'es hoy' : dias === 1 ? 'es mañana' : dias < 14 ? 'faltan ' + dias + ' días' : dias <= 60 ? 'faltan ' + Math.round(dias / 7) + ' semanas' : 'faltan unos ' + Math.round(dias / 30.44) + ' meses';
+  return { texto: cab + ', ' + falta + '.', nota };
+}
 function blocRaw() {
   const v = jget(localStorage, LS.bloc2, null);
   if (v) return v;

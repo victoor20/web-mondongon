@@ -32,12 +32,5 @@ async function todasLasPreguntas() {
   const res = await Promise.allSettled(its.filter(i => i.kind === 'json').map(i => loadTestData(i.id)));
   return res.filter(r => r.status === 'fulfilled').flatMap(r => r.value.preguntas);
 }
-// frase de estado general: temas con tests y acierto reciente
-function fraseEstado() {
-  const temas = Object.keys(_temario.byId).length, con = Object.keys(cnt).filter(t => _temario.byId[t]).length;
-  let r = 0, t = 0; Object.entries(TS).forEach(([id, a]) => { if (_temario.byId[id] && a.reciente.t) { r += a.reciente.r; t += a.reciente.t; } });
-  return `Administrativo del Estado (C1). ${plural(con, 'tema con tests', 'temas con tests')} de ${temas}` + (t ? `; acierto reciente del ${Math.round(r / t * 100)} %.` : '.');
-}
-
 /* documentos de la Biblioteca por tema (lista guardada en este dispositivo) */
 const matCuenta = tema => Object.values(jget(localStorage, 'ma2_bib', {})).filter(d => d && !d.del && d.tema === tema).length;

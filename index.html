@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261129">
+<link rel="stylesheet" href="style.css?v=20261130">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -62,12 +62,18 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261129"></script>
-<script src="vistas.js?v=20261129"></script>
+<script src="app.js?v=20261130"></script>
+<script src="vistas.js?v=20261130"></script>
 <script>
 let selTema = null, primera = true;
 
-function renderEstado() { $('estado').textContent = fraseEstado(); }
+function renderEstado() {                                          // bajo el título: fecha estimada del examen y lo que falta
+  const p = $('estado'), f = fraseExamen(); p.textContent = '';
+  if (!f) { p.textContent = 'Administrativo del Estado (C1).'; return; }
+  p.append(f.texto);
+  if (f.nota) p.append(' ', el('span', 'fine', f.nota));
+  const a = el('a', 'fine', 'Cambiar'); a.href = 'ajustes.html#examen'; a.style.marginLeft = '.5rem'; p.append(a);
+}
 
 const fmtT = s => { const m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '') : m + ' min'; };
 function temaFlojoAhora() {
@@ -221,6 +227,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261129"></script>
+<script src="temporizador.js?v=20261130"></script>
 </body>
 </html>
