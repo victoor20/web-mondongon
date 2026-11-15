@@ -13,14 +13,14 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261201">
+<link rel="stylesheet" href="style.css?v=20261202">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
   <div class="volver"><a class="btn small ghost" href="index.html" data-atras>← Atrás</a></div>
 
   <h1 class="titular">Añadir un test</h1>
-  <p class="entradilla">Pega el documento que te da ChatGPT. La web lo lee, lo asigna a su tema y lo publica.</p>
+  <p class="entradilla">Pega el documento que te da ChatGPT o sube el PDF de un test de la academia. La web lo lee, lo asigna a su tema y lo publica.</p>
 
   <section class="hoja paso" style="margin-top:1.6rem">
     <h2>1. Pega el documento</h2>
@@ -28,6 +28,8 @@
     <div class="acciones" style="margin-top:.8rem">
       <button type="button" class="btn" id="validar">Leer documento</button>
       <button type="button" class="btn ghost" id="pick">Subir archivo</button>
+      <button type="button" class="btn ghost" id="pickpdf">Subir PDF de la academia</button>
+      <input type="file" id="filepdf" accept=".pdf,application/pdf" class="hide">
       <input type="file" id="file" accept=".md,.txt,.json,text/plain,text/markdown,application/json" class="hide">
     </div>
     <div id="resultado"></div>
@@ -111,7 +113,7 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
   </section>
 </div>
 
-<script src="app.js?v=20261201"></script>
+<script src="app.js?v=20261202"></script>
 <script>
 function slug(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
@@ -217,6 +219,35 @@ $('validar').addEventListener('click', () => {
   $('descarga').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
+$('pickpdf').addEventListener('click', () => $('filepdf').click());
+async function pdfLineas(file) {                                   // texto del PDF por líneas; las columnas quedan separadas por 3 espacios
+  if (!window.pdfjsLib) await new Promise((ok, ko) => { const s = document.createElement('script'); s.src = 'vendor/pdfjs3/pdf.min.js'; s.onload = ok; s.onerror = () => ko(new Error('no se carga el lector de PDF')); document.head.append(s); });
+  const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = new URL('vendor/pdfjs3/pdf.worker.min.js', location.href).href;
+  const pdf = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise, paginas = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const items = (await (await pdf.getPage(i)).getTextContent()).items.filter(x => x.str && x.transform).map(x => ({ s: x.str, x: x.transform[4], y: x.transform[5], w: x.width }));
+    items.sort((a, b) => b.y - a.y || a.x - b.x);
+    const lineas = []; let fila = [], y0 = null;
+    const cierra = () => { if (!fila.length) return; fila.sort((a, b) => a.x - b.x); let t = '', p = null;
+      fila.forEach(it => { if (!it.s.trim()) { t += it.w > 8 ? '   ' : ' '; p = it; return; }
+        if (p) { const gap = it.x - (p.x + p.w); t += gap > 8 ? '   ' : (gap > 1 && !/\s$/.test(t) && !/^\s/.test(it.s) ? ' ' : ''); } t += it.s; p = it; }); lineas.push(t); fila = []; };
+    items.forEach(it => { if (y0 !== null && Math.abs(it.y - y0) > 3) { cierra(); } if (!fila.length) y0 = it.y; fila.push(it); });
+    cierra(); paginas.push(lineas);
+  }
+  return paginas;
+}
+$('filepdf').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  const box = $('resultado'); box.replaceChildren(); $('descarga').classList.add('hide'); current = null;
+  box.append(el('p', 'fine', 'Leyendo el PDF…'));
+  try {
+    const r = parsePdfAcademia(await pdfLineas(f), f.name);
+    box.replaceChildren();
+    if (r.errors.length) { showIssues(box, r.errors, r.warnings); return; }
+    $('json').value = JSON.stringify(r.data, null, 2); $('validar').click();
+    if (r.warnings.length) showIssues($('resultado'), [], r.warnings);
+  } catch (err) { box.replaceChildren(el('p', 'aviso', 'No he podido leer el PDF: ' + err.message)); }
+});
 $('pick').addEventListener('click', () => $('file').click());
 $('file').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;

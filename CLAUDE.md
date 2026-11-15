@@ -43,6 +43,10 @@ GitHub Pages con dominio propio `mondongon.com` (ver `CNAME`).
   metadato en `ma2_privcat` y una copia del JSON en Cache Storage `ma-priv` (uso sin conexión); sin token no aparecen.
   `loadRawTest` busca primero ahí. `editar.html` edita/elimina en el repo que corresponda y no deja guardar como `Academia`
   un test público. El Test mixto admite `&fuente=Academia` (lo añade Tests al filtrar por origen).
+- **Test de la academia en PDF**: «Añadir test» → «Subir PDF de la academia» lee el PDF en el navegador con pdf.js
+  (`pdfLineas` en `nuevo.html`) y `parsePdfAcademia` (`app.js`) saca preguntas (`N.` / `N.-`), opciones `a)–d)` (también en dos
+  columnas) y la tabla «SOLUCIÓN» (letra + referencia). Tema, título y origen salen del nombre del archivo (`B1-T01-01. Test 1. …`).
+  Si el formato de la academia cambia, se ajusta ese parser; el resultado se revisa siempre antes de publicar.
 - **Alta/edición de tests**: `nuevo.html`/`editar.html` generan el JSON del test y, con el
   mismo token, lo suben directamente a `tests/` en este repo mediante la API de GitHub (commit
   directo a `main`).

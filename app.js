@@ -747,6 +747,59 @@ function parseMarkdownTest(md) {
   return { data: { titulo: titulo ? niceTitle(titulo) : '', tema: bloque && tn ? `${bloque}-${tn}` : '', fecha, preguntas }, errors, warnings };
 }
 
+/* ---------- test de la academia en PDF (texto + tabla de soluciones) ---------- */
+const ROMANOS = ['', 'I', 'II', 'III', 'IV', 'V', 'VI'];
+// paginas: lista de páginas; cada página, lista de líneas (las columnas separadas por 3 espacios o más)
+function parsePdfAcademia(paginas, nombre) {
+  const errors = [], warnings = [];
+  const base = String(nombre || '').replace(/\.pdf$/i, '').trim();
+  const mm = /^B(\d)\s*-\s*T(\d{1,2})(?:\s*-\s*(\d+))?[.\s]*(.*)$/i.exec(base);
+  const tema = mm && ROMANOS[+mm[1]] ? ROMANOS[+mm[1]] + '-' + (+mm[2]) : '';
+  const resto = (mm ? mm[4] : base).replace(/\s*\(x\d+\)/i, '').replace(/^(Test\s*\d+)\.\s+/i, '$1: ').trim();
+  const titulo = mm ? `Academia B${mm[1]}-T${('0' + mm[2]).slice(-2)}${mm[3] ? '-' + mm[3] : ''}. ${resto}` : `Academia. ${resto}`;
+  // se quitan cabeceras y pies que se repiten en las páginas
+  const norm = s => s.replace(/\s+/g, ' ').trim(), veces = {};
+  paginas.forEach(p => new Set(p.map(norm)).forEach(l => { veces[l] = (veces[l] || 0) + 1; }));
+  const minRep = Math.max(2, Math.ceil(paginas.length * 0.6));
+  const lineas = [].concat.apply([], paginas.map(p => p.filter(l => { const n = norm(l); return n && !(veces[n] >= minRep && paginas.length > 1) && !/www\.|P[áa]gina\s*\|/i.test(n); })));
+  const iSol = lineas.findIndex(l => /^\s*SOLUCI[ÓO]N/i.test(l));
+  if (iSol < 0) return { data: null, errors: ['No encuentro la tabla de soluciones al final del PDF.'], warnings };
+  const preg = []; let cur = null, tgt = -1, sig = 1;                    // tgt: -1 = enunciado, 0..3 = opción
+  const anade = txt => { txt = txt.replace(/\s+/g, ' ').trim(); if (!txt) return; if (tgt < 0) cur.q = (cur.q + ' ' + txt).trim(); else cur.opciones[tgt] = (cur.opciones[tgt] + ' ' + txt).trim(); };
+  for (const raw of lineas.slice(0, iSol)) {
+    let ln = raw.trim(); if (!ln) continue;
+    const qm = /^(\d{1,3})\s*[.\-–)]+\s*(.*)$/.exec(ln);
+    if (qm && +qm[1] === sig) { cur = { n: sig, q: '', opciones: [] }; preg.push(cur); tgt = -1; sig++; ln = qm[2]; }
+    else if (!cur) continue;                                             // cabecera antes de la primera pregunta
+    while (ln) {                                                         // marcadores a) b) c) d) en orden
+      const l = 'abcd'[cur.opciones.length], m = l ? new RegExp('(^|\\s{2,})' + l + '\\)\\s*', 'i').exec(ln) : null;
+      if (!m) { anade(ln); break; }
+      anade(ln.slice(0, m.index)); cur.opciones.push(''); tgt = cur.opciones.length - 1; ln = ln.slice(m.index + m[0].length);
+    }
+  }
+  const sol = {}, txt = lineas.slice(iSol + 1).join('\n'), re = /(?:^|\s)(\d{1,3})\s*[.\-–]+\s*([a-dA-D])(?=\s|$)/g, hits = [];
+  let h; while ((h = re.exec(txt))) hits.push({ n: +h[1], l: h[2].toLowerCase(), ini: h.index + h[0].length, pos: h.index });
+  hits.forEach((x, i) => {
+    let ref = txt.slice(x.ini, i + 1 < hits.length ? hits[i + 1].pos : txt.length).replace(/\s+/g, ' ').trim();
+    ref = ref.replace(/^Constituci[oó]n\s*/i, '').replace(/Art[ií]culo\s+0*(\d+)/gi, 'Artículo $1').replace(/^Art[ií]culo 0$/i, '').trim();
+    if (!(x.n in sol)) sol[x.n] = { l: x.l, ref };
+  });
+  const preguntas = [];
+  preg.forEach(p => {
+    const s = sol[p.n];
+    if (!s) { errors.push(`Pregunta ${p.n}: no encuentro su solución en la tabla.`); return; }
+    if (p.opciones.length !== 4) warnings.push(`Pregunta ${p.n}: se han leído ${p.opciones.length} opciones.`);
+    const idx = 'abcd'.indexOf(s.l);
+    if (idx >= p.opciones.length) { errors.push(`Pregunta ${p.n}: la solución es ${s.l.toUpperCase()} pero no hay esa opción.`); return; }
+    const o = { q: p.q, opciones: p.opciones.map(x => x.replace(/\s+/g, ' ').trim()), correcta: idx };
+    if (s.ref) o.ref = s.ref;
+    preguntas.push(o);
+  });
+  if (!preg.length) errors.push('No he encontrado preguntas en el PDF.');
+  else if (Object.keys(sol).length !== preg.length) warnings.push(`El PDF tiene ${preg.length} preguntas y ${Object.keys(sol).length} soluciones. Revisa el resultado.`);
+  return { data: { titulo, tema, fecha: new Date().toISOString().slice(0, 10), fuente: 'Academia', preguntas }, errors, warnings };
+}
+
 /* ---------- uso sin conexión ---------- */
 const OFF = { cache: 'ma-dinamico', clave: 'ma2_offline', maxEdad: 6 * 3600 * 1000 };
 function registrarSW() {
