@@ -1,4 +1,5 @@
 'use strict';
+if (window.__PUERTA) throw new Error('cerrado');                 // página tapada por puerta.js: no se ejecuta nada más
 /* =====================================================================
    Mi Academia · lógica compartida (portada, test y alta de tests)
    ===================================================================== */

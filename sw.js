@@ -7,12 +7,12 @@
    a la primera; si la red tarda más o no hay, se usa la copia.
    Los tests y lo que no esté en la lista siguen pidiéndose primero a la red.
    Sube VERSION cuando cambie la lista PRECACHE: así se borran las copias antiguas. */
-const VERSION = 'v12';
+const VERSION = 'v13';
 const NUCLEO = 'ma-nucleo-' + VERSION;
 const DINAMICO = 'ma-dinamico';
 const ESPERA_PAGINA = 1200;
 const PRECACHE = ['./', 'index.html', 'temario.html', 'tests.html', 'biblioteca.html', 'ajustes.html', 'test.html', 'nuevo.html', 'editar.html', 'visor.html', 'estructura.html',
-  'app.js', 'vistas.js', 'biblioteca.js', 'temporizador.js', 'style.css', 'temario.json',
+  'puerta.js', 'app.js', 'vistas.js', 'biblioteca.js', 'temporizador.js', 'style.css', 'temario.json',
   'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
   'fonts/literata.woff2', 'fonts/literata-italic.woff2', 'fonts/bricolage.woff2',
   'vendor/pdfjs3/pdf.min.js', 'vendor/pdfjs3/pdf.worker.min.js'];
