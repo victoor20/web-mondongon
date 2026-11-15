@@ -38,6 +38,11 @@ GitHub Pages con dominio propio `mondongon.com` (ver `CNAME`).
   **privado** distinto llamado `mondongon-datos` (ver `CFG.datos`). El token se configura
   desde "Añadir test" → "Publicación directa". Nada de esto pasa por un backend propio: todo
   son llamadas directas a la API de GitHub desde el navegador.
+- **Tests de la academia (privados)**: un test con origen `Academia` NO se publica en `tests/` (público): `nuevo.html` lo
+  guarda en `tests-academia/` del repo privado `mondongon-datos`. `app.js` (bloque `PRIV`) los lista con el token, guarda su
+  metadato en `ma2_privcat` y una copia del JSON en Cache Storage `ma-priv` (uso sin conexión); sin token no aparecen.
+  `loadRawTest` busca primero ahí. `editar.html` edita/elimina en el repo que corresponda y no deja guardar como `Academia`
+  un test público. El Test mixto admite `&fuente=Academia` (lo añade Tests al filtrar por origen).
 - **Alta/edición de tests**: `nuevo.html`/`editar.html` generan el JSON del test y, con el
   mismo token, lo suben directamente a `tests/` en este repo mediante la API de GitHub (commit
   directo a `main`).

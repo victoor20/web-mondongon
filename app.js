@@ -200,14 +200,20 @@ async function loadCatalog() {
     } catch (e) { invalid.push(n); return null; }
   }));
   const old = legacy.map(n => ({ id: baseName(n), kind: 'html', titulo: prettyFromName(baseName(n)), tema: 'Sin clasificar', temas: {}, fuente: 'Sin origen', fecha: dateFromName(baseName(n)), n: null, url: `${CFG.dir}/${encodeURIComponent(n)}` }));
-  const items = [...loaded.filter(Boolean), ...old]
+  await privRefrescar();
+  Object.values(privMeta()).forEach(m => { if (m && m.invalido && getToken()) invalid.push(m.invalido); });
+  const items = [...loaded.filter(Boolean), ...old, ...privItems()]
     .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id.localeCompare(a.id));
   return { items, invalid };
 }
 
 async function loadRawTest(id) {
+  if (getToken() && privMeta()[id]) { const d = await privLeer(id); if (d) return d; }
   const r = await fetch(`${CFG.dir}/${encodeURIComponent(id)}.json`, { cache: 'no-cache' });
-  if (!r.ok) throw new Error(`No se encuentra el test "${id}".`);
+  if (!r.ok) {
+    if (getToken()) { const d = await privLeer(id); if (d) return d; }
+    throw new Error(`No se encuentra el test "${id}".`);
+  }
   return r.json();
 }
 async function loadTestData(id) {
@@ -230,6 +236,47 @@ function ghError(status) {
   if (status === 404) return 'No encuentro el repositorio o el token no tiene acceso a él.';
   if (status === 409 || status === 422) return 'GitHub no ha aceptado el cambio por un conflicto. Inténtalo de nuevo en unos segundos.';
   return `GitHub ha devuelto un error (${status}).`;
+}
+
+/* ---------- tests de la academia: repositorio PRIVADO (tests-academia/) ----------
+   No están en la web pública. Con el token de este dispositivo se listan, se bajan y se guardan en este
+   dispositivo (Cache Storage 'ma-priv') para poder usarlos sin conexión. Sin token no aparecen. */
+const PRIV = { dir: 'tests-academia', cache: 'ma-priv', meta: 'ma2_privcat', t: 'ma2_privcat_t', espera: 120000 };
+const esAcademia = f => String(f || '').trim().toLowerCase() === 'academia';
+const privMeta = () => jget(localStorage, PRIV.meta, {});               // id -> { sha, item } (solo metadatos; el test va en la caché)
+const privKey = id => new Request(location.origin + '/__priv/' + id);
+const privItems = () => (getToken() ? Object.values(privMeta()).filter(m => m && m.item).map(m => m.item) : []);
+function privItem(id, d) {
+  const temas = {};
+  d.preguntas.forEach(p => { const t = p.tema || d.tema || 'General'; temas[t] = (temas[t] || 0) + 1; });
+  const tema = d.tema || Object.keys(temas).sort((a, b) => temas[b] - temas[a])[0];
+  return { id, kind: 'json', priv: true, titulo: d.titulo, tema, temas, fuente: (d.fuente || '').trim() || 'Academia', fecha: d.fecha || dateFromName(id), n: d.preguntas.length, url: `test.html?t=${encodeURIComponent(id)}` };
+}
+async function privRefrescar(forzar) {                                 // sincroniza la lista y las copias con el repositorio privado
+  if (!getToken() || !window.caches || navigator.onLine === false) return;
+  if (!forzar && Date.now() - (+localStorage.getItem(PRIV.t) || 0) < PRIV.espera) return;
+  try {
+    const r = await fetch(ghFileUrl(CFG.datos.repo, PRIV.dir), { headers: ghHeaders(), cache: 'no-store' });
+    if (!r.ok && r.status !== 404) return;
+    const lista = r.ok ? (await r.json()).filter(f => f.type === 'file' && /\.json$/i.test(f.name)) : [];
+    const meta = privMeta(), nuevo = {}, cache = await caches.open(PRIV.cache);
+    for (const f of lista) {
+      const id = baseName(f.name), ant = meta[id];
+      if (ant && ant.sha === f.sha && await cache.match(privKey(id))) { nuevo[id] = ant; continue; }
+      const g = await fetch(ghFileUrl(CFG.datos.repo, PRIV.dir + '/' + f.name), { headers: { ...ghHeaders(), 'Accept': 'application/vnd.github.raw' }, cache: 'no-store' });
+      if (!g.ok) { if (ant) nuevo[id] = ant; continue; }
+      const txt = await g.text(); let d; try { d = JSON.parse(txt); } catch (e) { continue; }
+      if (validateTest(d).errors.length) { nuevo[id] = { sha: f.sha, invalido: f.name }; continue; }
+      await cache.put(privKey(id), new Response(txt, { headers: { 'Content-Type': 'application/json' } }));
+      nuevo[id] = { sha: f.sha, item: privItem(id, d) };
+    }
+    for (const id of Object.keys(meta)) if (!nuevo[id]) { try { await cache.delete(privKey(id)); } catch (e) { /* nada */ } }
+    jset(localStorage, PRIV.meta, nuevo); localStorage.setItem(PRIV.t, String(Date.now()));
+  } catch (e) { /* sin red o sin acceso: se queda lo que hay en el dispositivo */ }
+}
+async function privLeer(id) {
+  const leer = async () => { try { const r = await (await caches.open(PRIV.cache)).match(privKey(id)); return r ? await r.json() : null; } catch (e) { return null; } };
+  return (await leer()) || (await privRefrescar(true), await leer());
 }
 
 /* ---------- aspecto: claro, oscuro o el del sistema ---------- */

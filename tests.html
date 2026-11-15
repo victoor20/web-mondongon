@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261130">
+<link rel="stylesheet" href="style.css?v=20261201">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -55,8 +55,8 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261130"></script>
-<script src="vistas.js?v=20261130"></script>
+<script src="app.js?v=20261201"></script>
+<script src="vistas.js?v=20261201"></script>
 <script>
 let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
@@ -121,7 +121,7 @@ function renderList() {
 }
 function renderChips() {
   const box = $('chips'); box.replaceChildren();
-  const alt = () => { pagina = 1; renderChips(); renderList(); };
+  const alt = () => { pagina = 1; renderChips(); renderList(); renderPractica(); };
   // contenedor, texto, contador (null = sin contador), activo, acción, id de bloque (para el color)
   const mk = (cont, txt, n, on, fn, b) => {
     const c = el('button', 'chip' + (on ? ' on' : '') + (n === 0 ? ' vacio' : ''), txt); c.type = 'button';
@@ -168,15 +168,16 @@ function initControles() {
 }
 function renderPractica() {
   const box = $('practica'); box.replaceChildren();
-  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, total = totalPreguntas();
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, fo = fFuente !== 'Todos' ? fFuente : '';
+  const total = items.filter(i => i.kind === 'json' && (!fo || i.fuente === fo)).reduce((s, i) => s + (i.n || 0), 0), qf = fo ? '&fuente=' + encodeURIComponent(fo) : '';
   const m = el('div', 'mixto' + (total ? '' : ' off'));
   const bub = el('div', 'mixto-bub'); bub.setAttribute('aria-hidden', 'true');
   ['A', 'B', 'C', 'D'].forEach((l, i) => bub.append(el('i', i === 2 ? 'x' : '', l)));
   m.append(bub, el('h3', '', 'Test mixto'),
-    el('p', '', total ? `Preguntas al azar de todos tus tests (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
+    el('p', '', total ? `Preguntas al azar de ${fo ? 'tus tests de origen ' + fo : 'todos tus tests'} (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
   const ch = el('div', 'nchips');
-  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}`; ch.append(a); });
-  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}`; ch.append(a); }
+  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}${qf}`; ch.append(a); });
+  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}${qf}`; ch.append(a); }
   m.append(ch);
   const lado = el('div', 'hoy-lado');
   const tarjeta = (n, titulo, vacio, lleno, href) => {
@@ -198,6 +199,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261130"></script>
+<script src="temporizador.js?v=20261201"></script>
 </body>
 </html>

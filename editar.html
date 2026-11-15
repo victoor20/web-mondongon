@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261130">
+<link rel="stylesheet" href="style.css?v=20261201">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
@@ -55,10 +55,11 @@
   </div>
 </div>
 
-<script src="app.js?v=20261130"></script>
+<script src="app.js?v=20261201"></script>
 <script>
 const ID = new URLSearchParams(location.search).get('t');
-let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0;
+let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0, esPriv = false;
+const rutaTest = () => esPriv ? ghFileUrl(CFG.datos.repo, `${PRIV.dir}/${ID}.json`) : ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`);
 
 function setMsg(t, tipo) { const m = $('msg'); m.replaceChildren(); m.style.color = tipo === 'ok' ? 'var(--ok)' : tipo === 'mal' ? 'var(--ko)' : ''; m.textContent = t; return m; }
 function marcarSucio() { if (!sucio) { sucio = true; setMsg('Hay cambios sin guardar.'); } }
@@ -154,7 +155,7 @@ $('bajar').addEventListener('click', () => {
 });
 
 async function pedirArchivo() {
-  const g = await fetch(ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`), { headers: ghHeaders(), cache: 'no-store' });
+  const g = await fetch(rutaTest(), { headers: ghHeaders(), cache: 'no-store' });
   if (g.status === 404) return { error: 'Este test ya no existe en el repositorio.' };
   if (!g.ok) return { error: ghError(g.status) };
   const j = await g.json();
@@ -165,11 +166,12 @@ async function pedirArchivo() {
 $('guardar').addEventListener('click', async () => {
   const r = recoger(); if (!r || !validar(r.out)) return;
   if (!getToken()) { const m = setMsg('Para guardar hace falta el token de GitHub de este dispositivo. '); const a = el('a', '', 'Configurarlo'); a.href = 'nuevo.html'; m.append(a, '. Mientras tanto puedes descargar el JSON.'); return; }
+  if (!esPriv && esAcademia(r.out.fuente)) { setMsg('Los tests de la academia se guardan en privado. Créalo de nuevo desde «Añadir test» con origen Academia y elimina este.', 'mal'); return; }
   const btn = $('guardar'); btn.disabled = true; setMsg('Guardando…');
   try {
     const f = await pedirArchivo(); if (f.error) { setMsg(f.error, 'mal'); return; }
     if (f.remoto && canon(f.remoto) !== baseCanon && !confirm('Este test ha cambiado en GitHub desde que lo abriste. ¿Quieres sobrescribirlo con tus cambios?')) { setMsg('Cancelado.'); return; }
-    const url = ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`);
+    const url = rutaTest();
     const p = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: 'Editar test: ' + r.out.titulo, content: b64utf8(textoJSON(r.out)), sha: f.sha }) });
     if (!p.ok) { setMsg(ghError(p.status), 'mal'); return; }
@@ -177,7 +179,8 @@ $('guardar').addEventListener('click', async () => {
     try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
     data = r.out; baseCanon = canon(r.out); sucio = false;
     oldQs = r.qs.map(q => ({ key: q.key, tema: q.tema })); tarjetas.forEach((t, i) => { t.orig = i; });
-    setMsg('Guardado. En 1 o 2 minutos se ve en la web.', 'ok');
+    if (esPriv) { localStorage.removeItem(PRIV.t); await privRefrescar(true); }
+    setMsg(esPriv ? 'Guardado.' : 'Guardado. En 1 o 2 minutos se ve en la web.', 'ok');
     $('sub').textContent = `${r.out.titulo}. Archivo: ${ID}.json`;
   } catch (e) { setMsg('No he podido conectar con GitHub. Revisa tu conexión.', 'mal'); }
   finally { btn.disabled = false; }
@@ -194,12 +197,13 @@ $('borrar').addEventListener('click', async () => {
   setMsg('Eliminando…');
   try {
     const f = await pedirArchivo(); if (f.error) { setMsg(f.error, 'mal'); return; }
-    const d = await fetch(ghFileUrl(CFG.repo, `${CFG.dir}/${ID}.json`), { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    const d = await fetch(rutaTest(), { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: 'Eliminar test: ' + data.titulo, sha: f.sha }) });
     if (!d.ok) { setMsg(ghError(d.status), 'mal'); return; }
     migrarTrasEditar(oldQs, []);
     try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
     sucio = false;
+    if (esPriv) { localStorage.removeItem(PRIV.t); await privRefrescar(true); }
     const m = setMsg('Test eliminado. ', 'ok'); const a = el('a', '', 'Volver a la portada'); a.href = 'index.html'; m.append(a);
     $('guardar').disabled = true; $('borrar').disabled = true;
   } catch (e) { setMsg('No he podido conectar con GitHub. Revisa tu conexión.', 'mal'); }
@@ -211,7 +215,7 @@ window.addEventListener('beforeunload', e => { if (sucio) { e.preventDefault(); 
   if (!ID) { location.replace('index.html'); return; }
   await loadTemario();
   const dl = $('lista-fuentes'); FUENTES.forEach(f => { const o = el('option'); o.value = f; dl.append(o); });
-  try { data = await loadRawTest(ID); }
+  try { data = await loadRawTest(ID); esPriv = !!privMeta()[ID] && !!getToken(); }
   catch (e) { $('sub').textContent = e.message; return; }
   if (!Array.isArray(data.preguntas)) { $('sub').textContent = 'Este archivo no tiene el formato esperado; edítalo a mano en GitHub.'; return; }
   document.title = 'Editar: ' + data.titulo + ' - Mi Academia';

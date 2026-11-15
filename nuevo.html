@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261130">
+<link rel="stylesheet" href="style.css?v=20261201">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
@@ -77,6 +77,7 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
       <div class="campo"><label for="fecha">Fecha del test</label><input type="date" id="fecha"></div>
     </div>
     <div class="campo"><label for="fuente">Origen (herramienta que lo creó)</label><input type="text" id="fuente" list="lista-fuentes" autocomplete="off" placeholder="ChatGPT"><datalist id="lista-fuentes"></datalist></div>
+    <p class="fine hide" id="priv-nota">Origen Academia: este test se guarda en tu repositorio privado y no se publica en la web abierta. Se ve en Tests con el token de este dispositivo.</p>
     <div class="campo"><label for="fname">Nombre del archivo</label><input type="text" id="fname" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
     <div class="acciones">
       <button type="button" class="btn" id="pub">Publicar</button>
@@ -110,7 +111,7 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
   </section>
 </div>
 
-<script src="app.js?v=20261130"></script>
+<script src="app.js?v=20261201"></script>
 <script>
 function slug(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
@@ -209,7 +210,7 @@ $('validar').addEventListener('click', () => {
   $('titulo').value = d.titulo;
   $('fecha').value = d.fecha || new Date().toISOString().slice(0, 10);
   fillTemaSelect(d.tema);
-  $('fuente').value = d.fuente || getPrefs().fuente || CFG.fuenteAntigua;
+  $('fuente').value = d.fuente || getPrefs().fuente || CFG.fuenteAntigua; $('priv-nota').classList.toggle('hide', !esAcademia($('fuente').value));
   updateName();
   setMsg('');
   $('descarga').classList.remove('hide');
@@ -248,7 +249,7 @@ $('dl').addEventListener('click', () => {
 });
 
 /* ---------- publicación directa en GitHub ---------- */
-const ghUrl = name => ghFileUrl(CFG.repo, CFG.dir + '/' + name);
+const ghUrl = (name, priv) => priv ? ghFileUrl(CFG.datos.repo, PRIV.dir + '/' + name) : ghFileUrl(CFG.repo, CFG.dir + '/' + name);
 // acepta el token aunque el móvil haya añadido saltos de línea, espacios, mayúsculas o texto alrededor
 function extractToken(raw) {
   const limpio = raw.replace(/[\u200B-\u200D\u2060\uFEFF]/g, '');
@@ -306,23 +307,27 @@ $('pub').addEventListener('click', async () => {
   const btn = $('pub'); btn.disabled = true; setMsg('Publicando…');
   try {
     let sha;
-    const g = await fetch(ghUrl(r.name), { headers: ghHeaders() });
+    const priv = esAcademia(r.out.fuente);
+    const g = await fetch(ghUrl(r.name, priv), { headers: ghHeaders() });
     if (g.status === 200) {
       if (!confirm(`Ya existe un test llamado «${r.name}». ¿Quieres sobrescribirlo?`)) { setMsg('Cancelado.'); return; }
       sha = (await g.json()).sha;
     } else if (g.status !== 404) { setMsg(ghError(g.status)); return; }
     const body = { message: 'Añadir test: ' + r.out.titulo, content: b64utf8(r.text) };
     if (sha) body.sha = sha;
-    const p = await fetch(ghUrl(r.name), { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const p = await fetch(ghUrl(r.name, priv), { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (!p.ok) { setMsg(ghError(p.status)); return; }
     try { sessionStorage.removeItem(LS.list); } catch (e) { /* nada */ }
-    const m = setMsg('Publicado. En 1 o 2 minutos aparece en la portada. ', true);
-    const a = el('a', '', 'Ir a la portada'); a.href = 'index.html'; m.append(a);
+    if (priv) { localStorage.removeItem(PRIV.t); await privRefrescar(true); }
+    const m = setMsg(priv ? 'Guardado en privado. Ya está disponible en Tests. ' : 'Publicado. En 1 o 2 minutos aparece en la portada. ', true);
+    const a = el('a', '', priv ? 'Ir a Tests' : 'Ir a la portada'); a.href = priv ? 'tests.html' : 'index.html'; m.append(a);
   } catch (e) {
     setMsg('No he podido conectar con GitHub. Revisa tu conexión e inténtalo de nuevo.');
   } finally { btn.disabled = false; }
 });
 
+$('fuente').addEventListener('input', () => $('priv-nota').classList.toggle('hide', !esAcademia($('fuente').value)));
+$('fuente').addEventListener('change', () => $('priv-nota').classList.toggle('hide', !esAcademia($('fuente').value)));
 // al pegar el documento, se lee solo
 $('json').addEventListener('paste', () => setTimeout(() => $('validar').click(), 60));
 refreshCfg();
