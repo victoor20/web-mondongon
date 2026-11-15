@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261202">
+<link rel="stylesheet" href="style.css?v=20261203">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -46,11 +46,15 @@
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="i-tema"></select></label>
         <label class="bf-f">Tipo <select id="i-tipo"></select></label>
+        <label class="bf-f">Origen <select id="i-origen"></select></label>
       </div>
-      <p class="fine" id="subir-nota">PDF, Word, imágenes… hasta 60 MB por archivo. Se guardan en tu repositorio privado y quedan también en este dispositivo para leerlos sin conexión.</p>
+      <label class="fc-op bf-auto" id="bf-auto"><input type="checkbox" id="i-auto" checked> Clasificar por el nombre del archivo (B1-T01-…)</label>
+      <ul class="bf-prev" id="i-prev"></ul>
+      <p class="fine" id="subir-nota">PDF, Word, audio, imágenes… hasta 60 MB por archivo. Puedes elegir varios a la vez. Se guardan en tu repositorio privado y quedan también en este dispositivo para leerlos sin conexión.</p>
       <div class="bf-ac"><button type="submit" class="btn" id="i-ok">Subir</button><button type="button" class="btn ghost" id="i-cancel">Cancelar</button></div>
     </form>
 
+    <div class="chips origen bib-or" id="f-origen"></div>
     <p class="bib-msg" id="bib-msg" role="status" aria-live="polite"></p>
     <div id="bib-lista"></div>
   </div>
@@ -130,9 +134,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261202"></script>
-<script src="vistas.js?v=20261202"></script>
-<script src="biblioteca.js?v=20261202"></script>
+<script src="app.js?v=20261203"></script>
+<script src="vistas.js?v=20261203"></script>
+<script src="biblioteca.js?v=20261203"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -171,7 +175,35 @@ TABS.forEach((t, i) => {
 window.addEventListener('hashchange', () => ruta(true));
 /* ---------- Material ---------- */
 const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
-let copias = new Set(), edit = null, ocupado = false;
+let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos';
+const slugOrigen = f => String(f || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+const bibVisibles = () => bibLista().filter(d => fOrigenMat === 'Todos' || origenDe(d) === fOrigenMat);
+function renderOrigenMat() {
+  const box = $('f-origen'); box.replaceChildren();
+  const hay = ORIGENES.filter(o => bibLista().some(d => origenDe(d) === o));
+  if (hay.length < 2) { fOrigenMat = 'Todos'; return; }
+  if (fOrigenMat !== 'Todos' && !hay.includes(fOrigenMat)) fOrigenMat = 'Todos';
+  box.append(el('span', 'rot', 'Origen'));
+  ['Todos', ...hay].forEach(o => {
+    const n = o === 'Todos' ? null : bibLista().filter(d => origenDe(d) === o).length;
+    const c = el('button', 'chip' + (fOrigenMat === o ? ' on' : '') + (o !== 'Todos' ? ' o-' + slugOrigen(o) : ''), o); c.type = 'button';
+    if (n !== null) c.append(el('span', 'n', String(n)));
+    c.setAttribute('aria-pressed', String(fOrigenMat === o));
+    c.addEventListener('click', () => { fOrigenMat = o; renderMaterial(); });
+    box.append(c);
+  });
+}
+function metaArchivo(f) {                                         // valores del formulario; con «Clasificar por el nombre» manda el nombre
+  const m = { tema: $('i-tema').value, tipo: $('i-tipo').value, origen: $('i-origen').value };
+  if ($('i-auto').checked) { const c = clasificaNombre(f.name); if (c.tema && _temario.byId[c.tema]) m.tema = c.tema; if (c.tipo) m.tipo = c.tipo; if (c.origen) m.origen = c.origen; }
+  return m;
+}
+function vistaPrevia() {
+  const ul = $('i-prev'); ul.replaceChildren(); const fs = [...$('i-archivo').files];
+  if (edit || !fs.length) return;
+  fs.slice(0, 40).forEach(f => { const m = metaArchivo(f), li = el('li'); li.append(el('b', '', f.name), ' → ' + [m.tema ? codigoTema(m.tema) : 'General', m.tipo, m.origen].join(' · ')); ul.append(li); });
+  if (fs.length > 40) ul.append(el('li', '', `…y ${fs.length - 40} más`));
+}
 const abierto = {};                                               // temas abiertos o cerrados a mano en la vista de bloque
 const esGeneral = d => !d.tema || !_temario.byId[d.tema];
 function opcionesTema(sel) {
@@ -191,11 +223,12 @@ function notaTodo() {
 function renderMaterial() {
   const box = $('bib-lista'); box.replaceChildren();
   const q = $('f-q').value.trim().toLowerCase(), enBloque = !!vista.sub;
+  renderOrigenMat();
   $('bib-barra').classList.toggle('hide', enBloque); notaTodo();
   if (enBloque) vistaBloque(box, vista.sub); else if (q) vistaBusqueda(box, q); else vistaBloques(box);
 }
 function vistaBusqueda(box, q) {
-  const docs = bibLista().filter(d => d.titulo.toLowerCase().includes(q));
+  const docs = bibVisibles().filter(d => d.titulo.toLowerCase().includes(q));
   if (!docs.length) { box.append(el('p', 'vacio-msg', 'Ningún documento coincide con la búsqueda.')); return; }
   const grupos = {}; docs.forEach(d => { const t = esGeneral(d) ? '' : d.tema; (grupos[t] = grupos[t] || []).push(d); });
   const orden = Object.keys(_temario.byId);
@@ -207,7 +240,8 @@ function vistaBusqueda(box, q) {
   });
 }
 function vistaBloques(box) {
-  const docs = bibLista();
+  const docs = bibVisibles();
+  if (!docs.length && bibLista().length) { box.append(el('p', 'vacio-msg', `No hay material de origen ${fOrigenMat}.`)); return; }
   if (!docs.length) {
     const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no hay material'),
       el('p', '', getToken() ? 'Pulsa «Subir archivo» para añadir tu primer PDF. Elige el tema al que pertenece y quedará ordenado en su bloque.' : 'Para subir y consultar material necesitas el token de GitHub en este dispositivo.'));
@@ -234,7 +268,7 @@ function vistaBloque(box, sub) {
   const vol = el('a', 'bib-volver', '← Biblioteca'); vol.href = '#material';
   const cab = el('div', 'bib-cab'), h = el('h2', '', general ? 'General' : b.titulo); h.id = 'bib-vt'; h.tabIndex = -1;
   cab.append(el('span', 'rn', general ? 'G' : b.id), h); w.append(vol, cab);
-  const docs = bibLista().sort((x, y) => y.t - x.t);
+  const docs = bibVisibles().sort((x, y) => y.t - x.t);
   const subirAqui = tema => { const s = el('button', 'mini azul', 'Subir aquí'); s.type = 'button'; s.addEventListener('click', () => abrirForm(null, tema)); return s; };
   if (general) {
     const lista = docs.filter(esGeneral), c = el('div', 'bib-tb');
@@ -263,8 +297,9 @@ function filaDoc(d) {
   const f = el('article', 'doc');
   f.append(el('span', 'doc-ext', d.ext.toUpperCase().slice(0, 4)));
   const cuerpo = el('div', 'doc-c'); cuerpo.append(el('h3', '', d.titulo));
-  const off = copias.has(d.id);
-  cuerpo.append(el('p', 'fine', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(', ') + (off ? ', disponible sin conexión' : '')));
+  const off = copias.has(d.id), meta = el('p', 'fine doc-meta');
+  meta.append(el('span', 'org org-' + slugOrigen(origenDe(d)), origenDe(d)), el('span', '', [d.tipo, tamTexto(d.bytes), new Date(d.t).toLocaleDateString('es-ES')].join(', ') + (off ? ', disponible sin conexión' : '')));
+  cuerpo.append(meta);
   f.append(cuerpo);
   const ac = el('div', 'doc-ac');
   const ab = el('button', 'mini azul', 'Abrir'); ab.type = 'button';
@@ -305,7 +340,8 @@ function abrirForm(d, tema) {
   $('subir').classList.remove('hide');
   $('subir-t').textContent = d ? 'Editar documento' : 'Subir material';
   $('bf-archivo').classList.toggle('hide', !!d); $('subir-nota').classList.toggle('hide', !!d);
-  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : (tema || ''); $('i-tipo').value = d ? d.tipo : 'Ley';
+  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : (tema || ''); $('i-tipo').value = d ? d.tipo : 'Ley'; $('i-origen').value = d ? origenDe(d) : 'Propio';
+  $('bf-auto').classList.toggle('hide', !!d); $('i-prev').replaceChildren();
   $('bf-titulo').classList.remove('hide');
   $('i-ok').textContent = d ? 'Guardar cambios' : 'Subir'; $('i-ok').disabled = false;
   $('subir').scrollIntoView({ block: 'nearest' }); (d ? $('i-titulo') : $('i-archivo')).focus();
@@ -328,18 +364,20 @@ async function guardarTodo() {
 function initMaterial() {
   opcionesTema($('i-tema'));
   TIPOS.forEach(t => $('i-tipo').append(new Option(t, t)));
+  ORIGENES.slice().reverse().forEach(o => $('i-origen').append(new Option(o, o)));
+  ['i-tema', 'i-tipo', 'i-origen', 'i-auto'].forEach(i => $(i).addEventListener('change', vistaPrevia));
   $('f-q').addEventListener('input', renderMaterial);
   $('b-subir').addEventListener('click', () => abrirForm(null)); $('i-cancel').addEventListener('click', cerrarForm);
   $('b-todo').addEventListener('click', guardarTodo);
   window.addEventListener('online', notaTodo); window.addEventListener('offline', notaTodo);
-  $('i-archivo').addEventListener('change', () => { const fs = $('i-archivo').files; $('bf-titulo').classList.toggle('hide', fs.length > 1); if (fs.length === 1 && !$('i-titulo').value) $('i-titulo').value = fs[0].name.replace(/\.[^.]+$/, ''); });
+  $('i-archivo').addEventListener('change', () => { vistaPrevia(); const fs = $('i-archivo').files; $('bf-titulo').classList.toggle('hide', fs.length > 1); if (fs.length === 1 && !$('i-titulo').value) $('i-titulo').value = fs[0].name.replace(/\.[^.]+$/, ''); });
   $('subir').addEventListener('submit', async e => {
     e.preventDefault();
-    const tema = $('i-tema').value, tipo = $('i-tipo').value, ok = $('i-ok');
+    const tema = $('i-tema').value, tipo = $('i-tipo').value, origen = $('i-origen').value, ok = $('i-ok');
     if (edit) {
       const titulo = $('i-titulo').value.trim(); if (!titulo) { msg('Escribe un título.', true); return; }
       ok.disabled = true; msg('Guardando…');
-      try { await bibEscribir(docs => { if (docs[edit.id]) Object.assign(docs[edit.id], { titulo, tema, tipo }); }, 'Editar documento'); msg('Cambios guardados.'); cerrarForm(); }
+      try { await bibEscribir(docs => { if (docs[edit.id]) Object.assign(docs[edit.id], { titulo, tema, tipo, origen }); }, 'Editar documento'); msg('Cambios guardados.'); cerrarForm(); }
       catch (er) { msg(er.message === '401' ? ghError(401) : 'No he podido guardar. Comprueba la conexión.', true); }
       ok.disabled = false; renderMaterial(); return;
     }
@@ -350,7 +388,8 @@ function initMaterial() {
     try {
       for (const f of fs) {
         msg(`Subiendo ${hechos + 1} de ${fs.length}: ${f.name} (${tamTexto(f.size)})…`);
-        await bibSubir(f, { titulo: fs.length === 1 ? ($('i-titulo').value.trim() || f.name.replace(/\.[^.]+$/, '')) : f.name.replace(/\.[^.]+$/, ''), tema, tipo });
+        const c = metaArchivo(f);
+        await bibSubir(f, { titulo: fs.length === 1 ? ($('i-titulo').value.trim() || f.name.replace(/\.[^.]+$/, '')) : f.name.replace(/\.[^.]+$/, ''), tema: c.tema, tipo: c.tipo, origen: c.origen });
         hechos++; renderMaterial();
       }
       msg(hechos === 1 ? 'Archivo subido.' : `${hechos} archivos subidos.`); cerrarForm();
@@ -761,6 +800,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261202"></script>
+<script src="temporizador.js?v=20261203"></script>
 </body>
 </html>

@@ -331,7 +331,16 @@ ol.pasos li{margin:.4rem 0}
 .ins b{font:700 .8rem/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .ins small{font-size:.62rem;margin-top:.15rem;opacity:.9}
 .ins.sin{border-style:dashed}
-.fmeta .org{font-weight:600;color:var(--tinta)}
+.org{display:inline-block;padding:.08rem .6rem;border-radius:999px;border:1px solid var(--linea2);font:700 .72rem/1.5 var(--sans);color:var(--tinta);white-space:nowrap}
+.fmeta .org.org-academia,.org.org-academia{background:#15803D;border-color:#15803D;color:#FFFFFF}
+.chips.origen .chip.o-academia{border-left:4px solid #15803D}
+.chips.origen .chip.o-academia.on{background:#15803D;border-color:#15803D;color:#FFFFFF}
+.barra .limpiar{min-height:2.25rem;padding:.3rem .8rem;font-size:.82rem}
+.bib-or{margin:0 0 1rem}
+.doc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .5rem}
+.bf-prev{margin:0 0 .8rem;padding:0;list-style:none;display:grid;gap:.25rem;font-size:.82rem;color:var(--muted)}
+.bf-prev b{color:var(--tinta);font-weight:600;overflow-wrap:anywhere}
+.bf-auto{margin:0 0 .6rem}
 .pager{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1rem 0 0}
 .pager span{font-size:.85rem;color:var(--muted)}
 
@@ -770,7 +779,7 @@ details[open]>.nota-sum .nota-st{display:block;-webkit-line-clamp:unset}
 .bf-f{display:block;margin:0 0 .8rem;font-weight:600;font-size:.88rem}
 .bf-f input,.bf-f select{margin-top:.3rem;font-weight:400}
 .bf-f input[type=file]{display:block;width:100%;padding:.55rem;border:1.5px dashed var(--linea2);border-radius:9px;background:transparent;font-size:.9rem}
-.bf-fila{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.bf-fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.8rem}
 .bf-ac{display:flex;gap:.6rem;margin-top:.4rem}
 @media(max-width:560px){.bf-fila{grid-template-columns:1fr}}
 .bib-msg{min-height:1.2rem;margin:0 0 .8rem;font-size:.9rem;color:var(--muted)}

@@ -4,7 +4,9 @@
    Los archivos viven en el repositorio PRIVADO (biblioteca/…) y la lista en biblioteca.json.
    ===================================================================== */
 const BIB = { indice: 'biblioteca.json', dir: 'biblioteca/', limite: 60 * 1024 * 1024, clave: 'ma2_bib', cache: 'ma-bib' };
-const TIPOS = ['Ley', 'Apuntes', 'Esquema', 'Resumen', 'Otro'];
+const TIPOS = ['Temario', 'Esquema', 'Anexo', 'Test PDF', 'Audio', 'Ley', 'Apuntes', 'Resumen', 'Otro'];
+const ORIGENES = ['Academia', 'Propio'];
+const origenDe = d => (d && d.origen) || 'Propio';           // el material anterior a esta función es tuyo
 const MIME = { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', txt: 'text/plain', mp3: 'audio/mpeg', m4a: 'audio/mp4',
   docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', doc: 'application/msword', odt: 'application/vnd.oasis.opendocument.text',
   pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
@@ -15,6 +17,20 @@ const bibCuenta = tema => bibLista().filter(d => d.tema === tema).length;
 const extDe = n => { const m = /\.([A-Za-z0-9]{1,5})$/.exec(n || ''); return m ? m[1].toLowerCase() : 'bin'; };
 const tamTexto = b => b >= 1048576 ? (b / 1048576).toFixed(b >= 10485760 ? 0 : 1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
 const bibRuta = d => `${BIB.dir}${d.id}.${d.ext}`;
+/* Clasificación automática por el nombre: «B1-T01-01 Esquemas …pdf» = bloque I, tema 1, origen Academia */
+function clasificaNombre(nombre) {
+  const base = String(nombre || '').replace(/\.[^.]+$/, '').trim(), ext = extDe(nombre), r = {};
+  const m = /^B(\d)\s*-\s*T(\d{1,2})(?!\d)/i.exec(base);
+  if (m && ROMANOS[+m[1]]) { r.tema = ROMANOS[+m[1]] + '-' + (+m[2]); r.origen = 'Academia'; }
+  else if (/academia/i.test(base)) r.origen = 'Academia';
+  if (ext === 'mp3' || ext === 'm4a') r.tipo = 'Audio';
+  else if (/\btest/i.test(base)) r.tipo = 'Test PDF';
+  else if (/esquema/i.test(base)) r.tipo = 'Esquema';
+  else if (/anexo/i.test(base)) r.tipo = 'Anexo';
+  else if (/resumen/i.test(base)) r.tipo = 'Resumen';
+  else if (r.origen === 'Academia' || /temario/i.test(base)) r.tipo = 'Temario';
+  return r;
+}
 
 async function bibLeer() {
   const r = await fetch(ghFileUrl(CFG.datos.repo, BIB.indice), { headers: ghHeaders(), cache: 'no-store' });
@@ -59,7 +75,7 @@ function leerB64(file) {
 }
 async function bibSubir(file, meta) {
   const id = 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), ext = extDe(file.name);
-  const d = { id, ext, titulo: meta.titulo, tema: meta.tema, tipo: meta.tipo, archivo: file.name, bytes: file.size, t: nowT() };
+  const d = { id, ext, titulo: meta.titulo, tema: meta.tema, tipo: meta.tipo, origen: meta.origen || 'Propio', archivo: file.name, bytes: file.size, t: nowT() };
   const content = await leerB64(file);
   const p = await fetch(ghFileUrl(CFG.datos.repo, bibRuta(d)), { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Añadir documento', content }) });
   if (!p.ok) throw new Error(String(p.status));

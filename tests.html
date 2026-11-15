@@ -16,7 +16,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261202">
+<link rel="stylesheet" href="style.css?v=20261203">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -45,6 +45,7 @@
       <label>Mostrar <select id="pp" aria-label="Tests por página"></select></label>
       <label>Ordenar <select id="orden" aria-label="Orden"></select></label>
       <span class="fine" id="cuenta"></span>
+      <button type="button" class="btn small ghost limpiar hide" id="limpiar">Quitar filtros</button>
     </div>
     <div class="lista" id="lista"><p class="vacio-msg">Cargando tests…</p></div>
     <div class="pager hide" id="pager">
@@ -55,8 +56,8 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261202"></script>
-<script src="vistas.js?v=20261202"></script>
+<script src="app.js?v=20261203"></script>
+<script src="vistas.js?v=20261203"></script>
 <script>
 let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
@@ -68,6 +69,8 @@ const ORDENES = {
 };
 const TAMANOS = [5, 10, 25, 50, 100, 0];     // 0 = todos
 const itemTemas = it => Object.keys(it.temas || {});
+const slugOrigen = f => String(f || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+const hayFiltros = () => !!(fTema || fBloque !== 'Todos' || fEstado !== 'Todos' || fFuente !== 'Todos' || $('buscar').value.trim());
 function estadoDe(it) {                                         // 'curso' > 'hecho' > 'nuevo'
   if (it.kind === 'json') { const q = it.url.slice(it.url.indexOf('?')), c = cursosRaw()[q]; if (c && !c.del) return 'curso'; }
   return statsFor(it.id) ? 'hecho' : 'nuevo';
@@ -92,7 +95,7 @@ function fila(it) {
   const corto = _temario.byId[it.tema] ? _temario.byId[it.tema].corto : (it.kind === 'html' ? 'Sin clasificar' : it.tema);
   const et = etiquetasTest(it.titulo);
   if (et.length) { const tg = el('span', 'tags'); et.forEach(x => tg.append(el('span', 'ntag n-' + x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''), x))); meta.append(tg); }
-  meta.append(el('span', '', corto), el('span', 'org', it.fuente));
+  meta.append(el('span', '', corto), el('span', 'org org-' + slugOrigen(it.fuente), it.fuente));
   if (it.n) meta.append(el('span', '', `${it.n} preguntas`));
   if (day) meta.append(el('span', '', `${day.d} ${day.m}`));
   main.append(el('div', 'ftit', it.titulo), meta);
@@ -114,6 +117,7 @@ function renderList() {
   if (!vis.length) {
     list.append(el('p', 'vacio-msg', items.length ? 'Ningún test coincide con el filtro.' : 'Todavía no hay tests. Usa «Añadir test» para subir el primero.'));
   } else trozo.forEach(it => list.append(fila(it)));
+  $('limpiar').classList.toggle('hide', !hayFiltros());
   $('pager').classList.toggle('hide', paginas < 2);
   $('pag').textContent = `Página ${pagina} de ${paginas}`;
   $('ant').disabled = pagina <= 1; $('sig').disabled = pagina >= paginas;
@@ -151,7 +155,7 @@ function renderChips() {
   const fuentes = [...new Set(items.map(i => i.fuente))].sort((a, b) => a.localeCompare(b, 'es'));
   if (fuentes.length >= 2) {
     fb.append(el('span', 'rot', 'Origen'));
-    ['Todos', ...fuentes].forEach(f => mk(fb, f, null, fFuente === f, () => { fFuente = f; alt(); }));
+    ['Todos', ...fuentes].forEach(f => { const c = mk(fb, f, null, fFuente === f, () => { fFuente = f; alt(); }); if (f !== 'Todos') c.classList.add('o-' + slugOrigen(f)); });
   }
 }
 function initControles() {
@@ -165,6 +169,11 @@ function initControles() {
   $('ant').addEventListener('click', () => { pagina--; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
   $('sig').addEventListener('click', () => { pagina++; renderList(); $('seccion-tests').scrollIntoView({ behavior: 'smooth' }); });
   $('buscar').addEventListener('input', () => { pagina = 1; renderList(); });
+  $('limpiar').addEventListener('click', () => {
+    fBloque = 'Todos'; fEstado = 'Todos'; fFuente = 'Todos'; pagina = 1; $('buscar').value = '';
+    if (fTema) { fTema = null; try { history.replaceState(null, '', location.pathname); } catch (e) { /* nada */ } }
+    renderChips(); renderList(); renderPractica();
+  });
 }
 function renderPractica() {
   const box = $('practica'); box.replaceChildren();
@@ -199,6 +208,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261202"></script>
+<script src="temporizador.js?v=20261203"></script>
 </body>
 </html>

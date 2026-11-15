@@ -113,6 +113,12 @@ No hay paso de build ni de deploy aparte: lo que hay en `main` es lo que se sirv
   (`#material` = cuadrícula de bloques de colores, `#material/I` = temas del bloque I con sus documentos,
   `#material/general` = documentos sin tema). El enlace antiguo `biblioteca.html?tema=I-2#material`
   redirige a `#material/I` con ese tema abierto.
+- Cada documento lleva `origen` (`Academia` o `Propio`; sin campo = `Propio`) y `tipo` (Temario, Esquema,
+  Anexo, Test PDF, Audio, Ley, Apuntes, Resumen, Otro). Al subir, «Clasificar por el nombre» (`clasificaNombre`
+  en `biblioteca.js`) lee `B1-T01-01 …` = bloque I, tema 1, origen Academia, y el tipo por palabras del
+  nombre (esquema, anexo, test, mp3/m4a = audio); lo que no reconoce usa los valores del formulario.
+  Hay filtro de origen en Material y etiqueta de origen en cada documento; en Tests, la etiqueta `.org-academia`
+  (verde) y el botón «Quitar filtros». Tarjetas y Notas son siempre propias y no llevan origen.
 - Los archivos de material **no están en este repo**: viven en el repositorio privado `mondongon-datos`
   (carpeta `biblioteca/` y la lista `biblioteca.json`). La lista se copia en `localStorage` (`ma2_bib`) y
   cada archivo guardado «sin conexión» va a la caché `ma-bib` del navegador, por eso la Biblioteca y el
