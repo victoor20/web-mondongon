@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261207"></script>
+<script src="puerta.js?v=20261208"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261207">
+<link rel="stylesheet" href="style.css?v=20261208">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -135,9 +135,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261207"></script>
-<script src="vistas.js?v=20261207"></script>
-<script src="biblioteca.js?v=20261207"></script>
+<script src="app.js?v=20261208"></script>
+<script src="vistas.js?v=20261208"></script>
+<script src="biblioteca.js?v=20261208"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -176,9 +176,10 @@ TABS.forEach((t, i) => {
 window.addEventListener('hashchange', () => ruta(true));
 /* ---------- Material ---------- */
 const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
-let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos', fTipoMat = 'Todos', fOrdenMat = 'nuevos';
-const ORDENES = [['nuevos', 'Más recientes'], ['antiguos', 'Más antiguos'], ['az', 'A → Z'], ['za', 'Z → A']];
-const cmpDoc = { nuevos: (x, y) => y.t - x.t, antiguos: (x, y) => x.t - y.t, az: (x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), za: (x, y) => y.titulo.localeCompare(x.titulo, 'es', { numeric: true, sensitivity: 'base' }) };
+let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos', filtTema = {};
+const ORDENES = [['nuevos', 'Más recientes'], ['antiguos', 'Más antiguos'], ['az', 'A → Z'], ['za', 'Z → A'], ['tipo', 'Por tipo'], ['grandes', 'Más grandes']];
+const cmpDoc = { nuevos: (x, y) => y.t - x.t, antiguos: (x, y) => x.t - y.t, az: (x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), za: (x, y) => y.titulo.localeCompare(x.titulo, 'es', { numeric: true, sensitivity: 'base' }),
+  tipo: (x, y) => TIPOS.indexOf(x.tipo) - TIPOS.indexOf(y.tipo) || x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), grandes: (x, y) => (y.bytes || 0) - (x.bytes || 0) };
 const slugOrigen = f => String(f || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
 const bibVisibles = () => bibLista().filter(d => fOrigenMat === 'Todos' || origenDe(d) === fOrigenMat);
 function renderOrigenMat() {
@@ -271,29 +272,38 @@ function vistaBloque(box, sub) {
   const vol = el('a', 'bib-volver', '← Biblioteca'); vol.href = '#material';
   const cab = el('div', 'bib-cab'), h = el('h2', '', general ? 'General' : b.titulo); h.id = 'bib-vt'; h.tabIndex = -1;
   cab.append(el('span', 'rn', general ? 'G' : b.id), h); w.append(vol, cab);
-  const enEsteBloque = d => general ? esGeneral(d) : (!esGeneral(d) && bloqueOf(d.tema) === b.id);
-  const base = bibVisibles().filter(enEsteBloque), tipos = TIPOS.filter(t => base.some(d => d.tipo === t));
-  if (fTipoMat !== 'Todos' && !tipos.includes(fTipoMat)) fTipoMat = 'Todos';
-  const fil = el('div', 'bib-filtros'), chT = el('div', 'chips');
-  if (tipos.length > 1) {
-    chT.append(el('span', 'rot', 'Tipo'));
-    ['Todos', ...tipos].forEach(t => {
-      const c = el('button', 'chip' + (fTipoMat === t ? ' on' : ''), t); c.type = 'button'; c.setAttribute('aria-pressed', String(fTipoMat === t));
-      if (t !== 'Todos') c.append(el('span', 'n', String(base.filter(d => d.tipo === t).length)));
-      c.addEventListener('click', () => { fTipoMat = t; renderMaterial(); }); chT.append(c);
-    });
-    fil.append(chT);
-  }
-  const ord = el('select'); ord.setAttribute('aria-label', 'Ordenar los documentos');
-  ORDENES.forEach(([v, t]) => ord.append(new Option(t, v))); ord.value = fOrdenMat;
-  ord.addEventListener('change', () => { fOrdenMat = ord.value; renderMaterial(); });
-  fil.append(ord); w.append(fil);
-  const docs = bibVisibles().filter(d => fTipoMat === 'Todos' || d.tipo === fTipoMat).sort(cmpDoc[fOrdenMat]);
   const subirAqui = tema => { const s = el('button', 'mini azul', 'Subir aquí'); s.type = 'button'; s.addEventListener('click', () => abrirForm(null, tema)); return s; };
+  const docs = bibVisibles();
+  const listaDocs = (c, todos, key, tema) => {                      // la lista de un tema (o de General), con su propio filtro por tipo y orden
+    const st = filtTema[key] || (filtTema[key] = { tipo: 'Todos', orden: 'nuevos' });
+    const pinta = () => {
+      c.replaceChildren();
+      const tipos = TIPOS.filter(t => todos.some(d => d.tipo === t));
+      if (st.tipo !== 'Todos' && !tipos.includes(st.tipo)) st.tipo = 'Todos';
+      if (todos.length > 1) {
+        const fil = el('div', 'bib-filtros'), chT = el('div', 'chips');
+        if (tipos.length > 1) {
+          chT.append(el('span', 'rot', 'Tipo'));
+          ['Todos', ...tipos].forEach(t => {
+            const b = el('button', 'chip' + (st.tipo === t ? ' on' : ''), t); b.type = 'button'; b.setAttribute('aria-pressed', String(st.tipo === t));
+            if (t !== 'Todos') b.append(el('span', 'n', String(todos.filter(d => d.tipo === t).length)));
+            b.addEventListener('click', () => { st.tipo = t; pinta(); }); chT.append(b);
+          });
+          fil.append(chT);
+        }
+        const ord = el('select'); ord.setAttribute('aria-label', 'Ordenar los documentos');
+        ORDENES.forEach(([v, t]) => ord.append(new Option(t, v))); ord.value = st.orden;
+        ord.addEventListener('change', () => { st.orden = ord.value; pinta(); });
+        fil.append(ord); c.append(fil);
+      }
+      const lista = todos.filter(d => st.tipo === 'Todos' || d.tipo === st.tipo).sort(cmpDoc[st.orden]);
+      if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', 'Sin documentos'));
+      c.append(subirAqui(tema));
+    };
+    pinta();
+  };
   if (general) {
-    const lista = docs.filter(esGeneral), c = el('div', 'bib-tb');
-    if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', 'Sin documentos'));
-    c.append(subirAqui('')); w.append(c);
+    const c = el('div', 'bib-tb'); listaDocs(c, docs.filter(esGeneral), 'general', ''); w.append(c);
   } else {
     b.temas.forEach(t => {
       const lista = docs.filter(d => d.tema === t.id), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
@@ -302,9 +312,7 @@ function vistaBloque(box, sub) {
       const sum = el('summary', 'bib-ts');
       sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : 'sin documentos'), el('span', 'chev'));
       det.append(sum);
-      const c = el('div', 'bib-tb');
-      if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', fTipoMat === 'Todos' ? 'Sin documentos' : 'Sin documentos de tipo ' + fTipoMat));
-      c.append(subirAqui(t.id)); det.append(c); w.append(det);
+      const c = el('div', 'bib-tb'); listaDocs(c, lista, t.id, t.id); det.append(c); w.append(det);
     });
   }
   box.append(w);
@@ -830,6 +838,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261207"></script>
+<script src="temporizador.js?v=20261208"></script>
 </body>
 </html>

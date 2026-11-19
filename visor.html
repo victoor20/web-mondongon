@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261207"></script>
+<script src="puerta.js?v=20261208"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Visor - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261207">
+<link rel="stylesheet" href="style.css?v=20261208">
 <style>
 .vis-diag{margin:.8rem 0 0;padding:.6rem .75rem;border-radius:10px;background:var(--sel-bg);color:var(--tinta);font:.72rem/1.5 ui-monospace,Menlo,Consolas,monospace;text-align:left;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
 .vis-diag b{display:block;margin:0 0 .3rem;font:700 .78rem/1.3 var(--sans)}
@@ -37,6 +37,7 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
     <a class="btn small ghost" href="biblioteca.html#material" data-atras>← Biblioteca</a>
     <h1 class="vis-t" id="v-titulo">Documento</h1>
     <button type="button" class="btn small" id="v-desc" disabled>Descargar</button>
+    <button type="button" class="btn small ghost" id="v-buscar" aria-expanded="false" aria-controls="v-busca" disabled>Buscar</button>
     <label class="vis-pag">pág. <input type="number" id="v-pag" min="1" step="1" inputmode="numeric" aria-label="Ir a la página" disabled> / <span id="v-n">–</span></label>
     <div class="vis-zoom">
       <button type="button" id="v-menos" aria-label="Reducir zoom" disabled>−</button>
@@ -45,14 +46,21 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
       <button type="button" id="v-ancho" aria-label="Ajustar al ancho de la pantalla" aria-pressed="true" disabled>Ancho</button>
       <button type="button" id="v-pagina" aria-label="Ver la página entera" aria-pressed="false" disabled>Página</button>
     </div>
+    <div class="vis-busca" id="v-busca" role="search">
+      <input type="search" id="v-q" placeholder="Buscar en el documento" aria-label="Buscar en el documento" autocomplete="off" enterkeyhint="search">
+      <button type="button" id="v-prev" aria-label="Resultado anterior" disabled>↑</button>
+      <button type="button" id="v-next" aria-label="Resultado siguiente" disabled>↓</button>
+      <span class="vis-cuenta" id="v-cuenta" role="status" aria-live="polite"></span>
+      <button type="button" id="v-cierra" aria-label="Cerrar la búsqueda">✕</button>
+    </div>
   </div>
   <div class="vis-msg" id="v-msg" role="status" aria-live="polite"></div>
   <div class="vis-doc" id="v-doc"><div class="vis-pags" id="v-pags"></div></div>
   <noscript><p class="vis-msg">Este visor necesita JavaScript.</p></noscript>
   <script nomodule>document.getElementById('v-msg').textContent = 'Este navegador es demasiado antiguo para el visor. Vuelve a la Biblioteca y usa «Descargar».';</script>
 </div>
-<script src="app.js?v=20261207"></script>
-<script src="biblioteca.js?v=20261207"></script>
+<script src="app.js?v=20261208"></script>
+<script src="biblioteca.js?v=20261208"></script>
 <script type="module">
 const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx: 16e6 };
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -123,7 +131,7 @@ async function abrir() {
   try { n = pdf.numPages; base = (await pdf.getPage(1)).getViewport({ scale: 1 }); }
   catch (e) { await falla('pintar la página 1', e, 'No he podido leer la primera página de este PDF.'); return; }
   n = pdf.numPages; $('v-n').textContent = n; $('v-pag').max = n; $('v-pag').value = 1; $('v-pag').disabled = false;
-  ['v-menos', 'v-mas', 'v-z', 'v-ancho', 'v-pagina'].forEach(x => { $(x).disabled = false; });
+  ['v-menos', 'v-mas', 'v-z', 'v-ancho', 'v-pagina', 'v-buscar'].forEach(x => { $(x).disabled = false; });
   const g = guardado()[id] || {};
   z = Math.min(VIS.max, Math.max(VIS.min, +g.z || 1));
   aviso('');
@@ -172,7 +180,9 @@ async function pinta(p) {
     c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
     p.tarea = page.render({ canvasContext: c.getContext('2d'), viewport: vp });
     await p.tarea.promise; if (p.tk !== tk) return;
-    p.div.replaceChildren(c); p.estado = 'ok'; p.tarea = null;
+    const tl = el('div', 'textLayer'); tl.style.setProperty('--scale-factor', String(vp0.scale));
+    p.div.replaceChildren(c, tl); p.estado = 'ok'; p.tarea = null;
+    await capaTexto(p, page, tl, vp0, tk);                          // texto seleccionable y buscable; si falla, la página se ve igual
   } catch (e) {
     if (p.tk !== tk) return;
     p.tarea = null; p.estado = '';
@@ -183,10 +193,113 @@ async function pinta(p) {
 }
 function libera(p) {                                               // las páginas lejanas devuelven su memoria
   if (!p.estado) return; p.tk = (p.tk || 0) + 1;
+  if (p.tt) { try { p.tt.cancel(); } catch (e) { /* nada */ } p.tt = null; } p.divs = null;
   if (p.tarea) { try { p.tarea.cancel(); } catch (e) { /* nada */ } p.tarea = null; }
   const c = p.div.firstChild; if (c) { c.width = 0; c.height = 0; p.div.replaceChildren(); }
   p.estado = '';
 }
+
+/* ---- texto seleccionable y buscador ---- */
+async function capaTexto(p, page, tl, vp, tk) {
+  if (typeof lib.renderTextLayer !== 'function') return;
+  try {
+    const divs = [];
+    p.tt = lib.renderTextLayer({ textContentSource: page.streamTextContent(), container: tl, viewport: vp, textDivs: divs });
+    await p.tt.promise; p.tt = null; if (p.tk !== tk) return;
+    p.divs = divs; marcaPagina(p);
+  } catch (e) { p.tt = null; /* sin capa de texto: se ve igual, solo no se puede seleccionar */ }
+}
+const norm1 = ch => { let t = ch.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); return /\s/.test(t) ? ' ' : t; };
+const normaQ = q => { let o = '', sp = true; for (const ch of q) { const t = norm1(ch); if (t === ' ') { if (!sp) o += ' '; sp = true; } else { o += t; sp = false; } } return o.replace(/ $/, ''); };
+const B = { idx: null, carga: null, q: '', M: [], cur: -1, caracteres: 0 };       // idx[i] = { s: texto normalizado, map: [item, car] | null, items: [textos] }
+function indexaPagina(items) {
+  const s = [], map = [];
+  items.forEach((it, ii) => {
+    for (let ci = 0; ci < it.length; ci++) {
+      const t = norm1(it[ci]);
+      if (t === ' ' && (!s.length || s[s.length - 1] === ' ')) continue;
+      for (const u of t) { s.push(u); map.push([ii, ci]); }
+    }
+    if (it.hasEOL && s.length && s[s.length - 1] !== ' ') { s.push(' '); map.push(null); }
+  });
+  return { s: s.join(''), map, items: items.map(x => x.str ? x : x) };
+}
+function indexa() {
+  if (B.carga) return B.carga;
+  B.idx = [];
+  B.carga = (async () => {
+    for (let i = 1; i <= n; i++) {
+      const page = await pdf.getPage(i), tc = await page.getTextContent();
+      const items = tc.items.filter(x => typeof x.str === 'string').map(x => { const o = new String(x.str); o.hasEOL = !!x.hasEOL; return o; });
+      B.idx.push(indexaPagina(items)); B.caracteres += B.idx[i - 1].s.length;
+      if (i % 4 === 0 || i === n) cuenta('Preparando la búsqueda… ' + i + ' de ' + n);
+    }
+  })();
+  return B.carga;
+}
+function cuenta(t) { $('v-cuenta').textContent = t; }
+function pintaCuenta() {
+  const k = B.M.length;
+  $('v-prev').disabled = $('v-next').disabled = k < 2;
+  if (!B.q) { cuenta(''); return; }
+  cuenta(k ? (B.cur + 1) + ' de ' + k : 'Sin resultados');
+}
+async function busca(q, saltar) {
+  q = normaQ(q); B.q = q;
+  if (q.length < 2) { B.M = []; B.cur = -1; remarca(); cuenta(q ? 'Escribe al menos 2 letras' : ''); $('v-prev').disabled = $('v-next').disabled = true; return; }
+  const lista = []; 
+  try { await indexa(); } catch (e) { cuenta('No he podido leer el texto de este PDF'); return; }
+  if (B.q !== q) return;                                          // mientras tanto has escrito otra cosa
+  if (B.caracteres < 20 * Math.max(1, n) / 4 && B.caracteres < 200) { B.M = []; cuenta('Este PDF es una imagen escaneada, sin texto: no se puede buscar ni seleccionar'); remarca(); return; }
+  B.idx.forEach((pg, pi) => { let k = 0; while ((k = pg.s.indexOf(q, k)) >= 0) { lista.push({ p: pi, a: k, b: k + q.length }); k += q.length; } });
+  B.M = lista; B.cur = lista.length ? (saltar === false ? -1 : 0) : -1;
+  remarca(); pintaCuenta(); if (B.cur >= 0) vaA(B.cur);
+}
+function marcaPagina(p) {                                          // pinta los resultados de esta página en su capa de texto
+  const pg = B.idx && B.idx[p.i]; if (!pg || !p.divs || !B.M.length) return;
+  if (p.divs.length !== pg.items.length) return;                  // la capa no coincide con el texto extraído: no se marca
+  const porItem = {};
+  B.M.forEach((m, mi) => {
+    if (m.p !== p.i) return; const seg = {};
+    for (let k = m.a; k < m.b; k++) { const c = pg.map[k]; if (!c) continue; const s = seg[c[0]] || (seg[c[0]] = [c[1], c[1] + 1]); s[0] = Math.min(s[0], c[1]); s[1] = Math.max(s[1], c[1] + 1); }
+    Object.keys(seg).forEach(ii => (porItem[ii] || (porItem[ii] = [])).push({ a: seg[ii][0], b: seg[ii][1], m: mi }));
+  });
+  Object.keys(porItem).forEach(ii => {
+    const d = p.divs[ii], t = String(pg.items[ii]), segs = porItem[ii].sort((x, y) => x.a - y.a); let pos = 0; d.textContent = '';
+    segs.forEach(sg => {
+      if (sg.a < pos) return; if (sg.a > pos) d.append(document.createTextNode(t.slice(pos, sg.a)));
+      const mk = el('mark', sg.m === B.cur ? 'act' : '', t.slice(sg.a, sg.b)); mk.dataset.m = sg.m; d.append(mk); pos = sg.b;
+    });
+    if (pos < t.length) d.append(document.createTextNode(t.slice(pos)));
+  });
+}
+function remarca() { pags.forEach(p => { if (p.estado === 'ok') { libera(p); pinta(p); } }); }   // vuelve a dibujar las páginas visibles con los resultados nuevos
+async function vaA(k) {
+  if (!B.M.length) return; B.cur = (k + B.M.length) % B.M.length; pintaCuenta();
+  document.querySelectorAll('.textLayer mark.act').forEach(m => m.classList.remove('act'));
+  const m = B.M[B.cur], p = pags[m.p]; irAPagina(m.p + 1);
+  for (let t = 0; t < 60 && p.estado !== 'ok'; t++) await new Promise(r => setTimeout(r, 50));
+  if (B.M[B.cur] !== m) return;
+  const mk = p.div.querySelector('mark[data-m="' + B.cur + '"]');
+  if (mk) { document.querySelectorAll('.textLayer mark.act').forEach(x => x.classList.remove('act')); p.div.querySelectorAll('mark[data-m="' + B.cur + '"]').forEach(x => x.classList.add('act')); const r = mk.getBoundingClientRect(), v = innerHeight, top = barra.getBoundingClientRect().bottom;
+    if (r.top < top + 30 || r.bottom > v - 30) window.scrollTo(window.scrollX, scrollY + r.top - top - (v - top) / 3); }
+}
+function abreBusca(abrir) {
+  const b = $('v-busca'), on = abrir === undefined ? !b.classList.contains('abierta') : abrir;
+  b.classList.toggle('abierta', on); $('v-buscar').setAttribute('aria-expanded', String(on));
+  if (on) { $('v-q').focus(); $('v-q').select(); } else { B.q = ''; B.M = []; B.cur = -1; remarca(); cuenta(''); }
+}
+let tB = 0;
+$('v-buscar').addEventListener('click', () => abreBusca());
+$('v-cierra').addEventListener('click', () => { abreBusca(false); $('v-buscar').focus(); });
+$('v-q').addEventListener('input', () => { clearTimeout(tB); tB = setTimeout(() => busca($('v-q').value), 350); });
+$('v-q').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); clearTimeout(tB); if (normaQ($('v-q').value) !== B.q || !B.M.length) busca($('v-q').value); else vaA(B.cur + (e.shiftKey ? -1 : 1)); }
+  else if (e.key === 'Escape') { abreBusca(false); }
+});
+$('v-next').addEventListener('click', () => vaA(B.cur + 1));
+$('v-prev').addEventListener('click', () => vaA(B.cur - 1));
+addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 'f' || e.key === 'F') && n) { e.preventDefault(); abreBusca(true); } });
 
 /* ---- página actual, saltos y zoom ---- */
 const ancla = () => barra.getBoundingClientRect().bottom + 8;
@@ -225,6 +338,6 @@ let tR = 0, ancho0 = innerWidth;
 addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; ancho0 = innerWidth; clearTimeout(tR); tR = setTimeout(() => { const i = paginaActual(); aplicaZoom({ i, f: 0 }); }, 250); });
 abrir().catch(e => falla('abrir el visor', e, 'Ha ocurrido un error inesperado en el visor.'));
 </script>
-<script src="temporizador.js?v=20261207"></script>
+<script src="temporizador.js?v=20261208"></script>
 </body>
 </html>

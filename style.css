@@ -422,9 +422,9 @@ button.nav-i{width:100%;border:0;background:transparent;text-align:left;cursor:p
 .nav-i.gira svg{animation:giro .8s linear infinite}
 .btn.cancelar{background:rgba(200,40,40,.08);color:var(--ko);border-color:var(--ko)}
 .btn.cancelar:hover{background:rgba(200,40,40,.16);opacity:1}
-.bib-filtros{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin:0 0 1rem}
-.bib-filtros .chips{flex:1 1 auto}
-.bib-filtros select{min-height:2.25rem;padding:.25rem .6rem;border-radius:7px;border:1px solid var(--linea2);background:var(--hoja);color:var(--tinta);font:600 .83rem var(--sans)}
+.bib-filtros{display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center;margin:0 0 .8rem;padding:0 0 .8rem;border-bottom:1px solid var(--linea)}
+.bib-filtros .chips{flex:0 1 auto}
+.bib-filtros select{margin-left:auto;width:auto;flex:none;min-height:2.25rem;padding:.25rem .6rem;border-radius:7px;border:1px solid var(--linea2);background:var(--hoja);color:var(--tinta);font:600 .83rem var(--sans)}
 .nav-i[aria-current=page]{background:var(--azul-t);color:var(--azul)}
 .nav-i[aria-current=page]::before{content:"";position:absolute;left:-1rem;top:.6rem;bottom:.6rem;width:4px;border-radius:0 4px 4px 0;background:var(--azul)}
 .rail-pie{margin-top:auto;display:flex;flex-direction:column;gap:.6rem}
@@ -859,6 +859,18 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 .vis-pags{display:flex;flex-direction:column;align-items:center;width:max-content;min-width:100%}
 .vis-hoja{position:relative;flex:none;margin:0 0 .7rem;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .vis-hoja canvas{display:block;width:100%;height:100%}
+.textLayer{position:absolute;inset:0;overflow:hidden;line-height:1;text-align:initial;-webkit-text-size-adjust:none;text-size-adjust:none;forced-color-adjust:none}
+.textLayer span,.textLayer br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0}
+.textLayer ::selection{background:rgba(0,95,215,.35)}
+.textLayer mark{color:transparent;background:rgba(255,214,0,.5);border-radius:2px;padding:0}
+.textLayer mark.act{background:rgba(255,128,0,.7);outline:2px solid rgba(255,128,0,.95)}
+.vis-busca{display:none;flex:1 1 100%;align-items:center;gap:.4rem;padding:.5rem 0 0;border-top:1px solid var(--linea)}
+.vis-busca.abierta{display:flex}
+.vis-busca input{flex:1 1 8rem;min-width:0;min-height:2.25rem;padding:.2rem .6rem;border:1.5px solid var(--linea2);border-radius:8px;background:var(--hoja);color:var(--tinta);font:600 .9rem/1 var(--sans)}
+.vis-busca button{min-width:2.25rem;min-height:2.25rem;border:1px solid var(--linea2);border-radius:8px;background:transparent;color:var(--tinta);font:700 1rem/1 var(--sans);cursor:pointer}
+.vis-busca button:disabled{opacity:.4;cursor:default}
+.vis-busca input:focus-visible,.vis-busca button:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+.vis-cuenta{min-width:5.5rem;font-size:.82rem;color:var(--muted)}
 @media(max-width:560px){.vis-barra{padding:.5rem}.vis-t{flex:1 1 0}}
 
 /* ---------- Tests: filtros de bloque y estado ---------- */
