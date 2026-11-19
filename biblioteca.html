@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261206"></script>
+<script src="puerta.js?v=20261207"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261206">
+<link rel="stylesheet" href="style.css?v=20261207">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -52,7 +52,7 @@
       <label class="fc-op bf-auto" id="bf-auto"><input type="checkbox" id="i-auto" checked> Clasificar por el nombre del archivo (B1-T01-…)</label>
       <ul class="bf-prev" id="i-prev"></ul>
       <p class="fine" id="subir-nota">PDF, Word, audio, imágenes… hasta 60 MB por archivo. Puedes elegir varios a la vez. Se guardan en tu repositorio privado y quedan también en este dispositivo para leerlos sin conexión.</p>
-      <div class="bf-ac"><button type="submit" class="btn" id="i-ok">Subir</button><button type="button" class="btn ghost" id="i-cancel">Cancelar</button></div>
+      <div class="bf-ac"><button type="submit" class="btn" id="i-ok">Subir</button><button type="button" class="btn cancelar" id="i-cancel">Cancelar</button></div>
     </form>
 
     <div class="chips origen bib-or" id="f-origen"></div>
@@ -94,7 +94,7 @@
       </div>
       <div class="fc-chips" id="t-et-ch" aria-label="Etiquetas disponibles"></div>
       <p class="bib-msg" id="t-msg" role="alert"></p>
-      <div class="bf-ac"><button type="submit" class="btn">Guardar tarjeta</button><button type="button" class="btn ghost" id="t-cancel">Cancelar</button></div>
+      <div class="bf-ac"><button type="submit" class="btn">Guardar tarjeta</button><button type="button" class="btn cancelar" id="t-cancel">Cancelar</button></div>
     </form>
     <form id="t-form2" class="bib-form hide" autocomplete="off">
       <h2>Pegar varias tarjetas</h2>
@@ -104,7 +104,7 @@
         <label class="bf-f">Etiqueta (opcional) <input type="text" id="t-et2" maxlength="40" placeholder="Para todas las tarjetas"></label>
       </div>
       <p class="bib-msg" id="t-msg2" role="alert"></p>
-      <div class="bf-ac"><button type="submit" class="btn">Crear tarjetas</button><button type="button" class="btn ghost" id="t-cancel2">Cancelar</button></div>
+      <div class="bf-ac"><button type="submit" class="btn">Crear tarjetas</button><button type="button" class="btn cancelar" id="t-cancel2">Cancelar</button></div>
     </form>
     <div id="t-stats" class="est-hs fc-stats hide"></div>
     <div id="tarjetas"></div>
@@ -125,19 +125,19 @@
       <label class="bf-f">Texto <textarea id="n-x" rows="7"></textarea></label>
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="n-tema"></select></label>
-        <label class="bf-f">Etiqueta <input type="text" id="n-et" list="n-ets" maxlength="40" placeholder="Apuntes"></label>
+        <label class="bf-f">Etiqueta <input type="text" id="n-et" maxlength="40" placeholder="Elige una o escribe una nueva"></label>
       </div>
-      <datalist id="n-ets"><option value="Apuntes"><option value="Fallos de test propio"><option value="Dudas"><option value="Resumen"></datalist>
+      <div class="fc-chips" id="n-et-ch" aria-label="Etiquetas disponibles"></div>
       <p class="bib-msg" id="n-msg" role="alert"></p>
-      <div class="bf-ac"><button type="submit" class="btn">Guardar nota</button><button type="button" class="btn ghost" id="n-cancel">Cancelar</button></div>
+      <div class="bf-ac"><button type="submit" class="btn">Guardar nota</button><button type="button" class="btn cancelar" id="n-cancel">Cancelar</button></div>
     </form>
     <div id="notas"></div>
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261206"></script>
-<script src="vistas.js?v=20261206"></script>
-<script src="biblioteca.js?v=20261206"></script>
+<script src="app.js?v=20261207"></script>
+<script src="vistas.js?v=20261207"></script>
+<script src="biblioteca.js?v=20261207"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -176,7 +176,9 @@ TABS.forEach((t, i) => {
 window.addEventListener('hashchange', () => ruta(true));
 /* ---------- Material ---------- */
 const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
-let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos';
+let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos', fTipoMat = 'Todos', fOrdenMat = 'nuevos';
+const ORDENES = [['nuevos', 'Más recientes'], ['antiguos', 'Más antiguos'], ['az', 'A → Z'], ['za', 'Z → A']];
+const cmpDoc = { nuevos: (x, y) => y.t - x.t, antiguos: (x, y) => x.t - y.t, az: (x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), za: (x, y) => y.titulo.localeCompare(x.titulo, 'es', { numeric: true, sensitivity: 'base' }) };
 const slugOrigen = f => String(f || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
 const bibVisibles = () => bibLista().filter(d => fOrigenMat === 'Todos' || origenDe(d) === fOrigenMat);
 function renderOrigenMat() {
@@ -269,7 +271,24 @@ function vistaBloque(box, sub) {
   const vol = el('a', 'bib-volver', '← Biblioteca'); vol.href = '#material';
   const cab = el('div', 'bib-cab'), h = el('h2', '', general ? 'General' : b.titulo); h.id = 'bib-vt'; h.tabIndex = -1;
   cab.append(el('span', 'rn', general ? 'G' : b.id), h); w.append(vol, cab);
-  const docs = bibVisibles().sort((x, y) => y.t - x.t);
+  const enEsteBloque = d => general ? esGeneral(d) : (!esGeneral(d) && bloqueOf(d.tema) === b.id);
+  const base = bibVisibles().filter(enEsteBloque), tipos = TIPOS.filter(t => base.some(d => d.tipo === t));
+  if (fTipoMat !== 'Todos' && !tipos.includes(fTipoMat)) fTipoMat = 'Todos';
+  const fil = el('div', 'bib-filtros'), chT = el('div', 'chips');
+  if (tipos.length > 1) {
+    chT.append(el('span', 'rot', 'Tipo'));
+    ['Todos', ...tipos].forEach(t => {
+      const c = el('button', 'chip' + (fTipoMat === t ? ' on' : ''), t); c.type = 'button'; c.setAttribute('aria-pressed', String(fTipoMat === t));
+      if (t !== 'Todos') c.append(el('span', 'n', String(base.filter(d => d.tipo === t).length)));
+      c.addEventListener('click', () => { fTipoMat = t; renderMaterial(); }); chT.append(c);
+    });
+    fil.append(chT);
+  }
+  const ord = el('select'); ord.setAttribute('aria-label', 'Ordenar los documentos');
+  ORDENES.forEach(([v, t]) => ord.append(new Option(t, v))); ord.value = fOrdenMat;
+  ord.addEventListener('change', () => { fOrdenMat = ord.value; renderMaterial(); });
+  fil.append(ord); w.append(fil);
+  const docs = bibVisibles().filter(d => fTipoMat === 'Todos' || d.tipo === fTipoMat).sort(cmpDoc[fOrdenMat]);
   const subirAqui = tema => { const s = el('button', 'mini azul', 'Subir aquí'); s.type = 'button'; s.addEventListener('click', () => abrirForm(null, tema)); return s; };
   if (general) {
     const lista = docs.filter(esGeneral), c = el('div', 'bib-tb');
@@ -284,7 +303,7 @@ function vistaBloque(box, sub) {
       sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : 'sin documentos'), el('span', 'chev'));
       det.append(sum);
       const c = el('div', 'bib-tb');
-      if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', 'Sin documentos'));
+      if (lista.length) lista.forEach(d => c.append(filaDoc(d))); else c.append(el('p', 'fine', fTipoMat === 'Todos' ? 'Sin documentos' : 'Sin documentos de tipo ' + fTipoMat));
       c.append(subirAqui(t.id)); det.append(c); w.append(det);
     });
   }
@@ -537,11 +556,21 @@ $('n-todas').addEventListener('click', () => {                      // abrir o c
   ds.forEach(d => { d.open = abrir; if (d.dataset.t && !$('n-q').value && !$('n-fet').value) { if (abrir) notasAbiertas.add(d.dataset.t); else notasAbiertas.delete(d.dataset.t); } });
   $('n-todas').textContent = abrir ? 'Cerrar todo' : 'Abrir todo';
 });
+const ETQ_NOTAS = ['Apuntes', 'Fallos de test propio', 'Dudas', 'Resumen'];
+function etqNotas() { const t = ETQ_NOTAS.slice(); getLibres().forEach(n => { const e = (n.et || '').trim(); if (e && !t.some(x => x.toLowerCase() === e.toLowerCase())) t.push(e); }); return t; }
+function pintaChipsEtN() {
+  const box = $('n-et-ch'), v = $('n-et').value.trim().toLowerCase(); box.replaceChildren();
+  etqNotas().forEach(e => {
+    const on = e.toLowerCase() === v, b = el('button', 'fc-chip' + (on ? ' on' : ''), e); b.type = 'button'; b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.addEventListener('click', () => { $('n-et').value = on ? '' : e; pintaChipsEtN(); }); box.append(b);
+  });
+}
+$('n-et').addEventListener('input', pintaChipsEtN);
 function abreNota(n) {
   libreEdit = n ? n.id : null;
   $('n-form-t').textContent = n ? 'Editar nota' : 'Nueva nota';
   $('n-ti').value = n ? n.ti || '' : ''; $('n-x').value = n ? n.x || '' : ''; $('n-et').value = n ? n.et || '' : '';
-  $('n-tema').value = n && n.tema && _temario.byId[n.tema] ? n.tema : ''; $('n-msg').textContent = '';
+  $('n-tema').value = n && n.tema && _temario.byId[n.tema] ? n.tema : ''; $('n-msg').textContent = ''; pintaChipsEtN();
   $('n-form').classList.remove('hide'); $('n-nueva').classList.add('hide');
   $('n-form').scrollIntoView({ block: 'nearest' }); $('n-x').focus();
 }
@@ -801,6 +830,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261206"></script>
+<script src="temporizador.js?v=20261207"></script>
 </body>
 </html>

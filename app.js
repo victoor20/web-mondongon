@@ -874,6 +874,11 @@ function montarShell() {
   const nav = el('nav', 'nav'); nav.setAttribute('aria-label', 'Secciones');
   NAV.forEach(([id, txt, href]) => nav.append(enlace(id, txt, href, 'nav-i')));
   const pie = el('div', 'rail-pie');
+  if (!enfoque) {
+    const act = el('button', 'nav-i nav-act'); act.type = 'button'; act.title = 'Sincroniza, actualiza los tests y recarga la página';
+    act.insertAdjacentHTML('beforeend', svg('refrescar')); act.append(el('span', '', 'Actualizar'));
+    act.addEventListener('click', () => refrescarTodo(act)); pie.append(act);
+  }
   pie.append(enlace('ajustes', 'Ajustes', 'ajustes.html', 'nav-i'));
   rail.append(brand, nav, pie);
   // móvil: barra superior y barra de pestañas

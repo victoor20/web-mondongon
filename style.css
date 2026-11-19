@@ -418,6 +418,13 @@ ol.pasos li{margin:.4rem 0}
 .nav-i{position:relative;display:flex;align-items:center;gap:.8rem;padding:.72rem .85rem;border-radius:11px;color:var(--muted);text-decoration:none;font:600 .98rem/1.2 var(--sans)}
 .nav-i svg,.tab-i svg,.refresco svg{width:1.3rem;height:1.3rem;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .nav-i:hover{background:var(--sel-bg);color:var(--tinta)}
+button.nav-i{width:100%;border:0;background:transparent;text-align:left;cursor:pointer}
+.nav-i.gira svg{animation:giro .8s linear infinite}
+.btn.cancelar{background:rgba(200,40,40,.08);color:var(--ko);border-color:var(--ko)}
+.btn.cancelar:hover{background:rgba(200,40,40,.16);opacity:1}
+.bib-filtros{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin:0 0 1rem}
+.bib-filtros .chips{flex:1 1 auto}
+.bib-filtros select{min-height:2.25rem;padding:.25rem .6rem;border-radius:7px;border:1px solid var(--linea2);background:var(--hoja);color:var(--tinta);font:600 .83rem var(--sans)}
 .nav-i[aria-current=page]{background:var(--azul-t);color:var(--azul)}
 .nav-i[aria-current=page]::before{content:"";position:absolute;left:-1rem;top:.6rem;bottom:.6rem;width:4px;border-radius:0 4px 4px 0;background:var(--azul)}
 .rail-pie{margin-top:auto;display:flex;flex-direction:column;gap:.6rem}
@@ -685,7 +692,7 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .notas-t{margin:0 0 .7rem;padding-left:.75rem;border-left:5px solid var(--bc);font:700 1.05rem/1.25 var(--display)}
 .nota-card{margin:0 0 .65rem;padding:1rem 1.1rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja)}
 .nota-q{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 .55rem;font:500 .95rem/1.5 var(--serif);color:var(--muted)}
-.nota-x{margin:0 0 .75rem;padding:.5rem .75rem;border-radius:8px;background:var(--subraya-suave);white-space:pre-wrap}
+.nota-x{margin:0 0 .75rem;padding:.6rem .8rem;border-radius:8px;background:rgba(127,127,127,.09);border:1px solid var(--linea);color:var(--tinta);line-height:1.6;white-space:pre-wrap}
 .nota-libre{border-left:5px solid var(--bc)}
 .nota-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem .7rem;margin:0 0 .55rem}
 .nota-ti{margin:0;font:700 1.02rem/1.3 var(--display)}
