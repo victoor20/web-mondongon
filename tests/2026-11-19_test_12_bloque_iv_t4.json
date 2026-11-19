@@ -1,0 +1,404 @@
+{
+  "titulo": "Test 12: Bloque IV T4",
+  "tema": "IV-4",
+  "fecha": "2026-11-19",
+  "preguntas": [
+    {
+      "ref": "Artículo Art. 86 TREBEP",
+      "q": "Un funcionario de carrera presta servicios en su Administración y no debe quedar en otra situación administrativa. ¿Cuál le corresponde?",
+      "opciones": [
+        "Servicios especiales.",
+        "Servicio activo.",
+        "Servicio en otras Administraciones Públicas.",
+        "Expectativa de destino."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 87.2 TREBEP",
+      "q": "Un funcionario pasa a un alto cargo de una Administración pública. Como regla general, ¿qué retribuciones percibe mientras está en servicios especiales?",
+      "opciones": [
+        "Las del cargo desempeñado, sin perjuicio de los trienios reconocidos.",
+        "Las retribuciones de su puesto de origen, sin trienios.",
+        "Solo las retribuciones básicas de su cuerpo de origen.",
+        "Ninguna retribución hasta el reingreso."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 87.1.b TREBEP",
+      "q": "Una misión en una organización internacional será causa de pase a servicios especiales, según el supuesto recogido en el esquema, cuando su duración sea:",
+      "opciones": [
+        "Igual o superior a seis meses.",
+        "Superior a tres meses.",
+        "Exactamente seis meses.",
+        "Superior a seis meses."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 87.1.d TREBEP",
+      "q": "Un funcionario es adscrito al servicio del Tribunal de Cuentas mediante libre designación. ¿En qué situación queda, según el esquema?",
+      "opciones": [
+        "Excedencia forzosa.",
+        "Servicio activo en todo caso.",
+        "Servicios especiales.",
+        "Excedencia por prestación de servicios en el sector público."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 87.2 TREBEP",
+      "q": "En servicios especiales, el tiempo transcurrido computa, como regla general, a efectos de:",
+      "opciones": [
+        "Únicamente trienios.",
+        "Ascensos, trienios, promoción interna y derechos de Seguridad Social.",
+        "Solo ascensos y promoción interna.",
+        "Ninguno de los anteriores."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 88 TREBEP",
+      "q": "Una funcionaria de la AGE obtiene destino por concurso en una Administración autonómica, sin ser transferida. Respecto de su Administración de origen, ¿qué situación le corresponde?",
+      "opciones": [
+        "Servicio en otras Administraciones Públicas.",
+        "Servicio activo en la AGE.",
+        "Servicios especiales.",
+        "Excedencia voluntaria por interés particular."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 89.2 TREBEP",
+      "q": "¿Qué servicios efectivos previos exige, con carácter general, la excedencia voluntaria por interés particular?",
+      "opciones": [
+        "Dos años inmediatamente anteriores.",
+        "Cinco años, sin necesidad de ser consecutivos.",
+        "Ningún mínimo de servicios efectivos.",
+        "Cinco años inmediatamente anteriores."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 16 RD 365/1995",
+      "q": "La excedencia voluntaria por interés particular, en el régimen que recoge el esquema para la AGE, tiene una duración mínima continuada de:",
+      "opciones": [
+        "Un año.",
+        "Cinco años.",
+        "Dos años.",
+        "Quince años."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 89.2 TREBEP",
+      "q": "¿Cuál de los siguientes efectos caracteriza a la excedencia voluntaria por interés particular?",
+      "opciones": [
+        "Reserva del puesto durante dos años.",
+        "Sin retribuciones, sin reserva del puesto y sin cómputo para ascensos ni trienios.",
+        "Retribuciones básicas y trienios.",
+        "Cómputo del tiempo para ascensos."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 89.3 TREBEP",
+      "q": "En la excedencia voluntaria por agrupación familiar, ¿qué condición debe reunir, entre otras, el cónyuge que reside en otra localidad?",
+      "opciones": [
+        "Desempeñar un puesto definitivo como funcionario de carrera o personal laboral fijo en los ámbitos previstos.",
+        "Ser funcionario interino, aunque su destino sea temporal.",
+        "Haber cotizado al menos cinco años.",
+        "Ser funcionario en prácticas en cualquier Administración."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 17 RD 365/1995",
+      "q": "Según el régimen del esquema, ¿cuál es la duración de la excedencia voluntaria por agrupación familiar?",
+      "opciones": [
+        "Mínimo cinco años y máximo diez.",
+        "Máximo tres años, sin mínimo.",
+        "Mínimo dos años, sin límite máximo.",
+        "Mínimo dos años y máximo quince."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 89.4 TREBEP",
+      "q": "En la excedencia por cuidado de hijos o familiares, ¿cuál es el período máximo por cada sujeto causante que figura en el esquema?",
+      "opciones": [
+        "Dos años.",
+        "Cinco años.",
+        "Tres años.",
+        "Dieciocho meses."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 89.4 TREBEP",
+      "q": "Un funcionario solicita excedencia por cuidado de un familiar que no puede valerse por sí mismo y no trabaja. ¿Hasta qué grado de parentesco alcanza la previsión del esquema?",
+      "opciones": [
+        "Primer grado exclusivamente de consanguinidad.",
+        "Segundo grado inclusive de consanguinidad o afinidad.",
+        "Tercer grado inclusive de afinidad.",
+        "Solo cónyuge e hijos."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 89.4 TREBEP",
+      "q": "En la excedencia por cuidado de familiares, la reserva del puesto concreto se garantiza, como mínimo, durante:",
+      "opciones": [
+        "Dos años.",
+        "Seis meses.",
+        "Un año.",
+        "Los tres años íntegros."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 89.4 TREBEP",
+      "q": "¿Qué sucede con el cómputo del tiempo en la excedencia por cuidado de hijos o familiares?",
+      "opciones": [
+        "No computa en ningún concepto.",
+        "Computa solo para trienios.",
+        "Computa solo para ascensos, no para Seguridad Social.",
+        "Computa para trienios, carrera profesional y derechos de Seguridad Social."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 89.5 TREBEP",
+      "q": "Para acceder a la excedencia por razón de violencia de género, ¿qué exigencia de servicios previos establece el esquema?",
+      "opciones": [
+        "Cinco años.",
+        "Dos años.",
+        "No exige tiempo mínimo de servicios previos.",
+        "Un año."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 89.5 TREBEP",
+      "q": "Durante los dos primeros meses de excedencia por razón de violencia de género, ¿qué percibe la funcionaria?",
+      "opciones": [
+        "Únicamente el sueldo base.",
+        "Retribuciones íntegras y, en su caso, prestaciones familiares por hijo a cargo.",
+        "Retribuciones básicas y el 50 % del complemento específico.",
+        "Ninguna retribución."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 89.5 TREBEP",
+      "q": "En la excedencia por razón de violencia de género, la reserva inicial del puesto es de:",
+      "opciones": [
+        "Seis meses, con prórrogas de tres hasta un máximo de dieciocho cuando proceda.",
+        "Dos años, prorrogables sin límite.",
+        "Un mes, prorrogable a tres.",
+        "Dieciocho meses automáticamente en todos los casos."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 89.6 TREBEP",
+      "q": "¿Cuál de estos elementos figura como requisito de la excedencia por razón de violencia terrorista según el esquema?",
+      "opciones": [
+        "Tener necesariamente cinco años de servicios.",
+        "Ser personal laboral fijo.",
+        "Haber agotado antes la excedencia por interés particular.",
+        "Reconocimiento del Ministerio del Interior o sentencia judicial firme."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 15 RD 365/1995",
+      "q": "Un funcionario de carrera pasa a prestar servicios como personal laboral fijo en el sector público y no le corresponde servicio activo ni servicios especiales. ¿Qué situación recoge el esquema?",
+      "opciones": [
+        "Excedencia forzosa.",
+        "Servicio activo.",
+        "Excedencia voluntaria por prestación de servicios en el sector público.",
+        "Suspensión provisional."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 60 RD 364/1995",
+      "q": "En las dos primeras fases de reasignación de efectivos por supresión de puesto, el cambio a otro puesto resulta obligatorio cuando está situado en:",
+      "opciones": [
+        "La misma provincia, aunque sea otro municipio.",
+        "El mismo municipio.",
+        "Cualquier provincia de la comunidad autónoma.",
+        "Todo el territorio nacional."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 60 RD 364/1995",
+      "q": "La primera fase de reasignación de efectivos, realizada en el ámbito del Ministerio y organismos adscritos, dura como máximo:",
+      "opciones": [
+        "Seis meses.",
+        "Un año.",
+        "Tres meses.",
+        "Dos años."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 60 RD 364/1995",
+      "q": "La segunda fase de reasignación de efectivos para buscar puesto en otros Ministerios tiene una duración máxima de:",
+      "opciones": [
+        "Seis meses.",
+        "Un año.",
+        "Dieciocho meses.",
+        "Tres meses."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Esquema BIV-T4, pág. 6",
+      "q": "¿Qué significa SEFP en el esquema de reasignación de efectivos?",
+      "opciones": [
+        "Servicio Estatal de Formación de Personal.",
+        "Secretaría de Empleo y Formación Pública.",
+        "Secretaría de Estado de Función Pública.",
+        "Subsecretaría de Efectivos y Función Pública."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 12 RD 365/1995",
+      "q": "Al pasar a expectativa de destino, ¿qué porcentaje del complemento específico se percibe, junto con las retribuciones básicas y el complemento de destino?",
+      "opciones": [
+        "25 %.",
+        "50 %.",
+        "75 %.",
+        "100 %."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 12 RD 365/1995",
+      "q": "En expectativa de destino, ¿cuál es la duración máxima y el ámbito territorial relevante para aceptar puestos similares?",
+      "opciones": [
+        "Un año; misma provincia.",
+        "Dos años; mismo municipio.",
+        "Un año; mismo municipio.",
+        "Seis meses; cualquier provincia."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Arts. 12 y 13 RD 365/1995",
+      "q": "Según el esquema, ¿qué situación puede seguir al agotamiento del año de expectativa de destino o al incumplimiento de sus obligaciones?",
+      "opciones": [
+        "Servicios especiales.",
+        "Excedencia por cuidado de familiares.",
+        "Servicio en otras Administraciones Públicas.",
+        "Excedencia forzosa."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 13 RD 365/1995",
+      "q": "En la excedencia forzosa, ¿qué efectos económicos y de antigüedad señala el esquema?",
+      "opciones": [
+        "Retribuciones íntegras y reserva del puesto.",
+        "Únicamente complemento específico.",
+        "Retribuciones básicas y prestaciones por hijo a cargo; cómputo de trienios, antigüedad y derechos pasivos.",
+        "Sin retribuciones ni cómputo de trienios."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 18 RD 365/1995",
+      "q": "La excedencia voluntaria incentivada tiene una duración de:",
+      "opciones": [
+        "Dos años.",
+        "Cinco años.",
+        "Tres años.",
+        "Hasta quince años."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 18 RD 365/1995",
+      "q": "¿Cuál es la compensación prevista para la excedencia voluntaria incentivada, según el esquema?",
+      "opciones": [
+        "Un mes de retribuciones por año completo de servicios, con máximo de doce mensualidades y exclusiones previstas.",
+        "Una mensualidad por cada dos años sin máximo.",
+        "Doce mensualidades en todo caso.",
+        "Tres mensualidades, con independencia de antigüedad."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 96.1.c TREBEP",
+      "q": "Una suspensión de funciones impuesta como sanción disciplinaria firme tiene, según el esquema, una duración que no puede exceder de:",
+      "opciones": [
+        "Tres años.",
+        "Seis meses.",
+        "Cinco años.",
+        "Seis años."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 98.3 TREBEP",
+      "q": "La suspensión provisional acordada como medida cautelar durante un expediente disciplinario no podrá exceder, como regla general, de:",
+      "opciones": [
+        "Un año.",
+        "Dos años.",
+        "Seis meses.",
+        "Tres meses."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 98.4 TREBEP",
+      "q": "Si la suspensión provisional NO se convierte en definitiva, ¿qué ocurre con las retribuciones, de acuerdo con el esquema?",
+      "opciones": [
+        "Se pierde definitivamente toda retribución no percibida.",
+        "La Administración abona la diferencia de haberes no percibidos.",
+        "Se descuentan dos meses adicionales.",
+        "Se abona solo el 50 % del complemento específico."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 90.1 TREBEP",
+      "q": "Una suspensión de funciones que exceda de seis meses, según el esquema, implica:",
+      "opciones": [
+        "La pérdida del puesto de trabajo.",
+        "La pérdida automática de la condición de funcionario.",
+        "El paso directo a servicios especiales.",
+        "La concesión obligatoria de excedencia incentivada."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 62 RD 364/1995",
+      "q": "Sin reserva del puesto, el reingreso al servicio activo puede efectuarse, según el esquema, mediante:",
+      "opciones": [
+        "Únicamente renuncia y nueva oposición.",
+        "Solo comisión de servicios.",
+        "Exclusivamente adscripción provisional.",
+        "Concurso, libre designación o reasignación; también adscripción provisional en los casos previstos."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 62 RD 364/1995",
+      "q": "Cuando el reingreso se efectúa por adscripción provisional, el puesto se convocará para provisión definitiva en un plazo máximo de:",
+      "opciones": [
+        "Dos años.",
+        "Tres meses.",
+        "Un año.",
+        "Cinco años."
+      ],
+      "correcta": 2
+    }
+  ],
+  "fuente": "ChatGPT"
+}
