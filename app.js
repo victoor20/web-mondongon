@@ -904,6 +904,53 @@ function pintaAvisoToken() {
   if (txt) { const l = el('a', '', !tiene ? 'Configurarlo' : 'Guardar uno nuevo'); l.href = 'nuevo.html#token'; a.append(txt, l); }
   a.classList.toggle('hide', !txt);
 }
+/* ---------- texto con formato (Notas y Tarjetas) ----------
+   **negrita**  *cursiva*  ++subrayado++  ~~tachado~~  ==resaltado==  {r|rojo} {a|azul} {v|verde} {n|naranja}  {g|grande} {p|pequeño}
+   # título  ## subtítulo  ### apartado  - lista  1. lista  > cita  --- línea  | tabla |   Todo se pinta con nodos de texto: nada se interpreta como HTML. */
+const esFilaTabla = l => /^\s*\|.+\|\s*$/.test(l) || (l.indexOf('\t') > 0 && l.split('\t').filter(c => c.trim()).length >= 2);
+const celdasFila = l => l.indexOf('\t') > 0 && l.trim().charAt(0) !== '|' ? l.split('\t').map(c => c.trim()) : l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+const MD_INL = [[/\*\*(.+?)\*\*/, 'strong'], [/==(.+?)==/, 'mark'], [/\+\+(.+?)\+\+/, 'u'], [/~~(.+?)~~/, 'del'], [/\*([^*\s](?:[^*]*[^*\s])?)\*/, 'em'], [/\{([ravngp])\|(.+?)\}/, 'c']];
+function mdInline(p, s) {
+  while (s) {
+    let best = null;
+    for (const [re, tag] of MD_INL) { const m = re.exec(s); if (m && (!best || m.index < best.m.index)) best = { m: m, tag: tag }; }
+    if (!best) { p.append(document.createTextNode(s)); return p; }
+    const m = best.m, tag = best.tag;
+    if (m.index) p.append(document.createTextNode(s.slice(0, m.index)));
+    const n = tag === 'c' ? el('span', 'md-' + m[1]) : tag === 'mark' ? el('mark', 'md-hl') : el(tag);
+    mdInline(n, tag === 'c' ? m[2] : m[1]); p.append(n); s = s.slice(m.index + m[0].length);
+  }
+  return p;
+}
+function mdHtml(txt, suelto) {                                      // suelto: sin el fondo de las notas (tarjetas y vista previa)
+  const box = el('div', suelto ? 'md' : 'nota-x md'); let par = [], tab = [], lis = null, cit = [];
+  const cierraPar = () => { if (par.length) { box.append(mdInline(el('p'), par.join('\n'))); par = []; } };
+  const cierraLis = () => { if (lis) { box.append(lis); lis = null; } };
+  const cierraCit = () => { if (cit.length) { box.append(mdInline(el('blockquote'), cit.join('\n'))); cit = []; } };
+  const cierraTab = () => {
+    if (!tab.length) return;
+    const raya = r => r.every(c => /^:?-{3,}:?$/.test(c));
+    let filas = tab.map(celdasFila), cab = null;
+    if (filas.length > 1 && raya(filas[1])) { cab = filas[0]; filas = filas.slice(2); } else filas = filas.filter(r => !raya(r));
+    const w = el('div', 'tabla'), t = el('table');
+    if (cab) { const tr = el('tr'), th = el('thead'); cab.forEach(c => tr.append(mdInline(el('th'), c))); th.append(tr); t.append(th); }
+    const tb = el('tbody'); filas.forEach(r => { const tr = el('tr'); r.forEach(c => tr.append(mdInline(el('td'), c))); tb.append(tr); }); t.append(tb);
+    w.append(t); box.append(w); tab = [];
+  };
+  String(txt || '').replace(/\r\n?/g, '\n').split('\n').forEach(l => {
+    let m;
+    if (esFilaTabla(l)) { cierraPar(); cierraLis(); cierraCit(); tab.push(l); return; }
+    cierraTab();
+    if (!l.trim()) { cierraPar(); cierraLis(); cierraCit(); }
+    else if ((m = /^\s{0,3}(#{1,3})\s+(.+)$/.exec(l))) { cierraPar(); cierraLis(); cierraCit(); box.append(mdInline(el('p', 'md-h md-h' + m[1].length), m[2])); }
+    else if (/^\s*(-{3,}|_{3,}|\*{3,})\s*$/.test(l)) { cierraPar(); cierraLis(); cierraCit(); box.append(el('hr')); }
+    else if ((m = /^\s*[-*•]\s+(.+)$/.exec(l))) { cierraPar(); cierraCit(); if (lis && lis.tagName !== 'UL') cierraLis(); if (!lis) lis = el('ul'); lis.append(mdInline(el('li'), m[1])); }
+    else if ((m = /^\s*\d+[.)]\s+(.+)$/.exec(l))) { cierraPar(); cierraCit(); if (lis && lis.tagName !== 'OL') cierraLis(); if (!lis) lis = el('ol'); lis.append(mdInline(el('li'), m[1])); }
+    else if ((m = /^\s*>\s?(.*)$/.exec(l))) { cierraPar(); cierraLis(); cit.push(m[1]); }
+    else { cierraLis(); cierraCit(); par.push(l); }
+  });
+  cierraPar(); cierraLis(); cierraCit(); cierraTab(); return box;
+}
 registrarSW();
 montarShell();
 montarAvisoRed();

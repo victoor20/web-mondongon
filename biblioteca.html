@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261208"></script>
+<script src="puerta.js?v=20261209"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261208">
+<link rel="stylesheet" href="style.css?v=20261209">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -86,8 +86,8 @@
     <div id="t-rep" class="fc-estudio hide"></div>
     <form id="t-form" class="bib-form hide" autocomplete="off">
       <h2 id="t-form-t">Nueva tarjeta</h2>
-      <label class="bf-f">Pregunta o concepto <textarea id="t-p" rows="3"></textarea></label>
-      <label class="bf-f">Respuesta <textarea id="t-r" rows="4"></textarea></label>
+      <div class="bf-f"><label for="t-p">Pregunta o concepto</label><textarea id="t-p" rows="3"></textarea></div>
+      <div class="bf-f"><label for="t-r">Respuesta</label><textarea id="t-r" rows="5"></textarea></div>
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="t-tema"></select></label>
         <label class="bf-f">Etiqueta <input type="text" id="t-et" maxlength="40" placeholder="Elige una o escribe una nueva"></label>
@@ -122,7 +122,7 @@
     <form id="n-form" class="bib-form hide" autocomplete="off">
       <h2 id="n-form-t">Nueva nota</h2>
       <label class="bf-f">Título (opcional) <input type="text" id="n-ti" maxlength="120"></label>
-      <label class="bf-f">Texto <textarea id="n-x" rows="7"></textarea></label>
+      <div class="bf-f"><label for="n-x">Texto</label><textarea id="n-x" rows="10"></textarea></div>
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="n-tema"></select></label>
         <label class="bf-f">Etiqueta <input type="text" id="n-et" maxlength="40" placeholder="Elige una o escribe una nueva"></label>
@@ -135,9 +135,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261208"></script>
-<script src="vistas.js?v=20261208"></script>
-<script src="biblioteca.js?v=20261208"></script>
+<script src="app.js?v=20261209"></script>
+<script src="vistas.js?v=20261209"></script>
+<script src="biblioteca.js?v=20261209"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -496,30 +496,61 @@ function notaDesplegable(titulo, etiqueta, deTest) {                // nota pleg
   if (etiqueta) s.append(el('span', 'nota-et', etiqueta));
   c.append(s, el('div', 'nota-cuerpo')); return c;
 }
-const esFilaTabla = l => /^\s*\|.+\|\s*$/.test(l) || (l.indexOf('\t') > 0 && l.split('\t').filter(c => c.trim()).length >= 2);
-const celdasFila = l => l.indexOf('\t') > 0 && l.trim().charAt(0) !== '|' ? l.split('\t').map(c => c.trim()) : l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
-function conNegrita(p, txt) {                                       // **texto** -> negrita, sin tocar el resto
-  txt.split(/(\*\*[^*]+\*\*)/).forEach(s => { if (/^\*\*[^*]+\*\*$/.test(s)) p.append(el('strong', '', s.slice(2, -2))); else if (s) p.append(document.createTextNode(s)); });
-  return p;
-}
-function notaHtml(txt) {                                            // párrafos, tablas (| a | b |, o celdas con tabulador) y negritas
-  const box = el('div', 'nota-x'); let par = [], tab = [];
-  const cierraPar = () => { if (par.length) { box.append(conNegrita(el('p'), par.join('\n'))); par = []; } };
-  const cierraTab = () => {
-    if (!tab.length) return;
-    const raya = r => r.every(c => /^:?-{3,}:?$/.test(c));
-    let filas = tab.map(celdasFila), cab = null;
-    if (filas.length > 1 && raya(filas[1])) { cab = filas[0]; filas = filas.slice(2); } else filas = filas.filter(r => !raya(r));
-    const w = el('div', 'tabla'), t = el('table');
-    if (cab) { const tr = el('tr'), th = el('thead'); cab.forEach(c => tr.append(conNegrita(el('th'), c))); th.append(tr); t.append(th); }
-    const tb = el('tbody'); filas.forEach(r => { const tr = el('tr'); r.forEach(c => tr.append(conNegrita(el('td'), c))); tb.append(tr); }); t.append(tb);
-    w.append(t); box.append(w); tab = [];
+const notaHtml = txt => mdHtml(txt);
+/* barra de formato sobre un textarea: envuelve la selección con marcas de texto (el texto guardado sigue siendo texto plano) */
+function montaFormato(id) {
+  const ta = $(id), bar = el('div', 'fmt'), prev = el('div', 'fmt-prev hide');
+  bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Formato del texto'); prev.setAttribute('aria-live', 'polite');
+  const refresca = () => { if (!prev.classList.contains('hide')) prev.replaceChildren(ta.value.trim() ? mdHtml(ta.value, true) : el('p', 'fine', 'Aquí verás cómo queda el texto.')); };
+  const inserta = (s, e, txt) => {
+    ta.focus(); ta.setSelectionRange(s, e); let ok = false;
+    try { ok = document.execCommand('insertText', false, txt); } catch (x) { ok = false; }      // así Ctrl+Z deshace el cambio
+    if (!ok) { ta.setRangeText(txt, s, e, 'end'); ta.dispatchEvent(new Event('input')); }
   };
-  String(txt || '').replace(/\r\n?/g, '\n').split('\n').forEach(l => {
-    if (esFilaTabla(l)) { cierraPar(); tab.push(l); } else { cierraTab(); if (l.trim()) par.push(l); else cierraPar(); }
+  const inline = (a, b) => {
+    const v = ta.value, s = ta.selectionStart, e = ta.selectionEnd, t = v.slice(s, e);
+    if (t && v.slice(s - a.length, s) === a && v.slice(e, e + b.length) === b) { inserta(s - a.length, e + b.length, t); ta.setSelectionRange(s - a.length, s - a.length + t.length); }
+    else if (t.length >= a.length + b.length && t.startsWith(a) && t.endsWith(b)) { const u = t.slice(a.length, t.length - b.length); inserta(s, e, u); ta.setSelectionRange(s, s + u.length); }
+    else { const x = t || 'texto'; inserta(s, e, a + x + b); ta.setSelectionRange(s + a.length, s + a.length + x.length); }
+    refresca();
+  };
+  const lineas = fn => {
+    const v = ta.value, s = ta.selectionStart, e = ta.selectionEnd, i = v.lastIndexOf('\n', s - 1) + 1; let j = v.indexOf('\n', e); if (j < 0) j = v.length;
+    const out = fn(v.slice(i, j).split('\n')).join('\n'); inserta(i, j, out); ta.setSelectionRange(i, i + out.length); refresca();
+  };
+  const prefija = (pre, re) => lineas(ls => { const todas = ls.filter(l => l.trim()).every(l => l.startsWith(pre)); return ls.map(l => !l.trim() ? l : todas ? l.slice(pre.length) : pre + l.replace(re, '')); });
+  const numera = () => lineas(ls => { const num = /^\d+[.)]\s+/, todas = ls.filter(l => l.trim()).every(l => num.test(l)); let k = 0; return ls.map(l => !l.trim() ? l : todas ? l.replace(num, '') : (++k) + '. ' + l.replace(/^\s*([-*•]|\d+[.)])\s+/, '')); });
+  const bloque = txt => { const v = ta.value; let j = v.indexOf('\n', ta.selectionEnd); if (j < 0) j = v.length; inserta(j, j, '\n' + txt + '\n'); refresca(); };
+  const limpia = () => {
+    if (ta.selectionStart === ta.selectionEnd) { lineas(ls => ls.map(quita)); return; }
+    const s = ta.selectionStart, e = ta.selectionEnd, u = quita(ta.value.slice(s, e)); inserta(s, e, u); ta.setSelectionRange(s, s + u.length); refresca();
+  };
+  const quita = t => t.replace(/\{[ravngp]\|(.+?)\}/g, '$1').replace(/\*\*(.+?)\*\*/g, '$1').replace(/==(.+?)==/g, '$1').replace(/\+\+(.+?)\+\+/g, '$1').replace(/~~(.+?)~~/g, '$1')
+    .replace(/\*([^*\s](?:[^*]*[^*\s])?)\*/g, '$1').replace(/^\s{0,3}#{1,3}\s+/gm, '').replace(/^\s*>\s?/gm, '');
+  const btn = (txt, ayuda, fn, cls) => {
+    const b = el('button', cls || '', txt); b.type = 'button'; b.title = ayuda; b.setAttribute('aria-label', ayuda);
+    b.addEventListener('mousedown', ev => ev.preventDefault()); b.addEventListener('click', fn); bar.append(b); return b;
+  };
+  const sep = () => bar.append(el('span', 'sep'));
+  btn('B', 'Negrita (Ctrl+B)', () => inline('**', '**'), 'f-b'); btn('I', 'Cursiva (Ctrl+I)', () => inline('*', '*'), 'f-i');
+  btn('U', 'Subrayado (Ctrl+U)', () => inline('++', '++'), 'f-u'); btn('S', 'Tachado', () => inline('~~', '~~'), 'f-s');
+  btn('ab', 'Resaltar', () => inline('==', '=='), 'f-hl'); sep();
+  [['r', 'rojo'], ['a', 'azul'], ['v', 'verde'], ['n', 'naranja']].forEach(([k, n]) => btn('', 'Texto ' + n, () => inline('{' + k + '|', '}'), 'col col-' + k)); sep();
+  btn('A+', 'Texto más grande', () => inline('{g|', '}'), 'f-g'); btn('A−', 'Texto más pequeño', () => inline('{p|', '}'), 'f-p'); sep();
+  btn('T1', 'Título grande', () => prefija('# ', /^\s{0,3}#{1,3}\s+/)); btn('T2', 'Subtítulo', () => prefija('## ', /^\s{0,3}#{1,3}\s+/)); btn('T3', 'Apartado', () => prefija('### ', /^\s{0,3}#{1,3}\s+/)); sep();
+  btn('•', 'Lista con viñetas', () => prefija('- ', /^\s*([-*•]|\d+[.)])\s+/)); btn('1.', 'Lista numerada', numera); btn('❝', 'Cita o destacado', () => prefija('> ', /^\s*>\s?/));
+  btn('—', 'Línea separadora', () => bloque('---')); btn('▦', 'Tabla', () => bloque('| Concepto | Detalle |\n|---|---|\n| | |')); sep();
+  btn('Limpiar', 'Quitar el formato de lo seleccionado', limpia, 'f-txt');
+  const vp = btn('Vista previa', 'Ver cómo queda el texto', () => { const on = prev.classList.toggle('hide') === false; vp.setAttribute('aria-pressed', String(on)); refresca(); }, 'f-txt f-vp'); vp.setAttribute('aria-pressed', 'false');
+  ta.before(bar); ta.after(prev);
+  ta.addEventListener('input', refresca); ta._fmt = refresca;
+  ta.addEventListener('keydown', ev => {
+    if (!(ev.ctrlKey || ev.metaKey) || ev.altKey || ev.shiftKey) return;
+    const k = ev.key.toLowerCase(), a = k === 'b' ? '**' : k === 'i' ? '*' : k === 'u' ? '++' : '';
+    if (a) { ev.preventDefault(); inline(a, a); }
   });
-  cierraTab(); cierraPar(); return box;
 }
+['n-x', 't-p', 't-r'].forEach(montaFormato);
 function htmlATexto(html) {                                         // lo copiado de ChatGPT trae tablas HTML: se pasan a | a | b |
   const doc = new DOMParser().parseFromString(html, 'text/html'), out = [], A = Array.prototype;
   const hijos = n => A.map.call(n.childNodes, dentro).join('');
@@ -578,7 +609,7 @@ function abreNota(n) {
   libreEdit = n ? n.id : null;
   $('n-form-t').textContent = n ? 'Editar nota' : 'Nueva nota';
   $('n-ti').value = n ? n.ti || '' : ''; $('n-x').value = n ? n.x || '' : ''; $('n-et').value = n ? n.et || '' : '';
-  $('n-tema').value = n && n.tema && _temario.byId[n.tema] ? n.tema : ''; $('n-msg').textContent = ''; pintaChipsEtN();
+  $('n-tema').value = n && n.tema && _temario.byId[n.tema] ? n.tema : ''; $('n-msg').textContent = ''; pintaChipsEtN(); $('n-x')._fmt();
   $('n-form').classList.remove('hide'); $('n-nueva').classList.add('hide');
   $('n-form').scrollIntoView({ block: 'nearest' }); $('n-x').focus();
 }
@@ -622,7 +653,7 @@ function carta(k, grande) {
   const cara = (cls, lado, txt, pista) => {
     const f = el('div', 'fc-cara ' + cls), cab = el('div', 'fc-cab');
     cab.append(el('span', 'fc-lado', lado)); if (k.et) cab.append(el('span', 'fc-et', k.et));
-    f.append(cab, el('p', 'fc-txt', txt)); if (pista) f.append(el('span', 'fc-pista', pista)); return f;
+    const tx = el('div', 'fc-txt'); tx.append(mdHtml(txt, true)); f.append(cab, tx); if (pista) f.append(el('span', 'fc-pista', pista)); return f;
   };
   const a = cara('fc-frente', inv ? 'Respuesta' : 'Pregunta', inv ? k.r : k.p, grande ? 'Toca la tarjeta o pulsa espacio para girarla' : 'Toca para girar');
   const b = cara('fc-dorso', inv ? 'Pregunta' : 'Respuesta', inv ? k.p : k.r, ''), int = el('div', 'fc-int');
@@ -724,7 +755,7 @@ $('t-et').addEventListener('input', pintaChipsEt);
 function abreTj(k) {
   tjEdit = k ? k.id : null; cierraLote();
   $('t-form-t').textContent = k ? 'Editar tarjeta' : 'Nueva tarjeta';
-  $('t-p').value = k ? k.p : ''; $('t-r').value = k ? k.r : ''; $('t-et').value = k ? k.et || '' : ''; pintaChipsEt();
+  $('t-p').value = k ? k.p : ''; $('t-r').value = k ? k.r : ''; $('t-et').value = k ? k.et || '' : ''; pintaChipsEt(); $('t-p')._fmt(); $('t-r')._fmt();
   $('t-tema').value = k && k.tema && _temario.byId[k.tema] ? k.tema : ''; $('t-msg').textContent = '';
   $('t-form').classList.remove('hide'); $('t-form').scrollIntoView({ block: 'nearest' }); $('t-p').focus();
 }
@@ -838,6 +869,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261208"></script>
+<script src="temporizador.js?v=20261209"></script>
 </body>
 </html>

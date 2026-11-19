@@ -51,6 +51,9 @@
     --sombra:none; --on-suave:#E7EBF3;
 }
 :root[data-tema="claro"]{color-scheme:light}
+:root{--tj:#C2410C;--tj-t:#FFEBDD;--no:#0B7285;--no-t:#DDF4F8;--papel-n:#FFFEF7;--md-a:#1F5FD6;--md-n:#B45309}
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]){--tj:#FFA070;--tj-t:#3A2217;--no:#5CCBE6;--no-t:#122E37;--papel-n:#182036;--md-a:#8DB4FF;--md-n:#F5A25D}}
+:root[data-tema="oscuro"]{--tj:#FFA070;--tj-t:#3A2217;--no:#5CCBE6;--no-t:#122E37;--papel-n:#182036;--md-a:#8DB4FF;--md-n:#F5A25D}
 :root[data-tema="oscuro"]{color-scheme:dark}
 [data-b="I"]{--bc:var(--b1);--bt:var(--b1t)}
 [data-b="II"]{--bc:var(--b2);--bt:var(--b2t)}
@@ -620,7 +623,7 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .fc-cab{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin:.2rem 0 .3rem}
 .fc-lado{font:700 .74rem/1 var(--sans);color:var(--muted)}
 .fc-et{padding:.2rem .55rem;border:1px solid var(--bc);border-radius:999px;font:600 .72rem/1.2 var(--sans);color:var(--tinta);overflow-wrap:anywhere}
-.fc-txt{margin:auto 0;padding:.4rem 0;font:600 .98rem/1.45 var(--display);white-space:pre-wrap;overflow-wrap:anywhere}
+.fc-txt{margin:auto 0;padding:.4rem 0;font:600 .98rem/1.45 var(--display);overflow-wrap:anywhere}
 .fc-pista{margin-top:.2rem;text-align:center;font:500 .75rem/1.2 var(--sans);color:var(--muted)}
 .fc-g{border-radius:22px}
 .fc-g .fc-cara{min-height:min(22rem,62vh);max-height:72vh;padding:1.5rem 1.7rem 1.2rem;border-radius:22px}
@@ -692,7 +695,7 @@ details.bloque .tema{grid-template-columns:3.8rem minmax(0,1fr);margin:0;padding
 .notas-t{margin:0 0 .7rem;padding-left:.75rem;border-left:5px solid var(--bc);font:700 1.05rem/1.25 var(--display)}
 .nota-card{margin:0 0 .65rem;padding:1rem 1.1rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja)}
 .nota-q{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0 0 .55rem;font:500 .95rem/1.5 var(--serif);color:var(--muted)}
-.nota-x{margin:0 0 .75rem;padding:.6rem .8rem;border-radius:8px;background:rgba(127,127,127,.09);border:1px solid var(--linea);color:var(--tinta);line-height:1.6;white-space:pre-wrap}
+.nota-x{margin:0 0 .75rem;padding:.6rem .8rem;border-radius:8px;background:rgba(127,127,127,.09);border:1px solid var(--linea);color:var(--tinta);line-height:1.6}
 .nota-libre{border-left:5px solid var(--bc)}
 .nota-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem .7rem;margin:0 0 .55rem}
 .nota-ti{margin:0;font:700 1.02rem/1.3 var(--display)}
@@ -872,6 +875,60 @@ a.bib-bloque .fine{color:var(--tinta);opacity:.78}
 .vis-busca input:focus-visible,.vis-busca button:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 .vis-cuenta{min-width:5.5rem;font-size:.82rem;color:var(--muted)}
 @media(max-width:560px){.vis-barra{padding:.5rem}.vis-t{flex:1 1 0}}
+/* ---------- texto con formato ---------- */
+.md p{margin:0 0 .55rem;white-space:pre-line;overflow-wrap:anywhere}
+.md>:last-child{margin-bottom:0}
+.md .md-h{margin:.8rem 0 .35rem;font-family:var(--display);font-weight:700;line-height:1.25;white-space:normal}
+.md>.md-h:first-child{margin-top:0}
+.md .md-h1{font-size:1.5em}.md .md-h2{font-size:1.2em}.md .md-h3{font-size:1.02em;color:var(--azul)}
+.md ul,.md ol{margin:0 0 .6rem;padding-left:1.45rem}.md li{margin:.18rem 0;overflow-wrap:anywhere}
+.md blockquote{margin:0 0 .65rem;padding:.4rem .85rem;border-left:4px solid var(--azul);border-radius:0 8px 8px 0;background:rgba(127,127,127,.09);white-space:pre-line}
+.md hr{margin:.9rem 0;border:0;border-top:2px solid var(--linea2)}
+.md mark.md-hl{padding:0 .15em;border-radius:3px;background:var(--subraya);color:var(--on-subraya)}
+.md u{text-decoration-thickness:2px;text-underline-offset:2px}
+.md .md-r{color:var(--ko);font-weight:600}.md .md-a{color:var(--md-a);font-weight:600}.md .md-v{color:var(--ok);font-weight:600}.md .md-n{color:var(--md-n);font-weight:600}
+.md .md-g{font-size:1.35em;line-height:1.3}.md .md-p{font-size:.82em}
+.md .tabla{overflow-x:auto;margin:.2rem 0 .6rem}.md table{border-collapse:collapse;width:100%;font-size:.9rem;line-height:1.4}
+.md th,.md td{padding:.4rem .6rem;border:1px solid var(--linea);text-align:left;vertical-align:top}.md th{background:rgba(127,127,127,.14)}
+.fc-txt .md{text-align:left}.fc-txt .md p{margin-bottom:.4rem}
+/* barra de formato del editor */
+.fmt{display:flex;flex-wrap:wrap;gap:.2rem;align-items:center;margin:.35rem 0 .45rem;padding:.3rem;border:1px solid var(--linea2);border-radius:10px;background:var(--hoja)}
+.fmt button{min-width:2.1rem;min-height:2.1rem;padding:0 .4rem;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--tinta);font:600 .88rem/1 var(--sans);cursor:pointer}
+.fmt button:hover{background:var(--sel-bg);border-color:var(--linea2)}
+.fmt button[aria-pressed=true]{background:var(--azul);border-color:var(--azul);color:var(--on-azul)}
+.fmt .f-b{font-weight:800}.fmt .f-i{font-style:italic;font-family:Georgia,serif}.fmt .f-u{text-decoration:underline}.fmt .f-s{text-decoration:line-through}
+.fmt .f-hl{background:var(--subraya);color:var(--on-subraya);padding:0 .35rem}
+.fmt .f-g{font-size:1.05rem}.fmt .f-p{font-size:.72rem}.fmt .f-txt{font-size:.8rem;padding:0 .6rem}.fmt .f-vp{margin-left:auto}
+.fmt .col{min-width:0;width:1.45rem;min-height:0;height:1.45rem;margin:0 .1rem;padding:0;border-radius:50%;border:2px solid var(--hoja);box-shadow:0 0 0 1px var(--linea2)}
+.fmt .col:hover{border-color:var(--hoja);box-shadow:0 0 0 2px var(--tinta)}
+.fmt .col-r{background:var(--ko)}.fmt .col-a{background:var(--md-a)}.fmt .col-v{background:var(--ok)}.fmt .col-n{background:var(--md-n)}
+.fmt .sep{width:1px;align-self:stretch;margin:.15rem .2rem;background:var(--linea)}
+.fmt-prev{margin:.5rem 0 0;padding:.75rem .95rem;border:1.5px dashed var(--linea2);border-radius:10px;background:var(--papel);font-weight:400}
+.bf-f>label{display:block}
+.bf-f textarea{width:100%}
+/* ---------- Tarjetas y Notas: cada una con su identidad ---------- */
+#panel-tarjetas{--azul:var(--tj);--azul-t:var(--tj-t);--foco:var(--tj)}
+#panel-notas{--azul:var(--no);--azul-t:var(--no-t);--foco:var(--no)}
+#tab-tarjetas::before,#tab-notas::before{content:"";display:inline-block;width:.55rem;height:.55rem;margin-right:.5rem;border-radius:3px;vertical-align:.04em}
+#tab-tarjetas::before{background:var(--tj)}#tab-notas::before{background:var(--no)}
+#tab-tarjetas[aria-selected=true]{background:var(--tj);color:var(--on-azul)}#tab-notas[aria-selected=true]{background:var(--no);color:var(--on-azul)}
+#tab-tarjetas[aria-selected=true]::before,#tab-notas[aria-selected=true]::before{background:var(--on-azul)}
+#panel-tarjetas .ib,#panel-notas .ib{border:1px solid var(--azul);border-left-width:8px;background:var(--azul-t)}
+#panel-tarjetas .ib h2,#panel-notas .ib h2{color:var(--azul);font-size:1.3rem}
+#panel-tarjetas .ib h2 svg,#panel-notas .ib h2 svg{width:2.4rem;height:2.4rem;padding:.5rem;border-radius:12px;background:var(--azul);color:var(--on-azul)}
+#panel-tarjetas .ib-ej,#panel-notas .ib-ej{border-color:var(--azul)}
+#panel-tarjetas .bib-form,#panel-notas .bib-form{border-top:5px solid var(--azul)}
+#panel-tarjetas .fc-frente{box-shadow:0 1px 3px rgba(0,0,0,.18),5px 5px 0 -1px var(--hoja),5px 5px 0 0 var(--linea2),10px 10px 0 -2px var(--hoja),10px 10px 0 -1px var(--linea)}
+#panel-tarjetas .fc-grid{gap:1.9rem 1.7rem}
+#panel-tarjetas .fc-item{padding:0 .7rem .7rem 0}
+#panel-tarjetas .fc-frente .fc-lado::before{content:"? ";color:var(--azul);font-weight:800}
+#panel-tarjetas .fc-dorso .fc-lado::before{content:"✓ ";color:var(--ok);font-weight:800}
+#panel-notas details.nota-card{background:var(--papel-n);border-radius:8px 16px 16px 8px}
+#panel-notas .nota-cuerpo{position:relative;padding-left:3rem;background:var(--papel-n)}
+#panel-notas .nota-cuerpo::before{content:"";position:absolute;left:2.1rem;top:0;bottom:0;width:2px;background:rgba(214,64,64,.4)}
+#panel-notas .nota-cuerpo .nota-x{padding:.1rem 0;border:0;background:transparent}
+#panel-notas .nota-sum .nota-st{font-family:var(--serif)}
+@media(max-width:560px){#panel-notas .nota-cuerpo{padding-left:2.3rem}#panel-notas .nota-cuerpo::before{left:1.5rem}}
 
 /* ---------- Tests: filtros de bloque y estado ---------- */
 .chips:empty{display:none}
