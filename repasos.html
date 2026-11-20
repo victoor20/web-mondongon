@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="puerta.js?v=20261213"></script>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Errores y dudas - Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261213">
+</head>
+<body data-pagina="tests">
+<div class="wrap">
+  <div class="volver"><a class="btn small ghost" href="tests.html" data-atras>← Atrás</a></div>
+  <div class="pagehead pagehead-fila">
+    <div>
+      <h1 class="titular">Errores y dudas</h1>
+      <p class="entradilla">Lo que has fallado o marcado con estrella, con su origen. Lo que ya resolviste queda guardado para consultarlo cuando quieras.</p>
+    </div>
+    <div class="acciones" id="repasar-ya"></div>
+  </div>
+
+  <div class="filtros hoja pad">
+    <input type="search" id="q" placeholder="Buscar en las preguntas" aria-label="Buscar en las preguntas">
+    <div class="chips" id="c-tipo" role="group" aria-label="Tipo"></div>
+    <div class="chips" id="c-est" role="group" aria-label="Estado"></div>
+    <div class="rp-sel">
+      <label>Bloque <select id="s-bloque"></select></label>
+      <label>Tema <select id="s-tema"></select></label>
+      <label>Ordenar <select id="s-orden"></select></label>
+    </div>
+  </div>
+  <div class="barra">
+    <label>Mostrar <select id="s-n" aria-label="Cuántos mostrar"></select></label>
+    <span class="fine" id="cuenta"></span>
+    <button type="button" class="btn small ghost hide" id="quitar">Quitar filtros</button>
+  </div>
+  <div id="lista"><p class="vacio-msg">Cargando…</p></div>
+</div>
+<script src="app.js?v=20261213"></script>
+<script src="vistas.js?v=20261213"></script>
+<script>
+const F = { q: '', tipo: 'todos', est: 'pend', bloque: '', tema: '', orden: 'rec' };
+let datos = [], qs = {};
+const ORD = { rec: ['Más recientes primero', (a, b) => (b.t || 0) - (a.t || 0)], fallos: ['Más veces fallada primero', (a, b) => (b.n || 0) - (a.n || 0) || (b.t || 0) - (a.t || 0)], tema: ['Por bloque y tema', null] };
+const fecha = ms => (ms ? new Date(ms).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '');
+const norma = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+function migraNotasTest() {                                        // las notas que escribiste en tests pasan al error o duda de esa pregunta (una vez)
+  if (getPrefs().migNotas) return;
+  const nr = notasRaw();
+  [LS.err, LS.dud].forEach(ls => {
+    const raw = jget(localStorage, ls, {}); let ch = false;
+    Object.entries(raw).forEach(([k, v]) => { const n = nr[k]; if (v && v.testId && !v.nota && n && n.x && n.x.trim()) { raw[k] = { ...v, nota: n.x.trim() }; ch = true; } });
+    if (ch) jset(localStorage, ls, raw);
+  });
+  setPref('migNotas', 1);
+}
+function leer() {
+  const out = [];
+  [['error', LS.err], ['duda', LS.dud]].forEach(([tipo, ls]) => Object.entries(jget(localStorage, ls, {})).forEach(([k, v]) => {
+    if (!v || !v.testId || (v.del && !v.res)) return;
+    out.push({ k, tipo, resuelto: !!v.del, n: v.n || 1, p: v.p || v.t, res: v.res || 0, rs: v.rs || 0, t: v.res || v.t || 0, testId: v.testId, tema: v.tema || 'General', nota: v.nota || '' });
+  }));
+  return out;
+}
+const bloqueDe = d => bloqueOf(d.tema) || 'x';
+function cuentaPor(fn) { return datos.filter(fn).length; }
+function chip(box, valor, actual, txt, n, alClick) {
+  const b = el('button', 'chip' + (valor === actual ? ' on' : ''), txt); b.type = 'button'; b.setAttribute('aria-pressed', String(valor === actual));
+  b.append(el('span', 'n', String(n))); b.addEventListener('click', () => { alClick(valor); pinta(); }); box.append(b);
+}
+function filtrados() {
+  const q = norma(F.q.trim());
+  const l = datos.filter(d => (F.tipo === 'todos' || d.tipo === F.tipo) && (F.est === 'todos' || (F.est === 'res') === d.resuelto) && (!F.bloque || bloqueDe(d) === F.bloque) && (!F.tema || d.tema === F.tema)
+    && (!q || norma((qs[d.k] ? qs[d.k].q : '') + ' ' + d.nota + ' ' + temaLabel(d.tema)).indexOf(q) >= 0));
+  if (F.orden === 'tema') { const o = Object.keys(_temario.byId); l.sort((a, b) => (o.indexOf(a.tema) + 1 || 999) - (o.indexOf(b.tema) + 1 || 999) || (b.t - a.t)); } else l.sort(ORD[F.orden][1]);
+  return l;
+}
+function tarjeta(d) {
+  const q = qs[d.k], c = el('details', 'rp-card' + (d.resuelto ? ' resuelto' : ''));
+  const s = el('summary', 'rp-sum'), tit = el('span', 'rp-q', q ? q.q : 'Esta pregunta ya no está en los tests publicados.');
+  const tg = el('span', 'rp-tags');
+  tg.append(el('b', 'tag ' + (d.tipo === 'error' ? 'ko' : 'est'), d.tipo === 'error' ? 'Error' : 'Duda'), el('b', 'tag ' + (d.resuelto ? 'ok' : 'pend'), d.resuelto ? 'Resuelto' : 'Pendiente'));
+  s.append(tit, tg); c.append(s);
+  const b = el('div', 'rp-cuerpo');
+  b.append(el('p', 'rp-origen', [bloqueInfo(bloqueOf(d.tema)) ? 'Bloque ' + bloqueOf(d.tema) : '', temaLabel(d.tema)].filter(Boolean).join(' · ')));
+  if (q) {
+    const lista = el('div', 'rv-opts');
+    q.opciones.forEach((t, j) => { const ok = j === q.correcta, o = el('div', 'rv-opt' + (ok ? ' right' : '')); o.append(el('span', 'let', LETTERS[j]), el('span', 'otx', t)); if (ok) { const tg2 = el('span', 'rv-tags'); tg2.append(el('b', 'tag ok', 'Correcta')); o.append(tg2); } lista.append(o); });
+    b.append(lista);
+    if (q.explicacion) b.append(el('div', 'expl', q.explicacion));
+    if (q.ref) b.append(el('p', 'fine', 'Referencia: ' + q.ref));
+  }
+  const hist = [d.tipo === 'error' ? `Primer fallo: ${fecha(d.p)}.` : `Marcada por primera vez: ${fecha(d.p)}.`, d.n > 1 ? `${d.tipo === 'error' ? 'Fallos' : 'Veces marcada'}: ${d.n}.` : '',
+    d.resuelto ? `Resuelta el ${fecha(d.res)}${d.rs > 1 ? ` (${d.rs} veces resuelta)` : ''}.` : 'Sigue pendiente de repasar.'].filter(Boolean).join(' ');
+  b.append(el('p', 'rp-hist', hist));
+  if (d.nota) { const n = el('div', 'minota'); n.append(el('b', '', 'Tu nota: '), d.nota); b.append(n); }
+  if (q) { const a = el('a', 'mini', 'Abrir el test de origen'); a.href = 'test.html?t=' + encodeURIComponent(d.testId); b.append(a); }
+  c.append(b); return c;
+}
+function pinta() {
+  const t0 = F.tipo, e0 = F.est;
+  const ct = $('c-tipo'), ce = $('c-est'); ct.replaceChildren(); ce.replaceChildren();
+  const sinTipo = d => (F.est === 'todos' || (F.est === 'res') === d.resuelto), sinEst = d => (F.tipo === 'todos' || d.tipo === F.tipo);
+  chip(ct, 'todos', F.tipo, 'Errores y dudas', cuentaPor(sinTipo), v => { F.tipo = v; });
+  chip(ct, 'error', F.tipo, 'Errores', cuentaPor(d => d.tipo === 'error' && sinTipo(d)), v => { F.tipo = v; });
+  chip(ct, 'duda', F.tipo, 'Dudas', cuentaPor(d => d.tipo === 'duda' && sinTipo(d)), v => { F.tipo = v; });
+  chip(ce, 'pend', F.est, 'Pendientes', cuentaPor(d => !d.resuelto && sinEst(d)), v => { F.est = v; });
+  chip(ce, 'res', F.est, 'Resueltos', cuentaPor(d => d.resuelto && sinEst(d)), v => { F.est = v; });
+  chip(ce, 'todos', F.est, 'Todos', cuentaPor(sinEst), v => { F.est = v; });
+  const sb = $('s-bloque'), st = $('s-tema'); sb.replaceChildren(new Option('Todos', '')); st.replaceChildren(new Option('Todos', ''));
+  _temario.bloques.forEach(b => { if (datos.some(d => bloqueDe(d) === b.id)) sb.append(new Option(`${b.id}. ${b.titulo}`, b.id)); }); sb.value = F.bloque;
+  const temas = [...new Set(datos.filter(d => !F.bloque || bloqueDe(d) === F.bloque).map(d => d.tema))].sort((a, b) => Object.keys(_temario.byId).indexOf(a) - Object.keys(_temario.byId).indexOf(b));
+  temas.forEach(t => st.append(new Option(temaLabel(t), t))); if (F.tema && !temas.includes(F.tema)) F.tema = ''; st.value = F.tema;
+  const so = $('s-orden'); if (!so.options.length) Object.entries(ORD).forEach(([k, v]) => so.append(new Option(v[0], k))); so.value = F.orden;
+  const sn = $('s-n'); if (!sn.options.length) [[10, '10'], [25, '25'], [50, '50'], [0, 'Todos']].forEach(([v, tx]) => sn.append(new Option(tx, String(v)))); const n = getPrefs().repN == null ? 10 : getPrefs().repN; sn.value = String(n);
+  const fil = filtrados(), h = lim(fil, n), box = $('lista'); box.replaceChildren();
+  $('cuenta').textContent = `${h.length} de ${fil.length}`;
+  const hay = F.q || F.bloque || F.tema || F.tipo !== 'todos' || F.est !== 'pend'; $('quitar').classList.toggle('hide', !hay);
+  if (!datos.length) { box.append(el('p', 'vacio-msg', 'Todavía no tienes errores ni dudas. Aquí aparecerán, y se quedarán aunque los resuelvas.')); return; }
+  if (!fil.length) { box.append(el('p', 'vacio-msg', F.est === 'pend' && cuentaPor(d => d.resuelto) ? 'No tienes nada pendiente con estos filtros. Mira «Resueltos» para ver lo que ya repasaste.' : 'No hay nada con estos filtros.')); return; }
+  h.forEach(d => box.append(tarjeta(d)));
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, ya = $('repasar-ya'); ya.replaceChildren();
+  if (nErr) { const a = el('a', 'btn small', `Repasar errores (${nErr})`); a.href = 'test.html?t=errores'; ya.append(a); }
+  if (nDud) { const a = el('a', 'btn small ghost', `Repasar dudas (${nDud})`); a.href = 'test.html?t=dudosas'; ya.append(a); }
+}
+const lim = (l, n) => (n ? l.slice(0, n) : l);
+$('q').addEventListener('input', () => { F.q = $('q').value; pinta(); });
+$('s-bloque').addEventListener('change', () => { F.bloque = $('s-bloque').value; F.tema = ''; pinta(); });
+$('s-tema').addEventListener('change', () => { F.tema = $('s-tema').value; pinta(); });
+$('s-orden').addEventListener('change', () => { F.orden = $('s-orden').value; pinta(); });
+$('s-n').addEventListener('change', () => { setPref('repN', parseInt($('s-n').value, 10)); pinta(); });
+$('quitar').addEventListener('click', () => { Object.assign(F, { q: '', tipo: 'todos', est: 'pend', bloque: '', tema: '' }); $('q').value = ''; pinta(); });
+(async function init() {
+  await loadTemario(); migraNotasTest(); datos = leer(); pinta();
+  try { (await todasLasPreguntas()).forEach(q => { qs[q.key] = q; }); } catch (e) { /* se muestra sin el texto */ }
+  datos = leer(); pinta();
+  if (getToken()) { const r = await syncNow(); if (r.cambioLocal) { datos = leer(); pinta(); } }
+})();
+</script>
+</body>
+</html>

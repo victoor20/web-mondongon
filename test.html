@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261212"></script>
+<script src="puerta.js?v=20261213"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261212">
+<link rel="stylesheet" href="style.css?v=20261213">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -153,8 +153,8 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261212"></script>
-<script src="descarga.js?v=20261212"></script>
+<script src="app.js?v=20261213"></script>
+<script src="descarga.js?v=20261213"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente');
@@ -417,7 +417,7 @@ function renderQuestions() {
     // nota propia: es de este intento (no se carga la de intentos anteriores); al terminar se guarda en tus notas
     const foot = el('div', 'qfoot'), izq = el('div', 'qfoot-l'), nb = el('button', 'notebtn'); nb.type = 'button';
     const nota = el('div', 'nota hide'), ta = el('textarea');
-    ta.placeholder = 'Tu nota para esta pregunta'; ta.setAttribute('aria-label', 'Nota de la pregunta ' + (i + 1)); ta.value = item.nota || '';
+    ta.placeholder = 'Tu nota para esta pregunta (se guarda con el error o la duda)'; ta.setAttribute('aria-label', 'Nota de la pregunta ' + (i + 1)); ta.value = item.nota || '';
     const paintNb = () => {
       nb.replaceChildren(); nb.insertAdjacentHTML('beforeend', ICON_PEN);
       nb.append(ta.value.trim() ? 'Ver nota' : 'Añadir nota');
@@ -538,20 +538,20 @@ function finishExam() {
   const wrong = exam.filter(q => q.selected !== null && q.selected !== q.correcta).length;
 
   // dudas (estrella): son decisiones tuyas, se guardan siempre
-  const dud = getDud();
+  const dud = jget(localStorage, LS.dud, {});
+  const conN = q => (conNota(q) ? { nota: q.nota.trim() } : {});    // la nota del intento viaja con el error o la duda, no a Biblioteca > Notas
   exam.forEach(q => {
-    if (q.stars.length) bankSet(LS.dud, q.key, { testId: q.testId, tema: q.tema, n: ((dud[q.key] || {}).n || 0) + 1 });
+    if (q.stars.length) bankSet(LS.dud, q.key, { testId: q.testId, tema: q.tema, n: ((dud[q.key] || {}).n || 0) + 1, ...conN(q) });
     else if (T === 'dudosas') bankDel(LS.dud, q.key);
   });
 
-  // errores: los fallos siempre se guardan (también en modo Estudio); las notas del intento pasan a tus notas;
+  // errores: los fallos siempre se guardan (también en modo Estudio), con la nota del intento;
   // las estadísticas solo cambian si el intento cuenta
-  const errs = getErr();
+  const errs = jget(localStorage, LS.err, {});
   exam.forEach(q => {
     if (q.selected === q.correcta) { if (T === 'errores') bankDel(LS.err, q.key); }
-    else if (q.selected !== null) bankSet(LS.err, q.key, { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 });
+    else if (q.selected !== null) bankSet(LS.err, q.key, { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1, ...conN(q) });
   });
-  exam.forEach(q => { if (conNota(q)) setNota(q.key, q.nota); });
   if (countIt) {
     const byTema = {};
     exam.forEach(q => { byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++; if (q.selected === q.correcta) byTema[q.tema].r++; });

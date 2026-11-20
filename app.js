@@ -332,10 +332,16 @@ function addHist(entry) { const h = getHist(); h.unshift(entry); jset(localStora
 const vivos = raw => { const o = {}; Object.entries(raw || {}).forEach(([k, v]) => { if (v && !v.del) o[k] = v; }); return o; };
 const getErr = () => vivos(jget(localStorage, LS.err, {}));      // errores: preguntas falladas
 const getDud = () => vivos(jget(localStorage, LS.dud, {}));      // dudas: preguntas con estrella
-function bankSet(store, key, entry) { const raw = jget(localStorage, store, {}); raw[key] = { ...entry, t: nowT() }; jset(localStorage, store, raw); scheduleSync(); }
+function bankSet(store, key, entry) {                              // p = primera vez, rs = veces resuelta; nota = la de la última vez
+  const raw = jget(localStorage, store, {}), ant = raw[key] || {};
+  const e = { ...entry, p: ant.p || nowT(), rs: ant.rs || 0, t: nowT() };
+  if (e.nota == null && ant.nota) e.nota = ant.nota;
+  if (e.nota == null) delete e.nota;
+  raw[key] = e; jset(localStorage, store, raw); scheduleSync();
+}
 function bankDel(store, key) {
   const raw = jget(localStorage, store, {});
-  if (raw[key] && !raw[key].del) { raw[key] = { del: true, t: nowT() }; jset(localStorage, store, raw); scheduleSync(); }
+  if (raw[key] && !raw[key].del) { raw[key] = { ...raw[key], del: true, res: nowT(), rs: (raw[key].rs || 0) + 1, t: nowT() }; jset(localStorage, store, raw); scheduleSync(); }   // resuelta: sale de pendientes pero se conserva en el historial
 }
 function notasRaw() {                                              // admite el formato antiguo (texto suelto)
   const raw = jget(localStorage, LS.notas, {}), o = {};
@@ -504,7 +510,7 @@ function mergeMap(a, b) {
   new Set([...Object.keys(a || {}), ...Object.keys(b || {})]).forEach(k => {
     const x = a && a[k], y = b && b[k];
     const w = x && y ? ((y.t || 0) > (x.t || 0) ? y : x) : (x || y);
-    if (w.del && (w.t || 0) < limite) return;                  // las tumbas de más de 90 días se limpian
+    if (w.del && !w.res && (w.t || 0) < limite) return;        // las tumbas de más de 90 días se limpian (las resueltas con datos se conservan: son el historial)
     out[k] = w;
   });
   return out;

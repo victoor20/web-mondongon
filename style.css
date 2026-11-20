@@ -1114,4 +1114,23 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .ult-pie{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin:.7rem 0 0}
 .ult-pie .fine{margin-left:auto}
 .estado-l2{display:block;margin-top:.2rem}
+/* ---------- tanda 28: historial de errores y dudas, selectores de cantidad ---------- */
+.sec-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin:0 0 .9rem}
+.sec-cab .h-sec{margin:0}
+.ult-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;margin:0 0 .7rem}
+.ult-cab .ult-chips{margin:0}.ult-cab .barra{margin:0 0 0 auto}
+.ult-cab select{width:auto;flex:none}
+.rp-sel{display:flex;flex-wrap:wrap;gap:.6rem 1rem}
+.rp-sel label{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;color:var(--muted);min-width:0}
+.rp-sel select{width:auto;max-width:100%;flex:none}
+.rp-card{margin:0 0 .6rem;border:1px solid var(--linea);border-radius:13px;background:var(--hoja);border-left:4px solid var(--ko)}
+.rp-card.resuelto{border-left-color:var(--ok)}
+.rp-sum{display:flex;flex-direction:column;gap:.45rem;padding:.8rem 1rem;cursor:pointer;list-style:none}
+.rp-sum::-webkit-details-marker{display:none}
+.rp-q{font:600 1rem/1.45 var(--serif)}
+.rp-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tag.pend{background:var(--ko-bg);color:var(--ko);border:1px solid var(--ko)}
+.rp-cuerpo{padding:0 1rem 1rem}
+.rp-origen{margin:0 0 .6rem;font-size:.82rem;font-weight:600;color:var(--muted)}
+.rp-hist{margin:.7rem 0 .3rem;font-size:.88rem}
 
