@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261209"></script>
+<script src="puerta.js?v=20261210"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261209">
+<link rel="stylesheet" href="style.css?v=20261210">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -41,8 +41,8 @@
 
     <div id="config">
       <div class="modos" role="radiogroup" aria-label="Modo">
-        <label class="modo"><input type="radio" name="modo" value="examen" checked><b>Examen</b><span>Sin pistas. La corrección y las explicaciones llegan al terminar.</span></label>
-        <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder cada pregunta.</span></label>
+        <label class="modo"><input type="radio" name="modo" value="examen" checked><b>Examen</b><span>Simulacro sin pistas: la corrección llega al terminar. Úsalo para medir tu nivel real, cuando ya has estudiado el tema.</span></label>
+        <label class="modo"><input type="radio" name="modo" value="estudio"><b>Estudio</b><span>Ves si has acertado, y por qué, nada más responder. Úsalo para aprender un tema nuevo o repasar errores.</span></label>
       </div>
       <div class="opcion-n hide" id="o-n-box"><label for="o-n">Número de preguntas</label><select id="o-n"></select><small>Se eligen al azar entre todos tus tests (o del tema elegido).</small></div>
       <label class="opcion"><input type="checkbox" id="o-cuenta" checked><span>Contar este intento en mis estadísticas<small id="o-cuenta-h"></small></span></label>
@@ -54,6 +54,7 @@
 
   <!-- TEST -->
   <section id="exam" class="hide">
+    <div class="exam-lay"><div class="exam-main">
     <div class="exambar">
       <div class="prog"><strong id="progress-label">0 de 0</strong><div class="meter" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" id="progress-bar"><i id="progress-fill"></i></div></div>
       <button type="button" class="tbtn" id="timer-btn" aria-label="Ocultar el tiempo">
@@ -67,7 +68,28 @@
       <button type="button" class="btn small" id="finish-top">Finalizar</button>
     </div>
     <div id="questions"></div>
-    <div class="fin"><span class="fine" id="pending-note"></span><button type="button" class="btn cancelar" id="cancel-bottom">Cancelar test</button><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div>
+    <div class="cierre">
+      <h2>Antes de entregar</h2>
+      <p class="fine" id="resumen-t" style="margin:0 0 .7rem"></p>
+      <div class="cierre-chips" id="resumen"></div>
+      <p class="fine" style="margin:.7rem 0 0">Cada error resta ⅓ de acierto; las preguntas en blanco no restan.</p>
+      <div class="fin"><button type="button" class="btn cancelar" id="cancel-bottom">Cancelar test</button><button type="button" class="btn" id="finish-bottom">Finalizar test</button></div>
+    </div>
+    </div>
+    <aside class="side" id="side" aria-label="Mapa de preguntas">
+      <h2>Tu progreso</h2>
+      <div class="side-n"><b id="side-n">0</b><span id="side-t">de 0 respondidas</span></div>
+      <div class="meter"><i id="side-fill"></i></div>
+      <div class="side-stats" id="side-stats"></div>
+      <div class="grid" id="side-grid"></div>
+      <div class="leyenda">
+        <span><i style="background:var(--tinta);border-color:var(--tinta)"></i>Respondida</span>
+        <span><i style="border-color:var(--estrella);background:var(--subraya-suave)"></i>Con estrella</span>
+        <span><i style="background:var(--foco);border-color:var(--foco)"></i>Con nota</span>
+      </div>
+      <button type="button" class="btn small ghost" id="side-first" style="margin-top:.8rem">Ir a la primera sin responder</button>
+    </aside>
+    </div>
   </section>
 
   <!-- RESULTADOS -->
@@ -75,7 +97,7 @@
     <div class="hoja res">
       <h2 id="result-title">Resultado</h2>
       <p class="fine" id="summary" style="margin:0"></p>
-      <span class="nocuenta hide" id="nocuenta">Intento de repaso: no cuenta en tus estadísticas.</span>
+      <span class="nocuenta hide" id="nocuenta">Práctica libre: no cuenta en tus estadísticas. Tus fallos sí van a tu lista de errores.</span>
       <div class="cifras">
         <div><b id="score-right">0</b><span>aciertos</span></div>
         <div><b id="score-wrong">0</b><span>errores</span></div>
@@ -85,7 +107,7 @@
       </div>
       <div class="acciones">
         <button type="button" id="retry" class="btn">Repetir</button>
-        <a class="btn ghost" href="index.html">Volver al inicio</a>
+        <a class="btn ghost" id="go-back" href="tests.html">Volver a Tests</a>
         <a class="btn ghost hide" id="go-errores" href="test.html?t=errores">Repasar errores</a>
       </div>
     </div>
@@ -119,7 +141,7 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261209"></script>
+<script src="app.js?v=20261210"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente');
@@ -129,11 +151,23 @@ const CURSO = LS.curso + location.search;
 const ICON_STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></svg>';
 const ICON_PEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
 
+
+/* de dónde vienes: al cancelar vuelves ahí; al terminar, a Tests (o a donde lo abriste, si no fue Inicio) */
+const FROM = (() => {
+  let r = '';
+  try { const u = new URL(document.referrer); if (u.origin === location.origin && !/test\.html$/.test(u.pathname)) r = (u.pathname.replace(/^.*\//, '') || 'index.html') + u.search + u.hash; } catch (e) { /* nada */ }
+  try { if (r) sessionStorage.setItem('ma2_from', r); else r = sessionStorage.getItem('ma2_from') || ''; } catch (e) { /* nada */ }
+  return r;
+})();
+const DEST_CANCEL = FROM || 'tests.html', DEST_FIN = FROM && !/^index\.html/.test(FROM) ? FROM : 'tests.html';
+const VOLVER = { 'tests.html': 'Volver a Tests', 'temario.html': 'Volver al temario', 'estructura.html': 'Volver a Estructura', 'biblioteca.html': 'Volver a Biblioteca', 'index.html': 'Volver al inicio' };
+
 let meta = { titulo: '', desc: '' }, pool = [], exam = [];
 let mode = 'examen', countIt = true, showTimer = true, feedback = false, fbTouched = false;
 let startAt = 0, elapsed = 0, ticker = null, hiddenAt = 0, completed = false, filtro = 'all', enExamen = false, countTouched = false;
 
 function show(id) {
+  document.body.classList.toggle('con-lado', id === 'exam');
   ['loading', 'welcome', 'exam', 'results'].forEach(s => $(s).classList.toggle('hide', s !== id));
   window.scrollTo(0, 0);
 }
@@ -201,8 +235,8 @@ async function prepBanco(tipo) {
 /* ---------- inicio ---------- */
 function refreshCuentaHint() {
   $('o-cuenta-h').textContent = $('o-cuenta').checked
-    ? 'Tus aciertos y fallos cuentan en las estadísticas y alimentan tu lista de errores.'
-    : 'Es un repaso: ni los aciertos ni los fallos cambian tus estadísticas ni tu lista de errores.';
+    ? 'Tu nota y tu acierto por tema se guardan en las estadísticas.'
+    : 'Práctica libre: no cambia tu nota ni tus estadísticas. Tus fallos sí se guardan en tu lista de errores.';
 }
 function applyDefaultCuenta() {
   if (countTouched) return;
@@ -241,7 +275,7 @@ function showWelcome() {
 function save() {
   if (!enExamen || completed) return;
   cursoSet(CURSO, { v: 1, mode, feedback, countIt, elapsed, exam, savedAt: Date.now() });
-  const sig = answeredCount() + '/' + exam.filter(q => q.star !== null).length;
+  const sig = answeredCount() + '/' + exam.filter(q => q.stars.length).length;
   if (sig !== _sig) { _sig = sig; scheduleSyncSoon(30000); }       // el progreso del test llega a tus otros dispositivos
 }
 let _sig = '';
@@ -249,13 +283,33 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && enE
 
 /* ---------- test ---------- */
 function answeredCount() { return exam.filter(q => q.selected !== null).length; }
+const conNota = q => !!(q.nota && q.nota.trim());
 function updateProgress() {
   const n = answeredCount();
   $('progress-label').textContent = `${n} de ${exam.length}`;
   $('progress-fill').style.width = `${n / exam.length * 100}%`;
   $('progress-bar').setAttribute('aria-valuenow', n); $('progress-bar').setAttribute('aria-valuemax', exam.length);
-  const dud = exam.filter(q => q.star !== null).length;
-  $('pending-note').textContent = n === exam.length ? 'Todo respondido' : `${exam.length - n} sin responder` + (dud ? `, ${dud} con estrella` : '');
+  paintResumen();
+}
+/* saltar a la siguiente pregunta que cumple algo (por debajo de la que se ve; si no hay, la primera) */
+function saltaA(pred) {
+  let i = exam.findIndex((q, k) => pred(q) && $('q-' + k).getBoundingClientRect().top > 90);
+  if (i < 0) i = exam.findIndex(pred);
+  if (i >= 0) $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function chipRes(cls, n, txt, pred) {
+  const b = el(pred && n ? 'button' : 'div', 'rs ' + cls);
+  if (pred && n) { b.type = 'button'; b.title = 'Ir a la siguiente'; b.addEventListener('click', () => { closePanels(); saltaA(pred); }); }
+  b.append(el('b', '', String(n)), el('span', '', txt)); return b;
+}
+function paintResumen() {
+  const n = answeredCount(), total = exam.length, blank = total - n, est = exam.filter(q => q.stars.length).length, nota = exam.filter(conNota).length;
+  const sinR = q => q.selected === null, conE = q => q.stars.length > 0;
+  const chips = () => [chipRes('ok', n, n === 1 ? 'respondida' : 'respondidas'), chipRes(blank ? 'pend' : 'ok', blank, blank === 1 ? 'sin responder' : 'sin responder', sinR),
+    chipRes('est', est, est === 1 ? 'con estrella' : 'con estrella', conE), chipRes('nota', nota, nota === 1 ? 'con nota' : 'con nota', conNota)];
+  $('resumen').replaceChildren(...chips()); $('side-stats').replaceChildren(...chips());
+  $('resumen-t').textContent = blank ? `Te quedan ${plural(blank, 'pregunta', 'preguntas')} por responder.` : 'Has respondido todas las preguntas.';
+  $('side-n').textContent = String(n); $('side-t').textContent = `de ${total} respondidas`; $('side-fill').style.width = `${total ? n / total * 100 : 0}%`;
 }
 function paintTimer() {
   $('timer').textContent = showTimer ? fmtTime(elapsed) : '';
@@ -288,48 +342,61 @@ function lockStudy(item, opts, card) {
 
 function renderQuestions() {
   const box = $('questions'); box.replaceChildren();
-  const notas = getNotas();
   exam.forEach((item, i) => {
     const card = el('article', 'hoja q'); card.id = 'q-' + i;
     const head = el('div', 'qhead');
     head.append(el('span', 'qn', `Pregunta ${i + 1} de ${exam.length}`));
     if (item.ref) head.append(el('span', 'qref', item.ref));
     card.append(head, el('h3', 'qtext', item.q));
-    const opts = el('div', 'opts');
+    const opts = el('div', 'opts'), msg = el('span', 'tip hide', 'Máximo 3 estrellas por pregunta: quita una para marcar otra.');
+    msg.setAttribute('role', 'status');
+    const blankBtn = el('button', 'blankbtn', 'Dejar en blanco'); blankBtn.type = 'button'; blankBtn.title = 'Quita tu respuesta de esta pregunta';
+    const paintBl = () => blankBtn.classList.toggle('hide', item.selected === null || feedback);
     item.opts.forEach((o, j) => {
-      const div = el('div', 'opt' + (item.selected === o.orig ? ' sel' : '') + (item.star === o.orig ? ' dud' : ''));
+      const div = el('div', 'opt' + (item.selected === o.orig ? ' sel' : '') + (item.stars.includes(o.orig) ? ' dud' : ''));
       const label = el('label'), inp = el('input');
       inp.type = 'radio'; inp.name = 'q' + i; inp.value = String(o.orig); inp.checked = item.selected === o.orig;
       label.append(inp, el('span', 'let', LETTERS[j]), el('span', 'otx', o.text));
       const star = el('button', 'star'); star.type = 'button';
-      star.setAttribute('aria-pressed', String(item.star === o.orig));
-      star.setAttribute('aria-label', `Marcar con estrella la opción ${LETTERS[j]}: la que crees correcta, pendiente de revisar`);
-      star.title = 'Marcar como posible respuesta (queda como duda)';
+      star.setAttribute('aria-pressed', String(item.stars.includes(o.orig)));
+      star.setAttribute('aria-label', `Marcar con estrella la opción ${LETTERS[j]}: posible respuesta pendiente de revisar (hasta 3 por pregunta)`);
+      star.title = 'Marcar como posible respuesta (hasta 3; queda como duda)';
       star.insertAdjacentHTML('beforeend', ICON_STAR);
       div.append(label, star); opts.append(div);
 
       inp.addEventListener('change', () => {
         item.selected = o.orig;
         [...opts.children].forEach(d => d.classList.toggle('sel', d.querySelector('input').checked));
-        updateProgress(); paintNav(); save();
+        paintBl(); updateProgress(); paintNav(); save();
         if (feedback) lockStudy(item, opts, card);
       });
       star.addEventListener('click', () => {
-        item.star = item.star === o.orig ? null : o.orig;
-        [...opts.children].forEach((d, k) => {
-          const on = item.star === item.opts[k].orig;
+        const k = item.stars.indexOf(o.orig);
+        if (k >= 0) item.stars.splice(k, 1);
+        else if (item.stars.length >= 3) { msg.classList.remove('hide'); clearTimeout(msg._t); msg._t = setTimeout(() => msg.classList.add('hide'), 3500); return; }
+        else item.stars.push(o.orig);
+        msg.classList.add('hide');
+        [...opts.children].forEach((d, k2) => {
+          const on = item.stars.includes(item.opts[k2].orig);
           d.classList.toggle('dud', on); d.querySelector('.star').setAttribute('aria-pressed', String(on));
         });
         updateProgress(); paintNav(); save();
       });
     });
+    blankBtn.addEventListener('click', () => {
+      item.selected = null;
+      opts.querySelectorAll('input').forEach(x => { x.checked = false; });
+      [...opts.children].forEach(d => d.classList.remove('sel'));
+      paintBl(); updateProgress(); paintNav(); save();
+    });
+    paintBl();
     card.append(opts);
     if (item.selected !== null && feedback) lockStudy(item, opts, card);
 
-    // nota propia (se guarda por pregunta y reaparece cada vez que sale)
-    const foot = el('div', 'qfoot'), nb = el('button', 'notebtn'); nb.type = 'button';
+    // nota propia: es de este intento (no se carga la de intentos anteriores); al terminar se guarda en tus notas
+    const foot = el('div', 'qfoot'), izq = el('div', 'qfoot-l'), nb = el('button', 'notebtn'); nb.type = 'button';
     const nota = el('div', 'nota hide'), ta = el('textarea');
-    ta.placeholder = 'Tu nota para esta pregunta'; ta.setAttribute('aria-label', 'Nota de la pregunta ' + (i + 1)); ta.value = notas[item.key] || '';
+    ta.placeholder = 'Tu nota para esta pregunta'; ta.setAttribute('aria-label', 'Nota de la pregunta ' + (i + 1)); ta.value = item.nota || '';
     const paintNb = () => {
       nb.replaceChildren(); nb.insertAdjacentHTML('beforeend', ICON_PEN);
       nb.append(ta.value.trim() ? 'Ver nota' : 'Añadir nota');
@@ -337,25 +404,27 @@ function renderQuestions() {
     };
     paintNb();
     nb.addEventListener('click', () => { nota.classList.toggle('hide'); if (!nota.classList.contains('hide')) ta.focus(); });
-    ta.addEventListener('input', () => { setNota(item.key, ta.value); paintNb(); paintNav(); });
+    ta.addEventListener('input', () => { item.nota = ta.value; paintNb(); paintNav(); updateProgress(); save(); });
     nota.append(ta);
     if (ta.value.trim()) nota.classList.remove('hide');
-    foot.append(el('span'), nb);
+    izq.append(blankBtn, msg); foot.append(izq, nb);
     card.append(foot, nota);
     box.append(card);
   });
   updateProgress(); paintNav(); paintTimer();
 }
 
-/* ---------- panel «ir a pregunta» ---------- */
+/* ---------- mapa de preguntas: panel «ir a pregunta» y panel fijo de la derecha ---------- */
 function paintNav() {
-  const grid = $('grid'); grid.replaceChildren();
-  const notas = getNotas();
-  exam.forEach((q, i) => {
-    const b = el('button', 'gq' + (q.selected !== null ? ' hecha' : '') + (q.star !== null ? ' dud' : '') + (notas[q.key] ? ' nota' : ''), String(i + 1));
-    b.type = 'button'; b.setAttribute('aria-label', `Pregunta ${i + 1}` + (q.selected !== null ? ', respondida' : '') + (q.star !== null ? ', con estrella' : ''));
-    b.addEventListener('click', () => { closePanels(); $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-    grid.append(b);
+  ['grid', 'side-grid'].forEach(id => {
+    const grid = $(id); grid.replaceChildren();
+    exam.forEach((q, i) => {
+      const lock = feedback && q.selected !== null, bien = lock && q.selected === q.correcta, mal = lock && !bien;
+      const b = el('button', 'gq' + (q.selected !== null ? ' hecha' : '') + (q.stars.length ? ' dud' : '') + (conNota(q) ? ' nota' : '') + (bien ? ' ok' : '') + (mal ? ' ko' : ''), String(i + 1));
+      b.type = 'button'; b.setAttribute('aria-label', `Pregunta ${i + 1}` + (q.selected !== null ? ', respondida' : ', sin responder') + (q.stars.length ? ', con estrella' : '') + (conNota(q) ? ', con nota' : ''));
+      b.addEventListener('click', () => { closePanels(); $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      grid.append(b);
+    });
   });
 }
 let lastFocus = null;
@@ -386,13 +455,13 @@ function startExam() {
     pool = shuffle(mixtoAll).slice(0, nMixto());
     try { const u = new URL(location.href); u.searchParams.set('n', String(pool.length)); history.replaceState(null, '', u); } catch (e) { /* nada */ }   // «otro test» conserva el número elegido
   }
-  exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null, star: null }));
+  exam = shuffle(pool).map(q => ({ ...q, opts: shuffle(q.opciones.map((text, orig) => ({ text, orig }))), selected: null, stars: [], nota: '' }));
   elapsed = 0; startAt = Date.now();
   beginExam();
 }
 function resumeExam() {
   const s = jget(localStorage, CURSO, null); if (!s) return;
-  mode = s.mode; feedback = s.feedback !== undefined ? !!s.feedback : s.mode === 'estudio'; countIt = s.countIt; exam = s.exam.map(q => ({ star: null, ...q }));
+  mode = s.mode; feedback = s.feedback !== undefined ? !!s.feedback : s.mode === 'estudio'; countIt = s.countIt; exam = s.exam.map(q => ({ stars: q.star != null ? [q.star] : [], nota: '', ...q }));
   showTimer = getPrefs().timer !== false;
   elapsed = s.elapsed || 0; startAt = Date.now() - elapsed * 1000;
   beginExam();
@@ -402,21 +471,30 @@ function resumeExam() {
 function label(q, orig) { const pos = q.opts.findIndex(o => o.orig === orig); return `${LETTERS[pos]}) ${q.opciones[orig]}`; }
 function renderReview() {
   const box = $('review-list'); box.replaceChildren(); let found = 0;
-  const notas = getNotas();
   exam.forEach((q, i) => {
     const st = q.selected === null ? 'blank' : q.selected === q.correcta ? 'correct' : 'wrong';
-    const nota = notas[q.key] || '';
-    if (filtro === 'star' && q.star === null) return;
+    const nota = (q.nota || '').trim();
+    if (filtro === 'star' && !q.stars.length) return;
     if (filtro === 'note' && !nota) return;
     if (['wrong', 'blank', 'correct'].includes(filtro) && st !== filtro) return;
     found++;
     const card = el('article', 'hoja rev'), head = el('div', 'rh');
     head.append(el('h3', '', `${i + 1}. ${q.q}`), el('span', 'est ' + st, st === 'correct' ? 'Acierto' : st === 'wrong' ? 'Error' : 'En blanco'));
     card.append(head);
-    if (st === 'wrong') { const p = el('p', 'lin bad'); p.append(el('b', '', 'Tu respuesta: '), label(q, q.selected)); card.append(p); }
-    if (st === 'blank') card.append(el('p', 'lin bad', 'Tu respuesta: sin responder'));
-    const ok = el('p', 'lin good'); ok.append(el('b', '', 'Correcta: '), label(q, q.correcta)); card.append(ok);
-    if (q.star !== null) card.append(el('p', 'lin dudl', `★ Marcaste ${label(q, q.star)} como posible respuesta` + (q.star === q.selected ? ' y la elegiste.' : (q.selected === null ? '.' : ' pero acabaste eligiendo otra.'))));
+    if (st === 'blank') card.append(el('p', 'lin bad', 'No respondiste esta pregunta.'));
+    const lista = el('div', 'rv-opts');                           // todas las opciones, con la correcta, la tuya y tus estrellas
+    q.opts.forEach((o, j) => {
+      const esC = o.orig === q.correcta, esT = o.orig === q.selected, esE = q.stars.includes(o.orig);
+      const d = el('div', 'rv-opt' + (esC ? ' right' : esT ? ' wrong' : ''));
+      d.append(el('span', 'let', LETTERS[j]), el('span', 'otx', o.text));
+      const tags = el('span', 'rv-tags');
+      if (esC) tags.append(el('b', 'tag ok', 'Correcta'));
+      if (esT) tags.append(el('b', 'tag ' + (esC ? 'ok' : 'ko'), 'Tu respuesta'));
+      if (esE) tags.append(el('b', 'tag est', '★ Marcada'));
+      if (tags.children.length) d.append(tags);
+      lista.append(d);
+    });
+    card.append(lista);
     if (q.explicacion) card.append(el('div', 'expl', q.explicacion));
     if (nota) { const n = el('div', 'minota'); n.append(el('b', '', 'Tu nota: '), nota); card.append(n); }
     card.append(el('p', 'fine', [q.ref && 'Referencia: ' + q.ref, temaLabel(q.tema), (T === 'mixto' || ES_BANCO) && q.testTitulo].filter(Boolean).join('. ')));
@@ -428,7 +506,7 @@ function updateFilters() { document.querySelectorAll('#filters .chip').forEach(b
 
 function finishExam() {
   if (completed) return;
-  const blank = exam.filter(q => q.selected === null).length, dudas = exam.filter(q => q.star !== null).length;
+  const blank = exam.filter(q => q.selected === null).length, dudas = exam.filter(q => q.stars.length).length;
   if (blank || dudas) {
     const partes = [blank && `Quedan ${plural(blank, 'pregunta', 'preguntas')} sin responder.`, dudas && `${plural(dudas, 'pregunta tiene', 'preguntas tienen')} estrella y se guardarán como dudas.`].filter(Boolean);
     if (!confirm(partes.join(' ') + ' ¿Finalizar y corregir?')) return;
@@ -441,18 +519,21 @@ function finishExam() {
   // dudas (estrella): son decisiones tuyas, se guardan siempre
   const dud = getDud();
   exam.forEach(q => {
-    if (q.star !== null) bankSet(LS.dud, q.key, { testId: q.testId, tema: q.tema, n: ((dud[q.key] || {}).n || 0) + 1 });
+    if (q.stars.length) bankSet(LS.dud, q.key, { testId: q.testId, tema: q.tema, n: ((dud[q.key] || {}).n || 0) + 1 });
     else if (T === 'dudosas') bankDel(LS.dud, q.key);
   });
 
-  // estadísticas y errores: solo si el intento cuenta
+  // errores: los fallos siempre se guardan (también en modo Estudio); las notas del intento pasan a tus notas;
+  // las estadísticas solo cambian si el intento cuenta
+  const errs = getErr();
+  exam.forEach(q => {
+    if (q.selected === q.correcta) { if (T === 'errores') bankDel(LS.err, q.key); }
+    else if (q.selected !== null) bankSet(LS.err, q.key, { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 });
+  });
+  exam.forEach(q => { if (conNota(q)) setNota(q.key, q.nota); });
   if (countIt) {
-    const byTema = {}, errs = getErr();
-    exam.forEach(q => {
-      byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++;
-      if (q.selected === q.correcta) { byTema[q.tema].r++; if (T === 'errores') bankDel(LS.err, q.key); }
-      else if (q.selected !== null) bankSet(LS.err, q.key, { testId: q.testId, tema: q.tema, n: ((errs[q.key] || {}).n || 0) + 1 });
-    });
+    const byTema = {};
+    exam.forEach(q => { byTema[q.tema] = byTema[q.tema] || { r: 0, t: 0 }; byTema[q.tema].t++; if (q.selected === q.correcta) byTema[q.tema].r++; });
     const ar = {};                                                 // acierto por artículo (para la vista Estructura): clave = número, o L+número en la LOTC
     exam.forEach(q => new Set(refInfo(q).map(r => (r.norma === 'LOTC' ? 'L' : '') + r.n)).forEach(k => { const a = ar[k] = ar[k] || [0, 0]; a[1]++; if (q.selected === q.correcta) a[0]++; }));
     addHist({ id: T, titulo: meta.titulo, date: new Date().toISOString(), right, wrong, blank, neta: Math.round((right - wrong / 3) * 100) / 100, total: exam.length, elapsed, mode, byTema, ar });
@@ -465,7 +546,8 @@ function finishExam() {
   $('result-title').textContent = `${right} de ${exam.length} correctas`;
   $('summary').textContent = `Acierto del ${Math.round(right / exam.length * 100)} %.`;
   $('nocuenta').classList.toggle('hide', countIt);
-  $('go-errores').classList.toggle('hide', !countIt || !Object.keys(getErr()).length || T === 'errores');
+  $('go-errores').classList.toggle('hide', !Object.keys(getErr()).length || T === 'errores');
+  $('go-back').href = DEST_FIN; $('go-back').textContent = VOLVER[DEST_FIN.split(/[?#]/)[0]] || 'Volver';
   filtro = wrong || blank ? 'wrong' : 'all';
   renderReview(); updateFilters(); show('results');
   syncNow();                                                       // sube el resultado a tu repositorio de datos (si lo tienes configurado)
@@ -481,8 +563,8 @@ function cancelarTest() {
   if (!confirm('¿Cancelar el test? Se descarta este intento: no cuenta en tus estadísticas ni se guarda tu progreso.')) return;
   completed = true; enExamen = false; clearInterval(ticker);
   cursoDel(CURSO);
-  if (getToken()) syncNow().finally(() => { location.href = 'index.html'; }); else location.href = 'index.html';
-  setTimeout(() => { location.href = 'index.html'; }, 2500);
+  if (getToken()) syncNow().finally(() => { location.href = DEST_CANCEL; }); else location.href = DEST_CANCEL;
+  setTimeout(() => { location.href = DEST_CANCEL; }, 2500);
 }
 $('cancel-top').addEventListener('click', cancelarTest);
 $('cancel-bottom').addEventListener('click', cancelarTest);
@@ -501,6 +583,7 @@ $('bloc-text').addEventListener('input', e => setBloc(e.target.value));
 $('scrim').addEventListener('click', closePanels);
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closePanels));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanels(); });
+$('side-first').addEventListener('click', () => saltaA(q => q.selected === null));
 $('go-first-blank').addEventListener('click', () => {
   const i = exam.findIndex(q => q.selected === null); closePanels();
   if (i >= 0) $('q-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' });
