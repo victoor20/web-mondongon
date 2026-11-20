@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261213"></script>
+<script src="puerta.js?v=20261214"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261213">
+<link rel="stylesheet" href="style.css?v=20261214">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -66,23 +66,34 @@
       <p class="ib-x">Preguntas y respuestas breves sobre datos, plazos, números, órganos, competencias y definiciones.</p>
       <p class="ib-ej">Ejemplo: ¿qué cuórum exige el Pleno? Dos tercios de sus miembros.</p>
     </section>
-    <div class="tj-barra">
-      <button type="button" class="btn small" id="t-repasar">Estudiar hoy</button>
-      <button type="button" class="btn small ghost" id="t-todas">Estudiar todas</button>
-      <select id="t-filtro" aria-label="Filtrar por tema"></select>
-      <button type="button" class="btn small" id="t-nueva">Nueva tarjeta</button>
-      <button type="button" class="btn small ghost" id="t-varias">Pegar varias</button>
-    </div>
-    <div class="fc-ops">
-      <label class="fc-op"><input type="checkbox" id="t-azar"> Orden aleatorio</label>
-      <label class="fc-op"><input type="checkbox" id="t-inv"> Mostrar primero la respuesta</label>
-    </div>
-    <div class="bib-barra">
-      <input type="search" id="t-q" placeholder="Buscar en las tarjetas" aria-label="Buscar en las tarjetas" autocomplete="off">
-      <select id="t-est" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="nueva">Nuevas</option><option value="aprendiendo">Aprendiendo</option><option value="dominada">Dominadas</option></select>
-      <button type="button" class="btn small ghost" id="t-abrir">Abrir todo</button>
-    </div>
-    <div id="t-ets-f" class="fc-chips hide" role="group" aria-label="Filtrar por etiqueta"></div>
+    <div id="t-stats" class="est-hs fc-stats hide"></div>
+    <section class="tj-panel tj-estudiar" aria-labelledby="tj-est-t">
+      <h3 class="tj-t" id="tj-est-t">Estudiar</h3>
+      <div class="tj-fila">
+        <button type="button" class="btn small" id="t-repasar">Estudiar hoy</button>
+        <button type="button" class="btn small ghost" id="t-todas">Estudiar todas</button>
+        <label class="tj-sel">De <select id="t-filtro" aria-label="Filtrar por tema"></select></label>
+      </div>
+      <div class="fc-ops">
+        <label class="fc-op"><input type="checkbox" id="t-azar"> Orden aleatorio</label>
+        <label class="fc-op"><input type="checkbox" id="t-inv"> Mostrar primero la respuesta</label>
+      </div>
+    </section>
+    <section class="tj-panel" aria-labelledby="tj-ges-t">
+      <div class="tj-cab">
+        <h3 class="tj-t" id="tj-ges-t">Tus tarjetas</h3>
+        <div class="tj-fila">
+          <button type="button" class="btn small" id="t-nueva">Nueva tarjeta</button>
+          <button type="button" class="btn small ghost" id="t-varias">Pegar varias</button>
+        </div>
+      </div>
+      <div class="bib-barra">
+        <input type="search" id="t-q" placeholder="Buscar en las tarjetas" aria-label="Buscar en las tarjetas" autocomplete="off">
+        <select id="t-est" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="nueva">Nuevas</option><option value="aprendiendo">Aprendiendo</option><option value="dominada">Dominadas</option></select>
+        <button type="button" class="btn small ghost" id="t-abrir">Abrir todo</button>
+      </div>
+      <div id="t-ets-f" class="fc-chips hide" role="group" aria-label="Filtrar por etiqueta"></div>
+    </section>
     <div id="t-rep" class="fc-estudio hide"></div>
     <form id="t-form" class="bib-form hide" autocomplete="off">
       <h2 id="t-form-t">Nueva tarjeta</h2>
@@ -106,7 +117,6 @@
       <p class="bib-msg" id="t-msg2" role="alert"></p>
       <div class="bf-ac"><button type="submit" class="btn">Crear tarjetas</button><button type="button" class="btn cancelar" id="t-cancel2">Cancelar</button></div>
     </form>
-    <div id="t-stats" class="est-hs fc-stats hide"></div>
     <div id="tarjetas"></div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
@@ -135,9 +145,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261213"></script>
-<script src="vistas.js?v=20261213"></script>
-<script src="biblioteca.js?v=20261213"></script>
+<script src="app.js?v=20261214"></script>
+<script src="vistas.js?v=20261214"></script>
+<script src="biblioteca.js?v=20261214"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -460,14 +470,15 @@ async function renderNotas(forzar) {
     h.addEventListener('click', () => setTimeout(() => {            // recuerda qué temas has abierto (no mientras hay un filtro)
       if (!$('n-q').value && !$('n-fet').value) { if (g.open) ab.add(t); else ab.delete(t); }
     }, 0));
-    g.append(h);
+    const cuerpo = el('div', 'nt-cuerpo');                          // las notas quedan dentro del tema, sangradas
+    g.append(h, cuerpo);
     grupos[t].forEach(n => {
-      if (n.libre) { g.append(tarjetaLibre(n.libre)); return; }
+      if (n.libre) { cuerpo.append(tarjetaLibre(n.libre)); return; }
       const c = notaDesplegable(n.q ? n.q.q : 'Esta pregunta ya no está en los tests publicados.', 'De un test', true);
       c.querySelector('.nota-cuerpo').append(notaHtml(n.texto));
       c.dataset.q = normaBusca((n.q ? n.q.q : '') + ' ' + n.texto); c.dataset.et = 'De un test';
       if (n.q) { const a = el('a', 'mini', 'Abrir el test'); a.href = 'test.html?t=' + encodeURIComponent(n.q.testId); c.querySelector('.nota-cuerpo').append(a); }
-      g.append(c);
+      cuerpo.append(c);
     });
     box.append(g);
   });
@@ -869,6 +880,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261213"></script>
+<script src="temporizador.js?v=20261214"></script>
 </body>
 </html>

@@ -1133,4 +1133,19 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .rp-cuerpo{padding:0 1rem 1rem}
 .rp-origen{margin:0 0 .6rem;font-size:.82rem;font-weight:600;color:var(--muted)}
 .rp-hist{margin:.7rem 0 .3rem;font-size:.88rem}
+/* ---------- tanda 29: Tarjetas en bloques (Estudiar / Tus tarjetas) y Notas dentro de su tema ---------- */
+.tj-panel{margin:0 0 1rem;padding:1rem 1.1rem;border:1px solid var(--linea);border-radius:14px;background:var(--hoja)}
+.tj-estudiar{border-left:5px solid var(--azul)}
+.tj-t{margin:0 0 .75rem;font:700 1.05rem/1.2 var(--display)}
+.tj-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;margin:0 0 .75rem}
+.tj-cab .tj-t{margin:0}
+.tj-fila{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+.tj-sel{display:inline-flex;align-items:center;gap:.5rem;flex:1 1 14rem;min-width:0;font-size:.85rem;color:var(--muted)}
+.tj-sel select{flex:1 1 auto;width:auto;min-width:0;max-width:100%;min-height:2.4rem}
+.tj-panel .fc-ops{margin:.9rem 0 0}
+.tj-panel .bib-barra{margin:0 0 .7rem}
+.tj-panel .fc-chips{margin:0}
+#panel-tarjetas .fc-stats{margin:0 0 1rem}
+.nt-cuerpo{margin:0 0 .3rem 1.2rem;padding-left:.8rem;border-left:2px solid var(--linea2)}
+.nt-g:not([open]) .nt-cuerpo{display:none}
 
