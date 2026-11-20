@@ -943,8 +943,11 @@ function mdHtml(txt, suelto) {                                      // suelto: s
     const tb = el('tbody'); filas.forEach(r => { const tr = el('tr'); r.forEach(c => tr.append(mdInline(el('td'), c))); tb.append(tr); }); t.append(tb);
     w.append(t); box.append(w); tab = [];
   };
+  let vacias = 0;                                                   // varias líneas en blanco seguidas dejan más aire, como las escribió
   String(txt || '').replace(/\r\n?/g, '\n').split('\n').forEach(l => {
     let m;
+    if (!l.trim()) vacias++;
+    else { if (vacias > 1 && box.firstChild) for (let i = 1; i < Math.min(vacias, 6); i++) box.append(el('div', 'md-sp')); vacias = 0; }
     if (esFilaTabla(l)) { cierraPar(); cierraLis(); cierraCit(); tab.push(l); return; }
     cierraTab();
     if (!l.trim()) { cierraPar(); cierraLis(); cierraCit(); }

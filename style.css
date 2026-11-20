@@ -1148,4 +1148,16 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 #panel-tarjetas .fc-stats{margin:0 0 1rem}
 .nt-cuerpo{margin:0 0 .3rem 1.2rem;padding-left:.8rem;border-left:2px solid var(--linea2)}
 .nt-g:not([open]) .nt-cuerpo{display:none}
+/* ---------- tanda 30: editor de formato (vista previa abierta, botones con hover claro), saltos de línea y títulos de notas ---------- */
+.fmt-cap{margin:0 0 .55rem;font:600 .78rem/1.35 var(--sans);color:var(--muted)}
+.fmt-prev{border-style:solid;border-color:var(--azul)}
+.md .md-sp{height:.9rem}
+.fmt button:hover{background:rgba(127,127,127,.26);border-color:var(--tinta)}
+.fmt button[aria-pressed=true]:hover{background:var(--azul);border-color:var(--tinta);color:var(--on-azul)}
+.fmt .f-hl:hover{background:var(--subraya);color:var(--on-subraya)}
+.fmt .col-r:hover{background:var(--ko)}.fmt .col-a:hover{background:var(--md-a)}.fmt .col-v:hover{background:var(--ok)}.fmt .col-n:hover{background:var(--md-n)}
+.fmt .col:hover{border-color:var(--hoja);box-shadow:0 0 0 2px var(--tinta);transform:scale(1.15)}
+.fmt button:focus-visible{outline:2px solid var(--azul);outline-offset:1px}
+#panel-notas .nota-sum .nota-st{font-weight:700;color:var(--tinta)}
+#panel-notas details.nota-card[open]>.nota-sum{background:var(--bt,rgba(127,127,127,.12))}
 

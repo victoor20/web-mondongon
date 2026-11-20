@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261214"></script>
+<script src="puerta.js?v=20261215"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261214">
+<link rel="stylesheet" href="style.css?v=20261215">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -145,9 +145,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261214"></script>
-<script src="vistas.js?v=20261214"></script>
-<script src="biblioteca.js?v=20261214"></script>
+<script src="app.js?v=20261215"></script>
+<script src="vistas.js?v=20261215"></script>
+<script src="biblioteca.js?v=20261215"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -510,9 +510,12 @@ function notaDesplegable(titulo, etiqueta, deTest) {                // nota pleg
 const notaHtml = txt => mdHtml(txt);
 /* barra de formato sobre un textarea: envuelve la selección con marcas de texto (el texto guardado sigue siendo texto plano) */
 function montaFormato(id) {
-  const ta = $(id), bar = el('div', 'fmt'), prev = el('div', 'fmt-prev hide');
+  const ta = $(id), bar = el('div', 'fmt'), prev = el('div', 'fmt-prev');
   bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Formato del texto'); prev.setAttribute('aria-live', 'polite');
-  const refresca = () => { if (!prev.classList.contains('hide')) prev.replaceChildren(ta.value.trim() ? mdHtml(ta.value, true) : el('p', 'fine', 'Aquí verás cómo queda el texto.')); };
+  const refresca = () => {                                            // la vista previa está abierta por defecto: se escribe con símbolos y se ve el resultado
+    if (prev.classList.contains('hide')) return;
+    prev.replaceChildren(el('p', 'fmt-cap', 'Así se verá. Los símbolos del texto (como ** o *) solo marcan el formato.'), ta.value.trim() ? mdHtml(ta.value, true) : el('p', 'fine', 'Escribe arriba y verás aquí el resultado.'));
+  };
   const inserta = (s, e, txt) => {
     ta.focus(); ta.setSelectionRange(s, e); let ok = false;
     try { ok = document.execCommand('insertText', false, txt); } catch (x) { ok = false; }      // así Ctrl+Z deshace el cambio
@@ -552,8 +555,8 @@ function montaFormato(id) {
   btn('•', 'Lista con viñetas', () => prefija('- ', /^\s*([-*•]|\d+[.)])\s+/)); btn('1.', 'Lista numerada', numera); btn('❝', 'Cita o destacado', () => prefija('> ', /^\s*>\s?/));
   btn('—', 'Línea separadora', () => bloque('---')); btn('▦', 'Tabla', () => bloque('| Concepto | Detalle |\n|---|---|\n| | |')); sep();
   btn('Limpiar', 'Quitar el formato de lo seleccionado', limpia, 'f-txt');
-  const vp = btn('Vista previa', 'Ver cómo queda el texto', () => { const on = prev.classList.toggle('hide') === false; vp.setAttribute('aria-pressed', String(on)); refresca(); }, 'f-txt f-vp'); vp.setAttribute('aria-pressed', 'false');
-  ta.before(bar); ta.after(prev);
+  const vp = btn('Vista previa', 'Ver cómo queda el texto', () => { const on = prev.classList.toggle('hide') === false; vp.setAttribute('aria-pressed', String(on)); refresca(); }, 'f-txt f-vp'); vp.setAttribute('aria-pressed', 'true');
+  ta.before(bar); ta.after(prev); refresca();
   ta.addEventListener('input', refresca); ta._fmt = refresca;
   ta.addEventListener('keydown', ev => {
     if (!(ev.ctrlKey || ev.metaKey) || ev.altKey || ev.shiftKey) return;
@@ -587,7 +590,7 @@ $('n-x').addEventListener('paste', ev => {
 });
 function tarjetaLibre(n) {
   const prim = String(n.x || '').split('\n').map(l => l.replace(/^[\s|*-]+/, '').trim()).find(l => l && !/^:?-{3,}/.test(l)) || '';
-  const c = notaDesplegable(n.ti || (prim ? prim.slice(0, 90) : 'Nota sin título'), n.et, false), cuerpo = c.querySelector('.nota-cuerpo');
+  const c = notaDesplegable(n.ti || (prim ? (prim.length > 90 ? prim.slice(0, 90).replace(/\s+\S*$/, '') + '…' : prim) : 'Nota sin título'), n.et, false), cuerpo = c.querySelector('.nota-cuerpo');
   c.dataset.q = normaBusca([n.ti, n.et, n.x].join(' ')); c.dataset.et = n.et || '';
   const ac = el('div', 'nota-ac'), bE = el('button', 'mini', 'Editar'), bB = el('button', 'mini err', 'Borrar');
   bE.type = 'button'; bB.type = 'button';
@@ -880,6 +883,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261214"></script>
+<script src="temporizador.js?v=20261215"></script>
 </body>
 </html>
