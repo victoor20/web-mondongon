@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261210"></script>
+<script src="puerta.js?v=20261211"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261210">
+<link rel="stylesheet" href="style.css?v=20261211">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -49,6 +49,17 @@
       <label class="opcion"><input type="checkbox" id="o-fb"><span>Mostrar la respuesta correcta y la explicación al responder<small id="o-fb-h"></small></span></label>
       <label class="opcion"><input type="checkbox" id="o-tiempo" checked><span>Mostrar el tiempo mientras respondo<small>Se mide siempre y lo verás al final. Puedes ocultarlo o mostrarlo durante el test.</small></span></label>
       <div class="acciones" style="margin-top:1.3rem"><button type="button" class="btn" id="start">Empezar</button></div>
+    </div>
+    <div class="desc-limpio hide" id="desc-limpio">
+      <h2>Descargar en limpio</h2>
+      <p class="fine">Para practicar en papel. Sale sin respuestas, notas ni estrellas, con las preguntas y las opciones siempre en el mismo orden.</p>
+      <label class="opcion"><input type="checkbox" id="d-sol"><span>Añadir al final una hoja con las soluciones<small>En una página aparte, para corregir tú.</small></span></label>
+      <div class="acciones">
+        <button type="button" class="btn small" id="d-pdf">PDF</button>
+        <button type="button" class="btn small ghost" id="d-docx">Word</button>
+        <button type="button" class="btn small ghost" id="d-md">Markdown</button>
+      </div>
+      <p class="fine" id="d-ayuda" style="margin-top:.6rem">PDF: se abre el diálogo de imprimir; elige «Guardar como PDF» o tu impresora.</p>
     </div>
   </section>
 
@@ -141,7 +152,8 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261210"></script>
+<script src="app.js?v=20261211"></script>
+<script src="descarga.js?v=20261211"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente');
@@ -268,8 +280,15 @@ function showWelcome() {
     $('reanudar-txt').textContent = `Tienes un intento sin terminar: ${n} de ${saved.exam.length} respondidas.`;
     $('reanudar').classList.remove('hide'); $('config').classList.add('hide');
   }
+  $('desc-limpio').classList.toggle('hide', T === 'mixto');
   show('welcome');
 }
+
+/* ---------- descarga en limpio (orden fijo: el del test) ---------- */
+const preguntasLimpias = () => pool.map(q => ({ q: q.q, opciones: q.opciones, correcta: q.correcta }));
+$('d-pdf').addEventListener('click', () => Descarga.pdf(meta.titulo, preguntasLimpias(), $('d-sol').checked));
+$('d-docx').addEventListener('click', () => Descarga.docx(meta.titulo, preguntasLimpias(), $('d-sol').checked));
+$('d-md').addEventListener('click', () => Descarga.md(meta.titulo, preguntasLimpias(), $('d-sol').checked));
 
 /* ---------- progreso en curso (sobrevive a cerrar la app) ---------- */
 function save() {

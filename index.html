@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261210"></script>
+<script src="puerta.js?v=20261211"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261210">
+<link rel="stylesheet" href="style.css?v=20261211">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -63,8 +63,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261210"></script>
-<script src="vistas.js?v=20261210"></script>
+<script src="app.js?v=20261211"></script>
+<script src="vistas.js?v=20261211"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -87,14 +87,14 @@ function renderSesion() {                                        // un orden sen
   const nTj = getTarjetas().filter(tarjetaToca).length, nErr = Object.keys(getErr()).length, total = totalPreguntas(), flojo = temaFlojoAhora();
   box.append(el('h2', 'sesion-t', 'Sesión de hoy'), el('p', 'sesion-s', 'Un orden sencillo para empezar. Haz lo que te dé tiempo.'));
   const pasos = [];
-  if (nTj) pasos.push(['Repasa tus tarjetas', plural(nTj, 'tarjeta toca', 'tarjetas tocan') + ' hoy.', 'biblioteca.html#tarjetas', 'Repasar']);
-  if (nErr) pasos.push(['Repasa tus errores', plural(nErr, 'pregunta fallada', 'preguntas falladas') + ' pendientes.', 'test.html?t=errores', 'Repasar']);
+  if (nTj) pasos.push(['Repasa tus tarjetas', plural(nTj, 'tarjeta toca', 'tarjetas tocan') + ' hoy.', 'biblioteca.html#tarjetas', 'Repasar', 'p-tj']);
+  if (nErr) pasos.push(['Repasa tus errores', plural(nErr, 'pregunta fallada', 'preguntas falladas') + ' pendientes.', 'test.html?t=errores', 'Repasar', 'p-err']);
   if (flojo) pasos.push(['Test corto de ' + temaLabel(flojo), 'Es tu tema más flojo ahora: ' + pct(TS[flojo].reciente) + ' % en tus últimos intentos.', urlMixto(flojo), 'Empezar']);
   else if (total) pasos.push(['Test mixto de 20 preguntas', 'Preguntas al azar de todos tus tests.', 'test.html?t=mixto&n=20', 'Empezar']);
   if (!pasos.length) { box.append(el('p', 'vacio-msg', 'Cuando haya tests publicados, aquí verás por dónde empezar.')); return; }
   const ol = el('ol', 'sesion-pasos');
   pasos.forEach(p => {
-    const li = el('li', 'paso'), tx = el('div', 'paso-tx'), a = el('a', 'btn small', p[3]); a.href = p[2];
+    const li = el('li', 'paso ' + (p[4] || 'p-tx')), tx = el('div', 'paso-tx'), a = el('a', 'btn small', p[3]); a.href = p[2];
     tx.append(el('strong', '', p[0]), el('span', '', p[1])); li.append(tx, a); ol.append(li);
   });
   box.append(ol);
@@ -197,10 +197,24 @@ function renderHoja() {
   if (primera) requestAnimationFrame(() => requestAnimationFrame(apply)); else apply();   // un único movimiento al cargar
   primera = false;
 }
+let ultFiltro = 'todos', ultN = 5;
+const tipoRes = e => (e.id === 'mixto' ? 'mixtos' : (e.id === 'errores' || e.id === 'dudosas') ? 'repasos' : 'tests');
 function renderUltimos() {
   const box = $('ultimos'); box.replaceChildren();
-  const h = getHist().slice(0, 5);
-  if (!h.length) { box.append(el('p', 'vacio-msg', 'Todavía no has hecho ningún test. Empieza con uno mixto o abre un test desde «Tests».')); return; }
+  const todo = getHist();
+  if (!todo.length) { box.append(el('p', 'vacio-msg', 'Todavía no has hecho ningún test. Empieza con uno mixto o abre un test desde «Tests».')); return; }
+  const cuenta = { todos: todo.length, tests: 0, mixtos: 0, repasos: 0 };
+  todo.forEach(e => { cuenta[tipoRes(e)]++; });
+  if (ultFiltro !== 'todos' && !cuenta[ultFiltro]) ultFiltro = 'todos';
+  const chips = el('div', 'chips ult-chips'); chips.setAttribute('role', 'group'); chips.setAttribute('aria-label', 'Filtrar resultados');
+  [['todos', 'Todos'], ['tests', 'Tests'], ['mixtos', 'Mixtos'], ['repasos', 'Repasos']].forEach(([k, t]) => {
+    if (k !== 'todos' && !cuenta[k]) return;
+    const b = el('button', 'chip' + (ultFiltro === k ? ' on' : ''), t); b.type = 'button'; b.setAttribute('aria-pressed', String(ultFiltro === k));
+    b.append(el('span', 'n', String(cuenta[k])));
+    b.addEventListener('click', () => { ultFiltro = k; ultN = 5; renderUltimos(); }); chips.append(b);
+  });
+  if (cuenta.mixtos + cuenta.repasos) box.append(chips);
+  const fil = todo.filter(e => ultFiltro === 'todos' || tipoRes(e) === ultFiltro), h = fil.slice(0, ultN);
   const lista = el('div', 'res-lista');
   h.forEach(e => {
     const p = e.total ? Math.round(e.right / e.total * 100) : 0;
@@ -209,6 +223,13 @@ function renderUltimos() {
     a.append(m, el('b', 'res-pct' + (p < 60 ? ' low' : ''), p + ' %')); lista.append(a);
   });
   box.append(lista);
+  if (fil.length > 5) {
+    const pie = el('div', 'ult-pie');
+    if (fil.length > ultN) { const mas = el('button', 'btn small ghost', `Ver ${Math.min(5, fil.length - ultN)} más`); mas.type = 'button'; mas.addEventListener('click', () => { ultN += 5; renderUltimos(); }); pie.append(mas); }
+    if (ultN > 5) { const menos = el('button', 'btn small ghost', 'Ver solo los últimos 5'); menos.type = 'button'; menos.addEventListener('click', () => { ultN = 5; renderUltimos(); }); pie.append(menos); }
+    pie.append(el('span', 'fine', `${Math.min(ultN, fil.length)} de ${fil.length}`));
+    box.append(pie);
+  }
 }
 function refresh() { computeData(); renderEstado(); renderSesion(); renderEstudio(); renderRepasar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
 async function sincronizar() {
@@ -228,6 +249,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261210"></script>
+<script src="temporizador.js?v=20261211"></script>
 </body>
 </html>

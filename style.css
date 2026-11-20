@@ -1097,3 +1097,20 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .tmp-ma-f input[type=number]{width:5rem}
 .tmp-ma-r{margin:.4rem 0 0;color:var(--ok)}
 .tmp-ma-r:empty{display:none}
+/* ---------- tanda 26: descarga en limpio, Sesión de hoy con color, filtros de resultados ---------- */
+.desc-limpio{margin:1.6rem 0 0;padding:1.05rem 1.15rem;border:1px dashed var(--linea2);border-radius:14px}
+.desc-limpio h2{margin:0 0 .25rem;font:700 1.05rem/1.2 var(--display)}
+.desc-limpio .fine{margin:0 0 .5rem}
+.desc-limpio .acciones{margin-top:.6rem}
+.sesion-pasos{display:grid;gap:.55rem}
+.sesion-pasos .paso{padding:.75rem .9rem;border:1px solid var(--linea);border-radius:12px}
+.sesion-pasos .paso.p-err{background:var(--ko-bg);border-color:var(--ko)}
+.sesion-pasos .paso.p-err .paso-tx::before{background:var(--ko);color:var(--hoja)}
+.sesion-pasos .paso.p-err .paso-tx strong{color:var(--ko)}
+.sesion-pasos .paso.p-err .btn{background:var(--ko);border-color:var(--ko);color:var(--hoja)}
+.sesion-pasos .paso.p-tj{background:var(--azul-t);border-color:var(--azul)}
+.sesion-pasos .paso.p-tj .paso-tx strong{color:var(--azul)}
+.ult-chips{margin:0 0 .7rem}
+.ult-pie{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin:.7rem 0 0}
+.ult-pie .fine{margin-left:auto}
+
