@@ -1160,4 +1160,13 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .fmt button:focus-visible{outline:2px solid var(--azul);outline-offset:1px}
 #panel-notas .nota-sum .nota-st{font-weight:700;color:var(--tinta)}
 #panel-notas details.nota-card[open]>.nota-sum{background:var(--bt,rgba(127,127,127,.12))}
+/* ---------- tanda 31: historial con las pendientes para practicar (opciones, pista, ver solución) ---------- */
+.rp-pick{width:100%;text-align:left;font:inherit;font-size:.92rem;line-height:1.45;color:var(--tinta);background:transparent;cursor:pointer}
+.rp-pick:hover:not(:disabled){border-color:var(--tinta)}
+.rp-pick:disabled{color:var(--tinta);cursor:default}
+.rv-opt.descartada{opacity:.4;text-decoration:line-through}
+.rp-barra{display:flex;flex-wrap:wrap;gap:.5rem;margin:.7rem 0 .3rem}
+.rp-pista{margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--estrella);border-radius:0 8px 8px 0;background:var(--aviso-bg);font-size:.9rem}
+.rp-pista p{margin:.15rem 0}
+.rp-msg{margin:.6rem 0 .2rem;font-weight:700}
 

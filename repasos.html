@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261215"></script>
+<script src="puerta.js?v=20261216"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Errores y dudas - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261215">
+<link rel="stylesheet" href="style.css?v=20261216">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -47,8 +47,8 @@
   </div>
   <div id="lista"><p class="vacio-msg">Cargando…</p></div>
 </div>
-<script src="app.js?v=20261215"></script>
-<script src="vistas.js?v=20261215"></script>
+<script src="app.js?v=20261216"></script>
+<script src="vistas.js?v=20261216"></script>
 <script>
 const F = { q: '', tipo: 'todos', est: 'pend', bloque: '', tema: '', orden: 'rec' };
 let datos = [], qs = {};
@@ -95,17 +95,64 @@ function tarjeta(d) {
   s.append(tit, tg); c.append(s);
   const b = el('div', 'rp-cuerpo');
   b.append(el('p', 'rp-origen', [bloqueInfo(bloqueOf(d.tema)) ? 'Bloque ' + bloqueOf(d.tema) : '', temaLabel(d.tema)].filter(Boolean).join(' · ')));
+  const ocultos = [];                                               // en las pendientes, solución, referencia y nota esperan a «Ver solución»
+  const jugar = !!q && !d.resuelto;
   if (q) {
-    const lista = el('div', 'rv-opts');
-    q.opciones.forEach((t, j) => { const ok = j === q.correcta, o = el('div', 'rv-opt' + (ok ? ' right' : '')); o.append(el('span', 'let', LETTERS[j]), el('span', 'otx', t)); if (ok) { const tg2 = el('span', 'rv-tags'); tg2.append(el('b', 'tag ok', 'Correcta')); o.append(tg2); } lista.append(o); });
+    const lista = el('div', 'rv-opts'), ops = [];
+    let etiqueta = null, hecho = false, nivel = 0;
+    q.opciones.forEach((t, j) => {
+      const ok = j === q.correcta, o = el(jugar ? 'button' : 'div', 'rv-opt' + (!jugar && ok ? ' right' : '') + (jugar ? ' rp-pick' : ''));
+      if (jugar) o.type = 'button';
+      o.append(el('span', 'let', LETTERS[j]), el('span', 'otx', t));
+      if (!jugar && ok) { const tg2 = el('span', 'rv-tags'); tg2.append(el('b', 'tag ok', 'Correcta')); o.append(tg2); }
+      lista.append(o); ops.push(o);
+    });
     b.append(lista);
-    if (q.explicacion) b.append(el('div', 'expl', q.explicacion));
-    if (q.ref) b.append(el('p', 'fine', 'Referencia: ' + q.ref));
+    if (jugar) {
+      const barra = el('div', 'rp-barra'), bPista = el('button', 'btn small ghost', 'Pista'), bSol = el('button', 'btn small ghost', 'Ver solución');
+      const caja = el('div', 'rp-pista hide'), msg = el('p', 'rp-msg hide'), bOtra = el('button', 'btn small ghost hide', 'Volver a intentarlo');
+      bPista.type = bSol.type = bOtra.type = 'button';
+      const pistas = [];
+      if (q.ref) pistas.push(() => 'La respuesta está en ' + q.ref + '.');
+      if (q.opciones.length > 2) pistas.push(() => {
+        const malas = ops.map((o, j) => j).filter(j => j !== q.correcta).sort(() => Math.random() - .5).slice(0, 2);
+        malas.forEach(j => { ops[j].classList.add('descartada'); ops[j].disabled = true; });
+        return 'Descartadas dos opciones que no son la correcta.';
+      });
+      const txtPista = () => bPista.textContent = nivel >= pistas.length ? 'Sin más pistas' : 'Pista (' + (nivel + 1) + '/' + pistas.length + ')';
+      txtPista(); if (!pistas.length) bPista.classList.add('hide');
+      bPista.addEventListener('click', () => {
+        if (hecho || nivel >= pistas.length) return;
+        caja.append(el('p', '', pistas[nivel++]())); caja.classList.remove('hide'); txtPista(); bPista.disabled = nivel >= pistas.length;
+      });
+      const revela = pick => {                                       // pick: la opción elegida, o null si pide la solución
+        if (hecho) return; hecho = true;
+        ops.forEach((o, j) => {
+          o.disabled = true; o.classList.remove('descartada');
+          if (j === q.correcta) { o.classList.add('right'); etiqueta = el('span', 'rv-tags'); etiqueta.append(el('b', 'tag ok', 'Correcta')); o.append(etiqueta); }
+          else if (j === pick) o.classList.add('wrong');
+        });
+        msg.textContent = pick === null ? '' : pick === q.correcta ? '¡Correcto!' : 'No es esa. La correcta está marcada en verde.';
+        msg.classList.toggle('hide', pick === null);
+        ocultos.forEach(e => e.classList.remove('hide')); barra.classList.add('hide'); bOtra.classList.remove('hide');
+      };
+      const reinicia = () => {
+        hecho = false; nivel = 0; if (etiqueta) { etiqueta.remove(); etiqueta = null; }
+        ops.forEach(o => { o.disabled = false; o.classList.remove('right', 'wrong', 'descartada'); });
+        ocultos.forEach(e => e.classList.add('hide')); caja.replaceChildren(); caja.classList.add('hide'); msg.classList.add('hide'); bOtra.classList.add('hide');
+        barra.classList.remove('hide'); bPista.disabled = false; txtPista();
+      };
+      ops.forEach((o, j) => o.addEventListener('click', () => revela(j)));
+      bSol.addEventListener('click', () => revela(null)); bOtra.addEventListener('click', reinicia);
+      barra.append(bPista, bSol); b.append(barra, caja, msg, bOtra);
+    }
+    if (q.explicacion) { const e = el('div', 'expl' + (jugar ? ' hide' : ''), q.explicacion); b.append(e); if (jugar) ocultos.push(e); }
+    if (q.ref) { const e = el('p', 'fine' + (jugar ? ' hide' : ''), 'Referencia: ' + q.ref); b.append(e); if (jugar) ocultos.push(e); }
   }
   const hist = [d.tipo === 'error' ? `Primer fallo: ${fecha(d.p)}.` : `Marcada por primera vez: ${fecha(d.p)}.`, d.n > 1 ? `${d.tipo === 'error' ? 'Fallos' : 'Veces marcada'}: ${d.n}.` : '',
     d.resuelto ? `Resuelta el ${fecha(d.res)}${d.rs > 1 ? ` (${d.rs} veces resuelta)` : ''}.` : 'Sigue pendiente de repasar.'].filter(Boolean).join(' ');
   b.append(el('p', 'rp-hist', hist));
-  if (d.nota) { const n = el('div', 'minota'); n.append(el('b', '', 'Tu nota: '), d.nota); b.append(n); }
+  if (d.nota) { const n = el('div', 'minota' + (jugar ? ' hide' : '')); n.append(el('b', '', 'Tu nota: '), d.nota); b.append(n); if (jugar) ocultos.push(n); }
   if (q) { const a = el('a', 'mini', 'Abrir el test de origen'); a.href = 'test.html?t=' + encodeURIComponent(d.testId); b.append(a); }
   c.append(b); return c;
 }
