@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261211"></script>
+<script src="puerta.js?v=20261212"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261211">
+<link rel="stylesheet" href="style.css?v=20261212">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -36,6 +36,7 @@
       <div class="acciones">
         <button type="button" class="btn" id="b-reanudar">Continuar donde lo dejé</button>
         <button type="button" class="btn ghost" id="b-descartar">Empezar de nuevo</button>
+        <button type="button" class="btn cancelar" id="b-cancelar">Cancelar test</button>
       </div>
     </div>
 
@@ -52,7 +53,7 @@
     </div>
     <div class="desc-limpio hide" id="desc-limpio">
       <h2>Descargar en limpio</h2>
-      <p class="fine">Para practicar en papel. Sale sin respuestas, notas ni estrellas, con las preguntas y las opciones siempre en el mismo orden.</p>
+      <p class="fine">Para practicar en papel. Sale sin respuestas, notas ni estrellas. Cada descarga mezcla al azar el orden de las preguntas y de las opciones: un examen distinto cada vez.</p>
       <label class="opcion"><input type="checkbox" id="d-sol"><span>Añadir al final una hoja con las soluciones<small>En una página aparte, para corregir tú.</small></span></label>
       <div class="acciones">
         <button type="button" class="btn small" id="d-pdf">PDF</button>
@@ -152,8 +153,8 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261211"></script>
-<script src="descarga.js?v=20261211"></script>
+<script src="app.js?v=20261212"></script>
+<script src="descarga.js?v=20261212"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente');
@@ -285,7 +286,8 @@ function showWelcome() {
 }
 
 /* ---------- descarga en limpio (orden fijo: el del test) ---------- */
-const preguntasLimpias = () => pool.map(q => ({ q: q.q, opciones: q.opciones, correcta: q.correcta }));
+// cada descarga es un examen distinto: preguntas y opciones en orden aleatorio (la correcta se recoloca)
+const preguntasLimpias = () => shuffle(pool.slice()).map(q => { const o = shuffle(q.opciones.map((t, i) => ({ t, ok: i === q.correcta }))); return { q: q.q, opciones: o.map(x => x.t), correcta: o.findIndex(x => x.ok) }; });
 $('d-pdf').addEventListener('click', () => Descarga.pdf(meta.titulo, preguntasLimpias(), $('d-sol').checked));
 $('d-docx').addEventListener('click', () => Descarga.docx(meta.titulo, preguntasLimpias(), $('d-sol').checked));
 $('d-md').addEventListener('click', () => Descarga.md(meta.titulo, preguntasLimpias(), $('d-sol').checked));
@@ -575,6 +577,12 @@ function finishExam() {
 /* ---------- eventos ---------- */
 $('start').addEventListener('click', startExam);
 $('b-reanudar').addEventListener('click', resumeExam);
+$('b-cancelar').addEventListener('click', () => {
+  if (!confirm('¿Cancelar este test? Se descarta lo respondido: no se guarda nota, estadística ni nada.')) return;
+  cursoDel(CURSO);
+  if (getToken()) syncNow().finally(() => { location.href = DEST_CANCEL; }); else location.href = DEST_CANCEL;
+  setTimeout(() => { location.href = DEST_CANCEL; }, 2500);
+});
 $('b-descartar').addEventListener('click', () => { cursoDel(CURSO); $('reanudar').classList.add('hide'); $('config').classList.remove('hide'); });
 $('retry').addEventListener('click', () => { if (T === 'mixto' || ES_BANCO) location.reload(); else { show('welcome'); showWelcome(); } });
 function cancelarTest() {

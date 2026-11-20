@@ -1,6 +1,6 @@
 /* Mi Academia · descarga de un test en limpio para practicar en papel
-   Sin notas, estrellas ni respuestas marcadas. Las preguntas y las opciones salen siempre en el
-   mismo orden (el del test), numeradas, para que dos copias impresas sean idénticas.
+   Sin notas, estrellas ni respuestas marcadas. Quien llama decide el orden (en el test se mezclan
+   preguntas y opciones en cada descarga); aquí se numeran y, si se pide, se añade la tabla de soluciones.
    Formatos: PDF (con el diálogo de imprimir), Word (.docx) y Markdown (.md). Todo se genera en el
    dispositivo, sin red. */
 const Descarga = (() => {
@@ -26,8 +26,9 @@ const Descarga = (() => {
       o.push('');
     });
     if (conSol) {
-      o.push('---', '', '## Soluciones', '');
-      for (let i = 0; i < preg.length; i += 10) o.push(soluciones(preg).slice(i, i + 10).join('  ·  '), '');
+      o.push('---', '', '## Soluciones', '', '| Pregunta | Respuesta |', '|:--:|:--:|');
+      preg.forEach((q, i) => o.push(`| ${i + 1} | ${L[q.correcta]} |`));
+      o.push('');
     }
     return o.join('\n');
   }
@@ -35,7 +36,9 @@ const Descarga = (() => {
   /* ---------- PDF: página lista para imprimir ---------- */
   function paginaHtml(titulo, preg, conSol) {
     const q = preg.map((p, i) => `<section class="q"><p class="e"><b>${i + 1}.</b> ${esc(limpia(p.q))}</p>${p.opciones.map((t, j) => `<p class="o"><b>${L[j]})</b> ${esc(limpia(t))}</p>`).join('')}</section>`).join('');
-    const sol = conSol ? `<section class="sol"><h2>Soluciones</h2><p>${soluciones(preg).map(esc).join(' &nbsp;·&nbsp; ')}</p></section>` : '';
+    const tablas = [];                                              // soluciones en vertical: 1 - B, 2 - C… en tablas de 25 filas
+    for (let a = 0; a < preg.length; a += 25) tablas.push('<table><tr><th>Pregunta</th><th>Respuesta</th></tr>' + preg.slice(a, a + 25).map((p, k) => `<tr><td>${a + k + 1}</td><td>${L[p.correcta]}</td></tr>`).join('') + '</table>');
+    const sol = conSol ? `<section class="sol"><h2>Soluciones</h2><div class="tabs">${tablas.join('')}</div></section>` : '';
     return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(limpia(titulo))}</title><style>
 @page{size:A4;margin:18mm 16mm 20mm;@bottom-center{content:counter(page) " / " counter(pages);font:9pt Georgia,serif;color:#555}}
 html{font:11.5pt/1.45 Georgia,"Times New Roman",serif;color:#000}body{margin:0}
@@ -44,7 +47,8 @@ h1{font:700 17pt/1.25 Georgia,serif;margin:0 0 4mm}
 .reg{font-size:9.5pt;color:#333;margin:0 0 6mm}
 .q{break-inside:avoid;page-break-inside:avoid;margin:0 0 5.5mm}
 .e{margin:0 0 1.6mm}.o{margin:0 0 1mm;padding-left:7mm;text-indent:-7mm}
-.sol{break-before:page;page-break-before:always}.sol h2{font:700 14pt Georgia,serif}
+.sol{break-before:page;page-break-before:always}.sol h2{font:700 14pt Georgia,serif;margin:0 0 5mm}
+.tabs{display:flex;flex-wrap:wrap;gap:10mm;align-items:flex-start}.sol table{border-collapse:collapse;font-size:11pt}.sol th,.sol td{border:1px solid #000;padding:1mm 6mm;text-align:center}.sol th{background:#eee}
 </style></head><body><h1>${esc(limpia(titulo))}</h1>
 <div class="dat"><span>Nombre: ______________________________</span><span>Fecha: ______________</span><span>${preg.length} preguntas</span></div>
 <p class="reg">${esc(REGLA)}</p>${q}${sol}</body></html>`;
@@ -90,7 +94,12 @@ h1{font:700 17pt/1.25 Georgia,serif;margin:0 0 4mm}
     });
     if (conSol) {
       cuerpo.push(par(run('Soluciones', { b: 1, sz: 28 }), { salto: 1, despues: 120 }));
-      cuerpo.push(par(run(soluciones(preg).join('   ·   ')), { despues: 60 }));
+      const celda = (t, b) => `<w:tc><w:tcPr><w:tcW w:w="1700" w:type="dxa"/></w:tcPr><w:p><w:pPr><w:spacing w:before="20" w:after="20"/><w:jc w:val="center"/></w:pPr>${run(String(t), { b })}</w:p></w:tc>`;
+      const borde = ['top', 'left', 'bottom', 'right', 'insideH', 'insideV'].map(x => `<w:${x} w:val="single" w:sz="4" w:space="0" w:color="000000"/>`).join('');
+      cuerpo.push('<w:tbl><w:tblPr><w:tblW w:w="3400" w:type="dxa"/><w:tblBorders>' + borde + '</w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="1700"/><w:gridCol w:w="1700"/></w:tblGrid>' +
+        '<w:tr><w:trPr><w:cantSplit/></w:trPr>' + celda('Pregunta', 1) + celda('Respuesta', 1) + '</w:tr>' +
+        preg.map((q, i) => '<w:tr><w:trPr><w:cantSplit/></w:trPr>' + celda(i + 1) + celda(L[q.correcta]) + '</w:tr>').join('') + '</w:tbl>');
+      cuerpo.push(par('', { despues: 0 }));
     }
     const doc = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + cuerpo.join('') +
       '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1021" w:bottom="1134" w:left="1021" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>';
