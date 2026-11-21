@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="puerta.js?v=20261219"></script>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Logros - Mi Academia</title>
+<script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Academia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=20261219">
+</head>
+<body data-pagina="ajustes">
+<div class="wrap">
+  <div class="volver"><a class="btn small ghost" href="ajustes.html" data-atras>← Volver</a></div>
+  <div class="pagehead">
+    <h1 class="titular">Logros</h1>
+    <p class="entradilla">Metas por escalones que salen de tu estudio real. No hay nada que reclamar: se calculan con tus datos y no se pierden.</p>
+  </div>
+  <p class="lg-res" id="lg-res"></p>
+  <div id="lg-nuevo"></div>
+  <div class="lg-grid" id="lg-grid"></div>
+</div>
+<script src="app.js?v=20261219"></script>
+<script src="vistas.js?v=20261219"></script>
+<script>
+const L = logrosCalcula(), vis = logrosVistos(), tot = L.reduce((a, x) => a + x.pasos.length, 0), con = L.reduce((a, x) => a + x.nivel, 0), nuevos = [];
+$('lg-res').textContent = con + ' de ' + tot + ' escalones conseguidos.';
+const grid = $('lg-grid');
+L.forEach(x => {
+  const visto = vis ? (vis[x.id] || 0) : x.nivel, c = el('article', 'lg' + (x.sig ? '' : ' hecho'));
+  const cab = el('div', 'lg-cab'); cab.append(el('h2', '', x.t), el('span', 'lg-v', x.f(x.id === 'horas' ? Math.floor(x.v) : x.v))); c.append(cab, el('p', 'lg-d', x.d));
+  const ol = el('ol', 'lg-pasos');
+  x.pasos.forEach((p, i) => {
+    const li = el('li', i < x.nivel ? 'on' + (i >= visto ? ' nuevo' : '') : '', x.f(p)); li.setAttribute('aria-label', x.f(p) + (i < x.nivel ? ', conseguido' : ', por conseguir'));
+    if (i >= visto && i < x.nivel) nuevos.push(x.t + ', ' + x.f(p));
+    ol.append(li);
+  });
+  const prev = x.nivel ? x.pasos[x.nivel - 1] : 0, barra = el('div', 'lg-barra'), fill = el('i');
+  fill.style.width = (x.sig ? Math.max(2, Math.round((x.v - prev) / (x.sig - prev) * 100)) : 100) + '%'; barra.append(fill); barra.setAttribute('role', 'img');
+  const sig = x.sig ? 'Siguiente: ' + x.f(x.sig) + '. Te faltan ' + x.f(Math.ceil(x.sig - x.v)) + '.' : 'Completado. Has superado todos los escalones.';
+  barra.setAttribute('aria-label', sig); c.append(ol, barra, el('p', 'lg-sig', sig)); grid.append(c);
+});
+if (nuevos.length) $('lg-nuevo').append(el('p', 'lg-nuevo', 'Nuevo: ' + nuevos.join('; ') + '.'));
+logrosMarca(L);
+</script>
+<script src="temporizador.js?v=20261219"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261218"></script>
+<script src="puerta.js?v=20261219"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Visor - Mi Academia</title>
@@ -18,7 +18,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261218">
+<link rel="stylesheet" href="style.css?v=20261219">
 <style>
 .vis-diag{margin:.8rem 0 0;padding:.6rem .75rem;border-radius:10px;background:var(--sel-bg);color:var(--tinta);font:.72rem/1.5 ui-monospace,Menlo,Consolas,monospace;text-align:left;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
 .vis-diag b{display:block;margin:0 0 .3rem;font:700 .78rem/1.3 var(--sans)}
@@ -61,8 +61,8 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
   <noscript><p class="vis-msg">Este visor necesita JavaScript.</p></noscript>
   <script nomodule>document.getElementById('v-msg').textContent = 'Este navegador es demasiado antiguo para el visor. Vuelve a la Biblioteca y usa «Descargar».';</script>
 </div>
-<script src="app.js?v=20261218"></script>
-<script src="biblioteca.js?v=20261218"></script>
+<script src="app.js?v=20261219"></script>
+<script src="biblioteca.js?v=20261219"></script>
 <script type="module">
 const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx: 16e6 };
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -150,8 +150,8 @@ function montar() {
   pagsEl.replaceChildren();
   for (let i = 0; i < n; i++) { const d = el('div', 'vis-hoja'); d.dataset.n = i + 1; d.setAttribute('role', 'img'); d.setAttribute('aria-label', 'Página ' + (i + 1)); pagsEl.append(d); pags.push({ div: d, estado: '', tarea: null, i }); }
 }
-function medidas() {
-  const disp = Math.min($('v-doc').clientWidth || 320, VIS.ancho);
+function medidas(w) {                                             // w: ancho del documento si ya se conoce el que tendrá (menú en animación)
+  const disp = Math.min(w || $('v-doc').clientWidth || 320, VIS.ancho);
   fit = disp / base.width; return fit * z;                         // escala CSS de las páginas
 }
 function dimensiona(p, w, h) { p.w = w; p.h = h; p.div.style.width = w + 'px'; p.div.style.height = h + 'px'; }
@@ -161,19 +161,24 @@ function zPagina() {                                               // el tamaño
   const alto = (window.innerHeight || 800) - barra.offsetHeight - 24;
   return Math.min(VIS.max, Math.max(VIS.min, alto / (base.height * fit)));
 }
-function aplicaZoom(ancla) {                                       // ancla: { i, f } página y fracción visible, para no perder el sitio
-  const s = medidas();
+function aplicaZoom(ancla, suave, wDoc) {                          // ancla: { i, f } página y fracción visible, para no perder el sitio; suave: las páginas ya pintadas se quedan (estiradas) hasta tener la nueva
+  const s = medidas(wDoc);
   if (document.activeElement !== $('v-z')) $('v-z').value = Math.round(z * 100);
   $('v-menos').disabled = z <= VIS.min + 1e-6; $('v-mas').disabled = z >= VIS.max - 1e-6;
   $('v-ancho').setAttribute('aria-pressed', String(Math.abs(z - zAncho()) < .01));
   $('v-pagina').setAttribute('aria-pressed', String(Math.abs(z - zPagina()) < .01));
-  pags.forEach(p => { libera(p); if (io) io.unobserve(p.div); dimensiona(p, Math.floor(base.width * s), Math.floor(base.height * s)); });
+  pags.forEach(p => {
+    if (io) io.unobserve(p.div);
+    const w = Math.floor(base.width * s), h = Math.floor(base.height * s);
+    if (suave && p.estado === 'ok') { if (Math.abs(w - p.w) > 1 || Math.abs(h - p.h) > 1) { dimensiona(p, w, h); p.viejo = true; } }   // mismo tamaño: no hay nada que repintar
+    else { libera(p); dimensiona(p, w, h); }
+  });
   if (ancla) { const p = pags[ancla.i]; window.scrollTo(window.scrollX, p.div.getBoundingClientRect().top + scrollY - barra.offsetHeight - 8 + ancla.f * p.h); }
   if (io) pags.forEach(p => io.observe(p.div)); else pags.slice(Math.max(0, actual - 2), actual + 2).forEach(pinta);
   recuerda();
 }
 async function pinta(p) {
-  if (p.estado) return; p.estado = 'cargando'; const tk = p.tk = (p.tk || 0) + 1;
+  if (p.estado && !p.viejo) return; p.viejo = false; p.estado = 'cargando'; const tk = p.tk = (p.tk || 0) + 1;
   try {
     const page = await pdf.getPage(p.i + 1); if (p.tk !== tk) return;
     const s = fit * z, vp0 = page.getViewport({ scale: s }), w = Math.floor(vp0.width), h = Math.floor(vp0.height);
@@ -199,7 +204,7 @@ function libera(p) {                                               // las págin
   if (p.tt) { try { p.tt.cancel(); } catch (e) { /* nada */ } p.tt = null; } p.divs = null;
   if (p.tarea) { try { p.tarea.cancel(); } catch (e) { /* nada */ } p.tarea = null; }
   const c = p.div.firstChild; if (c) { c.width = 0; c.height = 0; p.div.replaceChildren(); }
-  p.estado = '';
+  p.estado = ''; p.viejo = false;
 }
 
 /* ---- texto seleccionable y buscador ---- */
@@ -345,18 +350,29 @@ addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; anch
   const cierra = el('button', 'rail-toggle'); cierra.type = 'button'; cierra.insertAdjacentHTML('beforeend', ICONO); if (rail) rail.append(cierra);
   const abre = $('v-rail'); abre.insertAdjacentHTML('afterbegin', ICONO);
   const pinta = () => { const o = raiz.classList.contains('sin-rail'), t = o ? 'Mostrar menú' : 'Ocultar menú'; [cierra, abre].forEach(b => { b.title = t; b.setAttribute('aria-label', t); }); };
+  let anim = 0;
   const alterna = () => {
     const ajustada = !!n && Math.abs(z - zAncho()) < .01;
     const i = n ? paginaActual() : 0, p = pags[i], r = p ? p.div.getBoundingClientRect() : null, f = r ? Math.max(0, (ancla() - r.top) / (p.h || 1)) : 0;
+    raiz.classList.add('sin-anim'); raiz.classList.toggle('sin-rail');   // mide el ancho que va a quedar, sin animar y sin que se llegue a pintar
+    const wFin = $('v-doc').clientWidth; raiz.classList.toggle('sin-rail'); void raiz.offsetWidth; raiz.classList.remove('sin-anim');
     const o = raiz.classList.toggle('sin-rail'); setPref('visorRail', o); pinta();
-    setTimeout(() => {                                             // cuando termina la animación: la hoja se vuelve a ajustar al ancho que quedó
-      if (!n) return; if (ajustada) z = Math.min(VIS.max, zAncho()); aplicaZoom({ i, f });
-    }, 340);
+    if (!n) return;
+    if (ajustada) z = Math.min(VIS.max, wFin / Math.min(wFin, VIS.ancho));
+    cancelAnimationFrame(anim); raiz.classList.add('anim-hoja');
+    aplicaZoom(null, true, wFin);                                  // las hojas crecen a la vez que el menú se desliza; las páginas pintadas se estiran y se afinan al terminar, sin pasar por blanco
+    const t0 = performance.now();
+    const sigue = t => {                                           // mantiene en su sitio lo que se estaba leyendo mientras cambia el tamaño
+      const pg = pags[i], rr = pg.div.getBoundingClientRect(), y = rr.top + scrollY - barra.offsetHeight - 8 + f * rr.height;
+      if (Math.abs(y - scrollY) > .5) window.scrollTo(window.scrollX, y);
+      if (t - t0 < 380) anim = requestAnimationFrame(sigue); else raiz.classList.remove('anim-hoja');
+    };
+    anim = requestAnimationFrame(sigue);
   };
   [cierra, abre].forEach(b => b.addEventListener('click', alterna)); pinta();
 }
 abrir().catch(e => falla('abrir el visor', e, 'Ha ocurrido un error inesperado en el visor.'));
 </script>
-<script src="temporizador.js?v=20261218"></script>
+<script src="temporizador.js?v=20261219"></script>
 </body>
 </html>

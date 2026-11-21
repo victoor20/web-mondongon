@@ -427,10 +427,15 @@ function objCfgs() { const e = objEntrada(); return (Array.isArray(e.c) ? e.c : 
 function objCfgDe(f) { let c = null; objCfgs().forEach(x => { if (x.d <= f) c = x; }); return c; }
 function objLibres() { const e = objEntrada(); return Array.isArray(e.libres) ? e.libres : []; }
 function objGuardaEntrada(c, libres) { const raw = estudioRaw(); raw[OBJ_K] = { c: c.slice(-60), libres: libres.slice(-400), t: nowT() }; jset(localStorage, LS.estudio, raw); scheduleSync(); }
-function objGuarda(cfg) {                                          // la meta nueva vale desde hoy
-  const hoy = hoyISO(), lista = objCfgs().filter(x => x.d !== hoy);
-  lista.push({ d: hoy, on: !!cfg.on, min: cfg.min, obj: cfg.obj, desc: cfg.desc, mar: cfg.mar });
-  objGuardaEntrada(lista, objLibres());
+function objGuarda(cfg, desde) {                                   // la meta nueva vale desde hoy; «desde» (opcional) es el primer día que cuenta para la racha
+  const hoy = hoyISO(), nueva = { on: !!cfg.on, min: cfg.min, obj: cfg.obj, desc: cfg.desc, mar: cfg.mar };
+  let lista = objCfgs(); desde = desde && desde <= hoy ? desde : '';
+  if (!lista.length) lista = [{ d: desde || hoy, ...nueva }];
+  else if (desde) { const ant = objCfgDe(desde) || lista[0]; lista = lista.filter(x => x.d > desde); lista.unshift({ ...ant, d: desde }); }
+  const vig = lista.filter(x => x.d <= hoy).pop();
+  const igual = vig && vig.on === nueva.on && vig.min === nueva.min && vig.obj === nueva.obj && vig.mar === nueva.mar && JSON.stringify(vig.desc) === JSON.stringify(nueva.desc);
+  if (!igual) { lista = lista.filter(x => x.d !== hoy); lista.push({ d: hoy, ...nueva }); }
+  objGuardaEntrada(lista.sort((a, b) => a.d < b.d ? -1 : 1), objLibres());
 }
 function objSetLibre(f, si) { const l = objLibres().filter(x => x !== f); if (si) l.push(f); objGuardaEntrada(objCfgs(), l); }
 const lunesISO = d => hoyISO(new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)));
@@ -445,8 +450,43 @@ function objEstado() {                                             // null mient
     else { const w = lunesISO(d); if ((usados[w] || 0) < c.mar) usados[w] = (usados[w] || 0) + 1; else racha = 0; }
   }
   const c = objCfgDe(hoy), h = new Date(), sem = estudioSemana();
-  return { cfg: c, on: !!(c && c.on), racha: racha, mejor: mejor, hoy: estudioDia(hoy), descanso: !!c && (c.desc.indexOf(h.getDay()) >= 0 || libres.has(hoy)),
+  return { cfg: c, on: !!(c && c.on), desde: lista[0].d, racha: racha, mejor: mejor, hoy: estudioDia(hoy), descanso: !!c && (c.desc.indexOf(h.getDay()) >= 0 || libres.has(hoy)),
     margen: c ? Math.max(0, c.mar - (usados[lunesISO(h)] || 0)) : 0, semana: sem.total, metaSemana: c ? (7 - c.desc.length) * c.min * 60 : 0 };
+}
+
+/* ---------- logros ----------
+   Se calculan siempre con tus datos (no hay nada que «reclamar» y nunca se pierden). Cada uno es una escalera de metas; solo se guarda hasta qué escalón has visto,
+   en el mismo mapa que el tiempo de estudio (clave «cfg|logros»), para avisar en Inicio de los nuevos. */
+const LOGROS_K = 'cfg|logros', logPl = (n, s, p) => n + ' ' + (n === 1 ? s : p);
+function logrosCalcula() {
+  const dias = {}; let seg = 0;
+  Object.entries(estudioRaw()).forEach(([k, v]) => { if (/^\d{4}-\d\d-\d\d\|/.test(k)) { const f = k.split('|')[0], s = (v && v.s) || 0; dias[f] = (dias[f] || 0) + s; seg += s; } });
+  let cumplidos = 0; Object.keys(dias).forEach(f => { if (dias[f] >= (objCfgDe(f) || OBJ_DEF).min * 60) cumplidos++; });
+  const hist = getHist(), temas = {}; let aciertos = 0;
+  hist.forEach(h => { aciertos += +h.right || 0; Object.entries(h.byTema || {}).forEach(([t, x]) => { const a = temas[t] = temas[t] || { r: 0, t: 0 }; a.r += (x && x.r) || 0; a.t += (x && x.t) || 0; }); });
+  const dominados = Object.values(temas).filter(a => a.t >= 20 && a.r / a.t >= .8).length;
+  const superados = Object.values(jget(localStorage, LS.err, {})).filter(e => e && e.del && e.res).length;
+  const afianzadas = getTarjetas().filter(k => (k.c || 0) >= 3).length, ob = objEstado();
+  const dd = n => logPl(n, 'día', 'días');
+  const L = [
+    { id: 'racha', t: 'Constancia', d: 'Tu mejor racha de días seguidos alcanzando el mínimo diario.', pasos: [3, 7, 14, 30, 60, 100], v: ob ? ob.mejor : 0, f: dd },
+    { id: 'horas', t: 'Horas de estudio', d: 'Tiempo de estudio efectivo acumulado, medido con el temporizador.', pasos: [10, 25, 50, 100, 250, 500], v: seg / 3600, f: n => Math.floor(n) + ' h' },
+    { id: 'dias', t: 'Días cumplidos', d: 'Días en los que has llegado al mínimo, seguidos o no.', pasos: [7, 20, 50, 100, 150], v: cumplidos, f: dd },
+    { id: 'tests', t: 'Tests', d: 'Tests terminados que cuentan en tus estadísticas.', pasos: [5, 25, 50, 100, 250], v: hist.length, f: n => logPl(n, 'test', 'tests') },
+    { id: 'aciertos', t: 'Aciertos', d: 'Preguntas acertadas en tus tests.', pasos: [100, 500, 1000, 2500, 5000], v: aciertos, f: n => logPl(n, 'acierto', 'aciertos') },
+    { id: 'temas', t: 'Temas dominados', d: 'Temas con al menos 20 preguntas contestadas y un 80 % de aciertos.', pasos: [1, 3, 5, 10, 15], v: dominados, f: n => logPl(n, 'tema', 'temas') },
+    { id: 'errores', t: 'Errores superados', d: 'Errores que has resuelto y ya no están pendientes.', pasos: [10, 50, 100, 250], v: superados, f: n => logPl(n, 'error', 'errores') },
+    { id: 'tarjetas', t: 'Tarjetas afianzadas', d: 'Tarjetas que ya recuerdas con una semana o más entre repasos.', pasos: [5, 20, 50, 100], v: afianzadas, f: n => logPl(n, 'tarjeta', 'tarjetas') }
+  ];
+  L.forEach(x => { x.nivel = x.pasos.filter(p => x.v >= p).length; x.sig = x.pasos[x.nivel] || 0; x.cerca = x.sig ? x.v / x.sig : -1; });
+  return L;
+}
+function logrosVistos() { const e = estudioRaw()[LOGROS_K]; return e && e.v && typeof e.v === 'object' ? e.v : null; }
+function logrosMarca(L) {                                          // «visto» solo sube: nunca se vuelve a avisar de un escalón ya enseñado
+  const raw = estudioRaw(), ant = logrosVistos() || {}, v = {};
+  L.forEach(x => { v[x.id] = Math.max(x.nivel, ant[x.id] || 0); });
+  if (JSON.stringify(v) === JSON.stringify(ant)) return;
+  raw[LOGROS_K] = { v: v, t: nowT() }; jset(localStorage, LS.estudio, raw); scheduleSync();
 }
 
 /* ---------- notas libres (apuntes propios, sincronizados) ---------- */

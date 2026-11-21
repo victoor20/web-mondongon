@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261218"></script>
+<script src="puerta.js?v=20261219"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261218">
+<link rel="stylesheet" href="style.css?v=20261219">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -31,6 +31,7 @@
   <section class="inicio-top" aria-label="Hoy">
     <div class="sesion" id="sesion"></div>
     <div class="estudio-card" id="estudio"></div>
+    <div class="racha-card" id="racha"></div>
   </section>
 
   <section class="hoy-sec" aria-labelledby="rep-t">
@@ -63,8 +64,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261218"></script>
-<script src="vistas.js?v=20261218"></script>
+<script src="app.js?v=20261219"></script>
+<script src="vistas.js?v=20261219"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -121,14 +122,25 @@ function renderEstudio() {
     b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px';
     c.append(b, el('span', '', L[i])); dias.append(c);
   });
-  const ob = objEstado();
-  if (!ob) { const a = el('a', 'obj-fija', 'Fija tu objetivo diario y empieza tu racha'); a.href = 'ajustes.html#objetivo'; box.append(a); }
-  else if (ob.on) box.append(pintaObjetivo(ob));
   box.append(dias, el('p', 'fine', 'Tiempo de estudio efectivo medido con el temporizador, de todos tus dispositivos.'));
+}
+function renderRacha() {                                           // recuadro propio: racha, progreso de hoy y próximo logro
+  const box = $('racha'), ob = objEstado(); box.replaceChildren(); box.hidden = !!(ob && !ob.on); if (box.hidden) return;
+  box.append(el('h2', 'sesion-t', 'Tu racha'));
+  if (!ob) {
+    box.append(el('p', 'sesion-s', 'Fija cuánto quieres estudiar cada día y la web contará los días seguidos que lo cumples.'));
+    const a = el('a', 'btn small', 'Fijar mi objetivo'); a.href = 'ajustes.html#objetivo'; box.append(a);
+  } else box.append(pintaObjetivo(ob));
+  const L = logrosCalcula(), vis = logrosVistos(); if (!vis) logrosMarca(L);   // la primera vez se anota lo que ya tenías, sin avisar
+  const nuevos = vis ? L.filter(x => x.nivel > (vis[x.id] || 0)) : [], prox = L.filter(x => x.sig).sort((a, b) => b.cerca - a.cerca)[0];
+  const p = el('p', 'racha-prox' + (nuevos.length ? ' nuevo' : ''));
+  if (nuevos.length) p.append('Logro nuevo: ' + nuevos.map(x => x.t + ', ' + x.f(x.pasos[x.nivel - 1])).join('; ') + '. ');
+  else if (prox) p.append('Próximo logro: ' + prox.t + ', ' + prox.f(prox.sig) + '. Te faltan ' + prox.f(Math.ceil(prox.sig - prox.v)) + '. ');
+  const a = el('a', '', 'Ver logros'); a.href = 'logros.html'; p.append(a); box.append(p);
 }
 function pintaObjetivo(ob) {                                       // progreso de hoy frente al mínimo y al objetivo, y la racha
   const c = ob.cfg, min = c.min * 60, obj = Math.max(c.obj, c.min) * 60, s = ob.hoy, w = el('div', 'obj'), cab = el('div', 'obj-cab');
-  cab.append(el('b', '', 'Racha: ' + plural(ob.racha, 'día', 'días')), el('span', '', 'Mejor: ' + plural(ob.mejor, 'día', 'días')));
+  cab.append(el('b', '', plural(ob.racha, 'día', 'días')), el('span', '', 'Mejor: ' + plural(ob.mejor, 'día', 'días')));
   const barra = el('div', 'obj-barra' + (s >= min ? ' ok' : '')), fill = el('i'), marca = el('u');
   fill.style.width = Math.min(100, Math.round(s / obj * 100)) + '%'; marca.style.left = Math.round(min / obj * 100) + '%'; barra.append(fill, marca);
   let txt;
@@ -275,7 +287,7 @@ function renderUltimos() {
   });
   box.append(lista);
 }
-function refresh() { computeData(); renderEstado(); renderSesion(); renderEstudio(); renderRepasar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
+function refresh() { computeData(); renderEstado(); renderSesion(); renderEstudio(); renderRacha(); renderRepasar(); renderSugerencias(); renderContinuar(); renderHoja(); renderUltimos(); if (selTema) selectTema(selTema); }
 async function sincronizar() {
   const r = await syncNow();
   if (r.cambioLocal) refresh();
@@ -294,6 +306,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261218"></script>
+<script src="temporizador.js?v=20261219"></script>
 </body>
 </html>
