@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261219"></script>
+<script src="puerta.js?v=20261220"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Logros - Mi Academia</title>
@@ -17,42 +17,25 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261219">
+<link rel="stylesheet" href="style.css?v=20261220">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
   <div class="volver"><a class="btn small ghost" href="ajustes.html" data-atras>← Volver</a></div>
   <div class="pagehead">
     <h1 class="titular">Logros</h1>
-    <p class="entradilla">Metas por escalones que salen de tu estudio real. No hay nada que reclamar: se calculan con tus datos y no se pierden.</p>
+    <p class="entradilla">Cada logro es una pieza de tu colección. Cambia de forma y de material a medida que subes de escalón; se calcula con tu estudio real y no se pierde.</p>
   </div>
-  <p class="lg-res" id="lg-res"></p>
+  <div class="lg-hero">
+    <div class="lg-cuenta"><b id="lg-con">0</b><span id="lg-tot"></span></div>
+    <div class="lg-total" role="presentation"><i id="lg-total-i"></i></div>
+  </div>
   <div id="lg-nuevo"></div>
   <div class="lg-grid" id="lg-grid"></div>
 </div>
-<script src="app.js?v=20261219"></script>
-<script src="vistas.js?v=20261219"></script>
-<script>
-const L = logrosCalcula(), vis = logrosVistos(), tot = L.reduce((a, x) => a + x.pasos.length, 0), con = L.reduce((a, x) => a + x.nivel, 0), nuevos = [];
-$('lg-res').textContent = con + ' de ' + tot + ' escalones conseguidos.';
-const grid = $('lg-grid');
-L.forEach(x => {
-  const visto = vis ? (vis[x.id] || 0) : x.nivel, c = el('article', 'lg' + (x.sig ? '' : ' hecho'));
-  const cab = el('div', 'lg-cab'); cab.append(el('h2', '', x.t), el('span', 'lg-v', x.f(x.id === 'horas' ? Math.floor(x.v) : x.v))); c.append(cab, el('p', 'lg-d', x.d));
-  const ol = el('ol', 'lg-pasos');
-  x.pasos.forEach((p, i) => {
-    const li = el('li', i < x.nivel ? 'on' + (i >= visto ? ' nuevo' : '') : '', x.f(p)); li.setAttribute('aria-label', x.f(p) + (i < x.nivel ? ', conseguido' : ', por conseguir'));
-    if (i >= visto && i < x.nivel) nuevos.push(x.t + ', ' + x.f(p));
-    ol.append(li);
-  });
-  const prev = x.nivel ? x.pasos[x.nivel - 1] : 0, barra = el('div', 'lg-barra'), fill = el('i');
-  fill.style.width = (x.sig ? Math.max(2, Math.round((x.v - prev) / (x.sig - prev) * 100)) : 100) + '%'; barra.append(fill); barra.setAttribute('role', 'img');
-  const sig = x.sig ? 'Siguiente: ' + x.f(x.sig) + '. Te faltan ' + x.f(Math.ceil(x.sig - x.v)) + '.' : 'Completado. Has superado todos los escalones.';
-  barra.setAttribute('aria-label', sig); c.append(ol, barra, el('p', 'lg-sig', sig)); grid.append(c);
-});
-if (nuevos.length) $('lg-nuevo').append(el('p', 'lg-nuevo', 'Nuevo: ' + nuevos.join('; ') + '.'));
-logrosMarca(L);
-</script>
-<script src="temporizador.js?v=20261219"></script>
+<script src="app.js?v=20261220"></script>
+<script src="vistas.js?v=20261220"></script>
+<script src="logros.js?v=20261220"></script>
+<script src="temporizador.js?v=20261220"></script>
 </body>
 </html>

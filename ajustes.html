@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261219"></script>
+<script src="puerta.js?v=20261220"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ajustes - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261219">
+<link rel="stylesheet" href="style.css?v=20261220">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -67,7 +67,7 @@
 
   <section class="hoja sync" id="logros" style="margin-top:1rem">
     <h2>Logros</h2>
-    <p class="estado-s">Metas por escalones: horas de estudio, constancia, tests, errores superados y tarjetas. Se calculan con tus datos, sin nada que reclamar.</p>
+    <p class="estado-s">Una sala de piezas que cambian de forma y de material según avanzas: horas de estudio, constancia, tests, aciertos, temas, errores superados y tarjetas. Se calculan con tus datos.</p>
     <p class="estado-s" id="lg-res" style="margin-top:.5rem"></p>
     <a class="btn small" href="logros.html" style="margin-top:.6rem">Ver mis logros</a>
   </section>
@@ -163,8 +163,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261219"></script>
-<script src="vistas.js?v=20261219"></script>
+<script src="app.js?v=20261220"></script>
+<script src="vistas.js?v=20261220"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -343,6 +343,6 @@ cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261219"></script>
+<script src="temporizador.js?v=20261220"></script>
 </body>
 </html>

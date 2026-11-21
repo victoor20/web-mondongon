@@ -469,14 +469,14 @@ function logrosCalcula() {
   const afianzadas = getTarjetas().filter(k => (k.c || 0) >= 3).length, ob = objEstado();
   const dd = n => logPl(n, 'día', 'días');
   const L = [
-    { id: 'racha', t: 'Constancia', d: 'Tu mejor racha de días seguidos alcanzando el mínimo diario.', pasos: [3, 7, 14, 30, 60, 100], v: ob ? ob.mejor : 0, f: dd },
-    { id: 'horas', t: 'Horas de estudio', d: 'Tiempo de estudio efectivo acumulado, medido con el temporizador.', pasos: [10, 25, 50, 100, 250, 500], v: seg / 3600, f: n => Math.floor(n) + ' h' },
-    { id: 'dias', t: 'Días cumplidos', d: 'Días en los que has llegado al mínimo, seguidos o no.', pasos: [7, 20, 50, 100, 150], v: cumplidos, f: dd },
-    { id: 'tests', t: 'Tests', d: 'Tests terminados que cuentan en tus estadísticas.', pasos: [5, 25, 50, 100, 250], v: hist.length, f: n => logPl(n, 'test', 'tests') },
-    { id: 'aciertos', t: 'Aciertos', d: 'Preguntas acertadas en tus tests.', pasos: [100, 500, 1000, 2500, 5000], v: aciertos, f: n => logPl(n, 'acierto', 'aciertos') },
-    { id: 'temas', t: 'Temas dominados', d: 'Temas con al menos 20 preguntas contestadas y un 80 % de aciertos.', pasos: [1, 3, 5, 10, 15], v: dominados, f: n => logPl(n, 'tema', 'temas') },
-    { id: 'errores', t: 'Errores superados', d: 'Errores que has resuelto y ya no están pendientes.', pasos: [10, 50, 100, 250], v: superados, f: n => logPl(n, 'error', 'errores') },
-    { id: 'tarjetas', t: 'Tarjetas afianzadas', d: 'Tarjetas que ya recuerdas con una semana o más entre repasos.', pasos: [5, 20, 50, 100], v: afianzadas, f: n => logPl(n, 'tarjeta', 'tarjetas') }
+    { id: 'racha', t: 'Constancia', d: 'Tu mejor racha de días seguidos alcanzando el mínimo diario.', pasos: [3, 7, 14, 30, 60, 100, 365], nom: ['Chispa', 'Llama', 'Fogata', 'Antorcha', 'Brasero', 'Faro', 'Llama eterna'], v: ob ? ob.mejor : 0, f: dd },
+    { id: 'horas', t: 'Horas de estudio', d: 'Tiempo de estudio efectivo acumulado, medido con el temporizador.', pasos: [10, 25, 50, 100, 250, 500, 1000], nom: ['Gnomon', 'Clepsidra', 'Reloj de arena', 'Reloj de bolsillo', 'Cronómetro', 'Reloj de torre', 'Astrolabio'], v: seg / 3600, f: n => Math.floor(n) + ' h' },
+    { id: 'dias', t: 'Días cumplidos', d: 'Días en los que has llegado al mínimo, seguidos o no.', pasos: [7, 20, 50, 100, 150, 200, 250], nom: ['Hoja', 'Ramita', 'Corona', 'Laurel', 'Corona cívica', 'Corona de oro', 'Triunfo'], v: cumplidos, f: dd },
+    { id: 'tests', t: 'Tests', d: 'Tests terminados que cuentan en tus estadísticas.', pasos: [5, 25, 50, 100, 250, 500, 1000], nom: ['Cuartilla', 'Cuaderno', 'Dossier', 'Expediente', 'Archivo', 'Legajo', 'Biblioteca'], v: hist.length, f: n => logPl(n, 'test', 'tests') },
+    { id: 'aciertos', t: 'Aciertos', d: 'Preguntas acertadas en tus tests.', pasos: [100, 500, 1000, 2500, 5000, 10000, 20000], nom: ['Primer blanco', 'Tirador', 'Certero', 'Puntería fina', 'Pulso firme', 'Ojo de halcón', 'Diana perfecta'], v: aciertos, f: n => logPl(n, 'acierto', 'aciertos') },
+    { id: 'temas', t: 'Temas dominados', d: 'Temas con al menos 20 preguntas contestadas y un 80 % de aciertos.', pasos: [1, 3, 5, 10, 15, 25, 40], nom: ['Estrella', 'Trío', 'Cuadrilátero', 'Osa Menor', 'Cisne', 'Orión', 'Vía Láctea'], v: dominados, f: n => logPl(n, 'tema', 'temas') },
+    { id: 'errores', t: 'Errores superados', d: 'Errores que has resuelto y ya no están pendientes.', pasos: [10, 25, 50, 100, 250, 500, 1000], nom: ['Rodela', 'Adarga', 'Escudo', 'Broquel', 'Égida', 'Coraza', 'Muralla'], v: superados, f: n => logPl(n, 'error', 'errores') },
+    { id: 'tarjetas', t: 'Tarjetas afianzadas', d: 'Tarjetas que ya recuerdas con una semana o más entre repasos.', pasos: [5, 20, 50, 100, 250, 500, 1000], nom: ['Carta', 'Pareja', 'Mano', 'Abanico', 'Baraja', 'Mazo', 'Arcano mayor'], v: afianzadas, f: n => logPl(n, 'tarjeta', 'tarjetas') }
   ];
   L.forEach(x => { x.nivel = x.pasos.filter(p => x.v >= p).length; x.sig = x.pasos[x.nivel] || 0; x.cerca = x.sig ? x.v / x.sig : -1; });
   return L;
