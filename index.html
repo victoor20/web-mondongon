@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261217"></script>
+<script src="puerta.js?v=20261218"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261217">
+<link rel="stylesheet" href="style.css?v=20261218">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -63,8 +63,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261217"></script>
-<script src="vistas.js?v=20261217"></script>
+<script src="app.js?v=20261218"></script>
+<script src="vistas.js?v=20261218"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -121,7 +121,24 @@ function renderEstudio() {
     b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px';
     c.append(b, el('span', '', L[i])); dias.append(c);
   });
+  const ob = objEstado();
+  if (!ob) { const a = el('a', 'obj-fija', 'Fija tu objetivo diario y empieza tu racha'); a.href = 'ajustes.html#objetivo'; box.append(a); }
+  else if (ob.on) box.append(pintaObjetivo(ob));
   box.append(dias, el('p', 'fine', 'Tiempo de estudio efectivo medido con el temporizador, de todos tus dispositivos.'));
+}
+function pintaObjetivo(ob) {                                       // progreso de hoy frente al mínimo y al objetivo, y la racha
+  const c = ob.cfg, min = c.min * 60, obj = Math.max(c.obj, c.min) * 60, s = ob.hoy, w = el('div', 'obj'), cab = el('div', 'obj-cab');
+  cab.append(el('b', '', 'Racha: ' + plural(ob.racha, 'día', 'días')), el('span', '', 'Mejor: ' + plural(ob.mejor, 'día', 'días')));
+  const barra = el('div', 'obj-barra' + (s >= min ? ' ok' : '')), fill = el('i'), marca = el('u');
+  fill.style.width = Math.min(100, Math.round(s / obj * 100)) + '%'; marca.style.left = Math.round(min / obj * 100) + '%'; barra.append(fill, marca);
+  let txt;
+  if (s >= obj) txt = 'Objetivo de hoy cumplido (' + fmtT(obj) + ').';
+  else if (s >= min) txt = 'Mínimo cumplido. Te faltan ' + fmtT(obj - s) + ' para el objetivo de ' + fmtT(obj) + '.';
+  else if (ob.descanso) txt = 'Hoy es día de descanso. Lo que estudies suma, pero no es obligatorio.';
+  else txt = 'Te faltan ' + fmtT(min - s) + ' para el mínimo de hoy (' + fmtT(min) + ').';
+  barra.setAttribute('role', 'img'); barra.setAttribute('aria-label', txt);
+  const sem = 'Semana: ' + fmtT(ob.semana) + ' de ' + fmtT(ob.metaSemana) + '.' + (c.mar ? ' Margen: ' + (ob.margen ? 'te queda ' + plural(ob.margen, 'día', 'días') : 'agotado esta semana') + '.' : '');
+  w.append(cab, barra, el('p', 'obj-txt', txt), el('p', 'obj-sem', sem)); return w;
 }
 function renderRepasar() {
   const box = $('repasar'); box.replaceChildren();
@@ -277,6 +294,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261217"></script>
+<script src="temporizador.js?v=20261218"></script>
 </body>
 </html>

@@ -1170,13 +1170,40 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .rp-pista p{margin:.15rem 0}
 .rp-msg{margin:.6rem 0 .2rem;font-weight:700}
 /* ---------- tanda 32: visor a todo el ancho con menú ocultable, historial de estudio en Ajustes, hueco fijo en Sesión de hoy ---------- */
-.vis-rail{display:none}
+.vis-rail{display:none;align-items:center;padding:0 .65rem}
+.rail-toggle{display:none}
 @media(min-width:861px){
-  .vis-rail{display:inline-flex}
+  html.sin-rail .vis-rail{display:inline-flex}
   body[data-visor] .main .wrap{max-width:none;padding-top:1rem;padding-bottom:3rem}
-  html.sin-rail .rail{display:none}
+  .rail-toggle{position:absolute;top:1.4rem;right:.8rem;display:grid;place-items:center;width:2.4rem;height:2.4rem;padding:0;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer}
+  .rail-toggle:hover{background:rgba(127,127,127,.22);color:var(--tinta)}
+  .rail-toggle:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+  .rail{transition:transform .3s cubic-bezier(.4,0,.2,1),visibility 0s}
+  .main{transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+  html.sin-rail .rail{transform:translateX(-100%);visibility:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1),visibility 0s .3s}
   html.sin-rail .main{margin-left:0}
 }
+@media(prefers-reduced-motion:reduce){.rail,.main,html.sin-rail .rail{transition:none}}
+/* ---------- tanda 33: objetivo de estudio y racha ---------- */
+.obj{margin:0 0 1rem;padding:.8rem .9rem;border:1px solid var(--linea);border-radius:12px;background:var(--papel)}
+.obj-cab{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.2rem .8rem;margin:0 0 .6rem}
+.obj-cab b{font:700 1.02rem/1.2 var(--display)}
+.obj-cab span{font-size:.82rem;color:var(--muted)}
+.obj-barra{position:relative;height:.7rem;border-radius:999px;background:rgba(127,127,127,.22)}
+.obj-barra i{display:block;height:100%;border-radius:999px;background:var(--azul)}
+.obj-barra.ok i{background:var(--ok)}
+.obj-barra u{position:absolute;top:-.2rem;bottom:-.2rem;width:2px;background:var(--tinta);opacity:.55;text-decoration:none}
+.obj-txt{margin:.6rem 0 .15rem;font-size:.9rem;font-weight:600}
+.obj-sem{margin:0;font-size:.82rem;color:var(--muted)}
+.obj-fija{display:inline-block;margin:0 0 1rem;font-size:.9rem}
+.ob-on{display:flex;align-items:center;gap:.5rem;margin:.7rem 0;font-weight:600}
+.ob-on input,.ce-libre input{width:auto;min-width:0;min-height:0}
+.ob-f{display:flex;flex-wrap:wrap;gap:.8rem;margin:.6rem 0 .9rem}
+.ob-f label{display:flex;flex-direction:column;gap:.2rem;font-size:.85rem;color:var(--muted)}
+.ob-f input,.ob-f select{width:auto;min-width:7rem;min-height:2.6rem;padding:.5rem .7rem;border:1.5px solid var(--linea2);border-radius:9px;background:var(--hoja);color:var(--tinta);font-size:1rem}
+.ob-desc{margin:0 0 1rem;padding:0;border:0}
+.ob-desc legend{padding:0;margin:0 0 .4rem;font-size:.85rem;color:var(--muted)}
+.ce-libre{display:flex;align-items:center;gap:.5rem;margin:.9rem 0 0;font-size:.9rem}
 .ce-sel{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .9rem}
 .ce-sel b{font:800 1.35rem/1.2 var(--display)}
 #est-mes{margin:.7rem 0 0}

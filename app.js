@@ -417,6 +417,37 @@ function estudioSemana() {                                         // semana act
   for (let i = 0; i < 7; i++) { const f = hoyISO(new Date(lun.getFullYear(), lun.getMonth(), lun.getDate() + i)); out.push({ f: f, s: dias[f] || 0 }); }
   return { dias: out, total: out.reduce((a, x) => a + x.s, 0), hoy: dias[hoyISO()] || 0 };
 }
+/* ---------- objetivo de estudio y racha ----------
+   La configuración vive en el mismo mapa que el tiempo de estudio (clave «cfg|objetivo»), así se sincroniza sola. Guarda la lista de metas con su fecha de inicio:
+   cada día se mide con la meta que había entonces, y cambiarla no reescribe el pasado. La racha cuenta días que llegan al mínimo; los días de descanso, los días libres
+   y el margen semanal no la rompen. */
+const OBJ_K = 'cfg|objetivo', OBJ_DEF = { on: true, min: 180, obj: 240, desc: [0], mar: 1 };   // min y obj en minutos; desc: días de descanso (0 = domingo)
+const objEntrada = () => estudioRaw()[OBJ_K] || {};
+function objCfgs() { const e = objEntrada(); return (Array.isArray(e.c) ? e.c : []).slice().sort((a, b) => a.d < b.d ? -1 : 1); }
+function objCfgDe(f) { let c = null; objCfgs().forEach(x => { if (x.d <= f) c = x; }); return c; }
+function objLibres() { const e = objEntrada(); return Array.isArray(e.libres) ? e.libres : []; }
+function objGuardaEntrada(c, libres) { const raw = estudioRaw(); raw[OBJ_K] = { c: c.slice(-60), libres: libres.slice(-400), t: nowT() }; jset(localStorage, LS.estudio, raw); scheduleSync(); }
+function objGuarda(cfg) {                                          // la meta nueva vale desde hoy
+  const hoy = hoyISO(), lista = objCfgs().filter(x => x.d !== hoy);
+  lista.push({ d: hoy, on: !!cfg.on, min: cfg.min, obj: cfg.obj, desc: cfg.desc, mar: cfg.mar });
+  objGuardaEntrada(lista, objLibres());
+}
+function objSetLibre(f, si) { const l = objLibres().filter(x => x !== f); if (si) l.push(f); objGuardaEntrada(objCfgs(), l); }
+const lunesISO = d => hoyISO(new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)));
+function objEstado() {                                             // null mientras no se haya fijado ningún objetivo
+  const lista = objCfgs(); if (!lista.length) return null;
+  const hoy = hoyISO(), libres = new Set(objLibres()), usados = {}, fin = new Date(hoy + 'T12:00:00'); let racha = 0, mejor = 0;
+  for (let d = new Date(lista[0].d + 'T12:00:00'); d <= fin; d.setDate(d.getDate() + 1)) {
+    const f = hoyISO(d), c = objCfgDe(f), s = estudioDia(f);
+    if (!c || !c.on) continue;                                     // objetivo desactivado ese día: ni suma ni rompe
+    if (s >= c.min * 60) { racha++; if (racha > mejor) mejor = racha; }
+    else if (c.desc.indexOf(d.getDay()) >= 0 || libres.has(f) || f === hoy) { /* descanso, día libre o día en curso: no se cuenta */ }
+    else { const w = lunesISO(d); if ((usados[w] || 0) < c.mar) usados[w] = (usados[w] || 0) + 1; else racha = 0; }
+  }
+  const c = objCfgDe(hoy), h = new Date(), sem = estudioSemana();
+  return { cfg: c, on: !!(c && c.on), racha: racha, mejor: mejor, hoy: estudioDia(hoy), descanso: !!c && (c.desc.indexOf(h.getDay()) >= 0 || libres.has(hoy)),
+    margen: c ? Math.max(0, c.mar - (usados[lunesISO(h)] || 0)) : 0, semana: sem.total, metaSemana: c ? (7 - c.desc.length) * c.min * 60 : 0 };
+}
 
 /* ---------- notas libres (apuntes propios, sincronizados) ---------- */
 const libresRaw = () => jget(localStorage, LS.libres, {});

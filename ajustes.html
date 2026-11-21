@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261217"></script>
+<script src="puerta.js?v=20261218"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ajustes - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261217">
+<link rel="stylesheet" href="style.css?v=20261218">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -50,6 +50,20 @@
     <div style="margin-top:.7rem;max-width:16rem"><select id="tam" aria-label="Tamaño del texto"><option value="normal">Normal</option><option value="grande">Grande</option><option value="mayor">Muy grande</option></select></div>
   </section>
 
+  <section class="hoja sync" id="objetivo" style="margin-top:1rem">
+    <h2>Objetivo de estudio</h2>
+    <p class="estado-s">El mínimo diario es lo que hace falta para sumar un día a la racha; el objetivo es la meta ideal. Los días de descanso y el margen semanal no rompen la racha. Los cambios valen desde hoy: los días anteriores se siguen midiendo con la meta que tenían.</p>
+    <label class="ob-on"><input type="checkbox" id="ob-on"> Activar objetivo y racha</label>
+    <div class="ob-f">
+      <label>Mínimo diario (horas) <input type="number" id="ob-min" min="0.5" max="16" step="0.25" inputmode="decimal"></label>
+      <label>Objetivo diario (horas) <input type="number" id="ob-obj" min="0.5" max="16" step="0.25" inputmode="decimal"></label>
+      <label>Margen por semana (días) <select id="ob-mar"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+    </div>
+    <fieldset class="ob-desc"><legend>Días de descanso</legend><div class="chips" id="ob-dias" role="group" aria-label="Días de descanso"></div></fieldset>
+    <button type="button" class="btn small" id="ob-g">Guardar</button>
+    <p class="estado-s" id="ob-msg" role="status" style="margin-top:.6rem"></p>
+  </section>
+
   <section class="hoja sync" id="est-box" style="margin-top:1rem">
     <h2>Tiempo de estudio</h2>
     <p class="estado-s">Lo que llevas con el temporizador, sumando todos tus dispositivos.</p>
@@ -72,6 +86,7 @@
       <div class="ce-sel" id="est-sel"></div>
       <p class="estado-s" id="est-sw"></p>
       <div id="est-swg"></div>
+      <label class="ce-libre"><input type="checkbox" id="est-libre"> Día libre: no rompe la racha</label>
       <form class="ce-f" id="est-form" autocomplete="off">
         <label>Corregir el total de ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
         <button type="submit" class="btn small">Guardar</button>
@@ -140,8 +155,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261217"></script>
-<script src="vistas.js?v=20261217"></script>
+<script src="app.js?v=20261218"></script>
+<script src="vistas.js?v=20261218"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -266,7 +281,7 @@ function pintaSel() {                                               // el día e
   $('est-swg').replaceChildren(g);
 }
 function cargaDia() {
-  $('est-min').value = Math.round(estudioDia(diaSel) / 60); $('est-msg').textContent = '';
+  $('est-min').value = Math.round(estudioDia(diaSel) / 60); $('est-msg').textContent = ''; $('est-libre').checked = objLibres().indexOf(diaSel) >= 0;
   pintaSel(); pintaCal();
 }
 $('est-abre').addEventListener('click', () => {
@@ -284,11 +299,36 @@ $('est-form').addEventListener('submit', e => {
   msg.textContent = 'Guardado: ' + (m >= 60 ? minTx(m * 60) : m + ' min') + ' el ' + diaCorto(f) + '.';
   if (window.MaTemporizador && window.MaTemporizador.repinta) window.MaTemporizador.repinta();
 });
+$('est-libre').addEventListener('change', e => { objSetLibre(diaSel, e.target.checked); $('est-msg').textContent = e.target.checked ? 'Marcado como día libre.' : 'Ya no es día libre.'; });
+{                                                                   // objetivo de estudio
+  const DIAS = [['L', 1, 'lunes'], ['M', 2, 'martes'], ['X', 3, 'miércoles'], ['J', 4, 'jueves'], ['V', 5, 'viernes'], ['S', 6, 'sábado'], ['D', 0, 'domingo']], caja = $('ob-dias'), sel = new Set();
+  const pintaDias = () => {
+    caja.replaceChildren();
+    DIAS.forEach(([l, d, n]) => {
+      const b = el('button', 'chip' + (sel.has(d) ? ' on' : ''), l); b.type = 'button'; b.setAttribute('aria-pressed', String(sel.has(d))); b.setAttribute('aria-label', 'Descanso el ' + n);
+      b.addEventListener('click', () => { if (sel.has(d)) sel.delete(d); else sel.add(d); pintaDias(); }); caja.append(b);
+    });
+  };
+  const carga = () => {
+    const c = objCfgDe(hoyISO()) || OBJ_DEF; $('ob-on').checked = c.on !== false; $('ob-min').value = c.min / 60; $('ob-obj').value = c.obj / 60; $('ob-mar').value = String(c.mar);
+    sel.clear(); c.desc.forEach(d => sel.add(d)); pintaDias();
+    $('ob-g').textContent = objCfgs().length ? 'Guardar' : 'Guardar y empezar';
+  };
+  $('ob-g').addEventListener('click', () => {
+    const min = Math.round(parseFloat($('ob-min').value) * 60), obj = Math.round(parseFloat($('ob-obj').value) * 60), msg = $('ob-msg');
+    if (!(min >= 30 && min <= 960) || !(obj >= 30 && obj <= 960)) { msg.textContent = 'Escribe entre 0,5 y 16 horas.'; return; }
+    if (obj < min) { msg.textContent = 'El objetivo no puede ser menor que el mínimo.'; return; }
+    if (sel.size >= 7) { msg.textContent = 'Deja al menos un día de estudio.'; return; }
+    objGuarda({ on: $('ob-on').checked, min: min, obj: obj, desc: Array.from(sel).sort(), mar: parseInt($('ob-mar').value, 10) || 0 });
+    msg.textContent = 'Guardado. Vale desde hoy.'; carga();
+  });
+  carga();
+}
 pintaRes();
 cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261217"></script>
+<script src="temporizador.js?v=20261218"></script>
 </body>
 </html>
