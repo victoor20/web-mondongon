@@ -1169,4 +1169,22 @@ button.rs{cursor:pointer}button.rs:hover{filter:brightness(.97);border-color:var
 .rp-pista{margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--estrella);border-radius:0 8px 8px 0;background:var(--aviso-bg);font-size:.9rem}
 .rp-pista p{margin:.15rem 0}
 .rp-msg{margin:.6rem 0 .2rem;font-weight:700}
+/* ---------- tanda 32: visor a todo el ancho con menú ocultable, historial de estudio en Ajustes, hueco fijo en Sesión de hoy ---------- */
+.vis-rail{display:none}
+@media(min-width:861px){
+  .vis-rail{display:inline-flex}
+  body[data-visor] .main .wrap{max-width:none;padding-top:1rem;padding-bottom:3rem}
+  html.sin-rail .rail{display:none}
+  html.sin-rail .main{margin-left:0}
+}
+.ce-sel{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .9rem}
+.ce-sel b{font:800 1.35rem/1.2 var(--display)}
+#est-mes{margin:.7rem 0 0}
+#est-sw{margin:.8rem 0 .5rem}
+.est-corr .est-dias{max-width:28rem}
+.sesion-pasos .paso.p-cargando{min-height:6rem}
+.p-cargando .sk{display:block;height:.95rem;border-radius:6px;background:rgba(127,127,127,.22)}
+.p-cargando strong.sk{width:70%;margin:0 0 .5rem}.p-cargando span.sk{width:90%}
+.p-cargando .paso-tx{flex:1 1 auto;min-width:0}
+.sk-btn{visibility:hidden}
 

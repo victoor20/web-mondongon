@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261216"></script>
+<script src="puerta.js?v=20261217"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Visor - Mi Academia</title>
 <script>try{var t=JSON.parse(localStorage.getItem('ma2_prefs')||'{}').tema;if(t==='claro'||t==='oscuro')document.documentElement.dataset.tema=t}catch(e){}</script>
+<script>try{if(JSON.parse(localStorage.getItem('ma2_prefs')||'{}').visorRail)document.documentElement.classList.add('sin-rail')}catch(e){}</script>
 <meta name="theme-color" content="#E9ECF4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A0F1E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +18,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261216">
+<link rel="stylesheet" href="style.css?v=20261217">
 <style>
 .vis-diag{margin:.8rem 0 0;padding:.6rem .75rem;border-radius:10px;background:var(--sel-bg);color:var(--tinta);font:.72rem/1.5 ui-monospace,Menlo,Consolas,monospace;text-align:left;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
 .vis-diag b{display:block;margin:0 0 .3rem;font:700 .78rem/1.3 var(--sans)}
@@ -31,10 +32,11 @@ window.addEventListener('error', function (e) { window.__errsVisor.push((e.messa
 window.addEventListener('unhandledrejection', function (e) { var r = e.reason; window.__errsVisor.push('promesa: ' + (r && (r.name ? r.name + ': ' : '') + (r.message || r) || r)); });
 </script>
 </head>
-<body data-pagina="biblioteca" data-enfoque>
+<body data-pagina="biblioteca" data-enfoque data-visor>
 <div class="wrap">
   <div class="vis-barra" role="toolbar" aria-label="Controles del visor">
     <a class="btn small ghost" href="biblioteca.html#material" data-atras>← Biblioteca</a>
+    <button type="button" class="btn small ghost vis-rail" id="v-rail" aria-pressed="false">Ocultar menú</button>
     <h1 class="vis-t" id="v-titulo">Documento</h1>
     <button type="button" class="btn small" id="v-desc" disabled>Descargar</button>
     <button type="button" class="btn small ghost" id="v-buscar" aria-expanded="false" aria-controls="v-busca" disabled>Buscar</button>
@@ -59,8 +61,8 @@ window.addEventListener('unhandledrejection', function (e) { var r = e.reason; w
   <noscript><p class="vis-msg">Este visor necesita JavaScript.</p></noscript>
   <script nomodule>document.getElementById('v-msg').textContent = 'Este navegador es demasiado antiguo para el visor. Vuelve a la Biblioteca y usa «Descargar».';</script>
 </div>
-<script src="app.js?v=20261216"></script>
-<script src="biblioteca.js?v=20261216"></script>
+<script src="app.js?v=20261217"></script>
+<script src="biblioteca.js?v=20261217"></script>
 <script type="module">
 const VIS = { clave: 'ma2_visor', ancho: 900, min: .5, max: 3, paso: .25, maxPx: 16e6 };
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -153,6 +155,7 @@ function medidas() {
   fit = disp / base.width; return fit * z;                         // escala CSS de las páginas
 }
 function dimensiona(p, w, h) { p.w = w; p.h = h; p.div.style.width = w + 'px'; p.div.style.height = h + 'px'; }
+function zAncho() { const w = $('v-doc').clientWidth || 320; return w / Math.min(w, VIS.ancho); }   // el zoom con el que la hoja ocupa todo el ancho disponible (en móvil es 100 %)
 function zPagina() {                                               // el tamaño con el que la hoja entera cabe de alto en la pantalla
   if (!base || !fit) return 1;
   const alto = (window.innerHeight || 800) - barra.offsetHeight - 24;
@@ -162,7 +165,7 @@ function aplicaZoom(ancla) {                                       // ancla: { i
   const s = medidas();
   if (document.activeElement !== $('v-z')) $('v-z').value = Math.round(z * 100);
   $('v-menos').disabled = z <= VIS.min + 1e-6; $('v-mas').disabled = z >= VIS.max - 1e-6;
-  $('v-ancho').setAttribute('aria-pressed', String(Math.abs(z - 1) < .01));
+  $('v-ancho').setAttribute('aria-pressed', String(Math.abs(z - zAncho()) < .01));
   $('v-pagina').setAttribute('aria-pressed', String(Math.abs(z - zPagina()) < .01));
   pags.forEach(p => { libera(p); if (io) io.unobserve(p.div); dimensiona(p, Math.floor(base.width * s), Math.floor(base.height * s)); });
   if (ancla) { const p = pags[ancla.i]; window.scrollTo(window.scrollX, p.div.getBoundingClientRect().top + scrollY - barra.offsetHeight - 8 + ancla.f * p.h); }
@@ -323,7 +326,7 @@ let raf = 0;
 addEventListener('scroll', () => { if (!n || raf) return; raf = requestAnimationFrame(() => { raf = 0; actual = paginaActual() + 1; if (document.activeElement !== $('v-pag')) $('v-pag').value = actual; recuerda(); }); }, { passive: true });
 $('v-menos').addEventListener('click', () => cambiaZoom(z - VIS.paso));
 $('v-mas').addEventListener('click', () => cambiaZoom(z + VIS.paso));
-$('v-ancho').addEventListener('click', () => cambiaZoom(1));
+$('v-ancho').addEventListener('click', () => cambiaZoom(zAncho()));
 $('v-pagina').addEventListener('click', () => cambiaZoom(zPagina()));
 function escribeZoom() {                                           // el porcentaje se puede escribir a mano
   const v = Math.round(+$('v-z').value);
@@ -336,8 +339,18 @@ $('v-pag').addEventListener('change', () => irAPagina(+$('v-pag').value));
 $('v-pag').addEventListener('keydown', e => { if (e.key === 'Enter') { irAPagina(+$('v-pag').value); $('v-pag').blur(); } });
 let tR = 0, ancho0 = innerWidth;
 addEventListener('resize', () => { if (!n || innerWidth === ancho0) return; ancho0 = innerWidth; clearTimeout(tR); tR = setTimeout(() => { const i = paginaActual(); aplicaZoom({ i, f: 0 }); }, 250); });
+{                                                                 // menú lateral (solo en pantallas grandes): ocultarlo da más sitio al documento
+  const raiz = document.documentElement, bR = $('v-rail');
+  const pintaRail = () => { const o = raiz.classList.contains('sin-rail'); bR.textContent = o ? 'Mostrar menú' : 'Ocultar menú'; bR.setAttribute('aria-pressed', String(o)); };
+  bR.addEventListener('click', () => {
+    const ajustada = !!n && Math.abs(z - zAncho()) < .01, o = raiz.classList.toggle('sin-rail'); setPref('visorRail', o); pintaRail();
+    if (ajustada) z = Math.min(VIS.max, zAncho());                  // si la hoja ocupaba todo el ancho, sigue ocupándolo
+    if (n) { const i = paginaActual(), p = pags[i], r = p.div.getBoundingClientRect(), f = Math.max(0, (ancla() - r.top) / (p.h || 1)); aplicaZoom({ i, f }); }
+  });
+  pintaRail();
+}
 abrir().catch(e => falla('abrir el visor', e, 'Ha ocurrido un error inesperado en el visor.'));
 </script>
-<script src="temporizador.js?v=20261216"></script>
+<script src="temporizador.js?v=20261217"></script>
 </body>
 </html>

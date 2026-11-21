@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261216"></script>
+<script src="puerta.js?v=20261217"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261216">
+<link rel="stylesheet" href="style.css?v=20261217">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -63,8 +63,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261216"></script>
-<script src="vistas.js?v=20261216"></script>
+<script src="app.js?v=20261217"></script>
+<script src="vistas.js?v=20261217"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -83,6 +83,7 @@ function temaFlojoAhora() {
   const flojos = conDatos.filter(([, a]) => a.reciente.t >= 10).sort((x, y) => pct(x[1].reciente) - pct(y[1].reciente));
   return flojos.length && pct(flojos[0][1].reciente) < 85 ? flojos[0][0] : null;
 }
+let catListo = false;                                              // el catálogo de tests llega después de la primera pintada
 function renderSesion() {                                        // un orden sencillo para hoy, sin objetivos ni contadores de cumplimiento
   const box = $('sesion'); box.replaceChildren();
   const nTj = getTarjetas().filter(tarjetaToca).length, nErr = Object.keys(getErr()).length, total = totalPreguntas(), flojo = temaFlojoAhora();
@@ -90,13 +91,18 @@ function renderSesion() {                                        // un orden sen
   const pasos = [];
   if (nTj) pasos.push(['Repasa tus tarjetas', plural(nTj, 'tarjeta toca', 'tarjetas tocan') + ' hoy.', 'biblioteca.html#tarjetas', 'Repasar', 'p-tj']);
   if (nErr) pasos.push(['Repasa tus errores', plural(nErr, 'pregunta fallada', 'preguntas falladas') + ' pendientes.', 'test.html?t=errores', 'Repasar', 'p-err']);
-  if (flojo) pasos.push(['Test corto de ' + temaLabel(flojo), 'Es tu tema más flojo ahora: ' + pct(TS[flojo].reciente) + ' % en tus últimos intentos.', urlMixto(flojo), 'Empezar']);
-  else if (total) pasos.push(['Test mixto de 20 preguntas', 'Preguntas al azar de todos tus tests.', 'test.html?t=mixto&n=20', 'Empezar']);
+  let p3 = null;                                                    // el tercer paso depende del catálogo: hasta que llega se muestra el último que hubo (o un hueco) para que nada salte
+  if (flojo) p3 = ['Test corto de ' + temaLabel(flojo), 'Es tu tema más flojo ahora: ' + pct(TS[flojo].reciente) + ' % en tus últimos intentos.', urlMixto(flojo), 'Empezar'];
+  else if (total) p3 = ['Test mixto de 20 preguntas', 'Preguntas al azar de todos tus tests.', 'test.html?t=mixto&n=20', 'Empezar'];
+  if (catListo) { if (JSON.stringify(getPrefs().ses3 || null) !== JSON.stringify(p3)) setPref('ses3', p3); }
+  else p3 = getPrefs().ses3 || ['', '', '', '', 'p-cargando'];
+  if (p3) pasos.push(p3);
   if (!pasos.length) { box.append(el('p', 'vacio-msg', 'Cuando haya tests publicados, aquí verás por dónde empezar.')); return; }
   const ol = el('ol', 'sesion-pasos');
   pasos.forEach(p => {
-    const li = el('li', 'paso ' + (p[4] || 'p-tx')), tx = el('div', 'paso-tx'), a = el('a', 'btn small', p[3]); a.href = p[2];
-    tx.append(el('strong', '', p[0]), el('span', '', p[1])); li.append(tx, a); ol.append(li);
+    const carga = p[4] === 'p-cargando', li = el('li', 'paso ' + (p[4] || 'p-tx')), tx = el('div', 'paso-tx'), a = carga ? el('span', 'btn small sk-btn', 'Empezar') : el('a', 'btn small', p[3]);
+    if (carga) li.setAttribute('aria-hidden', 'true'); else a.href = p[2];
+    tx.append(el('strong', carga ? 'sk' : '', carga ? '' : p[0]), el('span', carga ? 'sk' : '', carga ? '' : p[1])); li.append(tx, a); ol.append(li);
   });
   box.append(ol);
   const mas = el('a', 'sesion-mas', 'Más formas de practicar en Tests'); mas.href = 'tests.html'; box.append(mas);
@@ -261,7 +267,8 @@ async function sincronizar() {
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken()) sincronizar(); });
 async function init() {
   await loadTemario(); refresh();
-  await cargarCatalogo(); refresh();
+  try { await cargarCatalogo(); } finally { catListo = true; }
+  refresh();
   const off = offInfo();                                         // si ya la guardaste, se renueva sola de vez en cuando
   if (off.t && navigator.onLine !== false && Date.now() - off.t > OFF.maxEdad) guardarOffline(items).catch(() => { /* nada */ });
   if (getToken()) sincronizar();
@@ -270,6 +277,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261216"></script>
+<script src="temporizador.js?v=20261217"></script>
 </body>
 </html>

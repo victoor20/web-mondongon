@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261216"></script>
+<script src="puerta.js?v=20261217"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ajustes - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261216">
+<link rel="stylesheet" href="style.css?v=20261217">
 </head>
 <body data-pagina="ajustes">
 <div class="wrap">
@@ -55,9 +55,9 @@
     <p class="estado-s">Lo que llevas con el temporizador, sumando todos tus dispositivos.</p>
     <div class="est-hs" id="est-res"></div>
     <div id="est-sem"></div>
-    <button type="button" class="btn small ghost" id="est-abre" aria-expanded="false" aria-controls="est-corr">Corregir un día</button>
+    <button type="button" class="btn small ghost" id="est-abre" aria-expanded="false" aria-controls="est-corr">Ver historial y corregir</button>
     <div id="est-corr" class="est-corr hide">
-      <p class="estado-s">Elige un día del calendario y escribe cuántos minutos estudiaste en total. Sustituye lo que había: sirve para quitar tiempo de más o añadir el que falta.</p>
+      <p class="estado-s">Elige un día del calendario para ver cuánto estudiaste ese día, esa semana y ese mes. Si hace falta, corrige el total del día: sustituye lo que había, para quitar tiempo de más o añadir el que falta.</p>
       <div class="cal">
         <div class="cal-cab">
           <button type="button" class="cal-nav" id="cal-ant" aria-label="Mes anterior"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
@@ -68,9 +68,12 @@
         <div class="cal-dias" id="cal-dias"></div>
       </div>
       <button type="button" class="mini" id="cal-hoy">Ir a hoy</button>
-      <p class="ce-sel" id="est-sel"></p>
+      <p class="estado-s" id="est-mes"></p>
+      <div class="ce-sel" id="est-sel"></div>
+      <p class="estado-s" id="est-sw"></p>
+      <div id="est-swg"></div>
       <form class="ce-f" id="est-form" autocomplete="off">
-        <label>Total ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
+        <label>Corregir el total de ese día (min) <input type="number" id="est-min" min="0" max="1440" inputmode="numeric"></label>
         <button type="submit" class="btn small">Guardar</button>
       </form>
       <p class="estado-s" id="est-msg" role="status" style="margin-top:.6rem"></p>
@@ -137,8 +140,8 @@
     <span class="fine" id="impmsg" aria-live="polite"></span>
   </div>
 </div>
-<script src="app.js?v=20261216"></script>
-<script src="vistas.js?v=20261216"></script>
+<script src="app.js?v=20261217"></script>
+<script src="vistas.js?v=20261217"></script>
 <script>
 function renderSync() {
   const e = syncInfo.estado, p = $('sync-estado'); p.replaceChildren();
@@ -242,21 +245,33 @@ function pintaCal() {                                               // calendari
   const y = calMes.getFullYear(), mes = calMes.getMonth(), hoy = hoyISO(), h = new Date(), box = $('cal-dias');
   $('cal-t').textContent = cap(calMes.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }));
   $('cal-sig').disabled = y > h.getFullYear() || (y === h.getFullYear() && mes >= h.getMonth());
-  box.replaceChildren();
+  box.replaceChildren(); let totMes = 0;
   for (let i = (calMes.getDay() + 6) % 7; i > 0; i--) box.append(el('span'));
   for (let d = 1, n = new Date(y, mes + 1, 0).getDate(); d <= n; d++) {
     const f = hoyISO(new Date(y, mes, d)), s = estudioDia(f), b = el('button', 'cal-d' + (f === diaSel ? ' on' : '') + (f === hoy ? ' hoy' : '') + (s >= 60 ? ' tiene' : ''), String(d));
-    b.type = 'button'; b.disabled = f > hoy; b.setAttribute('aria-label', diaCorto(f) + ': ' + (s >= 60 ? minTx(s) : 'sin estudio')); b.setAttribute('aria-pressed', f === diaSel ? 'true' : 'false');
+    totMes += s; b.type = 'button'; b.disabled = f > hoy; b.setAttribute('aria-label', diaCorto(f) + ': ' + (s >= 60 ? minTx(s) : 'sin estudio')); b.setAttribute('aria-pressed', f === diaSel ? 'true' : 'false');
     b.addEventListener('click', () => { diaSel = f; cargaDia(); }); box.append(b);
   }
+  $('est-mes').textContent = $('cal-t').textContent + ': ' + txMin(totMes) + ' en total.';
+}
+function pintaSel() {                                               // el día elegido y la semana (de lunes a domingo) a la que pertenece
+  const hoy = hoyISO(), L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'], d0 = new Date(diaSel + 'T12:00:00'); d0.setDate(d0.getDate() - (d0.getDay() + 6) % 7);
+  const dias = L.map((l, i) => { const d = new Date(d0); d.setDate(d0.getDate() + i); const f = hoyISO(d); return { f: f, l: l, s: f > hoy ? 0 : estudioDia(f) }; });
+  const total = dias.reduce((a, d) => a + d.s, 0), max = Math.max.apply(null, dias.map(d => d.s).concat([1]));
+  const rango = d0.getMonth() === new Date(dias[6].f + 'T12:00:00').getMonth() ? d0.getDate() + ' al ' + diaCorto(dias[6].f) : diaCorto(dias[0].f) + ' al ' + diaCorto(dias[6].f);
+  $('est-sel').replaceChildren(el('span', '', cap(diaLargo(diaSel))), el('b', '', txMin(estudioDia(diaSel))));
+  $('est-sw').textContent = 'Semana del ' + rango + ': ' + txMin(total) + ' en total.';
+  const g = el('div', 'est-dias'); g.setAttribute('role', 'img'); g.setAttribute('aria-label', dias.map(d => d.l + ' ' + txMin(d.s)).join(', '));
+  dias.forEach(d => { const c = el('div', 'est-dia' + (d.f === diaSel ? ' hoy' : '')), b = el('i'); b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px'; c.append(b, el('span', '', d.l)); g.append(c); });
+  $('est-swg').replaceChildren(g);
 }
 function cargaDia() {
   $('est-min').value = Math.round(estudioDia(diaSel) / 60); $('est-msg').textContent = '';
-  $('est-sel').textContent = cap(diaLargo(diaSel)) + ' · ' + txMin(estudioDia(diaSel)); pintaCal();
+  pintaSel(); pintaCal();
 }
 $('est-abre').addEventListener('click', () => {
   const abre = $('est-corr').classList.toggle('hide') === false;
-  $('est-abre').setAttribute('aria-expanded', abre ? 'true' : 'false'); $('est-abre').textContent = abre ? 'Ocultar la corrección' : 'Corregir un día';
+  $('est-abre').setAttribute('aria-expanded', abre ? 'true' : 'false'); $('est-abre').textContent = abre ? 'Cerrar' : 'Ver historial y corregir';
 });
 $('cal-ant').addEventListener('click', () => { calMes = new Date(calMes.getFullYear(), calMes.getMonth() - 1, 1); pintaCal(); });
 $('cal-sig').addEventListener('click', () => { calMes = new Date(calMes.getFullYear(), calMes.getMonth() + 1, 1); pintaCal(); });
@@ -265,7 +280,7 @@ $('est-form').addEventListener('submit', e => {
   e.preventDefault(); const f = diaSel, txt = $('est-min').value.trim(), m = Math.round(+txt), msg = $('est-msg');
   if (f > hoyISO()) { msg.textContent = 'No se puede poner tiempo en un día que aún no ha llegado.'; return; }
   if (txt === '' || !(m >= 0 && m <= 1440)) { msg.textContent = 'Escribe entre 0 y 1440 minutos.'; return; }
-  estudioCorrige(f, m * 60); pintaRes(); pintaCal(); $('est-sel').textContent = cap(diaLargo(f)) + ' · ' + txMin(m * 60);
+  estudioCorrige(f, m * 60); pintaRes(); pintaSel(); pintaCal();
   msg.textContent = 'Guardado: ' + (m >= 60 ? minTx(m * 60) : m + ' min') + ' el ' + diaCorto(f) + '.';
   if (window.MaTemporizador && window.MaTemporizador.repinta) window.MaTemporizador.repinta();
 });
@@ -274,6 +289,6 @@ cargaDia();
 renderSync(); renderOffline();
 if (getToken()) sincronizar();
 </script>
-<script src="temporizador.js?v=20261216"></script>
+<script src="temporizador.js?v=20261217"></script>
 </body>
 </html>
