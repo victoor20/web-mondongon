@@ -1,0 +1,360 @@
+{
+  "titulo": "Test BIV-T06 — Indemnizaciones por razón del servicio",
+  "tema": "IV-6",
+  "fecha": "2026-11-22",
+  "preguntas": [
+    {
+      "ref": "Artículo Art. 2 RD 462/2002",
+      "q": "Conforme al artículo 1 del Real Decreto 462/2002, ¿cuál de los siguientes supuestos queda, con carácter general, fuera de su ámbito de aplicación directa, sin perjuicio del convenio colectivo o normativa específica que resulte aplicable?",
+      "opciones": [
+        "El personal funcionario interino de la Administración General del Estado.",
+        "Los funcionarios en prácticas incluidos en el ámbito del real decreto.",
+        "El personal laboral al servicio de las Administraciones Públicas.",
+        "El personal funcionario de las entidades que integran la Seguridad Social."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 3 RD 462/2002",
+      "q": "Un funcionario tiene autorizado residir en un municipio diferente del correspondiente a su oficina habitual. Todos los días se desplaza desde su domicilio hasta dicha oficina. Según el artículo 3 del RD 462/2002, este desplazamiento:",
+      "opciones": [
+        "No constituye comisión de servicio indemnizable, aunque los municipios sean distintos.",
+        "Constituye comisión de servicio si se acredita documentalmente el gasto del transporte.",
+        "Origina indemnización cuando se utiliza transporte público autorizado por la Administración.",
+        "Da derecho a resarcimiento si la residencia fue autorizada expresamente por el órgano competente."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 3 RD 462/2002",
+      "q": "Conforme al artículo 3 del RD 462/2002, respecto de las comisiones de servicio realizadas a iniciativa del interesado, señale la afirmación correcta.",
+      "opciones": [
+        "Son indemnizables cuando su finalidad se relaciona con la formación profesional del empleado.",
+        "Dan derecho a gastos de viaje, pero no a dietas de alojamiento y manutención.",
+        "Se indemnizan siempre que la autoridad correspondiente autorice su duración y desplazamiento.",
+        "No generan indemnización, salvo la excepción prevista para decisiones obligadas por la función de alto cargo."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 4 RD 462/2002",
+      "q": "Según el artículo 4 del RD 462/2002, la designación de las comisiones de servicio con derecho a indemnización corresponde, con carácter general:",
+      "opciones": [
+        "Al jefe inmediato del funcionario, sin intervención de otros órganos administrativos.",
+        "Al subsecretario del departamento o a la autoridad superior del organismo o entidad correspondiente.",
+        "Al órgano que autorice los créditos presupuestarios de personal del centro de destino.",
+        "Al director general competente en función pública, con independencia del departamento de origen."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 5 RD 462/2002",
+      "q": "Una comisión de servicio dentro del territorio nacional se ha previsto inicialmente por 25 días. Antes de su conclusión se constata justificadamente que se necesitan 15 días adicionales. Conforme al artículo 5 del RD 462/2002:",
+      "opciones": [
+        "La duración inicial impide cualquier prórroga y exige iniciar una nueva comisión.",
+        "El jefe correspondiente podrá proponer razonadamente una prórroga por el tiempo estrictamente indispensable.",
+        "La prórroga queda concedida automáticamente cuando el cometido aún no haya concluido.",
+        "La comisión deberá transformarse necesariamente en residencia eventual desde su primer día."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Arts. 5 y 6 RD 462/2002",
+      "q": "Una comisión en el extranjero está prevista desde su inicio por una duración excepcional de cuatro meses. Según los artículos 5 y 6 del RD 462/2002, ¿qué consideración tendrá?",
+      "opciones": [
+        "Comisión ordinaria durante los tres primeros meses y residencia eventual durante el cuarto.",
+        "Residencia eventual exclusivamente desde la fecha en que se cumplan tres meses.",
+        "Comisión ordinaria hasta que una resolución expresa acuerde su transformación.",
+        "Residencia eventual desde el comienzo de la comisión, al preverse inicialmente la superación del límite ordinario."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 6 RD 462/2002",
+      "q": "Conforme al artículo 6 del RD 462/2002, la duración máxima de la residencia eventual:",
+      "opciones": [
+        "Es de un año, prorrogable por el tiempo estrictamente indispensable sin que la prórroga exceda de otro año.",
+        "Es de dos años desde su comienzo, sin necesidad de autorización adicional de prórroga.",
+        "Es de un año improrrogable, debiendo crearse otro puesto cuando se alcance ese límite.",
+        "Depende exclusivamente de la duración de la comisión, sin un límite reglamentario específico."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 7 RD 462/2002",
+      "q": "Un funcionario asiste a un curso convocado por la Administración fuera de su municipio de destino y regresa cada noche a su residencia oficial. Por el horario del curso necesita almorzar en la localidad de impartición. Según el artículo 7 del RD 462/2002:",
+      "opciones": [
+        "Percibirá dieta completa por manutención y alojamiento, aunque no pernocte fuera.",
+        "Percibirá exclusivamente gastos de desplazamiento, al pernoctar en su residencia oficial.",
+        "Podrá percibir el 50 % de la manutención y, en su caso, los gastos de viaje correspondientes.",
+        "Tendrá derecho a residencia eventual durante todo el curso, con independencia de su duración."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 7.2 RD 462/2002",
+      "q": "Según el artículo 7 del RD 462/2002, la asistencia a cursos selectivos para ingreso en cuerpos o escalas por promoción interna tendrá, en materia indemnizatoria:",
+      "opciones": [
+        "La consideración de comisión ordinaria únicamente durante los días de asistencia efectiva.",
+        "La consideración de residencia eventual, con los límites y condiciones del artículo 6.",
+        "La consideración de desplazamiento municipal, cualquiera que sea el lugar de impartición.",
+        "La consideración de residencia eventual solo cuando el curso exceda de tres meses."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 9 RD 462/2002",
+      "q": "Conforme al artículo 9 del RD 462/2002, ¿qué relación entre concepto indemnizatorio y finalidad resulta correcta?",
+      "opciones": [
+        "Dieta: compensación por transporte; residencia eventual: compensación por cambio de destino.",
+        "Dieta: compensación por cambio de residencia; gastos de viaje: compensación por estancia.",
+        "Residencia eventual: compensación por transportes especiales; dieta: compensación por alojamiento oficial.",
+        "Dieta: gastos de estancia en los casos del artículo 5; gastos de viaje: utilización de medios de transporte por servicio."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 10 RD 462/2002",
+      "q": "De acuerdo con el artículo 10 del RD 462/2002, respecto del lavado y planchado de ropa personal durante una comisión de servicio, indique la respuesta correcta.",
+      "opciones": [
+        "Podrá autorizarse su indemnización si la comisión supera cuatro días y se justifica el importe efectivamente gastado.",
+        "Se indemnizará necesariamente a partir del cuarto día, mediante un porcentaje fijo de la dieta.",
+        "Únicamente podrá indemnizarse si la comisión se desarrolla en territorio extranjero.",
+        "Quedará incluido en la dieta de manutención y no podrá indemnizarse separadamente."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 12.1 RD 462/2002",
+      "q": "Un funcionario realiza una comisión de servicio que comienza a las 13:30 y finaliza a las 17:30 del mismo día natural. Según el artículo 12.1 del RD 462/2002, con carácter general:",
+      "opciones": [
+        "Tendrá derecho al 50 % de la dieta de manutención por haber finalizado después de las 16:00.",
+        "Podrá percibir la totalidad de la dieta de manutención al haberse iniciado antes de las 14:00.",
+        "No devengará manutención por no alcanzar la duración mínima exigida reglamentariamente.",
+        "Tendrá derecho al 50 % de la dieta si acredita que efectuó la comida fuera de su residencia."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 12.1 RD 462/2002",
+      "q": "Una comisión de servicio dura cinco horas y media dentro de un mismo día natural, comenzando a las 13:45 y finalizando a las 19:15. Conforme al artículo 12.1 del RD 462/2002, procede, con carácter general:",
+      "opciones": [
+        "Una dieta completa de manutención, sin gastos de alojamiento.",
+        "Una dieta de manutención del 50 % y el alojamiento correspondiente a un día.",
+        "Una dieta completa de manutención y el alojamiento si se aporta factura.",
+        "El 50 % de la dieta de manutención, sin indemnización ordinaria por alojamiento."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 12.2 RD 462/2002",
+      "q": "Una comisión de servicio tiene una duración de 20 horas, comprendiendo parte de dos días naturales. Según el artículo 12.2 del RD 462/2002:",
+      "opciones": [
+        "Se aplican necesariamente las reglas previstas para comisiones de un solo día natural.",
+        "Podrán percibirse gastos de alojamiento de un día y manutención conforme a las reglas de salida y regreso.",
+        "Solo se percibirá manutención cuando la duración total supere las 24 horas.",
+        "Corresponderán dos días completos de alojamiento y manutención al comprender dos fechas."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 12.3.a RD 462/2002",
+      "q": "Un funcionario inicia una comisión de servicio de duración superior a 24 horas a las 13:50. De acuerdo con el artículo 12.3.a) del RD 462/2002, el día de salida:",
+      "opciones": [
+        "Percibirá el 100 % de la dieta de manutención y podrá percibir gastos de alojamiento.",
+        "Percibirá el 50 % de la dieta de manutención y podrá percibir gastos de alojamiento.",
+        "Percibirá exclusivamente gastos de alojamiento, por no haber comenzado antes de las 12:00.",
+        "Percibirá el 100 % de la dieta de manutención, pero no podrá percibir alojamiento."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 12.3 RD 462/2002",
+      "q": "Una comisión de servicio de duración superior a 24 horas comienza el día de salida a las 17:00 y finaliza el día de regreso a las 13:00. Según el artículo 12.3 del RD 462/2002, ¿qué porcentajes de manutención corresponden, con carácter general, a ambos días, respectivamente?",
+      "opciones": [
+        "100 % el día de salida y 50 % el día de regreso.",
+        "50 % el día de salida y 50 % el día de regreso.",
+        "50 % el día de salida y 0 % el día de regreso.",
+        "0 % el día de salida y 50 % el día de regreso."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 12.4 RD 462/2002",
+      "q": "En una comisión superior a 24 horas, el regreso se produce después de las 22:00, siendo necesario cenar fuera de la residencia habitual. Conforme al artículo 12.4 del RD 462/2002, el abono excepcional adicional exige:",
+      "opciones": [
+        "Únicamente la comunicación posterior de la hora efectiva de llegada al domicilio.",
+        "Justificación mediante factura o recibo y constancia de la circunstancia en la orden de comisión.",
+        "Autorización general de residencia eventual, con independencia del horario de llegada.",
+        "Acreditación de haber percibido el 100 % de manutención durante el día de regreso."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 13 RD 462/2002",
+      "q": "Según el artículo 13 del RD 462/2002, un funcionario que realiza una comisión de servicio en representación de otro cargo clasificado en grupo superior:",
+      "opciones": [
+        "Percibirá las dietas del grupo superior cuando actúe por delegación expresa del titular.",
+        "Podrá elegir entre la dieta de su grupo y la del representado, previa justificación documental.",
+        "Percibirá las dietas del grupo superior cuando ejerza temporalmente sus funciones.",
+        "No podrá percibir dietas o pluses de grupo superior al que personalmente le corresponda, con la salvedad reglamentaria prevista."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 16.1 RD 462/2002",
+      "q": "La autoridad que designa una comisión ha fijado la indemnización por residencia eventual. Conforme al artículo 16.1 del RD 462/2002, su límite máximo ordinario, sin necesidad de justificación documental, es:",
+      "opciones": [
+        "El 50 % del importe de la dieta íntegra correspondiente.",
+        "El 75 % de la suma de los conceptos de alojamiento y manutención.",
+        "El 80 % del importe de las dietas enteras aplicables.",
+        "El 100 % de la dieta de manutención, excluido alojamiento."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 16.2 RD 462/2002",
+      "q": "Un funcionario se encuentra en situación de residencia eventual y debe realizar temporalmente un desplazamiento desde esa residencia por razón del servicio. Según el artículo 16.2 del RD 462/2002, además de la indemnización por residencia eventual:",
+      "opciones": [
+        "Percibirá, durante el desplazamiento, dietas exclusivamente por alojamiento y los gastos de viaje correspondientes.",
+        "Percibirá una segunda indemnización de residencia eventual por cada día que dure el desplazamiento.",
+        "Percibirá la dieta íntegra por alojamiento y manutención sin mantener la residencia eventual.",
+        "Percibirá únicamente gastos de viaje, pues las dietas quedan siempre excluidas en residencia eventual."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 17.3 RD 462/2002",
+      "q": "En una comisión de servicio se autoriza el desplazamiento en un medio de transporte, pero finalmente se utiliza un medio gratuito proporcionado por el Estado. Conforme al artículo 17.3 del RD 462/2002:",
+      "opciones": [
+        "Corresponderá una indemnización equivalente al billete de clase turista del trayecto.",
+        "Procederá compensación por desplazamiento, pero limitada a la mitad de la tarifa ordinaria.",
+        "Se mantendrá el derecho a los gastos de viaje si se acredita que el servicio fue efectivamente realizado.",
+        "No existirá derecho a indemnización por ese concepto de transporte gratuito."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 18 RD 462/2002 y cuantía actualizada del temario",
+      "q": "Un funcionario realiza una comisión autorizada y utiliza su automóvil particular en los términos previstos por el RD 462/2002. Conforme a las cuantías recogidas en el temario, la compensación por kilometraje para automóviles es de:",
+      "opciones": [
+        "0,19 euros por kilómetro.",
+        "0,26 euros por kilómetro.",
+        "0,23 euros por kilómetro.",
+        "0,30 euros por kilómetro."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Arts. 18 y 19 RD 462/2002",
+      "q": "Según los artículos 18 y 19 del RD 462/2002, ¿cuál de las siguientes afirmaciones es correcta sobre determinados gastos adicionales de desplazamiento y los anticipos?",
+      "opciones": [
+        "Los peajes podrán resarcirse sin autorización cuando el funcionario utilice vehículo propio; los anticipos están prohibidos.",
+        "El aparcamiento del vehículo propio se resarce en cualquier comisión; los anticipos solo abarcan manutención.",
+        "Determinados taxis, aparcamientos y peajes podrán indemnizarse bajo las condiciones y justificación exigidas; las comisiones pueden generar derecho a anticipo.",
+        "Los gastos especiales de transporte sustituyen siempre al kilometraje; el anticipo requiere haber concluido la comisión."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 20 RD 462/2002",
+      "q": "Un empleado público debe desplazarse por razón del servicio entre dos dependencias de su Administración situadas dentro del mismo término municipal. Conforme al artículo 20 del RD 462/2002, para el resarcimiento de gastos se requiere:",
+      "opciones": [
+        "Conformidad expresa del jefe de la unidad administrativa, efectuándose preferentemente el traslado en transporte público colectivo.",
+        "Autorización como comisión de servicio fuera de la residencia oficial, aunque no se abandone el municipio.",
+        "Resolución de residencia eventual, siempre que el desplazamiento implique más de cinco horas.",
+        "Únicamente la presentación de justificantes, sin intervención del responsable de la unidad."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 22.2 RD 462/2002",
+      "q": "Dos cónyuges destinados en la misma localidad de origen obtienen destinos indemnizables en la misma nueva localidad. La toma de posesión entre ambos se produce con una separación de dos meses. Conforme al artículo 22.2 del RD 462/2002:",
+      "opciones": [
+        "Cada uno tendrá derecho a indemnización íntegra, excepto por los viajes de familiares.",
+        "Ambos tendrán derecho al transporte de mobiliario, pero únicamente uno a gastos de instalación.",
+        "Se abonarán dos indemnizaciones de instalación, pero solamente una por mobiliario.",
+        "Los correspondientes gastos solo podrán reconocerse a uno de los cónyuges."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 22.2 RD 462/2002",
+      "q": "Dos cónyuges con derecho a indemnización por traslado proceden de la misma localidad y toman posesión en la misma nueva localidad con una diferencia de cuatro meses. Conforme al artículo 22.2 del RD 462/2002:",
+      "opciones": [
+        "Solo uno tendrá derecho al transporte de mobiliario, aunque ambos podrán recibir gastos de instalación.",
+        "Ambos podrán percibir gastos de instalación, pero ninguno por transporte de mobiliario.",
+        "Ambos podrán ser indemnizados por transporte de mobiliario y enseres, pero solo uno por instalación y viajes familiares.",
+        "Únicamente el cónyuge que toma posesión en segundo lugar tendrá derecho a gastos de viaje familiar."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 22.2 RD 462/2002",
+      "q": "Dos cónyuges son destinados a la misma localidad, pero proceden de destinos situados en localidades distintas. Conforme al artículo 22.2 del RD 462/2002, con independencia del intervalo entre sus incorporaciones:",
+      "opciones": [
+        "Ambos podrán ser indemnizados por el transporte de sus respectivos enseres; solo uno por instalación, y cada uno por viajes de familiares que convivían con él en origen.",
+        "Solo podrá indemnizarse al primero que tome posesión por la totalidad del traslado, incluidos los viajes de todos los familiares.",
+        "Ambos podrán percibir gastos de instalación, pero solo uno tendrá derecho al transporte de mobiliario y enseres.",
+        "Los derechos serán idénticos a los de dos cónyuges procedentes del mismo destino cuya toma de posesión difiera menos de tres meses."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 23.1 RD 462/2002",
+      "q": "Conforme al artículo 23 del RD 462/2002, un traslado forzoso nacional que origina un cambio de término municipal de residencia oficial da derecho, entre otros conceptos, a:",
+      "opciones": [
+        "Gastos de viaje y alojamiento durante el traslado, además de cinco dietas por cada familiar.",
+        "Gastos de viaje, transporte de mobiliario y enseres y tres dietas por titular y familiar que efectivamente se traslade.",
+        "Gastos de viaje y traslado de mobiliario, pero sin indemnización por dietas a los familiares.",
+        "Gastos de viaje y tres dietas únicamente para el titular, con independencia de los familiares trasladados."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 23.3 RD 462/2002",
+      "q": "En relación con la indemnización por traslado de residencia dentro del territorio nacional, conforme al artículo 23.3 del RD 462/2002, los traslados que obedezcan a una sanción impuesta al funcionario:",
+      "opciones": [
+        "Generarán únicamente los gastos de transporte de mobiliario, quedando excluidos los demás conceptos.",
+        "Permitirán tres dietas al titular, pero no la indemnización de gastos de viaje familiar.",
+        "Tendrán el mismo tratamiento económico que los traslados forzosos por supresión de unidades.",
+        "No darán derecho a indemnización por razón del traslado sancionador."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 24.3 RD 462/2002",
+      "q": "Un empleado es destinado desde España al extranjero por un período inicialmente previsto de 20 meses. Cesará a petición propia tras 10 meses, sin enfermedad ni razones familiares graves. Según el artículo 24 del RD 462/2002:",
+      "opciones": [
+        "Deberá reintegrar las indemnizaciones por pasajes familiares y transporte de mobiliario percibidas, sin derecho al abono de los viajes de regreso ni del traslado de enseres a España.",
+        "Conservará las indemnizaciones percibidas, aunque perderá el derecho a dietas por manutención durante su regreso.",
+        "Deberá reintegrar únicamente la mitad de las indemnizaciones familiares, conservando íntegro el derecho a traslado de mobiliario.",
+        "Mantendrá las indemnizaciones familiares, pero deberá reintegrar exclusivamente los gastos de instalación."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Arts. 27.3 y 33.3 RD 462/2002",
+      "q": "Conforme a los artículos 27 y 33 del RD 462/2002, una persona percibe 28.000 € anuales por su puesto principal, excluida la antigüedad. ¿Qué combinación expresa correctamente los límites económicos de las asistencias durante el año natural?",
+      "opciones": [
+        "14.000 € por formación y 7.000 € por el conjunto de las tres clases de asistencias.",
+        "7.000 € por formación y 14.000 € exclusivamente por la participación en tribunales.",
+        "7.000 € por formación y 14.000 € por el conjunto de las tres clases de asistencias.",
+        "14.000 € por formación y 14.000 € adicionales por las otras dos clases de asistencias."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 33.1 y 33.3 RD 462/2002",
+      "q": "Un funcionario colabora de forma no permanente ni habitual en actividades de formación de empleados públicos. Según el artículo 33 del RD 462/2002, ¿qué afirmación es correcta?",
+      "opciones": [
+        "Podrá realizar hasta 75 horas por cada centro formativo, sin límite conjunto anual individual.",
+        "El conjunto de las colaboraciones no podrá superar individualmente 75 horas anuales y estará sujeto al límite económico específico del 25 %.",
+        "Podrá realizar más de 75 horas anuales cuando el total percibido no exceda del límite general del 50 %.",
+        "El límite de 75 horas comprende conjuntamente la formación, los tribunales de oposición y las reuniones de órganos colegiados."
+      ],
+      "correcta": 1
+    }
+  ],
+  "fuente": "ChatGPT"
+}
