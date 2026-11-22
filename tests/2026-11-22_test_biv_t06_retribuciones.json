@@ -1,0 +1,338 @@
+{
+  "titulo": "Test BIV-T06 — Retribuciones",
+  "tema": "IV-6",
+  "fecha": "2026-11-22",
+  "preguntas": [
+    {
+      "ref": "Artículo DF 4.ª TREBEP",
+      "q": "De acuerdo con la disposición final cuarta del TREBEP y el régimen transitorio explicado en el temario, ¿qué afirmación es correcta respecto a los derechos retributivos del capítulo III del título III?",
+      "opciones": [
+        "Resultan plenamente aplicables desde la publicación del TREBEP, con excepción de los funcionarios en prácticas.",
+        "Su eficacia está diferida íntegramente hasta el desarrollo autonómico, incluido el reconocimiento de trienios a interinos.",
+        "Su producción de efectos queda vinculada a las leyes de Función Pública de desarrollo, con la excepción prevista para el artículo 25.2.",
+        "Su aplicación depende exclusivamente de las sucesivas leyes presupuestarias, sin excepciones establecidas en el Estatuto."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 23.3 Ley 30/1984",
+      "q": "Conforme al artículo 23 de la Ley 30/1984, ¿cuál de las siguientes relaciones entre un concepto retributivo y su finalidad resulta correcta?",
+      "opciones": [
+        "Complemento específico: condiciones particulares del puesto, entre ellas la responsabilidad, dedicación o incompatibilidad.",
+        "Complemento de productividad: circunstancias permanentes del puesto, como dificultad técnica o peligrosidad.",
+        "Complemento de destino: especial rendimiento individual y actividad extraordinaria acreditada durante el ejercicio.",
+        "Gratificaciones extraordinarias: características estructurales del puesto que justifican una percepción fija y periódica."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 23.3.d Ley 30/1984",
+      "q": "Según el artículo 23.3 de la Ley 30/1984, las gratificaciones por servicios extraordinarios fuera de la jornada normal:",
+      "opciones": [
+        "Podrán fijarse periódicamente, siempre que varíe su cuantía en función de los servicios.",
+        "Podrán establecerse en cuantía fija cuando se vinculen a una necesidad permanente del puesto.",
+        "No podrán percibirse cuando el funcionario tenga asignado complemento específico por dedicación.",
+        "No podrán ser fijas en su cuantía ni periódicas en su devengo."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 23.3.b Ley 30/1984",
+      "q": "En relación con el complemento específico regulado por la Ley 30/1984, señale la afirmación correcta.",
+      "opciones": [
+        "Podrán asignarse varios complementos específicos si retribuyen circunstancias diferenciadas.",
+        "Solo podrá asignarse un complemento específico a cada puesto de trabajo.",
+        "El complemento específico corresponde al grado personal consolidado por el funcionario.",
+        "Su cuantía depende exclusivamente del grupo o subgrupo de clasificación profesional."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 24.1 Ley 30/1984",
+      "q": "De acuerdo con el artículo 24.1 de la Ley 30/1984, ¿qué regla se establece respecto de las cuantías del sueldo y los trienios?",
+      "opciones": [
+        "Serán iguales en todas las Administraciones Públicas para cada grupo de clasificación.",
+        "Podrán diferir entre Administraciones cuando exista un complemento específico equivalente.",
+        "Serán fijadas por cada Administración conforme al nivel de los puestos de trabajo.",
+        "Se determinarán por los órganos de personal de cada Administración, respetando los límites globales."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 21 TREBEP",
+      "q": "Conforme al artículo 21 del TREBEP, en materia de incrementos retributivos, ¿cuál de las siguientes afirmaciones es correcta?",
+      "opciones": [
+        "El incremento de las complementarias queda excluido de los límites presupuestarios globales.",
+        "La masa salarial del personal laboral podrá superar los límites estatales por negociación colectiva.",
+        "Los límites globales establecidos en los PGE afectan exclusivamente a las retribuciones básicas.",
+        "No podrán acordarse incrementos que supongan globalmente superar los límites de masa salarial fijados en los PGE."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 22.2 TREBEP",
+      "q": "De acuerdo con el artículo 22 del TREBEP, las retribuciones básicas de los funcionarios de carrera:",
+      "opciones": [
+        "Retribuyen las características del puesto y la progresión alcanzada en la carrera administrativa.",
+        "Retribuyen la adscripción a un grupo o subgrupo y la antigüedad, e incluyen los componentes de sueldo y trienios de las pagas extraordinarias.",
+        "Comprenden el sueldo, los trienios y todos los complementos que se perciban en las pagas extraordinarias.",
+        "Se determinan atendiendo principalmente al rendimiento individual y a los resultados del funcionario."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Arts. 22.4 y 24 TREBEP",
+      "q": "Según el artículo 22.4 del TREBEP, ¿qué retribuciones complementarias quedan excluidas del importe de las pagas extraordinarias previstas en dicho precepto?",
+      "opciones": [
+        "Las vinculadas a progresión de carrera y características particulares del puesto.",
+        "Las vinculadas a responsabilidad del puesto y resultados de la evaluación del desempeño.",
+        "Las previstas en los apartados c) y d) del artículo 24, relativas al rendimiento y los servicios extraordinarios.",
+        "Las previstas en los apartados a) y b) del artículo 24, relativas a carrera y condiciones del puesto."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo RDL 24/2018, según temario",
+      "q": "Según el sistema de pagas extraordinarias recogido en el temario para la Administración del Estado, ¿qué afirmación resulta correcta respecto del complemento específico anual?",
+      "opciones": [
+        "Se distribuye en doce mensualidades y se excluye de las dos pagas de junio y diciembre.",
+        "Se percibe en catorce pagas, siendo las dos adicionales equivalentes al doble de una mensualidad.",
+        "Se abona íntegramente en las pagas extraordinarias, sin percepción mensual ordinaria.",
+        "Se percibe en catorce pagas iguales: doce mensuales y dos adicionales en junio y diciembre."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Arts. 22.2 y 23 TREBEP",
+      "q": "Según el artículo 23 del TREBEP, las retribuciones básicas están integradas única y exclusivamente por:",
+      "opciones": [
+        "Sueldo y trienios, sin perjuicio de los componentes básicos incluidos en las pagas extraordinarias conforme al artículo 22.",
+        "Sueldo, trienios y complemento de destino, por estar este último vinculado al grupo profesional.",
+        "Sueldo, trienios y pagas extraordinarias completas, incluidas todas las retribuciones complementarias.",
+        "Sueldo y complemento de carrera, al representar este último la progresión profesional consolidada."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 24.b TREBEP",
+      "q": "Conforme al artículo 24 del TREBEP, ¿qué factor corresponde a las retribuciones complementarias del apartado b)?",
+      "opciones": [
+        "La progresión alcanzada dentro del sistema de carrera administrativa.",
+        "La especial dificultad técnica, responsabilidad, dedicación o incompatibilidad exigible por el puesto.",
+        "El interés, iniciativa o esfuerzo manifestados y los resultados obtenidos.",
+        "Los servicios extraordinarios realizados fuera de la jornada ordinaria."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo DT 7.ª RDL 6/2023",
+      "q": "Conforme a la disposición transitoria séptima del Real Decreto-ley 6/2023, mientras no se haya implantado la evaluación del desempeño prevista en dicha norma, el complemento de desempeño:",
+      "opciones": [
+        "Quedará suspendido hasta que exista un modelo específico de valoración del personal.",
+        "Se determinará únicamente por el grado personal consolidado en el sistema de carrera.",
+        "Se regirá por los modelos, criterios o baremos autorizados y vigentes para el complemento de productividad.",
+        "Sustituirá inmediatamente al complemento específico desde la entrada en vigor del real decreto-ley."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 25.1 TREBEP",
+      "q": "Conforme al artículo 25.1 del TREBEP, respecto a las retribuciones de los funcionarios interinos, indique la afirmación correcta.",
+      "opciones": [
+        "Perciben las complementarias de los apartados b), c) y d) del artículo 24 y las correspondientes a la categoría de entrada del cuerpo o escala de nombramiento.",
+        "Perciben todas las complementarias del artículo 24 en los mismos términos que los funcionarios de carrera, incluida la progresión individual de carrera.",
+        "Perciben únicamente retribuciones básicas y pagas extraordinarias, salvo habilitación presupuestaria específica.",
+        "Perciben las complementarias de los apartados a), b) y c) del artículo 24, quedando excluidos los servicios extraordinarios."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 25.2 TREBEP",
+      "q": "Según el artículo 25.2 del TREBEP, los trienios correspondientes a los servicios prestados por funcionarios interinos antes de la entrada en vigor del Estatuto:",
+      "opciones": [
+        "Se reconocen únicamente cuando el interesado adquiere la condición de funcionario de carrera.",
+        "Producen efectos económicos desde la fecha en que se completó cada trienio, aunque sea anterior al Estatuto.",
+        "Se computan exclusivamente para antigüedad administrativa, sin generar efectos económicos.",
+        "Se reconocen, pero producen efectos retributivos únicamente desde la entrada en vigor del Estatuto."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 26 TREBEP",
+      "q": "Según el artículo 26 del TREBEP, ¿cuál es la retribución mínima que han de determinar las Administraciones Públicas para los funcionarios en prácticas?",
+      "opciones": [
+        "La totalidad de las retribuciones del puesto definitivo al que aspiren, con independencia de su nombramiento.",
+        "El sueldo y el complemento de destino del nivel mínimo previsto para el subgrupo de ingreso.",
+        "La correspondiente al sueldo del grupo o subgrupo al que aspiren a ingresar.",
+        "La integrada por sueldo, trienios y complemento específico del puesto que ocupaban previamente."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 2 RD 456/1986",
+      "q": "Un funcionario interino que ya percibe retribuciones de la Administración es nombrado funcionario en prácticas de otro cuerpo. Conforme al artículo 2 del RD 456/1986, ¿qué opción retributiva se contempla?",
+      "opciones": [
+        "Deberá percibir exclusivamente las retribuciones del nuevo cuerpo, sin conservar trienios reconocidos.",
+        "Podrá optar al inicio entre las retribuciones del puesto de origen, con los trienios reconocidos, y las previstas para el grupo al que aspira en los términos reglamentarios.",
+        "Deberá acumular las retribuciones de origen y las de funcionario en prácticas mientras dure el curso selectivo.",
+        "Podrá optar únicamente cuando finalice el período de prácticas y antes de la toma de posesión definitiva."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 27 TREBEP",
+      "q": "Según el artículo 27 del TREBEP, las retribuciones del personal laboral se determinan conforme:",
+      "opciones": [
+        "Exclusivamente a las leyes presupuestarias, con independencia del convenio colectivo.",
+        "Al sistema de sueldo y trienios establecido para los funcionarios de carrera.",
+        "A las instrucciones de personal de cada Administración, excluyendo el contrato de trabajo.",
+        "A la legislación laboral, el convenio colectivo aplicable y el contrato de trabajo, respetando el artículo 21."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 29 TREBEP",
+      "q": "Conforme al artículo 29 del TREBEP, las aportaciones de las Administraciones Públicas a planes de pensiones de empleo o seguros colectivos que incluyan la cobertura de jubilación:",
+      "opciones": [
+        "Se consideran retribución diferida y están sujetas a los límites presupuestarios correspondientes.",
+        "Tienen naturaleza de retribución complementaria vinculada al rendimiento individual.",
+        "Se consideran indemnizaciones por razón del servicio ajenas a la masa salarial.",
+        "Constituyen retribuciones básicas equivalentes a los trienios consolidados."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 30.1 TREBEP",
+      "q": "Un funcionario no realiza injustificadamente parte de su jornada y la Administración le practica la deducción proporcional correspondiente. Según el artículo 30.1 del TREBEP, esa deducción:",
+      "opciones": [
+        "Constituye necesariamente una sanción disciplinaria que exige expediente previo.",
+        "Impide que pueda exigirse otra responsabilidad disciplinaria por los mismos hechos.",
+        "No tiene carácter sancionador, sin perjuicio de la sanción disciplinaria que pudiera corresponder.",
+        "Solo puede aplicarse una vez declarada una falta grave o muy grave."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 30.2 TREBEP",
+      "q": "En relación con los efectos retributivos del ejercicio del derecho de huelga, según el artículo 30.2 del TREBEP:",
+      "opciones": [
+        "Se mantienen las retribuciones básicas, pero se descuentan las complementarias.",
+        "No se devengan las retribuciones del tiempo de huelga y la deducción no tiene carácter sancionador.",
+        "La deducción es una sanción económica compatible con la potestad disciplinaria.",
+        "La pérdida de retribuciones afecta necesariamente al régimen de prestaciones sociales."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 116 RDL 6/2023",
+      "q": "De acuerdo con el artículo 116 del Real Decreto-ley 6/2023, la evaluación del desempeño tiene por objeto:",
+      "opciones": [
+        "Valorar anualmente la conducta profesional y medir el rendimiento o logro de resultados para mejorar la productividad y calidad de los servicios.",
+        "Comprobar exclusivamente la productividad individual mediante una valoración económica anual de las retribuciones.",
+        "Determinar únicamente la promoción interna y los cambios de puesto del personal funcionario de carrera.",
+        "Sustituir las evaluaciones de las unidades administrativas por controles individuales de cumplimiento horario."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 117 RDL 6/2023",
+      "q": "Conforme al artículo 117 del Real Decreto-ley 6/2023, ¿qué personal está obligado a participar en los procedimientos de evaluación del desempeño?",
+      "opciones": [
+        "Únicamente quienes hayan solicitado un ascenso en la carrera profesional horizontal.",
+        "El personal funcionario de carrera, con exclusión del personal laboral y del interino.",
+        "Solo el personal que perciba retribuciones complementarias vinculadas a productividad.",
+        "Todo el personal que se encuentre en situación de servicio activo o asimilada."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 118.3 RDL 6/2023",
+      "q": "En aplicación del artículo 118 del Real Decreto-ley 6/2023, la valoración de la conducta profesional:",
+      "opciones": [
+        "Se presume negativa cuando no consta una evaluación expresa favorable del superior.",
+        "Se presume positiva, salvo valoración negativa expresa y motivada.",
+        "Solo podrá ser positiva cuando la evaluación permita ascender de tramo profesional.",
+        "Se considera favorable automáticamente cuando se alcanza la totalidad de objetivos individuales."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 119 RDL 6/2023",
+      "q": "Según el artículo 119 del Real Decreto-ley 6/2023, ¿cuál de las siguientes materias puede verse afectada por los resultados de la evaluación del desempeño?",
+      "opciones": [
+        "Exclusivamente la percepción de incentivos variables y las necesidades de formación.",
+        "Únicamente la progresión de carrera y la adjudicación inicial de destinos.",
+        "Las retribuciones complementarias variables, la carrera, la provisión y continuidad en puestos y las necesidades formativas.",
+        "La adquisición automática de la condición de funcionario de carrera y la modificación del grupo profesional."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 120.2 RDL 6/2023",
+      "q": "Conforme al artículo 120 del Real Decreto-ley 6/2023, una vez validado el modelo de evaluación por la Comisión de Coordinación, las evaluaciones realizadas mediante dicho modelo:",
+      "opciones": [
+        "Producirán efectos retributivos desde la primera anualidad, pero no efectos en carrera.",
+        "No tendrán consecuencias durante las tres primeras anualidades tras su implantación.",
+        "Solo producirán consecuencias cuando se haya efectuado una evaluación negativa.",
+        "No tendrán consecuencias en las dos primeras anualidades tras su implementación."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.1 RDL 6/2023",
+      "q": "Según el artículo 122 del Real Decreto-ley 6/2023, la carrera horizontal del personal funcionario de carrera consiste en:",
+      "opciones": [
+        "Progresar mediante tramos de reconocimiento profesional sin necesidad de cambiar de puesto de trabajo.",
+        "Ascender necesariamente de nivel de complemento de destino mediante concursos sucesivos.",
+        "Acceder a cuerpos o escalas superiores después de completar los períodos mínimos de permanencia.",
+        "Obtener un nuevo destino mediante movilidad voluntaria tras cada evaluación favorable."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 122.2 RDL 6/2023",
+      "q": "Conforme al artículo 122.2 del Real Decreto-ley 6/2023, ¿qué combinación de tramos y períodos mínimos de servicios efectivos se establece para la carrera horizontal?",
+      "opciones": [
+        "Tres tramos; cuatro años para el primero y cinco para los siguientes.",
+        "Cuatro tramos; seis años para el primero y cinco para los restantes.",
+        "Cuatro tramos; cinco años para el primero y seis para cada uno de los siguientes.",
+        "Cinco tramos; cinco años para los dos primeros y seis para los restantes."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.6 RDL 6/2023",
+      "q": "Según el artículo 122.6 del Real Decreto-ley 6/2023, los efectos económicos del reconocimiento de cada tramo de carrera horizontal se producirán:",
+      "opciones": [
+        "Desde la fecha de solicitud de evaluación presentada por el interesado.",
+        "Desde el 1 de enero del año siguiente al reconocimiento.",
+        "Desde el primer día del mes siguiente a la evaluación favorable.",
+        "Desde la fecha en que se complete el período mínimo de permanencia."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "En relación con el cómputo de los períodos mínimos de permanencia en un tramo de carrera horizontal, según el artículo 122.4 del Real Decreto-ley 6/2023, ¿cuál de las siguientes situaciones se encuentra expresamente contemplada?",
+      "opciones": [
+        "Excedencia voluntaria por interés particular, durante todo el período concedido.",
+        "Suspensión firme de funciones, cuando su duración no exceda de seis meses.",
+        "Excedencia voluntaria por agrupación familiar, cualquiera que sea su duración.",
+        "Excedencia por cuidado de familiares, sin perjuicio de los demás requisitos para ascender."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.7 RDL 6/2023",
+      "q": "Según el artículo 122.7 del Real Decreto-ley 6/2023, el complemento de carrera que retribuye la progresión horizontal:",
+      "opciones": [
+        "Tendrá la misma cuantía para el personal del mismo grupo o subgrupo con idéntico tramo reconocido.",
+        "Se determinará individualmente por el rendimiento anual, aunque se tenga el mismo tramo.",
+        "Dependerá exclusivamente del nivel de complemento de destino del puesto desempeñado.",
+        "Se calculará en función de la antigüedad total, con independencia del tramo reconocido."
+      ],
+      "correcta": 0
+    }
+  ],
+  "fuente": "ChatGPT"
+}
