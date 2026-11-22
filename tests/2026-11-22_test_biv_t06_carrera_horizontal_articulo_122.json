@@ -1,0 +1,206 @@
+{
+  "titulo": "Test BIV-T06 — Carrera horizontal (artículo 122)",
+  "tema": "IV-6",
+  "fecha": "2026-11-22",
+  "preguntas": [
+    {
+      "ref": "Artículo Art. 122.1 RDL 6/2023",
+      "q": "Conforme al artículo 122.1 del Real Decreto-ley 6/2023, la carrera horizontal del personal funcionario de carrera se caracteriza por:",
+      "opciones": [
+        "La progresión profesional mediante el acceso sucesivo a puestos de nivel superior, previa evaluación reglada.",
+        "El reconocimiento de la experiencia profesional a través de cambios de cuerpo o escala sin necesidad de concurso.",
+        "El ascenso por tramos de reconocimiento profesional, resultado de una evaluación objetiva y reglada, sin necesidad de cambiar de puesto.",
+        "La adquisición de grados personales superiores mediante períodos de servicios efectivos y provisión definitiva de puestos."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.2 RDL 6/2023",
+      "q": "En relación con el carácter y la estructura de la carrera profesional horizontal, el artículo 122.2 establece que:",
+      "opciones": [
+        "Tendrá carácter voluntario y se organizará en cuatro tramos por cada grupo o subgrupo de personal funcionario.",
+        "Tendrá carácter obligatorio y se organizará en cuatro tramos para el conjunto de los grupos profesionales.",
+        "Tendrá carácter voluntario, con un número de tramos determinado anualmente por cada departamento.",
+        "Tendrá carácter obligatorio para funcionarios de carrera, aunque el reconocimiento de tramos será voluntario."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 122.2.c RDL 6/2023",
+      "q": "Un funcionario de carrera pretende acceder al segundo tramo de carrera horizontal. Según el artículo 122.2.c), ¿qué período mínimo de servicios efectivos se exige para este ascenso?",
+      "opciones": [
+        "Cinco años, al tratarse de uno de los dos primeros tramos.",
+        "Cuatro años, siempre que exista evaluación positiva.",
+        "Siete años, si el funcionario permanece en el mismo puesto.",
+        "Seis años, al aplicarse este período a los tramos posteriores al primero."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.2.c RDL 6/2023",
+      "q": "Un funcionario inicia su carrera horizontal sin servicios anteriores computables y cumple sucesivamente todos los demás requisitos. ¿Qué período mínimo acumulado de servicios efectivos habrá necesitado para alcanzar el tercer tramo, conforme al artículo 122.2.c)?",
+      "opciones": [
+        "Dieciséis años.",
+        "Diecisiete años.",
+        "Dieciocho años.",
+        "Quince años."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 122.2.c RDL 6/2023",
+      "q": "Conforme al artículo 122.2.c), ¿cuál de las siguientes afirmaciones describe correctamente el orden de ascenso por los tramos de carrera horizontal?",
+      "opciones": [
+        "Los ascensos serán consecutivos, sin que una evaluación favorable permita omitir los tramos intermedios.",
+        "El ascenso podrá realizarse directamente al tramo correspondiente a los años de servicio acumulados.",
+        "Podrán reconocerse simultáneamente dos tramos cuando el interesado supere una evaluación extraordinaria.",
+        "Los ascensos tendrán carácter alternativo entre tramos consecutivos y acceso directo por experiencia acreditada."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 122.3 RDL 6/2023",
+      "q": "Según el artículo 122.3 del Real Decreto-ley 6/2023, los ascensos de tramo se producirán:",
+      "opciones": [
+        "De oficio, mediante la valoración del superior jerárquico al alcanzar los años mínimos exigidos.",
+        "A instancia del interesado, mediante un sistema de evaluación limitado a la antigüedad y al rendimiento.",
+        "Previa solicitud del interesado y mediante un sistema objetivo de acreditación de méritos sujeto a desarrollo reglamentario.",
+        "Mediante convocatoria automática, sin necesidad de acreditar méritos cuando exista evaluación favorable."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.3 RDL 6/2023",
+      "q": "Conforme al artículo 122.3, ¿qué conjunto de elementos deberá tener en cuenta, al menos, el sistema objetivo de acreditación de méritos para el ascenso?",
+      "opciones": [
+        "Antigüedad, nivel de complemento de destino y número de puestos desempeñados.",
+        "Trayectoria y evaluación, formación especializada y, en su caso, actividades de conocimiento, docencia o investigación, además de competencias y cualificaciones pertinentes.",
+        "Resultados económicos de la unidad, asistencia al trabajo y participación en órganos colegiados.",
+        "Formación general, cumplimiento de la jornada y nivel de responsabilidad del puesto ocupado."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "Un funcionario acredita el tiempo mínimo exigido para ascender de tramo, pero no cumple los restantes requisitos de acreditación de méritos. Conforme al artículo 122.4, ¿qué consecuencia procede?",
+      "opciones": [
+        "El ascenso deberá reconocerse provisionalmente hasta completar la formación exigida.",
+        "El tiempo mínimo permitirá el ascenso cuando exista una evaluación positiva, aunque falten otros requisitos.",
+        "El interesado podrá ascender si renuncia temporalmente a los efectos económicos del tramo.",
+        "El tiempo mínimo computable no dispensa de cumplir los demás requisitos exigidos para el ascenso."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "Conforme al artículo 122.4 del Real Decreto-ley 6/2023, ¿cuál de las siguientes situaciones administrativas se encuentra expresamente incluida entre las computables para cumplir los períodos mínimos de permanencia en un tramo?",
+      "opciones": [
+        "Excedencia voluntaria por agrupación familiar.",
+        "Excedencia voluntaria por interés particular.",
+        "Excedencia por razón de violencia de género.",
+        "Suspensión firme de funciones inferior a seis meses."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "Según el artículo 122.4, ¿cuál de las siguientes combinaciones contiene únicamente situaciones administrativas expresamente computables para los períodos mínimos de permanencia?",
+      "opciones": [
+        "Servicios especiales, excedencia por cuidado de familiares y excedencia por razón de violencia terrorista.",
+        "Servicios en otras Administraciones Públicas, excedencia forzosa y excedencia voluntaria por agrupación familiar.",
+        "Excedencia voluntaria por interés particular, servicios especiales y suspensión provisional de funciones.",
+        "Expectativa de destino, excedencia por cuidado de familiares y excedencia voluntaria incentivada."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "Un funcionario ha consolidado varios tramos de carrera horizontal prestando servicios sucesivamente en cuerpos o escalas pertenecientes a distintos grupos o subgrupos. Conforme al artículo 122.4:",
+      "opciones": [
+        "Deberá renunciar a los tramos anteriores para comenzar la carrera en el último grupo de adscripción.",
+        "Los tramos consolidados únicamente se mantendrán cuando todos los cuerpos pertenezcan al mismo grupo.",
+        "Conservará exclusivamente el último tramo consolidado, que se adaptará al nuevo grupo.",
+        "Tendrá derecho a mantener los tramos consolidados en los grupos o subgrupos anteriores."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.4 RDL 6/2023",
+      "q": "Un funcionario del subgrupo C1 ha prestado cuatro años de servicios computables para consolidar el primer tramo, pero promociona internamente al subgrupo A2 antes de consolidarlo. Conforme al artículo 122.4, ¿cómo se considerará ese tiempo a los efectos previstos en el precepto?",
+      "opciones": [
+        "Se perderá, al no haber consolidado todavía ningún tramo en el grupo de origen.",
+        "Se considerará tiempo de servicios prestados en el nuevo grupo para poder consolidar el tramo correspondiente.",
+        "Permitirá consolidar automáticamente el primer tramo en el grupo de origen al producirse la promoción.",
+        "Solo podrá computarse en el grupo de origen cuando el funcionario regrese posteriormente a él."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Arts. 122.2.b y 122.4 RDL 6/2023",
+      "q": "En relación con el reconocimiento de la experiencia profesional a quienes accedan mediante promoción interna, el artículo 122.2.b) dispone que:",
+      "opciones": [
+        "Se reconocerá la experiencia del grupo de origen exclusivamente si se ha alcanzado el cuarto tramo.",
+        "La promoción interna excluirá los servicios anteriores del nuevo sistema de carrera horizontal.",
+        "Se reconocerá la experiencia profesional del grupo o subgrupo de origen en los términos previstos en el artículo 122.4.",
+        "La experiencia previa se reconocerá únicamente cuando se mantenga el mismo puesto de trabajo."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.5 RDL 6/2023",
+      "q": "Un funcionario de carrera de una comunidad autónoma ocupa definitivamente un puesto de trabajo en la Administración del Estado. Conforme al artículo 122.5, su derecho a la carrera horizontal en esta última Administración:",
+      "opciones": [
+        "Se reconocerá en los mismos términos que al personal funcionario de carrera del Estado durante su vinculación a ella, desde la ocupación definitiva.",
+        "Nacerá únicamente tras adquirir la condición de funcionario de carrera de un cuerpo de la Administración del Estado.",
+        "Se reconocerá cuando complete el primer tramo de cinco años desde su incorporación, sin computar experiencia anterior.",
+        "Dependerá de que renuncie expresamente al sistema de carrera profesional de su Administración de origen."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 122.6.a RDL 6/2023",
+      "q": "Según el artículo 122.6.a) del Real Decreto-ley 6/2023, el procedimiento para el acceso a los tramos de carrera horizontal contempla:",
+      "opciones": [
+        "Una convocatoria cada dos años, en la que únicamente se evalúa al personal propuesto por su departamento.",
+        "Una evaluación anual obligatoria que comporta, por sí misma, el ascenso al tramo correspondiente.",
+        "Una convocatoria anual limitada al personal que complete el período mínimo de permanencia durante ese ejercicio.",
+        "Una convocatoria anual en la que el personal funcionario de carrera podrá solicitar voluntariamente la evaluación de su actividad profesional."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 122.6.b RDL 6/2023",
+      "q": "Un funcionario obtiene el reconocimiento de un nuevo tramo de carrera horizontal el 15 de septiembre de un determinado año. Según el artículo 122.6.b), sus efectos económicos se producirán:",
+      "opciones": [
+        "Desde el 1 de septiembre del año del reconocimiento.",
+        "Desde el 1 de enero del año siguiente.",
+        "Desde el primer día del mes siguiente al reconocimiento.",
+        "Desde el día en que cumplió el período mínimo de servicios exigido."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 122.7 RDL 6/2023",
+      "q": "Dos funcionarios de carrera pertenecen al mismo subgrupo y tienen reconocido el mismo tramo de carrera horizontal, aunque ocupan puestos de diferente nivel y responsabilidad. Conforme al artículo 122.7, la cuantía del complemento de carrera:",
+      "opciones": [
+        "Será superior para quien tenga mayor complemento específico.",
+        "Dependerá del resultado individual de la última evaluación del desempeño.",
+        "Será la misma para ambos, por compartir subgrupo y tramo reconocido.",
+        "Se fijará individualmente en función del nivel del puesto desempeñado."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 122.8 RDL 6/2023",
+      "q": "Según el artículo 122.8 del Real Decreto-ley 6/2023, la carrera horizontal del personal laboral se hará efectiva:",
+      "opciones": [
+        "Conforme a los convenios colectivos aplicables o, en su defecto, a un acuerdo colectivo, dentro del marco normativo correspondiente.",
+        "Mediante la aplicación directa y exclusiva del mismo sistema de tramos previsto para los funcionarios de carrera.",
+        "Conforme a la decisión de cada departamento, sin intervención de convenios o acuerdos colectivos.",
+        "Mediante resolución individual del órgano de personal, con independencia de la normativa laboral."
+      ],
+      "correcta": 0
+    }
+  ],
+  "fuente": "ChatGPT"
+}
