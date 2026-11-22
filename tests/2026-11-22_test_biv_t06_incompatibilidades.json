@@ -1,0 +1,360 @@
+{
+  "titulo": "Test BIV-T06 — Incompatibilidades",
+  "tema": "IV-6",
+  "fecha": "2026-11-22",
+  "preguntas": [
+    {
+      "ref": "Artículo Art. 1.2 Ley 53/1984",
+      "q": "A los solos efectos de la Ley 53/1984, ¿cuál de las siguientes afirmaciones relativas al concepto de remuneración resulta correcta?",
+      "opciones": [
+        "Comprende únicamente las percepciones periódicas abonadas directamente por una Administración Pública.",
+        "Se limita a las percepciones fijas de naturaleza salarial, con exclusión de las cantidades ocasionales.",
+        "Incluye los derechos económicos derivados de servicios personales, siempre que sean periódicos y de cuantía determinada.",
+        "Comprende cualquier derecho económico derivado directa o indirectamente de un servicio personal, sea fijo o variable y periódico u ocasional."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 1.3 Ley 53/1984",
+      "q": "De acuerdo con el artículo 1.3 de la Ley 53/1984, el ejercicio de un puesto público es incompatible con una actividad pública o privada cuando:",
+      "opciones": [
+        "Pueda impedir el cumplimiento de sus deberes o comprometer la imparcialidad o independencia del empleado.",
+        "La actividad adicional sea remunerada, con independencia de su contenido y circunstancias.",
+        "La actividad adicional se desarrolle fuera del horario ordinario del puesto público.",
+        "La actividad se ejerza por cuenta propia, aunque no afecte a los deberes del puesto."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 2.1.g Ley 53/1984",
+      "q": "Una fundación se financia ordinariamente en un 55 % mediante subvenciones y otros ingresos procedentes de Administraciones Públicas. A efectos del artículo 2.1.g) de la Ley 53/1984, el personal a su servicio:",
+      "opciones": [
+        "Queda excluido del ámbito de aplicación salvo que posea la condición de funcionario de carrera.",
+        "Queda incluido únicamente si la fundación depende orgánicamente de un ministerio.",
+        "Está comprendido en el ámbito de aplicación por superar la financiación pública el porcentaje legalmente establecido.",
+        "Queda incluido exclusivamente cuando la financiación pública alcance al menos el 75 % del presupuesto."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 2.2 Ley 53/1984",
+      "q": "Respecto al personal incluido en el artículo 2 de la Ley 53/1984, señale la afirmación correcta.",
+      "opciones": [
+        "La ley se aplica al personal funcionario y excluye, con carácter general, las relaciones laborales.",
+        "Queda comprendido todo el personal del ámbito delimitado, cualquiera que sea la naturaleza jurídica de su relación de empleo.",
+        "La aplicación de la ley depende de que la persona perciba sus retribuciones directamente de los Presupuestos Generales del Estado.",
+        "El personal eventual queda excluido de la ley cuando no desempeñe funciones reservadas a funcionarios de carrera."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 3.1 Ley 53/1984",
+      "q": "Según el artículo 3.1 de la Ley 53/1984, cuando se autorice excepcionalmente una segunda actividad pública por razones de interés público determinadas por el Consejo de Ministros o el órgano autonómico competente, dicha actividad deberá prestarse:",
+      "opciones": [
+        "En régimen funcionarial, a tiempo parcial y con duración determinada.",
+        "En régimen laboral, a tiempo parcial y con duración determinada.",
+        "En régimen laboral o funcionarial, con jornada completa si no coincide el horario.",
+        "En régimen laboral, con duración indefinida y jornada determinada por la Administración."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 3.2 Ley 53/1984",
+      "q": "Un empleado público percibe una pensión de jubilación de un régimen público obligatorio y comienza a desempeñar un puesto comprendido en el ámbito del artículo 3.2 de la Ley 53/1984. Con carácter general:",
+      "opciones": [
+        "Podrá mantener ambas percepciones cuando la retribución pública no supere el importe de la pensión.",
+        "Deberá renunciar definitivamente a la pensión, sin conservar el derecho a sus actualizaciones.",
+        "Podrá percibir ambas cantidades si el puesto tiene una jornada inferior a la ordinaria.",
+        "Quedará suspendida la percepción de la pensión mientras desempeñe el puesto, sin perjuicio de sus actualizaciones."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 3.2 Ley 53/1984",
+      "q": "Según la excepción prevista en el artículo 3.2 de la Ley 53/1984, podrá resultar compatible con un puesto de trabajo a tiempo parcial:",
+      "opciones": [
+        "La pensión de jubilación parcial, en el ámbito laboral.",
+        "Cualquier pensión de jubilación ordinaria del sistema público.",
+        "La pensión de retiro de Clases Pasivas, si el segundo puesto es interino.",
+        "La pensión de jubilación ordinaria, cuando el empleo público sea temporal."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 4.1 Ley 53/1984",
+      "q": "Un funcionario solicita compatibilizar su puesto con el de profesor universitario asociado. Según el artículo 4.1 de la Ley 53/1984, ¿qué condición de dedicación debe respetarse?",
+      "opciones": [
+        "La dedicación universitaria deberá ser exclusivamente ocasional, sin asignación regular de docencia.",
+        "La dedicación universitaria podrá ser a tiempo completo si el puesto público principal es de jornada reducida.",
+        "La dedicación como profesor asociado no podrá ser superior a la de tiempo parcial.",
+        "La dedicación deberá ser inferior a diez horas semanales, cualquiera que sea su modalidad contractual."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 4.2 Ley 53/1984",
+      "q": "Según el artículo 4.2 de la Ley 53/1984, la compatibilidad entre un puesto docente e investigador universitario y otro puesto público sanitario o exclusivamente investigador exige, entre otras condiciones:",
+      "opciones": [
+        "Que los puestos pertenezcan a Administraciones diferentes y uno sea desempeñado sin retribución.",
+        "Que el segundo puesto sea exclusivamente sanitario y esté adscrito a la misma universidad.",
+        "Que el puesto universitario sea de jornada completa y el segundo tenga carácter eventual.",
+        "Que ambos puestos estén reglamentariamente autorizados como de prestación a tiempo parcial."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 4.2 Ley 53/1984",
+      "q": "Conforme al artículo 4.2 de la Ley 53/1984, ¿qué colectivo podrá ser autorizado, en las condiciones establecidas legalmente, para desempeñar un segundo puesto de trabajo en el sector público cultural?",
+      "opciones": [
+        "El profesorado de enseñanza secundaria que imparta materias artísticas, cualquiera que sea su destino.",
+        "Los catedráticos y profesores de Música que presten servicio en los conservatorios contemplados por el precepto.",
+        "Todo el personal docente universitario con titulación superior en disciplinas artísticas.",
+        "El personal docente de centros privados de música que participe en programas financiados públicamente."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 5.1.a Ley 53/1984",
+      "q": "Según el artículo 5.1.a) de la Ley 53/1984, un empleado público podrá compatibilizar excepcionalmente su actividad con la condición de miembro de una asamblea legislativa autonómica:",
+      "opciones": [
+        "Salvo que perciba retribuciones periódicas por esa función o que por esta se establezca incompatibilidad.",
+        "Siempre que renuncie a las dietas de asistencia, aunque perciba una retribución parlamentaria periódica.",
+        "Únicamente cuando su participación parlamentaria no supere la mitad de la jornada administrativa.",
+        "Siempre que el empleado pertenezca a una Administración diferente de aquella en la que ejerce el cargo electivo."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 5.2 Ley 53/1984",
+      "q": "Un funcionario público es miembro de una corporación local en régimen de dedicación parcial. Conforme al artículo 5.2 de la Ley 53/1984, ¿qué circunstancia permite percibir retribuciones por esa dedicación?",
+      "opciones": [
+        "Que se desarrollen dentro de su jornada administrativa, compensando las horas posteriormente.",
+        "Que el cargo electivo carezca de remuneración fija, percibiéndose únicamente dietas.",
+        "Que se desempeñe fuera de la jornada de trabajo en la Administración y se respeten los límites generales.",
+        "Que la dedicación parcial haya sido reconocida antes de su nombramiento como funcionario."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 6.1 Ley 53/1984",
+      "q": "Según el artículo 6.1 de la Ley 53/1984, la autorización excepcional para realizar actividades de investigación no permanente o asesoramiento científico o técnico en supuestos concretos requiere, entre otras condiciones:",
+      "opciones": [
+        "Que las tareas formen parte de las funciones ordinarias del personal adscrito al órgano público.",
+        "Que no correspondan a las funciones del personal adscrito y que el encargo responda a las circunstancias legalmente previstas.",
+        "Que la actividad se ejerza necesariamente como profesor universitario asociado a tiempo parcial.",
+        "Que la investigación tenga carácter permanente y esté integrada en un programa estable del departamento."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 7.1 Ley 53/1984",
+      "q": "Un funcionario del actual subgrupo A2 percibe 30.000 € anuales por su puesto principal, en régimen de dedicación ordinaria. A los exclusivos efectos del límite porcentual del artículo 7.1 de la Ley 53/1984, y sin considerar el límite independiente del Director General, ¿qué retribución conjunta no superaría el límite ordinario correspondiente?",
+      "opciones": [
+        "40.500 €.",
+        "42.000 €.",
+        "43.500 €.",
+        "45.000 €."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 7.1 Ley 53/1984",
+      "q": "Según el artículo 7.1 de la Ley 53/1984, la superación excepcional de los límites económicos para compatibilizar actividades públicas, en cómputo anual, requiere:",
+      "opciones": [
+        "Comunicación del interesado y ausencia de oposición durante el plazo de toma de posesión.",
+        "Informe favorable del superior jerárquico, sin necesidad de acuerdo del órgano de gobierno.",
+        "Acreditación de que ambas jornadas son compatibles, sin otros requisitos económicos.",
+        "Acuerdo expreso del órgano de gobierno competente, fundado en razones de especial interés para el servicio."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Resolución SEFP 20/12/2011",
+      "q": "Conforme a la Resolución de 20 de diciembre de 2011 recogida en el temario, respecto de las autorizaciones para ejercer como profesor universitario asociado en el ámbito de la AGE:",
+      "opciones": [
+        "Se exceptúan todos los límites del artículo 7.1, incluidos los relativos al puesto principal.",
+        "Se permite superar el límite de dedicación parcial cuando exista especial interés para el servicio.",
+        "Se autoriza superar el límite de remuneración previsto para Director General, manteniendo las restantes limitaciones legales.",
+        "Se reconoce la compatibilidad automáticamente a todo funcionario que obtenga una plaza de profesor asociado."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 8.1 Ley 53/1984",
+      "q": "Según el artículo 8.1 de la Ley 53/1984, el personal que pertenezca, en representación del sector público, a un consejo de administración de los contemplados en dicho precepto:",
+      "opciones": [
+        "Solo podrá percibir las dietas o indemnizaciones de asistencia correspondientes; las cantidades por otros conceptos deberán ingresar en la Tesorería pública.",
+        "Podrá percibir las retribuciones del consejo y las del puesto público siempre que ambas no superen el límite del artículo 7.1.",
+        "Podrá percibir cualquier compensación acordada por el consejo cuando exista autorización de compatibilidad.",
+        "Deberá ingresar también en la Tesorería pública las dietas de asistencia, salvo autorización ministerial."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 8.1 Ley 53/1984",
+      "q": "Conforme al artículo 8.1 de la Ley 53/1984, la pertenencia de un empleado público, en representación del sector público, a los consejos de administración u órganos de gobierno allí previstos:",
+      "opciones": [
+        "Queda limitada a un consejo, salvo que el segundo pertenezca a una empresa pública.",
+        "No tiene límite numérico cuando la participación se realiza sin retribución.",
+        "Se permite hasta tres consejos, exigiéndose autorización únicamente para el cuarto.",
+        "No podrá superar dos consejos, salvo autorización excepcional mediante acuerdo del órgano competente."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 10 Ley 53/1984",
+      "q": "Un empleado público accede a un segundo puesto público susceptible de compatibilidad, previa autorización. Conforme al artículo 10 de la Ley 53/1984, deberá solicitarla:",
+      "opciones": [
+        "Durante los diez días posteriores a la finalización del plazo de toma de posesión.",
+        "En los diez primeros días del plazo de toma de posesión, que se entenderá prorrogado mientras se resuelve.",
+        "Antes de que transcurran tres meses desde su incorporación efectiva al segundo puesto.",
+        "Dentro del plazo de toma de posesión, sin que su duración se vea afectada por la tramitación."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 11.1 Ley 53/1984",
+      "q": "De acuerdo con el artículo 11.1 de la Ley 53/1984, ¿qué actividades particulares quedan exceptuadas de la prohibición de actividades privadas directamente relacionadas con las del departamento de destino?",
+      "opciones": [
+        "Las realizadas para terceros cuando no exista contraprestación económica.",
+        "Las realizadas fuera del horario de trabajo sin utilizar medios de la Administración.",
+        "Las realizadas para sí por los directamente interesados en ejercicio de un derecho legalmente reconocido.",
+        "Las realizadas por familiares del funcionario, aunque este intervenga profesionalmente en ellas."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 12.1.a Ley 53/1984",
+      "q": "Un empleado público intervino hace 18 meses en la tramitación de un expediente administrativo. Una empresa privada le propone encargarse profesionalmente de ese mismo asunto. Conforme al artículo 12.1.a) de la Ley 53/1984:",
+      "opciones": [
+        "Podrá aceptar el encargo si ya no desempeña funciones en la unidad que tramitó el expediente.",
+        "Podrá aceptarlo si obtiene reconocimiento de compatibilidad y evita utilizar información reservada.",
+        "Podrá aceptarlo cuando la actividad se desarrolle fuera del horario del puesto público.",
+        "No podrá ejercer esa actividad privada respecto del asunto, por haber intervenido en él dentro de los dos últimos años."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Art. 12.1.b Ley 53/1984",
+      "q": "Según el artículo 12.1.b) de la Ley 53/1984, ¿en qué supuesto se encuentra expresamente prohibida la pertenencia a un consejo de administración de una entidad privada?",
+      "opciones": [
+        "Cuando la actividad de la entidad esté directamente relacionada con la gestionada por el departamento, organismo o entidad de destino del empleado.",
+        "Cuando la empresa desarrolle cualquier actividad económica dentro de la provincia donde trabaja el funcionario.",
+        "Cuando el funcionario participe en el consejo, aunque no exista relación con las funciones del departamento.",
+        "Cuando la empresa privada tenga más de diez trabajadores y el empleado perciba dietas de asistencia."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 12.2 Ley 53/1984",
+      "q": "Según el artículo 12.2 de la Ley 53/1984, una actividad privada que requiera una presencia efectiva igual o superior a la mitad de la jornada semanal ordinaria de las Administraciones Públicas:",
+      "opciones": [
+        "Podrá autorizarse si el funcionario acredita que no existe coincidencia horaria con su puesto público.",
+        "Podrá autorizarse cuando el funcionario renuncie a percibir el complemento específico de su puesto.",
+        "Solo podrá autorizarse cuando la actividad pública sea una de las previstas legalmente como de prestación a tiempo parcial.",
+        "Estará prohibida incluso cuando la actividad pública se encuentre legalmente configurada a tiempo parcial."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 14 Ley 53/1984",
+      "q": "Un empleado público obtiene reconocimiento de compatibilidad para ejercer una actividad profesional privada. Posteriormente cambia de puesto de trabajo dentro del sector público. Según el artículo 14 de la Ley 53/1984:",
+      "opciones": [
+        "El reconocimiento se mantiene hasta su vencimiento, salvo que el nuevo puesto implique un cambio de Administración.",
+        "El reconocimiento quedará automáticamente sin efecto como consecuencia del cambio de puesto público.",
+        "El reconocimiento continuará vigente si se mantienen idénticos horario y complemento específico.",
+        "El reconocimiento se prorrogará provisionalmente hasta que la Administración revise sus condiciones."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 15 Ley 53/1984",
+      "q": "Según el artículo 15 de la Ley 53/1984, en el ejercicio de una actividad profesional, mercantil o industrial:",
+      "opciones": [
+        "El empleado público no podrá invocar ni hacer uso de su condición pública.",
+        "El empleado podrá mencionar su condición pública como garantía profesional, pero sin utilizar medios oficiales.",
+        "La condición pública podrá emplearse cuando exista reconocimiento expreso de compatibilidad.",
+        "La prohibición solo afectará a quienes desempeñen cargos directivos o funciones de inspección."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Arts. 16.3 y 4.1 Ley 53/1984",
+      "q": "Según el artículo 16.3 de la Ley 53/1984, ¿cuál de los siguientes supuestos está contemplado como excepción a la prohibición de compatibilidad de su apartado primero, con las condiciones legalmente establecidas?",
+      "opciones": [
+        "Cualquier segunda actividad privada desarrollada durante un máximo de diez horas semanales.",
+        "El desempeño de un cargo electivo retribuido en régimen de dedicación exclusiva.",
+        "La autorización para ejercer como profesor universitario asociado en los términos del artículo 4.1.",
+        "La prestación habitual de asesoramiento privado a las empresas contratistas de la Administración."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 16.4 Ley 53/1984",
+      "q": "Conforme al artículo 16.4 de la Ley 53/1984, en relación con el reconocimiento de compatibilidad para actividades privadas cuando se percibe complemento específico:",
+      "opciones": [
+        "Basta con no superar el 30 % de las retribuciones totales, incluidas las cantidades por antigüedad.",
+        "El límite económico sustituye íntegramente las prohibiciones de actividades privadas de los artículos 11 y 12.",
+        "Todo complemento específico, cualquiera que sea su cuantía, impide reconocer compatibilidad.",
+        "La excepción económica no elimina las limitaciones de los artículos 1.3, 11, 12 y 13 de la ley."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo Resolución SEFP 20/12/2011",
+      "q": "Según la Resolución de 20 de diciembre de 2011 citada en el temario, respecto de los funcionarios de los subgrupos C1, C2 y E de la AGE, ¿qué actuación puede facilitar el reconocimiento de compatibilidad privada?",
+      "opciones": [
+        "La renuncia irrevocable a las retribuciones complementarias correspondientes al puesto.",
+        "La reducción del complemento específico, a petición propia y mediante el procedimiento establecido.",
+        "La sustitución del complemento específico por el complemento de productividad de forma automática.",
+        "La reducción de la jornada ordinaria por decisión unilateral del interesado, sin modificación retributiva."
+      ],
+      "correcta": 1
+    },
+    {
+      "ref": "Artículo Art. 19.f Ley 53/1984",
+      "q": "Según el artículo 19 de la Ley 53/1984, ¿cuál de las siguientes actividades puede quedar exceptuada del régimen de incompatibilidades en los términos establecidos por dicho precepto?",
+      "opciones": [
+        "La docencia permanente en un centro oficial de formación, aunque supere 75 horas anuales.",
+        "El ejercicio retribuido de un cargo en la junta rectora de una mutualidad de funcionarios.",
+        "La creación y publicación de una obra literaria que no derive de una relación de empleo o prestación de servicios.",
+        "La realización habitual de asesoramiento profesional para una empresa privada relacionada con el departamento."
+      ],
+      "correcta": 2
+    },
+    {
+      "ref": "Artículo Art. 20.2 Ley 53/1984",
+      "q": "Un funcionario tiene reconocido el ejercicio de una actividad privada compatible y posteriormente incurre en negligencia en su puesto público, siendo sancionado por falta grave. Conforme al artículo 20.2 de la Ley 53/1984:",
+      "opciones": [
+        "Quedará automáticamente revocado el reconocimiento de compatibilidad.",
+        "El reconocimiento seguirá vigente hasta que termine el plazo inicialmente concedido.",
+        "La revocación requerirá necesariamente una segunda sanción por infracción de incompatibilidades.",
+        "Solo se producirá revocación automática si la falta es calificada como muy grave."
+      ],
+      "correcta": 0
+    },
+    {
+      "ref": "Artículo Art. 95.2.n TREBEP y art. 7.1.k RD 33/1986",
+      "q": "Según el régimen disciplinario sobre incompatibilidades recogido en el temario, ¿qué relación entre conducta y calificación es correcta?",
+      "opciones": [
+        "Incumplir un trámite sin mantener una situación incompatible constituye necesariamente falta muy grave.",
+        "Mantener una situación de incompatibilidad por incumplimiento de las normas constituye falta grave.",
+        "Incumplir los plazos de solicitud constituye siempre falta leve, aunque se mantenga la incompatibilidad.",
+        "Incumplir las normas generando una situación de incompatibilidad constituye falta muy grave; incumplir reglas procedimentales sin mantenerla puede constituir falta grave."
+      ],
+      "correcta": 3
+    },
+    {
+      "ref": "Artículo DA 1.ª RD 1777/1994",
+      "q": "Respecto de los procedimientos de compatibilidad del personal incluido en el ámbito de la disposición adicional primera del RD 1777/1994, ¿cuál de las siguientes afirmaciones es correcta?",
+      "opciones": [
+        "La autorización pública y el reconocimiento privado tienen idéntico plazo máximo de tres meses.",
+        "La autorización para una segunda actividad pública tiene un plazo de cuatro meses y el reconocimiento de actividad privada de tres, con silencio estimatorio en ambos.",
+        "La autorización pública tiene un plazo de tres meses y el reconocimiento privado de cuatro, con silencio estimatorio en ambos.",
+        "El reconocimiento de actividad privada tiene silencio estimatorio, mientras que la autorización pública tiene silencio desestimatorio."
+      ],
+      "correcta": 1
+    }
+  ],
+  "fuente": "ChatGPT"
+}
