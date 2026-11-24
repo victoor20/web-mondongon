@@ -59,4 +59,5 @@ async function todasLasPreguntas() {
   return res.filter(r => r.status === 'fulfilled').flatMap(r => r.value.preguntas);
 }
 /* documentos de la Biblioteca por tema (lista guardada en este dispositivo) */
-const matCuenta = tema => Object.values(jget(localStorage, 'ma2_bib', {})).filter(d => d && !d.del && d.tema === tema).length;
+const matCuenta = tema => Object.values(jget(localStorage, 'ma2_bib', {})).filter(d => d && !d.del && d.tema === tema && d.tipo !== 'Ejercicios').length;
+const ejCuenta = tema => Object.values(jget(localStorage, 'ma2_bib', {})).filter(d => d && !d.del && d.tema === tema && d.tipo === 'Ejercicios').length;

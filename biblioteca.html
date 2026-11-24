@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261221"></script>
+<script src="puerta.js?v=20261222"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261221">
+<link rel="stylesheet" href="style.css?v=20261222">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -60,15 +60,23 @@
     <div id="bib-lista"></div>
   </div>
   <div role="tabpanel" id="panel-tarjetas" aria-labelledby="tab-tarjetas" class="hide">
-    <section class="ib" aria-label="Qué es Tarjetas">
-      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>Tarjetas</h2>
-      <p class="ib-t">Para recordar sin mirar</p>
-      <p class="ib-x">Preguntas y respuestas breves sobre datos, plazos, números, órganos, competencias y definiciones.</p>
-      <p class="ib-ej">Ejemplo: ¿qué cuórum exige el Pleno? Dos tercios de sus miembros.</p>
-    </section>
+    <header class="tj-cabeza">
+      <h2 class="tj-h">Tarjetas</h2>
+      <p class="tj-sub">Preguntas y respuestas breves para recordar sin mirar: datos, plazos, números, órganos y definiciones.</p>
+      <details class="tj-ayuda"><summary>¿Cómo funcionan?</summary>
+        <p>Cada tarjeta tiene la pregunta delante y la respuesta detrás. Pruébate, gírala y marca si la sabías: las que sabes vuelven más espaciadas y las que fallas vuelven antes.</p>
+        <ul class="tj-leyenda">
+          <li><span class="fc-st fc-st-nueva">Nueva</span> Aún no la has repasado.</li>
+          <li><span class="fc-st fc-st-aprendiendo">Aprendiendo</span> La estás repasando.</li>
+          <li><span class="fc-st fc-st-dominada">Dominada</span> La has acertado cuatro veces seguidas.</li>
+        </ul>
+        <p class="ib-ej">Ejemplo: ¿qué cuórum exige el Pleno? Dos tercios de sus miembros.</p>
+      </details>
+    </header>
     <div id="t-stats" class="est-hs fc-stats hide"></div>
     <section class="tj-panel tj-estudiar" aria-labelledby="tj-est-t">
       <h3 class="tj-t" id="tj-est-t">Estudiar</h3>
+      <p class="tj-d">Elige qué quieres repasar ahora.</p>
       <div class="tj-fila">
         <button type="button" class="btn small" id="t-repasar">Estudiar hoy</button>
         <button type="button" class="btn small ghost" id="t-todas">Estudiar todas</button>
@@ -90,7 +98,6 @@
       <div class="bib-barra">
         <input type="search" id="t-q" placeholder="Buscar en las tarjetas" aria-label="Buscar en las tarjetas" autocomplete="off">
         <select id="t-est" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="nueva">Nuevas</option><option value="aprendiendo">Aprendiendo</option><option value="dominada">Dominadas</option></select>
-        <button type="button" class="btn small ghost" id="t-abrir">Abrir todo</button>
       </div>
       <div id="t-ets-f" class="fc-chips hide" role="group" aria-label="Filtrar por etiqueta"></div>
     </section>
@@ -117,18 +124,28 @@
       <p class="bib-msg" id="t-msg2" role="alert"></p>
       <div class="bf-ac"><button type="submit" class="btn">Crear tarjetas</button><button type="button" class="btn cancelar" id="t-cancel2">Cancelar</button></div>
     </form>
+    <div class="tj-listacab hide" id="t-listacab"><h3 class="tj-t">Por bloque y tema</h3><button type="button" class="btn small ghost" id="t-abrir">Abrir todo</button></div>
     <div id="tarjetas"></div>
   </div>
   <div role="tabpanel" id="panel-notas" aria-labelledby="tab-notas" class="hide">
-    <section class="ib" aria-label="Qué es Notas">
-      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>Notas</h2>
-      <p class="ib-t">Para comprender y consultar</p>
-      <p class="ib-x">Explicaciones, ejemplos, comparaciones, confusiones, errores y conceptos que necesitan contexto.</p>
-      <p class="ib-ej">Ejemplo: diferencia entre cuórum y mayoría de votación, explicada con una situación práctica.</p>
+    <header class="tj-cabeza">
+      <h2 class="tj-h">Notas</h2>
+      <p class="tj-sub">Para comprender y consultar: explicaciones, ejemplos, comparaciones, confusiones y conceptos que necesitan contexto.</p>
+      <details class="tj-ayuda"><summary>¿Cómo funcionan?</summary>
+        <p>Escribe una nota con «Nueva nota» y ponle un tema y, si quieres, una etiqueta. Se guardan agrupadas por tema, plegadas, y se sincronizan entre tus dispositivos.</p>
+        <p class="ib-ej">Ejemplo: diferencia entre cuórum y mayoría de votación, explicada con una situación práctica.</p>
+      </details>
+    </header>
+    <section class="tj-panel" aria-labelledby="tj-not-t">
+      <div class="tj-cab">
+        <h3 class="tj-t" id="tj-not-t">Tus notas</h3>
+        <div class="tj-fila"><button type="button" class="btn small" id="n-nueva">Nueva nota</button></div>
+      </div>
+      <div class="bib-barra">
+        <input type="search" id="n-q" placeholder="Buscar en las notas" aria-label="Buscar en las notas" autocomplete="off">
+        <select id="n-fet" aria-label="Filtrar por etiqueta"><option value="">Todas las etiquetas</option></select>
+      </div>
     </section>
-    <div class="bib-barra"><button type="button" class="btn small" id="n-nueva">Nueva nota</button> <button type="button" class="btn small ghost" id="n-todas">Abrir todo</button>
-      <input type="search" id="n-q" placeholder="Buscar en las notas" aria-label="Buscar en las notas" autocomplete="off">
-      <select id="n-fet" aria-label="Filtrar por etiqueta"><option value="">Todas las etiquetas</option></select></div>
     <form id="n-form" class="bib-form hide" autocomplete="off">
       <h2 id="n-form-t">Nueva nota</h2>
       <label class="bf-f">Título (opcional) <input type="text" id="n-ti" maxlength="120"></label>
@@ -141,13 +158,14 @@
       <p class="bib-msg" id="n-msg" role="alert"></p>
       <div class="bf-ac"><button type="submit" class="btn">Guardar nota</button><button type="button" class="btn cancelar" id="n-cancel">Cancelar</button></div>
     </form>
+    <div class="tj-listacab"><h3 class="tj-t">Por tema</h3><button type="button" class="btn small ghost" id="n-todas">Abrir todo</button></div>
     <div id="notas"></div>
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261221"></script>
-<script src="vistas.js?v=20261221"></script>
-<script src="biblioteca.js?v=20261221"></script>
+<script src="app.js?v=20261222"></script>
+<script src="vistas.js?v=20261222"></script>
+<script src="biblioteca.js?v=20261222"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -185,7 +203,13 @@ TABS.forEach((t, i) => {
 });
 window.addEventListener('hashchange', () => ruta(true));
 /* ---------- Material ---------- */
-const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.className = 'bib-msg' + (malo ? ' mal' : ''); };
+let msgT = 0;
+const msg = (t, malo) => {                                        // aviso: se cierra solo a los pocos segundos (salvo los de «…» en curso) y tiene su ✕
+  const m = $('bib-msg'); clearTimeout(msgT); m.className = 'bib-msg' + (malo ? ' mal' : ''); m.replaceChildren(); if (!t) return;
+  const x = el('button', 'msg-x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Cerrar el aviso'); x.addEventListener('click', () => msg(''));
+  m.append(el('span', '', t), x);
+  if (!/…$/.test(t)) msgT = setTimeout(() => msg(''), malo ? 10000 : 5000);
+};
 let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos', filtTema = {};
 const ORDENES = [['nuevos', 'Más recientes'], ['antiguos', 'Más antiguos'], ['az', 'A → Z'], ['za', 'Z → A'], ['tipo', 'Por tipo'], ['grandes', 'Más grandes']];
 const cmpDoc = { nuevos: (x, y) => y.t - x.t, antiguos: (x, y) => x.t - y.t, az: (x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), za: (x, y) => y.titulo.localeCompare(x.titulo, 'es', { numeric: true, sensitivity: 'base' }),
@@ -335,13 +359,18 @@ function vistaBloque(box, sub) {
       const todosT = docs.filter(d => d.tema === t.id), lista = todosT.filter(d => d.tipo !== 'Ejercicios'), ej = todosT.filter(d => d.tipo === 'Ejercicios'), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
       det.open = !!abierto[t.id];                                   // todo plegado al entrar; se abre lo que tú abras
       det.addEventListener('toggle', () => { abierto[t.id] = det.open; });
+      let d2 = null; const bEj = ej.length ? el('button', 'tej', 'Ejercicios (' + ej.length + ')') : null;
+      if (bEj) {                                                    // lleva directo a los ejercicios de este tema
+        bEj.type = 'button'; bEj.title = 'Ir a los ejercicios de este tema';
+        bEj.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); det.open = true; abierto[t.id] = true; if (d2) { d2.open = true; abierto['ej-' + t.id] = true; d2.scrollIntoView({ block: 'center', behavior: 'smooth' }); } });
+      }
       const sum = el('summary', 'bib-ts');
-      sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : (ej.length ? '' : 'sin documentos')), ej.length ? el('span', 'tej', 'Ejercicios ' + ej.length) : '', el('span', 'chev'));
+      sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : (ej.length ? '' : 'sin documentos')), bEj || '', el('span', 'chev'));
       det.append(sum);
       const c = el('div', 'bib-tb'); listaDocs(c, lista, t.id, t.id); det.append(c);
       if (ej.length) {                                              // los ejercicios prácticos, aparte y plegados
-        const eb = el('div', 'bib-tb bib-ejw'), d2 = el('details', 'bib-ej'), s2 = el('summary', '', 'Ejercicios prácticos (' + ej.length + ')');
-        d2.append(s2); ej.slice().sort((x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' })).forEach(d => d2.append(filaDoc(d)));
+        const eb = el('div', 'bib-tb bib-ejw'), s2 = el('summary', '', 'Ejercicios prácticos (' + ej.length + ')');
+        d2 = el('details', 'bib-ej'); d2.append(s2); ej.slice().sort((x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' })).forEach(d => d2.append(filaDoc(d)));
         const sj = el('button', 'mini azul', 'Subir ejercicio'); sj.type = 'button'; sj.addEventListener('click', () => abrirForm(null, t.id, 'Ejercicios')); d2.append(sj);
         d2.open = !!abierto['ej-' + t.id]; d2.addEventListener('toggle', () => { abierto['ej-' + t.id] = d2.open; });
         eb.append(d2); det.append(eb);
@@ -732,7 +761,7 @@ function renderTarjetas() {
   $('t-repasar').textContent = pend ? 'Estudiar hoy (' + pend + ')' : 'Estudiar hoy';
   $('t-todas').textContent = vis.length ? 'Estudiar todas (' + vis.length + ')' : 'Estudiar todas';
   $('t-repasar').disabled = $('t-todas').disabled = !vis.length;
-  const st = $('t-stats'); st.classList.toggle('hide', !todas.length); tjCifras(st, [['Tarjetas', vis.length], ['Para hoy', pend], ['Dominadas', dom]]);
+  $('t-listacab').classList.toggle('hide', !todas.length); const st = $('t-stats'); st.classList.toggle('hide', !todas.length); tjCifras(st, [['Tarjetas', vis.length], ['Para hoy', pend], ['Dominadas', dom]]);
   if (!todas.length) {
     const v = el('div', 'vacio-card'); v.append(el('h2', '', 'Todavía no tienes tarjetas'), el('p', '', 'Crea una con «Nueva tarjeta» o pega varias de golpe. Cada tarjeta tiene la pregunta delante y la respuesta detrás: pruébate, gírala y marca si la sabías. Las que fallas vuelven antes. Se sincronizan entre tus dispositivos.')); box.append(v); return;
   }
@@ -907,11 +936,11 @@ async function init() {
   await loadTemario(); initMaterial(); opcionesTema($('n-tema')); opcionesTema($('t-tema')); opcionesTema($('t-tema2'));
   // enlace antiguo del temario: biblioteca.html?tema=I-2#material -> #material/I con ese tema abierto
   const pt = new URLSearchParams(location.search).get('tema');
-  if (pt && _temario.byId[pt] && !leerRuta().sub) { resaltar = pt; history.replaceState(null, '', location.pathname + '#material/' + bloqueOf(pt)); }
+  if (pt && _temario.byId[pt] && !leerRuta().sub) { resaltar = pt; if (new URLSearchParams(location.search).get('ej')) abierto['ej-' + pt] = true; history.replaceState(null, '', location.pathname + '#material/' + bloqueOf(pt)); }
   ruta(false); cargaMaterial();
 }
 init();
 </script>
-<script src="temporizador.js?v=20261221"></script>
+<script src="temporizador.js?v=20261222"></script>
 </body>
 </html>
