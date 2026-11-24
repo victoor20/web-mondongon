@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261220"></script>
+<script src="puerta.js?v=20261221"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261220">
+<link rel="stylesheet" href="style.css?v=20261221">
 </head>
 <body data-pagina="tests" data-enfoque data-angosto>
 <div class="wrap">
@@ -153,11 +153,11 @@
   <p class="fine" style="margin:.5rem 0 0">Se guarda solo en este navegador y está disponible en todos los tests. Para anotar algo de una pregunta concreta, usa «Nota» dentro de ella.</p>
 </aside>
 
-<script src="app.js?v=20261220"></script>
-<script src="descarga.js?v=20261220"></script>
+<script src="app.js?v=20261221"></script>
+<script src="descarga.js?v=20261221"></script>
 <script>
 const params = new URLSearchParams(location.search);
-const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente');
+const T = params.get('t'), PTEMA = params.get('tema'), PBLOQUE = params.get('bloque'), PART = params.get('art'), PFUENTE = params.get('fuente'), PTEMAS = (params.get('temas') || '').split(',').filter(Boolean), PSOLO = params.get('solo') === 'nuevos';
 const ES_BANCO = T === 'errores' || T === 'dudosas';
 const CURSO = LS.curso + location.search;
 
@@ -190,7 +190,9 @@ const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
 /* ---------- preparar el conjunto de preguntas ---------- */
 function scopeFilter(q) {
   if (PART && !enRango(q, PART)) return false;
+  if (PSOLO && statsFor(q.testId)) return false;
   if (PTEMA) return q.tema === PTEMA;
+  if (PTEMAS.length) return PTEMAS.includes(q.tema);
   if (PBLOQUE) return bloqueOf(q.tema) === PBLOQUE;
   return true;
 }
@@ -200,9 +202,12 @@ function scopeName() {
 }
 function scopeBase() {
   if (PART) return nombreAmbito(PART);
-  if (PTEMA) return temaLabel(PTEMA);
-  if (PBLOQUE) { const b = bloqueInfo(PBLOQUE); return `Bloque ${PBLOQUE}` + (b ? ': ' + b.titulo : ''); }
-  return '';
+  const p = [];
+  if (PTEMA) p.push(temaLabel(PTEMA));
+  else if (PTEMAS.length) p.push(PTEMAS.length === 1 ? temaLabel(PTEMAS[0]) : `${PTEMAS.length} temas${PBLOQUE ? ' del bloque ' + PBLOQUE : ''}`);
+  else if (PBLOQUE) { const b = bloqueInfo(PBLOQUE); p.push(`Bloque ${PBLOQUE}` + (b ? ': ' + b.titulo : '')); }
+  if (PSOLO) p.push('tests sin hacer');
+  return p.join('. ');
 }
 async function allJsonTests() {
   const { items } = await loadCatalog();
@@ -224,10 +229,11 @@ async function prepMixto() {
   if (!all.length) throw new Error(scopeName() ? `Todavía no hay preguntas de ${scopeName()}.` : 'Todavía no hay tests para mezclar.');
   mixtoAll = all;
   const op = [10, 20, 30, 50, 70, 100].filter(x => x < all.length);
+  if (n < all.length && !op.includes(n)) { op.push(n); op.sort((a, b) => a - b); }      // un número a tu medida
   const sel = $('o-n'); sel.replaceChildren();
   op.forEach(x => sel.append(new Option(String(x), String(x))));
   sel.append(new Option(`Todas (${all.length})`, 'todas'));
-  sel.value = op.includes(n) ? String(n) : (n >= all.length ? 'todas' : String(op.filter(x => x <= n).pop() || op[0] || 'todas'));
+  sel.value = n >= all.length ? 'todas' : String(n);
   $('o-n-box').classList.remove('hide');
   pool = shuffle(all).slice(0, Math.min(n, all.length));
   meta = { titulo: scopeName() ? 'Test mixto. ' + scopeName() : 'Test mixto', desc: descMixto(pool.length) };

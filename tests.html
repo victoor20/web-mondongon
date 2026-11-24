@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261220"></script>
+<script src="puerta.js?v=20261221"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tests - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261220">
+<link rel="stylesheet" href="style.css?v=20261221">
 </head>
 <body data-pagina="tests">
 <div class="wrap">
@@ -39,6 +39,7 @@
     <div class="filtros hoja pad">
       <input type="search" id="buscar" placeholder="Buscar un test" aria-label="Buscar un test">
       <div class="chips" id="chips"></div>
+      <div class="chips tema-row hide" id="chips-tema"></div>
       <div class="chips estado" id="chips-estado"></div>
       <div class="chips origen" id="chips-origen"></div>
     </div>
@@ -57,8 +58,8 @@
     <div id="avisos"></div>
   </section>
 </div>
-<script src="app.js?v=20261220"></script>
-<script src="vistas.js?v=20261220"></script>
+<script src="app.js?v=20261221"></script>
+<script src="vistas.js?v=20261221"></script>
 <script>
 let fBloque = 'Todos', fTema = new URLSearchParams(location.search).get('tema'), fFuente = new URLSearchParams(location.search).get('fuente') || 'Todos', fEstado = 'Todos', pagina = 1;
 const ORDENES = {
@@ -126,7 +127,7 @@ function renderList() {
 }
 function renderChips() {
   const box = $('chips'); box.replaceChildren();
-  const alt = () => { pagina = 1; renderChips(); renderList(); renderPractica(); };
+  const alt = () => { if (fTema && fBloque !== 'Todos' && bloqueOf(fTema) !== fBloque) fTema = null; pagina = 1; renderChips(); renderList(); renderPractica(); };
   // contenedor, texto, contador (null = sin contador), activo, acción, id de bloque (para el color)
   const mk = (cont, txt, n, on, fn, b) => {
     const c = el('button', 'chip' + (on ? ' on' : '') + (n === 0 ? ' vacio' : ''), txt); c.type = 'button';
@@ -136,7 +137,19 @@ function renderChips() {
     if (n === 0) c.disabled = true; else c.addEventListener('click', fn);
     cont.append(c); return c;
   };
-  if (fTema) mk(box, `Tema ${codigoTema(fTema)} ✕`, null, true, () => { fTema = null; alt(); });
+  const bqSel = fBloque !== 'Todos' && fBloque !== 'Sin clasificar' ? _temario.bloques.find(b => b.id === fBloque) : null;
+  if (fTema && !bqSel) mk(box, `Tema ${codigoTema(fTema)} ✕`, null, true, () => { fTema = null; alt(); });
+  const ft = $('chips-tema'); ft.replaceChildren(); ft.classList.toggle('hide', !bqSel);
+  if (bqSel) {                                                      // un solo desplegable con los temas del bloque, en vez de un botón por tema
+    const cnt = t => items.filter(it => itemTemas(it).includes(t)).length, sl = el('select');
+    sl.setAttribute('aria-label', 'Tema del bloque ' + bqSel.id);
+    sl.append(new Option(`Todos los temas del bloque (${items.filter(it => itemTemas(it).some(t => bloqueOf(t) === bqSel.id)).length})`, ''));
+    bqSel.temas.forEach(t => { const n = cnt(t.id); if (n) sl.append(new Option(`${codigoTema(t.id)} · ${t.corto} (${n})`, t.id)); });
+    if (fTema && ![...sl.options].some(o => o.value === fTema)) sl.append(new Option(`${codigoTema(fTema)} (0)`, fTema));
+    sl.value = fTema || '';
+    sl.addEventListener('change', () => { fTema = sl.value || null; pagina = 1; renderChips(); renderList(); renderPractica(); });
+    ft.append(el('span', 'rot', 'Tema'), sl);
+  }
   const sinClas = it => it.kind === 'html' || !itemTemas(it).some(t => bloqueOf(t));
   const nBloque = b => items.filter(it => b === 'Sin clasificar' ? sinClas(it) : itemTemas(it).some(t => bloqueOf(t) === b)).length;
   if (items.length) {
@@ -177,19 +190,74 @@ function initControles() {
     renderChips(); renderList(); renderPractica();
   });
 }
+/* ---------- test mixto a medida ---------- */
+const mx = { bloque: '', temas: new Set(), nuevos: false, abierto: false };
+let mxEl = null;
+const mxFuente = () => fFuente !== 'Todos' ? fFuente : '';
+const mxItems = () => items.filter(i => i.kind === 'json' && (!mxFuente() || i.fuente === mxFuente()) && (!mx.nuevos || !statsFor(i.id)));
+const mxCuenta = f => mxItems().reduce((s, i) => s + Object.entries(i.temas || {}).filter(([t]) => f(t)).reduce((a, e) => a + e[1], 0), 0);
+const mxVale = t => mx.temas.size ? mx.temas.has(t) : (mx.bloque ? bloqueOf(t) === mx.bloque : true);
+function mxUrl(n) {
+  let u = 'test.html?t=mixto&n=' + n;
+  if (mx.temas.size) u += '&temas=' + encodeURIComponent([...mx.temas].join(',')); else if (mx.bloque) u += '&bloque=' + mx.bloque;
+  if (mx.nuevos) u += '&solo=nuevos'; if (mxFuente()) u += '&fuente=' + encodeURIComponent(mxFuente());
+  return u;
+}
+function mxResumen() {
+  const base = mx.temas.size ? (mx.temas.size === 1 ? temaLabel([...mx.temas][0]) : mx.temas.size + ' temas del bloque ' + mx.bloque) : mx.bloque ? 'el bloque ' + mx.bloque : (mxFuente() ? 'tus tests de origen ' + mxFuente() : 'todos tus tests');
+  return base + (mx.nuevos ? ', solo de los que aún no has hecho' : '') + (mxFuente() && (mx.temas.size || mx.bloque) ? ', origen ' + mxFuente() : '');
+}
+function repintaMixto(foco) { const n = mixtoCard(); if (mxEl && mxEl.parentNode) mxEl.replaceWith(n); mxEl = n; if (foco && $(foco)) $(foco).focus(); }
+function mixtoCard() {
+  const hay = mxCuenta(() => true), total = mxCuenta(mxVale), m = el('div', 'mixto' + (hay ? '' : ' off'));
+  const h = el('h3'), ic = el('span', 'mx-ico'); ic.setAttribute('aria-hidden', 'true');
+  ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c3 0 4.5 2 6 5s3 5 6 5H21M3 17h3.5c1.4 0 2.5-.5 3.4-1.4M14.1 8.4C15 7.5 16.1 7 17.5 7H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg>';
+  h.append(ic, 'Test mixto');
+  m.append(h, el('p', '', hay ? `Preguntas al azar de ${mxResumen()}. Hay ${plural(total, 'pregunta', 'preguntas')} disponibles; ¿cuántas quieres?` : 'Aparecerá cuando haya tests publicados.'));
+  const ch = el('div', 'nchips'); ch.setAttribute('role', 'group'); ch.setAttribute('aria-label', 'Número de preguntas');
+  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = mxUrl(x); ch.append(a); });
+  if (total) { const a = el('a', '', total < 10 ? `Las ${total}` : 'Todas'); a.href = mxUrl(total); ch.append(a); }
+  m.append(ch);
+  if (hay) {
+    const d = el('details', 'mx-opc'), s = el('summary', '', 'Personalizar'), act = mx.bloque || mx.temas.size || mx.nuevos;
+    if (act) s.append(el('span', 'mx-act', 'activo'));
+    d.open = mx.abierto; d.append(s);
+    d.addEventListener('toggle', () => { mx.abierto = d.open; $('practica').classList.toggle('mx-abierto', d.open); });
+    const lb = el('label', 'mx-f', 'Bloque'), sb = el('select'); sb.id = 'mx-b';
+    sb.append(new Option('Todos los bloques', ''));
+    _temario.bloques.forEach(b => { const n = mxCuenta(t => bloqueOf(t) === b.id); if (n) sb.append(new Option(`Bloque ${b.id}: ${b.titulo} (${plural(n, 'pregunta', 'preguntas')})`, b.id)); });
+    sb.value = mx.bloque; sb.addEventListener('change', () => { mx.bloque = sb.value; mx.temas.clear(); repintaMixto('mx-b'); });
+    lb.append(sb); d.append(lb);
+    const bq = mx.bloque && _temario.bloques.find(b => b.id === mx.bloque);
+    if (bq) {
+      const bx = el('fieldset', 'mx-temas'); bx.append(el('legend', '', 'Temas (si no marcas ninguno, entran todos)'));
+      const li = el('div', 'mx-lista');
+      bq.temas.forEach(t => {
+        const n = mxCuenta(x => x === t.id); if (!n) return;
+        const l = el('label', 'fc-op'), c = el('input'); c.type = 'checkbox'; c.id = 'mx-t-' + t.id; c.checked = mx.temas.has(t.id);
+        c.addEventListener('change', () => { if (c.checked) mx.temas.add(t.id); else mx.temas.delete(t.id); repintaMixto(c.id); });
+        l.append(c, ` ${codigoTema(t.id)} · ${t.corto} (${n})`); li.append(l);
+      });
+      bx.append(li);
+      if (mx.temas.size) { const q = el('button', 'btn small ghost', 'Quitar selección'); q.type = 'button'; q.addEventListener('click', () => { mx.temas.clear(); repintaMixto(); }); bx.append(q); }
+      d.append(bx);
+    }
+    const ln = el('label', 'fc-op'), cn = el('input'); cn.type = 'checkbox'; cn.id = 'mx-n'; cn.checked = mx.nuevos;
+    cn.addEventListener('change', () => { mx.nuevos = cn.checked; repintaMixto('mx-n'); });
+    ln.append(cn, ' Solo preguntas de tests que aún no he hecho'); d.append(ln);
+    if (total >= 5) {
+      const f = el('form', 'mx-num'), i = el('input'), b = el('button', 'btn small', 'Empezar'); i.type = 'number'; i.min = '5'; i.max = String(total); i.placeholder = 'Otro número'; i.setAttribute('aria-label', 'Otro número de preguntas');
+      f.addEventListener('submit', e => { e.preventDefault(); const n = Math.max(5, Math.min(total, parseInt(i.value, 10) || 0)); if (i.value) location.href = mxUrl(n); });
+      f.append(i, b); d.append(f);
+    }
+    m.append(d);
+  }
+  return m;
+}
 function renderPractica() {
   const box = $('practica'); box.replaceChildren();
-  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length, fo = fFuente !== 'Todos' ? fFuente : '';
-  const total = items.filter(i => i.kind === 'json' && (!fo || i.fuente === fo)).reduce((s, i) => s + (i.n || 0), 0), qf = fo ? '&fuente=' + encodeURIComponent(fo) : '';
-  const m = el('div', 'mixto' + (total ? '' : ' off'));
-  const bub = el('div', 'mixto-bub'); bub.setAttribute('aria-hidden', 'true');
-  ['A', 'B', 'C', 'D'].forEach((l, i) => bub.append(el('i', i === 2 ? 'x' : '', l)));
-  m.append(bub, el('h3', '', 'Test mixto'),
-    el('p', '', total ? `Preguntas al azar de ${fo ? 'tus tests de origen ' + fo : 'todos tus tests'} (${plural(total, 'pregunta', 'preguntas')}). ¿Cuántas?` : 'Aparecerá cuando haya tests publicados.'));
-  const ch = el('div', 'nchips');
-  [10, 20, 30, 50, 70, 100].filter(x => x < total).forEach(x => { const a = el('a', '', String(x)); a.href = `test.html?t=mixto&n=${x}${qf}`; ch.append(a); });
-  if (total) { const a = el('a', '', 'Todas'); a.href = `test.html?t=mixto&n=${total}${qf}`; ch.append(a); }
-  m.append(ch);
+  const nErr = Object.keys(getErr()).length, nDud = Object.keys(getDud()).length;
+  const m = mixtoCard(); mxEl = m; box.classList.toggle('mx-abierto', !!mx.abierto);
   const lado = el('div', 'hoy-lado');
   const tarjeta = (n, titulo, vacio, lleno, href) => {
     const a = el('a', 'accion' + (n ? '' : ' off')); a.href = href;
@@ -210,6 +278,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261220"></script>
+<script src="temporizador.js?v=20261221"></script>
 </body>
 </html>

@@ -4,7 +4,8 @@
    Los archivos viven en el repositorio PRIVADO (biblioteca/…) y la lista en biblioteca.json.
    ===================================================================== */
 const BIB = { indice: 'biblioteca.json', dir: 'biblioteca/', limite: 60 * 1024 * 1024, clave: 'ma2_bib', cache: 'ma-bib' };
-const TIPOS = ['Temario', 'Esquema', 'Anexo', 'Test PDF', 'Audio', 'Ley', 'Apuntes', 'Resumen', 'Otro'];
+const TIPOS = ['Temario', 'Esquema', 'Anexo', 'Test PDF', 'Audio', 'Ley', 'Apuntes', 'Resumen', 'Ejercicios', 'Otro'];
+const ixTipo = t => { const i = TIPOS.indexOf(t); return i < 0 ? 98 : i; };   // los tipos propios van después de los de siempre
 const ORIGENES = ['Academia', 'Propio'];
 const origenDe = d => (d && d.origen) || 'Propio';           // el material anterior a esta función es tuyo
 const MIME = { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', txt: 'text/plain', mp3: 'audio/mpeg', m4a: 'audio/mp4',
@@ -27,6 +28,7 @@ function clasificaNombre(nombre) {
   else if (/\btest/i.test(base)) r.tipo = 'Test PDF';
   else if (/esquema/i.test(base)) r.tipo = 'Esquema';
   else if (/anexo/i.test(base)) r.tipo = 'Anexo';
+  else if (/ejercicio|supuesto pr/i.test(base)) r.tipo = 'Ejercicios';
   else if (/resumen/i.test(base)) r.tipo = 'Resumen';
   else if (r.origen === 'Academia' || /temario/i.test(base)) r.tipo = 'Temario';
   return r;

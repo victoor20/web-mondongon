@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261220"></script>
+<script src="puerta.js?v=20261221"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261220">
+<link rel="stylesheet" href="style.css?v=20261221">
 </head>
 <body data-pagina="inicio">
 <div class="wrap">
@@ -64,8 +64,8 @@
     <div id="ultimos"></div>
   </section>
 </div>
-<script src="app.js?v=20261220"></script>
-<script src="vistas.js?v=20261220"></script>
+<script src="app.js?v=20261221"></script>
+<script src="vistas.js?v=20261221"></script>
 <script>
 let selTema = null, primera = true;
 
@@ -115,14 +115,26 @@ function renderEstudio() {
   const cifras = el('div', 'est-hs');
   [['Hoy', est.hoy], ['Esta semana', est.total]].forEach(([n, s]) => { const c = el('div', 'est-h'); c.append(el('b', '', s >= 60 ? fmtT(s) : '0 min'), el('span', '', n)); cifras.append(c); });
   box.append(cifras);
-  const dias = el('div', 'est-dias'); dias.setAttribute('role', 'img');
+  const dias = el('div', 'est-dias'), tip = el('div', 'est-tip'); tip.hidden = true; tip.setAttribute('aria-hidden', 'true');
   dias.setAttribute('aria-label', 'Estudio de cada día de esta semana: ' + est.dias.map((d, i) => L[i] + ' ' + (d.s >= 60 ? fmtT(d.s) : '0 min')).join(', '));
   est.dias.forEach((d, i) => {
     const c = el('div', 'est-dia' + (d.f === hoy ? ' hoy' : '')), b = el('i');
     b.style.height = d.s >= 60 ? Math.max(6, Math.round(d.s / max * 100)) + '%' : '3px';
+    c.tabIndex = 0;
+    const txt = new Date(d.f + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' }) + ': ' + (d.s >= 60 ? fmtT(d.s) : '0 min');
+    const ver = () => {
+      dias.querySelectorAll('.sel').forEach(x => x.classList.remove('sel')); c.classList.add('sel');
+      tip.textContent = txt; tip.hidden = false;
+      const w = tip.offsetWidth, m = c.offsetLeft + c.offsetWidth / 2;
+      tip.style.left = Math.max(w / 2, Math.min(dias.clientWidth - w / 2, m)) + 'px';
+    };
+    c.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') ver(); }); c.addEventListener('focus', ver); c.addEventListener('click', ver);
+    c.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { tip.hidden = true; c.classList.remove('sel'); } }); c.addEventListener('blur', () => { tip.hidden = true; c.classList.remove('sel'); });
     c.append(b, el('span', '', L[i])); dias.append(c);
   });
-  box.append(dias, el('p', 'fine', 'Tiempo de estudio efectivo medido con el temporizador, de todos tus dispositivos.'));
+  dias.append(tip);
+  if (!window._estTip) { window._estTip = 1; document.addEventListener('click', e => { const t = document.querySelector('.est-tip'); if (t && !e.target.closest('.est-dia')) { t.hidden = true; document.querySelectorAll('.est-dia.sel').forEach(x => x.classList.remove('sel')); } }); }
+  box.append(dias, el('p', 'fine', 'Toca o pasa el ratón por un día para ver su tiempo. Es estudio efectivo medido con el temporizador, de todos tus dispositivos.'));
 }
 function renderRacha() {                                           // recuadro propio: racha, progreso de hoy y próximo logro
   const box = $('racha'), ob = objEstado(); box.replaceChildren(); box.hidden = !!(ob && !ob.on); if (box.hidden) return;
@@ -306,6 +318,6 @@ window.addEventListener('online', () => { if (getToken()) sincronizar(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden && getToken() && items.length) sincronizar(); });
 init();
 </script>
-<script src="temporizador.js?v=20261220"></script>
+<script src="temporizador.js?v=20261221"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261220"></script>
+<script src="puerta.js?v=20261221"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Biblioteca - Mi Academia</title>
@@ -17,7 +17,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=20261220">
+<link rel="stylesheet" href="style.css?v=20261221">
 </head>
 <body data-pagina="biblioteca">
 <div class="wrap">
@@ -46,7 +46,7 @@
       <label class="bf-f" id="bf-titulo">Título <input type="text" id="i-titulo" maxlength="120"></label>
       <div class="bf-fila">
         <label class="bf-f">Tema <select id="i-tema"></select></label>
-        <label class="bf-f">Tipo <select id="i-tipo"></select></label>
+        <label class="bf-f">Tipo <select id="i-tipo"></select><input type="text" id="i-tipo-x" class="hide" maxlength="30" placeholder="Escribe el tipo, por ejemplo Mapa conceptual" aria-label="Tipo propio"></label>
         <label class="bf-f">Origen <select id="i-origen"></select></label>
       </div>
       <label class="fc-op bf-auto" id="bf-auto"><input type="checkbox" id="i-auto" checked> Clasificar por el nombre del archivo (B1-T01-…)</label>
@@ -145,9 +145,9 @@
     <p class="vacio-msg hide" id="n-nada">Ninguna nota coincide con la búsqueda.</p>
   </div>
 </div>
-<script src="app.js?v=20261220"></script>
-<script src="vistas.js?v=20261220"></script>
-<script src="biblioteca.js?v=20261220"></script>
+<script src="app.js?v=20261221"></script>
+<script src="vistas.js?v=20261221"></script>
+<script src="biblioteca.js?v=20261221"></script>
 <script>
 const TABS = ['material', 'tarjetas', 'notas'];
 let vista = { tab: 'material', sub: '' }, resaltar = '', enfocarTab = false;
@@ -189,7 +189,7 @@ const msg = (t, malo) => { const m = $('bib-msg'); m.textContent = t || ''; m.cl
 let copias = new Set(), edit = null, ocupado = false, fOrigenMat = 'Todos', filtTema = {};
 const ORDENES = [['nuevos', 'Más recientes'], ['antiguos', 'Más antiguos'], ['az', 'A → Z'], ['za', 'Z → A'], ['tipo', 'Por tipo'], ['grandes', 'Más grandes']];
 const cmpDoc = { nuevos: (x, y) => y.t - x.t, antiguos: (x, y) => x.t - y.t, az: (x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), za: (x, y) => y.titulo.localeCompare(x.titulo, 'es', { numeric: true, sensitivity: 'base' }),
-  tipo: (x, y) => TIPOS.indexOf(x.tipo) - TIPOS.indexOf(y.tipo) || x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), grandes: (x, y) => (y.bytes || 0) - (x.bytes || 0) };
+  tipo: (x, y) => ixTipo(x.tipo) - ixTipo(y.tipo) || (x.tipo || '').localeCompare(y.tipo || '', 'es') || x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' }), grandes: (x, y) => (y.bytes || 0) - (x.bytes || 0) };
 const slugOrigen = f => String(f || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
 const bibVisibles = () => bibLista().filter(d => fOrigenMat === 'Todos' || origenDe(d) === fOrigenMat);
 function renderOrigenMat() {
@@ -207,8 +207,24 @@ function renderOrigenMat() {
     box.append(c);
   });
 }
+const TIPO_NUEVO = '__nuevo';
+function tiposConocidos() {                                       // los de siempre y los que hayas escrito tú
+  const x = []; bibVisibles().forEach(d => { if (d.tipo && !TIPOS.includes(d.tipo) && !x.includes(d.tipo)) x.push(d.tipo); });
+  return TIPOS.concat(x.sort((a, b) => a.localeCompare(b, 'es')));
+}
+function rellenaTipos(sel) {
+  const s = $('i-tipo'), ts = tiposConocidos(); if (sel && !ts.includes(sel)) ts.push(sel);
+  s.replaceChildren(); ts.forEach(t => s.append(new Option(t, t))); s.append(new Option('Otro tipo (escribirlo)…', TIPO_NUEVO));
+  s.value = sel || 'Ley'; $('i-tipo-x').value = ''; $('i-tipo-x').classList.add('hide');
+}
+function tipoForm() {
+  const v = $('i-tipo').value; if (v !== TIPO_NUEVO) return v;
+  const t = $('i-tipo-x').value.trim().replace(/\s+/g, ' ').slice(0, 30); if (!t) return 'Otro';
+  const igual = tiposConocidos().find(x => x.toLowerCase() === t.toLowerCase());   // «ejercicios» = Ejercicios, sin duplicar
+  return igual || t.charAt(0).toUpperCase() + t.slice(1);
+}
 function metaArchivo(f) {                                         // valores del formulario; con «Clasificar por el nombre» manda el nombre
-  const m = { tema: $('i-tema').value, tipo: $('i-tipo').value, origen: $('i-origen').value };
+  const m = { tema: $('i-tema').value, tipo: tipoForm(), origen: $('i-origen').value };
   if ($('i-auto').checked) { const c = clasificaNombre(f.name); if (c.tema && _temario.byId[c.tema]) m.tema = c.tema; if (c.tipo) m.tipo = c.tipo; if (c.origen) m.origen = c.origen; }
   return m;
 }
@@ -288,7 +304,7 @@ function vistaBloque(box, sub) {
     const st = filtTema[key] || (filtTema[key] = { tipo: 'Todos', orden: 'nuevos' });
     const pinta = () => {
       c.replaceChildren();
-      const tipos = TIPOS.filter(t => todos.some(d => d.tipo === t));
+      const tipos = tiposConocidos().filter(t => todos.some(d => d.tipo === t));
       if (st.tipo !== 'Todos' && !tipos.includes(st.tipo)) st.tipo = 'Todos';
       if (todos.length > 1) {
         const fil = el('div', 'bib-filtros'), chT = el('div', 'chips');
@@ -316,13 +332,21 @@ function vistaBloque(box, sub) {
     const c = el('div', 'bib-tb'); listaDocs(c, docs.filter(esGeneral), 'general', ''); w.append(c);
   } else {
     b.temas.forEach(t => {
-      const lista = docs.filter(d => d.tema === t.id), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
+      const todosT = docs.filter(d => d.tema === t.id), lista = todosT.filter(d => d.tipo !== 'Ejercicios'), ej = todosT.filter(d => d.tipo === 'Ejercicios'), det = el('details', 'bib-tema'); det.id = 'bt-' + t.id;
       det.open = !!abierto[t.id];                                   // todo plegado al entrar; se abre lo que tú abras
       det.addEventListener('toggle', () => { abierto[t.id] = det.open; });
       const sum = el('summary', 'bib-ts');
-      sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : 'sin documentos'), el('span', 'chev'));
+      sum.append(el('span', 'tid', codigoTema(t.id)), el('span', 'tname', t.corto), el('span', 'tn' + (lista.length ? '' : ' cero'), lista.length ? plural(lista.length, 'documento', 'documentos') : (ej.length ? '' : 'sin documentos')), ej.length ? el('span', 'tej', 'Ejercicios ' + ej.length) : '', el('span', 'chev'));
       det.append(sum);
-      const c = el('div', 'bib-tb'); listaDocs(c, lista, t.id, t.id); det.append(c); w.append(det);
+      const c = el('div', 'bib-tb'); listaDocs(c, lista, t.id, t.id); det.append(c);
+      if (ej.length) {                                              // los ejercicios prácticos, aparte y plegados
+        const eb = el('div', 'bib-tb bib-ejw'), d2 = el('details', 'bib-ej'), s2 = el('summary', '', 'Ejercicios prácticos (' + ej.length + ')');
+        d2.append(s2); ej.slice().sort((x, y) => x.titulo.localeCompare(y.titulo, 'es', { numeric: true, sensitivity: 'base' })).forEach(d => d2.append(filaDoc(d)));
+        const sj = el('button', 'mini azul', 'Subir ejercicio'); sj.type = 'button'; sj.addEventListener('click', () => abrirForm(null, t.id, 'Ejercicios')); d2.append(sj);
+        d2.open = !!abierto['ej-' + t.id]; d2.addEventListener('toggle', () => { abierto['ej-' + t.id] = d2.open; });
+        eb.append(d2); det.append(eb);
+      }
+      w.append(det);
     });
   }
   box.append(w);
@@ -372,13 +396,13 @@ function filaDoc(d) {
   ac.append(bo); f.append(ac);
   return f;
 }
-function abrirForm(d, tema) {
+function abrirForm(d, tema, tipo) {
   edit = d || null; msg('');
   if (!getToken() && !d) { msg('Para subir archivos necesitas el token de GitHub: Ajustes → Token de GitHub.', true); return; }
   $('subir').classList.remove('hide');
   $('subir-t').textContent = d ? 'Editar documento' : 'Subir material';
   $('bf-archivo').classList.toggle('hide', !!d); $('subir-nota').classList.toggle('hide', !!d);
-  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : (tema || ''); $('i-tipo').value = d ? d.tipo : 'Ley'; $('i-origen').value = d ? origenDe(d) : 'Propio';
+  $('i-archivo').value = ''; $('i-titulo').value = d ? d.titulo : ''; $('i-tema').value = d ? d.tema : (tema || ''); rellenaTipos(d ? d.tipo : (tipo || 'Ley')); $('i-origen').value = d ? origenDe(d) : 'Propio';
   $('bf-auto').classList.toggle('hide', !!d); $('i-prev').replaceChildren();
   $('bf-titulo').classList.remove('hide');
   $('i-ok').textContent = d ? 'Guardar cambios' : 'Subir'; $('i-ok').disabled = false;
@@ -401,7 +425,9 @@ async function guardarTodo() {
 }
 function initMaterial() {
   opcionesTema($('i-tema'));
-  TIPOS.forEach(t => $('i-tipo').append(new Option(t, t)));
+  rellenaTipos('Ley');
+  $('i-tipo').addEventListener('change', () => { const n = $('i-tipo').value === TIPO_NUEVO; $('i-tipo-x').classList.toggle('hide', !n); if (n) $('i-tipo-x').focus(); });
+  $('i-tipo-x').addEventListener('input', vistaPrevia);
   ORIGENES.slice().reverse().forEach(o => $('i-origen').append(new Option(o, o)));
   ['i-tema', 'i-tipo', 'i-origen', 'i-auto'].forEach(i => $(i).addEventListener('change', vistaPrevia));
   $('f-q').addEventListener('input', renderMaterial);
@@ -411,7 +437,7 @@ function initMaterial() {
   $('i-archivo').addEventListener('change', () => { vistaPrevia(); const fs = $('i-archivo').files; $('bf-titulo').classList.toggle('hide', fs.length > 1); if (fs.length === 1 && !$('i-titulo').value) $('i-titulo').value = fs[0].name.replace(/\.[^.]+$/, ''); });
   $('subir').addEventListener('submit', async e => {
     e.preventDefault();
-    const tema = $('i-tema').value, tipo = $('i-tipo').value, origen = $('i-origen').value, ok = $('i-ok');
+    const tema = $('i-tema').value, tipo = tipoForm(), origen = $('i-origen').value, ok = $('i-ok');
     if (edit) {
       const titulo = $('i-titulo').value.trim(); if (!titulo) { msg('Escribe un título.', true); return; }
       ok.disabled = true; msg('Guardando…');
@@ -715,11 +741,11 @@ function renderTarjetas() {
   vis.forEach(k => { const t = tjTema(k), bq = bloqueOf(t) || 'x'; porB[bq] = porB[bq] || {}; (porB[bq][t] = porB[bq][t] || []).push(k); });
   const resumen = l => { const h = l.filter(tarjetaToca).length; return l.length + (l.length === 1 ? ' tarjeta' : ' tarjetas') + (h ? ' · ' + h + ' hoy' : ''); };
   const prog = l => { const p = el('span', 'fc-prog'), i = el('i'); i.style.width = Math.round(l.filter(k => tjEstado(k) === 'dominada').length / l.length * 100) + '%'; p.title = 'Dominadas'; p.setAttribute('aria-hidden', 'true'); p.append(i); return p; };
-  const botones = (l, txt) => {                                     // estudiar solo lo de este grupo
+  const botones = (l, txt, sinPrincipal) => {                       // estudiar solo lo de este grupo
     const ac = el('div', 'fc-grp-ac'), h = l.filter(tarjetaToca), b1 = el('button', 'btn small', 'Estudiar ' + txt + ' (' + l.length + ')');
-    b1.type = 'button'; b1.addEventListener('click', () => { cierraTj(); cierraLote(); empieza(l.map(k => k.id)); }); ac.append(b1);
+    b1.type = 'button'; b1.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); cierraTj(); cierraLote(); empieza(l.map(k => k.id)); }); if (!sinPrincipal) ac.append(b1);
     if (h.length && h.length < l.length) { const b2 = el('button', 'btn small ghost', 'Solo las de hoy (' + h.length + ')'); b2.type = 'button'; b2.addEventListener('click', () => { cierraTj(); cierraLote(); empieza(h.map(k => k.id)); }); ac.append(b2); }
-    return ac;
+    return sinPrincipal ? { ac, b1 } : ac;
   };
   const grupoTema = (t, l, bq) => {
     const g = el('details', 'nt-g fc-tm'), tt = _temario.byId[t], h = el('summary', 'notas-t nt-sum');
@@ -734,9 +760,12 @@ function renderTarjetas() {
     const temas = Object.keys(porB[bq.id]).sort((x, y) => ordenT.indexOf(x) - ordenT.indexOf(y)), todas = [].concat.apply([], temas.map(t => porB[bq.id][t]));
     const B = el('details', 'fc-bq'), s = el('summary', 'fc-bq-sum'), cu = el('div', 'fc-bq-cuerpo');
     B.dataset.b = bq.id; B.dataset.bq = bq.id; B.open = activo || !tjCe.has(bq.id);
-    s.append(el('span', 'fc-bq-cod', 'Bloque ' + bq.id), el('span', 'fc-bq-nom', bq.titulo), prog(todas), el('span', 'notas-n', resumen(todas)));
+    const bb = temas.length > 1 ? botones(todas, 'este bloque', true) : null;
+    s.append(el('span', 'fc-bq-cod', 'Bloque ' + bq.id), el('span', 'fc-bq-nom', bq.titulo));
+    if (bb) { s.classList.add('con-est'); bb.b1.classList.add('fc-bq-est'); s.append(bb.b1); }
+    s.append(prog(todas), el('span', 'notas-n', resumen(todas)));
     s.addEventListener('click', () => setTimeout(() => { if (!tjActivo()) { if (B.open) tjCe.delete(bq.id); else tjCe.add(bq.id); tjGuardaUi(); } }, 0));
-    if (temas.length > 1) cu.append(botones(todas, 'este bloque'));
+    if (bb && bb.ac.childNodes.length) cu.append(bb.ac);
     temas.forEach(t => cu.append(grupoTema(t, porB[bq.id][t], bq.id)));
     B.append(s, cu); box.append(B);
   });
@@ -883,6 +912,6 @@ async function init() {
 }
 init();
 </script>
-<script src="temporizador.js?v=20261220"></script>
+<script src="temporizador.js?v=20261221"></script>
 </body>
 </html>
