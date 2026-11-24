@@ -1,0 +1,488 @@
+{
+  "titulo": "Test BIV-T05 — Grado personal",
+  "tema": "IV-5",
+  "fecha": "2026-11-24",
+  "preguntas": [
+    {
+      "ref": "Artículo 70.1",
+      "q": "Conforme al artículo 70.1 del RD 364/1995, ¿en cuántos niveles se clasifican los puestos de trabajo?",
+      "opciones": [
+        "En 26 niveles.",
+        "En 30 niveles.",
+        "En 28 niveles.",
+        "En 32 niveles."
+      ],
+      "correcta": 1,
+      "explicacion": "Los puestos de trabajo se clasifican en 30 niveles. No debe confundirse el número total de niveles con los intervalos asignados a cada cuerpo o escala."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Según el régimen general del artículo 70.2, los funcionarios de carrera adquieren un grado personal por el desempeño de uno o más puestos del nivel correspondiente durante:",
+      "opciones": [
+        "Dos años continuados o dos años y seis meses con interrupción.",
+        "Tres años continuados o cuatro con interrupción.",
+        "Dos años continuados o tres con interrupción.",
+        "Un año continuado o dos con interrupción."
+      ],
+      "correcta": 2,
+      "explicacion": "La regla general exige dos años continuados o tres con interrupción desempeñando puestos del nivel correspondiente, con las excepciones reglamentarias."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Con carácter general, ¿qué influencia tiene el sistema de provisión del puesto sobre la adquisición del grado personal, según el artículo 70.2?",
+      "opciones": [
+        "El grado puede adquirirse cualquiera que sea el sistema de provisión, con las particularidades legalmente previstas.",
+        "Únicamente pueden consolidarse grados mediante puestos obtenidos por concurso.",
+        "La libre designación permite consolidar el grado, pero exige siempre un año adicional.",
+        "El tiempo desempeñado en puestos obtenidos por libre designación únicamente computa tras el cese."
+      ],
+      "correcta": 0,
+      "explicacion": "El grado puede adquirirse cualquiera que sea el sistema de provisión. Sin embargo, determinados sistemas, como las comisiones de servicios, tienen condiciones particulares de cómputo."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Un funcionario tiene consolidado el grado personal 18 y obtiene un puesto definitivo de nivel 23. Conforme a la regla de progresión del artículo 70.2, y suponiendo un desempeño continuado suficiente, ¿qué grado podrá consolidar tras los primeros dos años?",
+      "opciones": [
+        "El grado 19.",
+        "El grado 21.",
+        "El grado 23.",
+        "El grado 20."
+      ],
+      "correcta": 3,
+      "explicacion": "Al superar el puesto en más de dos niveles el grado consolidado, el funcionario avanza como máximo dos niveles por cada dos años continuados: primero del 18 al 20."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "En la progresión prevista para puestos superiores en más de dos niveles al grado consolidado, ¿cuál de las siguientes limitaciones debe respetarse?",
+      "opciones": [
+        "No superar el nivel medio del intervalo correspondiente al subgrupo.",
+        "No superar el nivel del puesto, aunque sí pueda superarse el intervalo del cuerpo.",
+        "No superar ni el nivel del puesto desempeñado ni el intervalo correspondiente al cuerpo o escala.",
+        "No superar el nivel del puesto anterior a la última provisión definitiva."
+      ],
+      "correcta": 2,
+      "explicacion": "La progresión no puede superar el nivel del puesto desempeñado ni el intervalo de niveles correspondiente al cuerpo o escala."
+    },
+    {
+      "ref": "Artículo 70.3",
+      "q": "Un funcionario de nuevo ingreso toma posesión de un puesto de nivel 18. Conforme al artículo 70.3, ¿qué grado personal deberá consolidar inicialmente, si no concurre ninguna de las excepciones previstas?",
+      "opciones": [
+        "El grado 18.",
+        "El nivel mínimo de su intervalo, con independencia del puesto adjudicado.",
+        "El grado 16, con posibilidad de ascender posteriormente al 18.",
+        "El grado correspondiente al puesto que ocupe al cumplirse el primer año de servicio, aunque sea distinto."
+      ],
+      "correcta": 0,
+      "explicacion": "El funcionario de nuevo ingreso debe consolidar inicialmente el grado correspondiente al nivel del puesto adjudicado tras superar el proceso selectivo, salvo excepción legal."
+    },
+    {
+      "ref": "Artículo 70.3",
+      "q": "Un funcionario de nuevo ingreso recibe un puesto de nivel 20 y posteriormente pasa voluntariamente a desempeñar otro de nivel 19 antes de consolidar el grado inicial. Según el artículo 70.3, ¿qué grado deberá consolidar como inicial?",
+      "opciones": [
+        "Necesariamente el 20, por ser el nivel del primer destino.",
+        "El 19, correspondiente al puesto inferior al que pasa voluntariamente.",
+        "El 20, siempre que el cambio se produzca durante los primeros dos años.",
+        "El 19 únicamente si el nuevo puesto pertenece a otro cuerpo o escala."
+      ],
+      "correcta": 1,
+      "explicacion": "Si el funcionario pasa voluntariamente a desempeñar un puesto inferior, consolida como grado inicial el correspondiente a ese nuevo puesto, en este caso el 19."
+    },
+    {
+      "ref": "Artículo 70.4",
+      "q": "Si durante el desempeño de un puesto de trabajo se modifica su nivel, ¿cómo debe computarse ese tiempo a efectos de consolidación conforme al artículo 70.4?",
+      "opciones": [
+        "Según el nivel que tuviera el puesto al comenzar su desempeño.",
+        "Según el nivel que tuviera al finalizar el período de consolidación.",
+        "Separando obligatoriamente el tiempo anterior y posterior a la modificación.",
+        "Con el nivel más alto en que el puesto hubiera estado clasificado."
+      ],
+      "correcta": 3,
+      "explicacion": "Cuando se modifica el nivel de un puesto durante su desempeño, el tiempo se computa tomando como referencia el nivel más alto en que dicho puesto haya estado clasificado."
+    },
+    {
+      "ref": "Artículo 70.5",
+      "q": "Un funcionario está consolidando el grado personal 16 y obtiene destino de nivel 18 antes de completar el período necesario. Según el artículo 70.5, el tiempo desempeñado en el nuevo destino:",
+      "opciones": [
+        "Obliga a comenzar desde cero la consolidación del grado 16.",
+        "Solo se computará si obtiene posteriormente un puesto del mismo nivel.",
+        "Es computable para completar la consolidación del grado 16 que tenía en proceso.",
+        "Permite consolidar inmediatamente el grado 18 si llevaba más de un año en el puesto anterior."
+      ],
+      "correcta": 2,
+      "explicacion": "Si el funcionario obtiene un destino superior mientras está consolidando un grado, el tiempo en el nuevo destino puede utilizarse para completar esa consolidación."
+    },
+    {
+      "ref": "Artículo 70.5",
+      "q": "Cuando un funcionario obtiene destino de nivel inferior al del grado que está en proceso de consolidación, el artículo 70.5 permite que el tiempo anteriormente prestado en puestos de nivel superior:",
+      "opciones": [
+        "Pueda computarse, a instancia del interesado, para consolidar el grado correspondiente al puesto inferior.",
+        "Se conserve exclusivamente para acreditar antigüedad, pero no a efectos de grado.",
+        "Se utilice necesariamente para consolidar el grado superior inicialmente perseguido.",
+        "Se compute automáticamente para adquirir el grado inferior, sin intervención del funcionario."
+      ],
+      "correcta": 0,
+      "explicacion": "Cuando obtiene un destino inferior al grado en proceso de consolidación, el funcionario puede solicitar que el tiempo anterior en puestos superiores compute para consolidar el grado correspondiente al nuevo destino."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Una vez consolidado el grado inicial, ¿cuándo puede computarse el tiempo prestado en comisión de servicios para consolidar el grado correspondiente al puesto desempeñado, según el artículo 70.6?",
+      "opciones": [
+        "Siempre que la comisión tenga una duración mínima de un año.",
+        "Cuando se obtenga definitivamente ese puesto u otro de igual o superior nivel.",
+        "Solo si el puesto definitivo posterior se obtiene en el mismo ministerio.",
+        "Cuando el funcionario regrese a su puesto de origen y complete otros dos años."
+      ],
+      "correcta": 1,
+      "explicacion": "Una vez consolidado el grado inicial, el tiempo en comisión de servicios puede computarse para consolidar el grado del puesto desempeñado si posteriormente obtiene definitivamente ese puesto u otro de igual o superior nivel."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Un funcionario tiene consolidado el grado 16, desempeña en comisión de servicios un puesto de nivel 19 y posteriormente obtiene definitivamente uno de nivel 18. ¿Qué dispone el artículo 70.6 sobre el tiempo de comisión?",
+      "opciones": [
+        "Únicamente puede computar para adquirir el grado 19.",
+        "No puede computar porque el puesto definitivo es inferior al de la comisión.",
+        "Se pierde obligatoriamente y el cómputo comienza desde el concurso.",
+        "Puede computarse para consolidar el grado correspondiente al puesto definitivo de nivel 18."
+      ],
+      "correcta": 3,
+      "explicacion": "Si el puesto definitivo es inferior al desempeñado en comisión, pero superior al grado consolidado, el período de comisión puede computarse para adquirir el grado correspondiente al puesto definitivo."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Conforme al artículo 70.6, ¿qué sucede con el tiempo desempeñado en comisión de servicios cuando el nivel del puesto es inferior al grado que se encuentra en proceso de consolidación?",
+      "opciones": [
+        "Se computa si la comisión supera los seis meses.",
+        "Se computa exclusivamente para el grado que ya tuviera consolidado.",
+        "No se computa para la consolidación del grado en proceso.",
+        "Se computa siempre que la comisión sea de carácter voluntario."
+      ],
+      "correcta": 2,
+      "explicacion": "El tiempo en comisión no computa cuando se desempeña un puesto inferior al grado que se encuentra en proceso de consolidación."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Las previsiones sobre cómputo del tiempo de comisión de servicios recogidas en el artículo 70.6 también resultan aplicables:",
+      "opciones": [
+        "Al desempeño de puestos en adscripción provisional en los supuestos previstos reglamentariamente.",
+        "A todas las excedencias voluntarias sin distinción.",
+        "Únicamente a los puestos obtenidos mediante libre designación.",
+        "A cualquier período de suspensión de funciones, con independencia de su causa."
+      ],
+      "correcta": 0,
+      "explicacion": "Las reglas de cómputo de las comisiones de servicios también resultan aplicables a las adscripciones provisionales en los supuestos previstos reglamentariamente."
+    },
+    {
+      "ref": "Artículo 70.7",
+      "q": "Según el artículo 70.7, ¿en qué fases de la reasignación de efectivos se contempla expresamente el cómputo del tiempo a efectos de consolidar el grado que se encontraba en proceso?",
+      "opciones": [
+        "Exclusivamente en la primera fase.",
+        "En las dos primeras fases.",
+        "Exclusivamente en la segunda y tercera fases.",
+        "En todas las fases, sin condiciones adicionales."
+      ],
+      "correcta": 1,
+      "explicacion": "El tiempo transcurrido durante las dos primeras fases de reasignación de efectivos computa para adquirir el grado personal que estaba en proceso de consolidación."
+    },
+    {
+      "ref": "Artículo 70.7",
+      "q": "Un funcionario se encuentra en situación de expectativa de destino. Conforme al artículo 70.7, ¿qué efecto tiene ese período sobre el grado personal que estaba en proceso de consolidación?",
+      "opciones": [
+        "Obliga a reiniciar el período cuando obtenga un puesto definitivo.",
+        "Permite consolidar automáticamente un grado superior al que estaba adquiriendo.",
+        "Se computa para adquirir el grado que estaba en proceso de consolidación.",
+        "Se considera tiempo no computable, salvo que exista reserva expresa de puesto."
+      ],
+      "correcta": 2,
+      "explicacion": "El período en expectativa de destino computa para consolidar el grado que el funcionario estaba adquiriendo antes de pasar a esa situación."
+    },
+    {
+      "ref": "Artículo 70.7",
+      "q": "Un funcionario resulta afectado por la supresión de su puesto de trabajo en las circunstancias previstas en el artículo 72.3 del RD 364/1995. ¿Qué dispone el artículo 70.7 respecto al tiempo transcurrido en dicha situación?",
+      "opciones": [
+        "Solo computa si obtiene un nuevo puesto del mismo nivel antes de tres meses.",
+        "Se descuenta del tiempo necesario para consolidar el grado en proceso.",
+        "Se considera una interrupción que exige comenzar un período nuevo.",
+        "Se computa para la adquisición del grado personal que tenía en proceso de consolidación."
+      ],
+      "correcta": 3,
+      "explicacion": "En los supuestos previstos de supresión o alteración del contenido del puesto, el tiempo transcurrido se computa para adquirir el grado en proceso de consolidación."
+    },
+    {
+      "ref": "Artículo 70.8",
+      "q": "Un funcionario es cesado de un puesto de libre designación y permanece cinco meses en adscripción provisional. Según el artículo 70.8, ese período:",
+      "opciones": [
+        "No se considera interrupción a efectos de consolidación del grado personal.",
+        "Se considera necesariamente interrupción porque ha dejado de ocupar un puesto definitivo.",
+        "Solo evita la interrupción cuando la adscripción dura exactamente seis meses.",
+        "Permite consolidar automáticamente el nivel del nuevo puesto provisional."
+      ],
+      "correcta": 0,
+      "explicacion": "Tras el cese de un puesto de libre designación, una adscripción provisional de cinco meses no se considera interrupción porque su duración es inferior a seis meses."
+    },
+    {
+      "ref": "Artículo 70.8",
+      "q": "¿Cuál de las siguientes afirmaciones se ajusta a la literalidad del artículo 70.8 sobre la duración de la adscripción provisional?",
+      "opciones": [
+        "El período no se considera interrupción siempre que no supere un año.",
+        "La regla de no interrupción exige que su duración sea inferior a seis meses.",
+        "El período no se considera interrupción cuando dura seis meses o más.",
+        "El plazo de seis meses solamente se aplica cuando existe una comisión de servicios anterior."
+      ],
+      "correcta": 1,
+      "explicacion": "La norma exige expresamente una duración inferior a seis meses. Una adscripción de exactamente seis meses no cumple esa condición, aunque deban examinarse las demás reglas aplicables."
+    },
+    {
+      "ref": "Artículo 70.9",
+      "q": "Según el artículo 70.9, el tiempo en situación de servicios especiales se computa, a efectos de adquisición del grado personal:",
+      "opciones": [
+        "Como desempeñado necesariamente en el puesto de mayor nivel del intervalo del funcionario.",
+        "Como desempeñado en el puesto que indique discrecionalmente el órgano de personal.",
+        "Como prestado en el último puesto desempeñado en servicio activo o en el obtenido por concurso durante los servicios especiales.",
+        "Como tiempo de servicios sin nivel asociado, que solo computa para trienios."
+      ],
+      "correcta": 2,
+      "explicacion": "El tiempo en servicios especiales computa como prestado en el último puesto desempeñado en servicio activo o en el obtenido por concurso durante esa situación."
+    },
+    {
+      "ref": "Artículo 70.10",
+      "q": "Atendiendo exclusivamente a la literalidad del artículo 70.10 del RD 364/1995, ¿qué período de excedencia por cuidado de hijos se menciona expresamente como computable en el puesto del que se es titular?",
+      "opciones": [
+        "Los dos primeros años.",
+        "Todo el período de excedencia, sin límite.",
+        "Los primeros seis meses.",
+        "El primer año."
+      ],
+      "correcta": 3,
+      "explicacion": "La literalidad de este apartado menciona el primer año de excedencia por cuidado de hijos. Debe distinguirse de la regulación del artículo 89.4 del TREBEP, que reconoce efectos de carrera profesional durante el período legal de excedencia."
+    },
+    {
+      "ref": "Artículo 89.4 del TREBEP",
+      "q": "Conforme al artículo 89.4 del TREBEP, el período de permanencia en excedencia por cuidado de hijos o familiares, dentro de los límites legalmente previstos:",
+      "opciones": [
+        "Es computable a efectos de trienios, carrera y derechos en el régimen de Seguridad Social aplicable.",
+        "Únicamente computa para trienios durante su primer año.",
+        "Solo computa para carrera profesional cuando se mantenga la reserva del puesto concreto.",
+        "No computa para carrera profesional, aunque sí para antigüedad."
+      ],
+      "correcta": 0,
+      "explicacion": "La excedencia por cuidado de hijos o familiares computa a efectos de trienios, carrera profesional y derechos en el régimen de Seguridad Social aplicable, dentro de su regulación legal."
+    },
+    {
+      "ref": "Artículo 70.11",
+      "q": "Según el artículo 70.11 del RD 364/1995, ¿qué autoridad efectúa, con carácter general, el reconocimiento del grado personal?",
+      "opciones": [
+        "El Delegado del Gobierno de la provincia en la que esté destinado el funcionario.",
+        "El Subsecretario del departamento donde preste servicios el funcionario.",
+        "El Director General de Función Pública, mediante resolución individual en todos los casos.",
+        "El órgano que convocó el último proceso selectivo, con independencia del destino."
+      ],
+      "correcta": 1,
+      "explicacion": "El reconocimiento del grado personal corresponde al subsecretario del departamento donde presta servicios el funcionario, que dicta la resolución correspondiente."
+    },
+    {
+      "ref": "Artículo 70.11",
+      "q": "Una vez reconocido el grado personal por el órgano competente, ¿en qué plazo debe comunicarse la resolución al Registro Central de Personal, según el artículo 70.11?",
+      "opciones": [
+        "En los cinco días naturales siguientes.",
+        "En los diez días hábiles siguientes.",
+        "Dentro de los tres días hábiles siguientes.",
+        "Dentro de los tres días naturales siguientes."
+      ],
+      "correcta": 2,
+      "explicacion": "La resolución de reconocimiento del grado debe comunicarse al Registro Central de Personal dentro de los tres días hábiles siguientes."
+    },
+    {
+      "ref": "Artículo 70.11",
+      "q": "Según el artículo 70.11, cuando un funcionario reingresa en la AGE en el mismo cuerpo o escala y aporta un grado reconocido por otra Administración pública, su anotación en el Registro Central de Personal:",
+      "opciones": [
+        "Se realiza sin límite de nivel por tratarse de un grado adquirido en otra Administración.",
+        "Exige comenzar un procedimiento nuevo de consolidación desde el nivel mínimo.",
+        "Solo resulta posible si el grado fue reconocido mediante concurso.",
+        "Se efectúa hasta el nivel máximo del intervalo correspondiente, cumpliendo las condiciones del artículo."
+      ],
+      "correcta": 3,
+      "explicacion": "El grado reconocido por otra Administración puede anotarse al reingresar en la AGE en el mismo cuerpo o escala, respetando el nivel máximo del intervalo correspondiente y las condiciones legales."
+    },
+    {
+      "ref": "Artículo 70.11",
+      "q": "Un funcionario regresa a la AGE después de prestar servicios en otra Administración pública, donde no completó el período necesario para consolidar un grado. Según el artículo 70.11, ¿cuándo puede aprovechar esos servicios?",
+      "opciones": [
+        "Cuando reingresa en el mismo cuerpo o escala y se cumplen las condiciones y límites reglamentarios.",
+        "En cualquier cuerpo o escala, siempre que mantenga el mismo subgrupo.",
+        "Únicamente cuando el período pendiente sea inferior a seis meses.",
+        "Solo cuando la otra Administración haya emitido una resolución definitiva de reconocimiento de grado."
+      ],
+      "correcta": 0,
+      "explicacion": "Los servicios prestados en otra Administración que no completaron la consolidación pueden tenerse en cuenta al reingresar en el mismo cuerpo o escala, respetando los intervalos reglamentarios."
+    },
+    {
+      "ref": "Artículo 70.12",
+      "q": "¿Qué garantía retributiva establece el artículo 70.12 para el funcionario que tiene un grado personal consolidado?",
+      "opciones": [
+        "El derecho a percibir el complemento específico más alto de todos los puestos desempeñados.",
+        "El derecho a percibir, como mínimo, el complemento de destino correspondiente a su grado personal.",
+        "La conservación de todas las retribuciones complementarias del puesto anterior.",
+        "El derecho a percibir exclusivamente el complemento de destino del puesto actual, sin garantía adicional."
+      ],
+      "correcta": 1,
+      "explicacion": "El grado personal consolidado garantiza percibir, como mínimo, el complemento de destino correspondiente a dicho grado, aunque se desempeñe un puesto inferior."
+    },
+    {
+      "ref": "Tabla de intervalos del esquema de Carmen",
+      "q": "Conforme a la tabla de intervalos del esquema de Carmen, ¿cuál es el nivel máximo del subgrupo C1?",
+      "opciones": [
+        "Nivel 20.",
+        "Nivel 24.",
+        "Nivel 21.",
+        "Nivel 22."
+      ],
+      "correcta": 3,
+      "explicacion": "El subgrupo C1 tiene asignado un intervalo de niveles del 16 al 22. Por tanto, su nivel máximo es el 22."
+    },
+    {
+      "ref": "Tabla de intervalos del esquema de Carmen",
+      "q": "¿Cuál es el intervalo de niveles del subgrupo C2 según el esquema facilitado?",
+      "opciones": [
+        "Del 12 al 18.",
+        "Del 14 al 20.",
+        "Del 14 al 18.",
+        "Del 16 al 22."
+      ],
+      "correcta": 2,
+      "explicacion": "El subgrupo C2 tiene asignado un intervalo de niveles del 14 al 18. No debe confundirse con el intervalo del C1."
+    },
+    {
+      "ref": "Artículo 78.3",
+      "q": "Un funcionario promociona internamente a otro cuerpo o escala. Según el artículo 78.3 del RD 364/1995, ¿en qué condiciones puede conservar el grado personal que tenía consolidado?",
+      "opciones": [
+        "A petición propia, siempre que el grado esté incluido en el intervalo de niveles del nuevo cuerpo o escala.",
+        "Automáticamente y sin límites, aunque supere el máximo del nuevo cuerpo.",
+        "Exclusivamente cuando acceda mediante promoción interna horizontal.",
+        "Únicamente si el grado anterior coincide con el nivel mínimo del nuevo cuerpo."
+      ],
+      "correcta": 0,
+      "explicacion": "Quien promociona internamente puede conservar, a petición propia, el grado consolidado anteriormente, siempre que esté incluido en el intervalo del nuevo cuerpo o escala."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Un funcionario de carrera ha desempeñado puestos del nivel correspondiente durante varios períodos no continuados. Según la regla general del artículo 70.2, ¿qué tiempo se exige para consolidar el grado personal con interrupción?",
+      "opciones": [
+        "Dos años y seis meses.",
+        "Tres años.",
+        "Cuatro años.",
+        "Dos años, con independencia de la interrupción."
+      ],
+      "correcta": 1,
+      "explicacion": "La regla general para adquirir grado personal mediante períodos de desempeño con interrupción exige tres años computables."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Un funcionario tiene consolidado el grado 16 y toma posesión de un puesto definitivo de nivel 19 el 01/06/2022. Si continúa desempeñándolo, no hay otras incidencias y el nivel está dentro de su intervalo, ¿qué grado podrá consolidar el 01/06/2024?",
+      "opciones": [
+        "El grado 17.",
+        "El grado 19.",
+        "El grado 18.",
+        "El grado 20."
+      ],
+      "correcta": 2,
+      "explicacion": "Un funcionario con grado 16 que desempeña un puesto de nivel 19 no puede consolidar directamente el 19 tras dos años; primero puede adquirir el grado 18."
+    },
+    {
+      "ref": "Artículo 70.2",
+      "q": "Un funcionario con grado personal 16 consolidado obtiene un puesto definitivo de nivel 18 el 10/02/2021. Si cumple dos años continuados de desempeño y no existe ninguna otra circunstancia que altere el cómputo, ¿qué grado podrá adquirir el 10/02/2023?",
+      "opciones": [
+        "El grado 18.",
+        "El grado 17.",
+        "El grado 16, porque primero necesita tres años de desempeño.",
+        "El grado 18 únicamente si antes ha consolidado el 17."
+      ],
+      "correcta": 0,
+      "explicacion": "La diferencia entre el grado 16 y el puesto de nivel 18 es de dos niveles, por lo que puede consolidar directamente el grado 18 tras dos años continuados."
+    },
+    {
+      "ref": "Artículo 70.12",
+      "q": "Una funcionaria tiene consolidado el grado personal 18 y obtiene por concurso un puesto de nivel 17. ¿Qué complemento de destino le corresponde percibir como mínimo?",
+      "opciones": [
+        "El del nivel 17, por ser el del puesto actual.",
+        "El promedio entre los niveles 17 y 18.",
+        "El del nivel 18 únicamente durante los seis primeros meses.",
+        "El correspondiente al nivel 18, por la garantía de su grado consolidado."
+      ],
+      "correcta": 3,
+      "explicacion": "Aunque la funcionaria pase a un puesto de nivel 17, mantiene la garantía mínima del complemento de destino correspondiente a su grado personal 18."
+    },
+    {
+      "ref": "Artículos 70.3 y 70.6",
+      "q": "Un funcionario de nuevo ingreso toma posesión de un puesto de nivel 16 y, antes de completar su consolidación inicial, pasa a una comisión de servicios de nivel 17. ¿Cuál de las siguientes afirmaciones es correcta?",
+      "opciones": [
+        "Consolida directamente el grado 17 al completar dos años desde el inicio de la comisión.",
+        "Debe respetar la regla de consolidación del grado inicial 16, sin adquirir automáticamente el 17 por la comisión.",
+        "La comisión provoca la pérdida de todo el tiempo trabajado anteriormente en el nivel 16.",
+        "Consolida simultáneamente los grados 16 y 17 cuando complete dos años de servicios."
+      ],
+      "correcta": 1,
+      "explicacion": "El funcionario de nuevo ingreso debe respetar la consolidación de su grado inicial. El desempeño temporal del nivel 17 no determina automáticamente la consolidación de ese grado superior."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Un funcionario tiene consolidado el grado 17 y desempeña durante dos años una comisión de servicios de nivel 18. Al finalizar, no consta que haya obtenido destino definitivo de nivel 18 o superior. ¿Qué conclusión es correcta?",
+      "opciones": [
+        "Consolida necesariamente el grado 18 porque ha cumplido dos años de desempeño.",
+        "Consolida el grado 18 si la comisión fue voluntaria.",
+        "No puede darse por consolidado automáticamente el grado 18; mantiene acreditado el 17, sin perjuicio de un posible cómputo posterior.",
+        "Pierde el grado 17 porque el puesto de nivel 18 no era definitivo."
+      ],
+      "correcta": 2,
+      "explicacion": "Dos años en comisión de servicios no permiten atribuir automáticamente el grado 18 si no constan los requisitos de consolidación correspondientes. El funcionario mantiene acreditado su grado 17."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Un funcionario con grado personal 16 ya consolidado desempeña durante un año un puesto de nivel 18 en comisión de servicios y después obtiene definitivamente ese mismo puesto por concurso. Según el artículo 70.6, ¿qué sucede con el tiempo de la comisión?",
+      "opciones": [
+        "Puede computarse para adquirir el grado correspondiente, al obtener definitivamente el mismo puesto, si se cumplen los demás requisitos.",
+        "No puede computarse porque los períodos de comisión inferiores a dos años siempre se excluyen.",
+        "Solo computaría si el funcionario hubiera regresado previamente a su puesto de origen durante seis meses.",
+        "Debe utilizarse exclusivamente para calcular trienios y nunca para consolidar el grado."
+      ],
+      "correcta": 0,
+      "explicacion": "El tiempo desempeñado en comisión puede computarse cuando posteriormente se obtiene definitivamente el mismo puesto, siempre que se cumplan las demás condiciones legales."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Una funcionaria tiene consolidado el grado 16, desempeña por comisión de servicios un puesto de nivel 19 y obtiene posteriormente por concurso un puesto de nivel 18. ¿Cuál de las siguientes afirmaciones reproduce la regla del artículo 70.6?",
+      "opciones": [
+        "El tiempo de comisión solo sirve para consolidar el grado 19, aunque el puesto definitivo sea inferior.",
+        "El período de comisión puede computarse para consolidar el grado correspondiente al puesto definitivo de nivel 18.",
+        "El período de comisión queda anulado porque el nivel definitivo no coincide exactamente con el provisional.",
+        "La obtención del puesto definitivo de nivel 18 determina la consolidación inmediata de ese grado."
+      ],
+      "correcta": 1,
+      "explicacion": "Si el puesto definitivo de nivel 18 es inferior al de la comisión, pero superior al grado consolidado 16, el tiempo anterior puede computarse para consolidar el grado 18."
+    },
+    {
+      "ref": "Artículo 70.6",
+      "q": "Un funcionario está en proceso de consolidación del grado personal 17 y desempeña una comisión de servicios en un puesto de nivel 16. Conforme al artículo 70.6, ¿cómo se considera ese tiempo respecto a la consolidación del grado 17?",
+      "opciones": [
+        "Se computa por tratarse de una comisión de servicios.",
+        "Se computa únicamente cuando su duración sea inferior a seis meses.",
+        "Se computa si posteriormente obtiene un puesto de nivel 16 por concurso.",
+        "No se computa, porque el nivel desempeñado en comisión es inferior al grado en proceso de consolidación."
+      ],
+      "correcta": 3,
+      "explicacion": "Cuando el puesto desempeñado en comisión es inferior al grado que está en proceso de consolidación, ese tiempo no computa para adquirir dicho grado."
+    },
+    {
+      "ref": "Artículo 70.5",
+      "q": "Un funcionario de nuevo ingreso ocupa inicialmente un puesto de nivel 20. Cuando lleva un año desempeñándolo, obtiene un destino de nivel 21. En relación con el grado inicial que estaba adquiriendo, ¿qué establece el artículo 70.5?",
+      "opciones": [
+        "El período anterior no puede aprovecharse porque el nuevo puesto es superior.",
+        "Consolida automáticamente el grado 21 al cumplirse dos años desde el ingreso.",
+        "El tiempo de servicios en el destino superior es computable para completar la consolidación del grado 20.",
+        "Debe consolidar primero el grado 19, por haber cambiado de puesto antes de completar dos años."
+      ],
+      "correcta": 2,
+      "explicacion": "Si durante la consolidación del grado 20 el funcionario obtiene un destino superior de nivel 21, el tiempo trabajado en ese nuevo puesto computa para completar la consolidación del grado 20."
+    }
+  ],
+  "fuente": "ChatGPT"
+}
