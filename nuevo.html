@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261223"></script>
+<script src="puerta.js?v=20261224"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Añadir test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261223">
+<link rel="stylesheet" href="style.css?v=20261224">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
@@ -31,7 +31,7 @@
       <button type="button" class="btn ghost" id="pick">Subir archivo</button>
       <button type="button" class="btn ghost" id="pickpdf">Subir PDF de la academia</button>
       <input type="file" id="filepdf" accept=".pdf,application/pdf" class="hide">
-      <input type="file" id="file" accept=".md,.txt,.json,text/plain,text/markdown,application/json" class="hide">
+      <input type="file" id="file" accept=".md,.txt,.json,.pdf,text/plain,text/markdown,application/json,application/pdf" class="hide">
     </div>
     <div id="resultado"></div>
 
@@ -114,7 +114,7 @@ Reglas: 4 opciones por pregunta (A–D) sin numeraciones extra; el número de Bl
   </section>
 </div>
 
-<script src="app.js?v=20261223"></script>
+<script src="app.js?v=20261224"></script>
 <script>
 function slug(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
@@ -238,21 +238,50 @@ async function pdfLineas(file) {                                   // texto del 
   }
   return paginas;
 }
-$('filepdf').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+const PROMPT_PDF = `Te adjunto un test en PDF (preguntas con 4 opciones y la tabla de soluciones al final; puede ser una imagen, léela con OCR). Devuélveme SOLO un JSON, sin texto alrededor ni bloque de código, con esta estructura:
+{"titulo":"Academia. ...","tema":"IV-6","fecha":"AAAA-MM-DD","fuente":"Academia","preguntas":[{"q":"Enunciado","opciones":["texto A","texto B","texto C","texto D"],"correcta":0}]}
+"correcta" es la posición de la opción correcta según la tabla de soluciones del PDF (0 = A, 1 = B, 2 = C, 3 = D). Copia los textos tal cual, con sus tildes y sin las letras A) B) delante. Antes de responder comprueba que has leído todas las preguntas y que cada una tiene su solución. Si es un simulacro de programa completo, usa "tema":"SIM" y pon en cada pregunta su "tema" del programa (I-1 … VI-8).`;
+let pdfActual = null;                                              // { paginas, nombre } para poder reintentar con respuestas pegadas
+function panelClaves(box, n) {
+  const w = el('div', 'claves');
+  w.append(el('p', '', `Pega aquí las respuestas de las ${n} preguntas. Vale «1C 2B 3A…», una por línea, o solo las letras seguidas «CBDA…».`));
+  const ta = el('textarea'); ta.id = 'claves-txt'; ta.rows = 4; ta.placeholder = '1C 2B 3A 4D…'; ta.spellcheck = false;
+  const b = el('button', 'btn', 'Aplicar respuestas'); b.type = 'button'; b.addEventListener('click', () => procesaPdf(ta.value));
+  w.append(ta, b); box.append(w);
+}
+function panelSinTexto(box) {
+  const w = el('div', 'claves');
+  w.append(el('p', '', 'Este PDF es una imagen (sin texto). Adjúntalo a Claude o ChatGPT con esta petición, y pega aquí abajo el JSON que te devuelva; luego «Leer documento».'));
+  const b = el('button', 'btn ghost', 'Copiar la petición'), m = el('span', 'fine'); b.type = 'button'; m.setAttribute('aria-live', 'polite');
+  const aMano = () => { m.textContent = ' Cópiala a mano:'; const t = el('textarea'); t.readOnly = true; t.rows = 6; t.value = PROMPT_PDF; w.append(t); t.focus(); t.select(); };
+  b.addEventListener('click', () => { const ok = () => { m.textContent = ' Copiado.'; }; if (navigator.clipboard) navigator.clipboard.writeText(PROMPT_PDF).then(ok, aMano); else aMano(); });
+  w.append(b, m); box.append(w);
+}
+async function procesaPdf(claves) {
   const box = $('resultado'); box.replaceChildren(); $('descarga').classList.add('hide'); current = null;
-  box.append(el('p', 'fine', 'Leyendo el PDF…'));
   try {
-    const r = parsePdfAcademia(await pdfLineas(f), f.name);
-    box.replaceChildren();
-    if (r.errors.length) { showIssues(box, r.errors, r.warnings); return; }
+    const r = parsePdfAcademia(pdfActual.paginas, pdfActual.nombre, claves);
+    if (r.errors.length) {
+      showIssues(box, r.errors, r.warnings);
+      if (r.faltanClaves) panelClaves(box, r.pregs); else if (/no tiene texto/.test(r.errors[0])) panelSinTexto(box);
+      return;
+    }
     $('json').value = JSON.stringify(r.data, null, 2); $('validar').click();
     if (r.warnings.length) showIssues($('resultado'), [], r.warnings);
   } catch (err) { box.replaceChildren(el('p', 'aviso', 'No he podido leer el PDF: ' + err.message)); }
-});
+}
+async function lanzaPdf(f) {
+  const box = $('resultado'); box.replaceChildren(); $('descarga').classList.add('hide'); current = null;
+  box.append(el('p', 'fine', 'Leyendo el PDF…'));
+  try { pdfActual = { paginas: await pdfLineas(f), nombre: f.name }; }
+  catch (err) { box.replaceChildren(el('p', 'aviso', 'No he podido leer el PDF: ' + err.message)); return; }
+  procesaPdf('');
+}
+$('filepdf').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) lanzaPdf(f); });
 $('pick').addEventListener('click', () => $('file').click());
 $('file').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
+  if (/\.pdf$/i.test(f.name)) { e.target.value = ''; lanzaPdf(f); return; }     // un solo botón: los PDF también
   const fr = new FileReader();
   fr.onload = () => { $('json').value = fr.result; $('validar').click(); e.target.value = ''; };
   fr.readAsText(f);

@@ -63,6 +63,9 @@
 [data-b="VI"]{--bc:var(--b6);--bt:var(--b6t)}
 [data-b="x"]{--bc:var(--muted);--bt:var(--linea)}
 [data-b="S"]{--bc:var(--azul);--bt:var(--azul-t)}
+.claves{margin:.8rem 0;padding:.9rem 1rem;border:1px dashed var(--linea2);border-radius:12px;background:var(--hoja)}
+.claves p{margin:0 0 .6rem}
+.claves textarea{display:block;width:100%;margin:0 0 .6rem;font:inherit;padding:.6rem .8rem;border:1px solid var(--linea2);border-radius:10px;background:var(--papel);color:var(--tinta);box-sizing:border-box}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}

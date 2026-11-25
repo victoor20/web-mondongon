@@ -831,7 +831,15 @@ function parseMarkdownTest(md) {
 /* ---------- test de la academia en PDF (texto + tabla de soluciones) ---------- */
 const ROMANOS = ['', 'I', 'II', 'III', 'IV', 'V', 'VI'];
 // paginas: lista de páginas; cada página, lista de líneas (las columnas separadas por 3 espacios o más)
-function parsePdfAcademia(paginas, nombre) {
+// Respuestas pegadas a mano: «1C 2B 3A…», «1-C», una por línea, o solo las letras seguidas «CBDA…»
+function parseClaves(txt, n) {
+  const t = String(txt || '').trim(), r = {};
+  if (!t) return r;
+  if (!/\d/.test(t)) { const ls = t.toLowerCase().replace(/[^a-d]/g, ''); for (let i = 0; i < ls.length && i < n; i++) r[i + 1] = ls[i]; return r; }
+  const re = /(\d{1,3})\s*[.\-–)=:]*\s*([a-dA-D])(?![a-zA-Z])/g; let m; while ((m = re.exec(t))) r[+m[1]] = m[2].toLowerCase();
+  return r;
+}
+function parsePdfAcademia(paginas, nombre, claves) {
   const errors = [], warnings = [];
   const base = String(nombre || '').replace(/\.pdf$/i, '').trim();
   const mm = /^B(\d)\s*-\s*T(\d{1,2})(?:\s*-\s*(\d+))?[.\s]*(.*)$/i.exec(base);
@@ -851,7 +859,7 @@ function parsePdfAcademia(paginas, nombre) {
     let k = lineas.length; while (k > 0 && (par(lineas[k - 1]) || !lineas[k - 1].trim())) k--;
     if (lineas.length - k >= 5) iSol = k - 1;
   }
-  if (iSol < 0) return { data: null, errors: ['No encuentro la tabla de soluciones al final del PDF (busco «SOLUCIONES», «RESPUESTAS» o una lista «1 C, 2 B…»).'], warnings };
+  const sinTabla = iSol < 0; if (sinTabla) iSol = lineas.length;          // sin tabla se leen igualmente las preguntas y se piden las respuestas
   const preg = []; let cur = null, tgt = -1, sig = 1;                    // tgt: -1 = enunciado, 0..3 = opción
   const anade = txt => { txt = txt.replace(/\s+/g, ' ').trim(); if (!txt) return; if (tgt < 0) cur.q = (cur.q + ' ' + txt).trim(); else cur.opciones[tgt] = (cur.opciones[tgt] + ' ' + txt).trim(); };
   for (const raw of lineas.slice(0, iSol)) {
@@ -872,10 +880,11 @@ function parsePdfAcademia(paginas, nombre) {
     ref = ref.replace(/^Constituci[oó]n\s*/i, '').replace(/Art[ií]culo\s+0*(\d+)/gi, 'Artículo $1').replace(/^Art[ií]culo 0$/i, '').trim();
     if (!(x.n in sol)) sol[x.n] = { l: x.l, ref };
   });
-  const preguntas = [];
+  if (claves) { const c = parseClaves(claves, preg.length); Object.keys(c).forEach(k => { sol[k] = { l: c[k], ref: (sol[k] && sol[k].ref) || '' }; }); }
+  const preguntas = [], faltan = [];
   preg.forEach(p => {
     const s = sol[p.n];
-    if (!s) { errors.push(`Pregunta ${p.n}: no encuentro su solución en la tabla.`); return; }
+    if (!s) { faltan.push(p.n); return; }
     if (p.opciones.length !== 4) warnings.push(`Pregunta ${p.n}: se han leído ${p.opciones.length} opciones.`);
     const idx = 'abcd'.indexOf(s.l);
     if (idx >= p.opciones.length) { errors.push(`Pregunta ${p.n}: la solución es ${s.l.toUpperCase()} pero no hay esa opción.`); return; }
@@ -884,8 +893,9 @@ function parsePdfAcademia(paginas, nombre) {
     preguntas.push(o);
   });
   if (!preg.length) errors.push('No he encontrado preguntas en el PDF.');
-  else if (Object.keys(sol).length !== preg.length) warnings.push(`El PDF tiene ${preg.length} preguntas y ${Object.keys(sol).length} soluciones. Revisa el resultado.`);
-  return { data: { titulo, tema, fecha: new Date().toISOString().slice(0, 10), fuente: 'Academia', preguntas }, errors, warnings };
+  else if (faltan.length) errors.push(faltan.length === preg.length ? (sinTabla ? 'No encuentro la tabla de respuestas en el PDF.' : 'No he podido leer ninguna respuesta de la tabla.') : `Faltan las respuestas de: ${faltan.slice(0, 25).join(', ')}${faltan.length > 25 ? '…' : ''}.`);
+  else if (!claves && Object.keys(sol).length !== preg.length) warnings.push(`El PDF tiene ${preg.length} preguntas y ${Object.keys(sol).length} soluciones. Revisa el resultado.`);
+  return { data: { titulo, tema, fecha: new Date().toISOString().slice(0, 10), fuente: 'Academia', preguntas }, errors, warnings, pregs: preg.length, faltanClaves: !!(preg.length && faltan.length) };
 }
 
 /* ---------- uso sin conexión ---------- */
