@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="puerta.js?v=20261222"></script>
+<script src="puerta.js?v=20261223"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Editar test - Mi Academia</title>
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="style.css?v=20261222">
+<link rel="stylesheet" href="style.css?v=20261223">
 </head>
 <body data-pagina="tests" data-angosto>
 <div class="wrap">
@@ -56,7 +56,7 @@
   </div>
 </div>
 
-<script src="app.js?v=20261222"></script>
+<script src="app.js?v=20261223"></script>
 <script>
 const ID = new URLSearchParams(location.search).get('t');
 let data = null, oldQs = [], baseCanon = '', tarjetas = [], sucio = false, uid = 0, esPriv = false;
@@ -68,12 +68,13 @@ function marcarSucio() { if (!sucio) { sucio = true; setMsg('Hay cambios sin gua
 function selectTema(sel, valor) {
   sel.replaceChildren();
   const ph = el('option', '', 'Elige el tema'); ph.value = ''; sel.append(ph);
+  const sm = el('option', '', 'Simulacro (programa completo)'); sm.value = TEMA_SIM; sel.append(sm);
   _temario.bloques.forEach(b => {
     const g = el('optgroup'); g.label = `Bloque ${b.id}: ${b.titulo}`;
     b.temas.forEach(t => { const o = el('option', '', `${codigoTema(t.id)}: ${t.corto}`); o.value = t.id; g.append(o); });
     sel.append(g);
   });
-  sel.value = valor && _temario.byId[valor] ? valor : '';
+  sel.value = valor && (_temario.byId[valor] || valor === TEMA_SIM) ? valor : '';
 }
 
 function numerar() {

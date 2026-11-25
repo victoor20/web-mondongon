@@ -62,6 +62,7 @@
 [data-b="V"]{--bc:var(--b5);--bt:var(--b5t)}
 [data-b="VI"]{--bc:var(--b6);--bt:var(--b6t)}
 [data-b="x"]{--bc:var(--muted);--bt:var(--linea)}
+[data-b="S"]{--bc:var(--azul);--bt:var(--azul-t)}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}

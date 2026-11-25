@@ -142,10 +142,13 @@ async function loadTemario() {
   _temarioLoaded = true;
   return _temario;
 }
-const temaIdSet = () => new Set(Object.keys(_temario.byId));
+// «SIM» = simulacro de programa completo: no es un tema del temario, pero se admite como tema de un test
+const TEMA_SIM = 'SIM';
+const temaIdSet = () => new Set([...Object.keys(_temario.byId), TEMA_SIM]);
 // Código visible: «I-1» (así se guarda) se muestra como «BI-T1» = Bloque I, Tema 1
 const codigoTema = id => String(id || '').replace(/^([IVX]+)-(\d+)$/, 'B$1-T$2');
 function temaLabel(id) {
+  if (id === TEMA_SIM) return 'Simulacro (programa completo)';
   const t = _temario.byId[id];
   return t ? `${codigoTema(id)}: ${t.corto}` : (id || 'General');
 }
@@ -832,16 +835,23 @@ function parsePdfAcademia(paginas, nombre) {
   const errors = [], warnings = [];
   const base = String(nombre || '').replace(/\.pdf$/i, '').trim();
   const mm = /^B(\d)\s*-\s*T(\d{1,2})(?:\s*-\s*(\d+))?[.\s]*(.*)$/i.exec(base);
-  const tema = mm && ROMANOS[+mm[1]] ? ROMANOS[+mm[1]] + '-' + (+mm[2]) : '';
-  const resto = (mm ? mm[4] : base).replace(/\s*\(x\d+\)/i, '').replace(/^(Test\s*\d+)\.\s+/i, '$1: ').trim();
+  const tema = mm && ROMANOS[+mm[1]] ? ROMANOS[+mm[1]] + '-' + (+mm[2]) : (/simulacro/i.test(base) ? TEMA_SIM : '');
+  const resto = (mm ? mm[4] : base).replace(/_+/g, ' ').replace(/\s*\(x\d+\)/i, '').replace(/^(Test\s*\d+)\.\s+/i, '$1: ').replace(/\s+/g, ' ').trim();
   const titulo = mm ? `Academia B${mm[1]}-T${('0' + mm[2]).slice(-2)}${mm[3] ? '-' + mm[3] : ''}. ${resto}` : `Academia. ${resto}`;
   // se quitan cabeceras y pies que se repiten en las páginas
   const norm = s => s.replace(/\s+/g, ' ').trim(), veces = {};
   paginas.forEach(p => new Set(p.map(norm)).forEach(l => { veces[l] = (veces[l] || 0) + 1; }));
   const minRep = Math.max(2, Math.ceil(paginas.length * 0.6));
   const lineas = [].concat.apply([], paginas.map(p => p.filter(l => { const n = norm(l); return n && !(veces[n] >= minRep && paginas.length > 1) && !/www\.|P[áa]gina\s*\|/i.test(n); })));
-  const iSol = lineas.findIndex(l => /^\s*SOLUCI[ÓO]N/i.test(l));
-  if (iSol < 0) return { data: null, errors: ['No encuentro la tabla de soluciones al final del PDF.'], warnings };
+  if (!lineas.some(l => /[A-Za-zÁÉÍÓÚáéíóúñ]{3}/.test(l))) return { data: null, errors: ['Este PDF no tiene texto que se pueda leer (es una imagen o un escaneo). Pásalo a JSON con ChatGPT/Claude y súbelo con «Subir archivo».'], warnings };
+  // cabecera de la tabla: SOLUCIÓN/SOLUCIONES, RESPUESTAS, CLAVE, PLANTILLA… (la última que haya)
+  let iSol = -1; lineas.forEach((l, i) => { if (/^\s*(SOLUCI[ÓO]N(ES)?|RESPUESTAS?(\s+CORRECTAS)?|CLAVES?|PLANTILLA)\b/i.test(l.trim()) && l.trim().length < 60) iSol = i; });
+  if (iSol < 0) {                                                        // sin cabecera: el último tramo de líneas «N letra»
+    const par = l => /^(?:\s*\d{1,3}\s*[.\-–)]*\s*[a-dA-D]\b[\s.]*){1,8}$/.test(l.trim());
+    let k = lineas.length; while (k > 0 && (par(lineas[k - 1]) || !lineas[k - 1].trim())) k--;
+    if (lineas.length - k >= 5) iSol = k - 1;
+  }
+  if (iSol < 0) return { data: null, errors: ['No encuentro la tabla de soluciones al final del PDF (busco «SOLUCIONES», «RESPUESTAS» o una lista «1 C, 2 B…»).'], warnings };
   const preg = []; let cur = null, tgt = -1, sig = 1;                    // tgt: -1 = enunciado, 0..3 = opción
   const anade = txt => { txt = txt.replace(/\s+/g, ' ').trim(); if (!txt) return; if (tgt < 0) cur.q = (cur.q + ' ' + txt).trim(); else cur.opciones[tgt] = (cur.opciones[tgt] + ' ' + txt).trim(); };
   for (const raw of lineas.slice(0, iSol)) {
@@ -855,7 +865,7 @@ function parsePdfAcademia(paginas, nombre) {
       anade(ln.slice(0, m.index)); cur.opciones.push(''); tgt = cur.opciones.length - 1; ln = ln.slice(m.index + m[0].length);
     }
   }
-  const sol = {}, txt = lineas.slice(iSol + 1).join('\n'), re = /(?:^|\s)(\d{1,3})\s*[.\-–]+\s*([a-dA-D])(?=\s|$)/g, hits = [];
+  const sol = {}, txt = lineas.slice(iSol + 1).join('\n'), re = /(?:^|\s)(\d{1,3})(?:\s*[.\-–)]+\s*|\s+)([a-dA-D])(?=\s|[.,;]|$)/g, hits = [];
   let h; while ((h = re.exec(txt))) hits.push({ n: +h[1], l: h[2].toLowerCase(), ini: h.index + h[0].length, pos: h.index });
   hits.forEach((x, i) => {
     let ref = txt.slice(x.ini, i + 1 < hits.length ? hits[i + 1].pos : txt.length).replace(/\s+/g, ' ').trim();
