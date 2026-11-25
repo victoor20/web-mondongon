@@ -1,0 +1,584 @@
+{
+  "titulo": "Test BIV-T06 — Régimen Disciplinario",
+  "tema": "IV-6",
+  "fecha": "2026-11-25",
+  "preguntas": [
+    {
+      "ref": "Artículo 93.1 del TREBEP",
+      "q": "Según el artículo 93 del TREBEP, ¿quiénes quedan sujetos al régimen disciplinario establecido en su título VII y en las normas de desarrollo?",
+      "opciones": [
+        "Exclusivamente los funcionarios de carrera y el personal laboral fijo.",
+        "Los funcionarios de carrera, pero no los funcionarios interinos.",
+        "Los funcionarios públicos y el personal laboral.",
+        "Únicamente los empleados públicos que ocupen puestos de carácter permanente."
+      ],
+      "correcta": 2,
+      "explicacion": "Los funcionarios públicos y el personal laboral están sujetos al régimen disciplinario previsto en el TREBEP y en las normas de desarrollo correspondientes. No se limita exclusivamente a los funcionarios de carrera."
+    },
+    {
+      "ref": "Artículo 93.2 del TREBEP",
+      "q": "Un funcionario induce deliberadamente a otro a realizar una conducta constitutiva de falta disciplinaria. Conforme al artículo 93.2 del TREBEP, el primero:",
+      "opciones": [
+        "Incurrirá en la misma responsabilidad disciplinaria que quien realiza la conducta.",
+        "Responderá únicamente cuando la falta cometida sea muy grave.",
+        "Solo responderá si ostenta una posición jerárquica superior.",
+        "Quedará exento de responsabilidad si no ejecutó personalmente los hechos."
+      ],
+      "correcta": 0,
+      "explicacion": "Quien induce a otro a cometer una falta disciplinaria incurre en la misma responsabilidad que quien realiza la conducta. No es imprescindible ejecutar personalmente los hechos."
+    },
+    {
+      "ref": "Artículo 93.3 del TREBEP",
+      "q": "Un funcionario encubre una falta grave cometida por un compañero. ¿En qué circunstancia incurrirá en responsabilidad disciplinaria por encubrimiento conforme al artículo 93.3 del TREBEP?",
+      "opciones": [
+        "Siempre que conozca los hechos, aunque no exista daño.",
+        "Únicamente cuando haya recibido una compensación económica.",
+        "Cuando el encubrimiento afecte a cualquier falta, incluidas las leves.",
+        "Cuando del encubrimiento se derive daño grave para la Administración o los ciudadanos."
+      ],
+      "correcta": 3,
+      "explicacion": "El encubrimiento genera responsabilidad disciplinaria cuando afecta a faltas consumadas muy graves o graves y produce daño grave a la Administración o a los ciudadanos."
+    },
+    {
+      "ref": "Artículo 94.1 del TREBEP",
+      "q": "Según el artículo 94.1 del TREBEP, la imposición de responsabilidad disciplinaria por una infracción cometida en el ejercicio de las funciones públicas:",
+      "opciones": [
+        "Excluye la responsabilidad penal derivada de los mismos hechos.",
+        "Se entiende sin perjuicio de la responsabilidad patrimonial o penal que pudiera derivarse.",
+        "Impide cualquier reclamación patrimonial mientras la sanción sea firme.",
+        "Sustituye necesariamente a las demás responsabilidades cuando se trate de una falta muy grave."
+      ],
+      "correcta": 1,
+      "explicacion": "La responsabilidad disciplinaria es compatible con las responsabilidades patrimonial o penal que pudieran derivarse de los hechos, respetando las garantías legales aplicables."
+    },
+    {
+      "ref": "Artículo 94.2.b del TREBEP",
+      "q": "Una norma posterior agrava la sanción aplicable a una conducta realizada anteriormente. ¿Qué principio del artículo 94.2 del TREBEP impide aplicar retroactivamente esa regulación más perjudicial?",
+      "opciones": [
+        "Presunción de inocencia.",
+        "Proporcionalidad.",
+        "Irretroactividad de las disposiciones sancionadoras no favorables.",
+        "Culpabilidad."
+      ],
+      "correcta": 2,
+      "explicacion": "Las disposiciones sancionadoras desfavorables no tienen efectos retroactivos. En cambio, las disposiciones favorables pueden aplicarse retroactivamente al presunto infractor."
+    },
+    {
+      "ref": "Artículo 94.2.c del TREBEP",
+      "q": "Un funcionario recibe una sanción claramente excesiva en relación con la gravedad de la conducta cometida. ¿Qué principio disciplinario resultaría especialmente comprometido?",
+      "opciones": [
+        "Tipicidad.",
+        "Presunción de inocencia.",
+        "Retroactividad favorable.",
+        "Proporcionalidad."
+      ],
+      "correcta": 3,
+      "explicacion": "El principio de proporcionalidad exige que la clasificación y aplicación de las sanciones guarden relación con la gravedad de la infracción."
+    },
+    {
+      "ref": "Artículo 94.2.a del TREBEP",
+      "q": "Se propone sancionar a un funcionario por una conducta que no está tipificada como infracción disciplinaria en la normativa aplicable. ¿Qué principio se vulneraría principalmente?",
+      "opciones": [
+        "Legalidad y tipicidad.",
+        "Culpabilidad.",
+        "Irretroactividad de las normas desfavorables.",
+        "Presunción de inocencia."
+      ],
+      "correcta": 0,
+      "explicacion": "Los principios de legalidad y tipicidad exigen que las infracciones y sanciones estén previstas normativamente. La Administración no puede inventar faltas disciplinarias."
+    },
+    {
+      "ref": "Artículo 94.3 del TREBEP",
+      "q": "Durante la instrucción de un expediente disciplinario aparecen indicios fundados de criminalidad. Conforme al artículo 94.3 del TREBEP, ¿cómo debe procederse?",
+      "opciones": [
+        "Continuar necesariamente el procedimiento hasta imponer una sanción administrativa.",
+        "Suspender su tramitación y poner los hechos en conocimiento del Ministerio Fiscal.",
+        "Archivar definitivamente el expediente sin posibilidad de reanudación.",
+        "Comunicarlo exclusivamente al superior jerárquico del funcionario."
+      ],
+      "correcta": 1,
+      "explicacion": "Ante indicios fundados de criminalidad se suspende la tramitación disciplinaria y se comunican los hechos al Ministerio Fiscal. Los hechos declarados probados por resoluciones judiciales firmes vinculan a la Administración."
+    },
+    {
+      "ref": "Artículo 95.1 del TREBEP",
+      "q": "Según el artículo 95.1 del TREBEP, las faltas disciplinarias pueden ser:",
+      "opciones": [
+        "Ordinarias, especiales y extraordinarias.",
+        "Muy graves y graves, sin categoría de faltas leves.",
+        "Graves, leves y meramente administrativas.",
+        "Muy graves, graves y leves."
+      ],
+      "correcta": 3,
+      "explicacion": "Las faltas disciplinarias se clasifican en tres categorías: muy graves, graves y leves. Esta clasificación condiciona las sanciones y los plazos de prescripción."
+    },
+    {
+      "ref": "Artículo 95.2.c del TREBEP",
+      "q": "Conforme al artículo 95.2 del TREBEP, el abandono del servicio por un funcionario constituye:",
+      "opciones": [
+        "Una falta grave, salvo que afecte a servicios esenciales.",
+        "Una falta leve cuando no ocasiona un perjuicio económico.",
+        "Una falta muy grave.",
+        "Una conducta no sancionable si no existe requerimiento previo."
+      ],
+      "correcta": 2,
+      "explicacion": "El abandono del servicio y la negativa voluntaria a hacerse cargo de las tareas encomendadas son faltas muy graves."
+    },
+    {
+      "ref": "Artículo 95.2.h del TREBEP",
+      "q": "Un funcionario utiliza las facultades de su puesto para influir en un proceso electoral, vulnerando su deber de imparcialidad. Según el artículo 95.2 del TREBEP, constituye:",
+      "opciones": [
+        "Una falta muy grave.",
+        "Una falta grave.",
+        "Una falta leve.",
+        "Una infracción cuya clasificación depende exclusivamente de que se altere el resultado electoral."
+      ],
+      "correcta": 0,
+      "explicacion": "Utilizar las facultades del puesto para influir en procesos electorales vulnera la imparcialidad y constituye falta muy grave."
+    },
+    {
+      "ref": "Artículo 95.2.d del TREBEP",
+      "q": "La adopción de acuerdos manifiestamente ilegales que causen perjuicio grave a la Administración o a los ciudadanos está tipificada en el artículo 95.2 del TREBEP como:",
+      "opciones": [
+        "Falta leve, cuando los acuerdos no llegan a ejecutarse.",
+        "Falta muy grave.",
+        "Falta grave en todos los casos.",
+        "Conducta sancionable únicamente en vía penal."
+      ],
+      "correcta": 1,
+      "explicacion": "La adopción de acuerdos manifiestamente ilegales que ocasionen perjuicio grave constituye falta muy grave. La gravedad del perjuicio es un elemento decisivo de esta tipificación."
+    },
+    {
+      "ref": "Artículo 95.2.n del TREBEP",
+      "q": "Un funcionario incumple las normas sobre incompatibilidades y, como consecuencia, mantiene una situación efectiva de incompatibilidad. Conforme al artículo 95.2 del TREBEP, se trata de:",
+      "opciones": [
+        "Una falta leve, si no ha percibido retribuciones adicionales.",
+        "Una falta grave, con independencia de sus consecuencias.",
+        "Una infracción exclusivamente administrativa sin carácter disciplinario.",
+        "Una falta muy grave."
+      ],
+      "correcta": 3,
+      "explicacion": "El incumplimiento de las normas de incompatibilidades que dé lugar a una situación efectiva de incompatibilidad constituye falta muy grave. No debe confundirse con determinados incumplimientos formales de procedimiento."
+    },
+    {
+      "ref": "Artículo 7.k del RD 33/1986",
+      "q": "Según el artículo 7 del RD 33/1986, el incumplimiento de plazos u otras disposiciones de procedimiento en materia de incompatibilidades, cuando no suponga mantenimiento de una situación de incompatibilidad, constituye:",
+      "opciones": [
+        "Una falta muy grave.",
+        "Una falta leve.",
+        "Una falta grave.",
+        "Una conducta que no puede constituir infracción disciplinaria."
+      ],
+      "correcta": 2,
+      "explicacion": "Los incumplimientos procedimentales en materia de incompatibilidades que no mantengan una situación incompatible están tipificados como faltas graves."
+    },
+    {
+      "ref": "Artículo 7.l del RD 33/1986",
+      "q": "Un funcionario acumula, en un mismo mes, diez horas de incumplimiento injustificado de su jornada de trabajo. Según el artículo 7 del RD 33/1986, esta conducta constituye:",
+      "opciones": [
+        "Una falta leve, salvo reincidencia.",
+        "Una falta grave.",
+        "Una falta muy grave.",
+        "Una falta grave exclusivamente si se produce durante tres meses consecutivos."
+      ],
+      "correcta": 1,
+      "explicacion": "El incumplimiento injustificado de jornada que acumule un mínimo de diez horas en un mes constituye falta grave. Es importante recordar tanto la cifra como el período de referencia."
+    },
+    {
+      "ref": "Artículo 8.b del RD 33/1986",
+      "q": "Según el artículo 8 del RD 33/1986, la falta de asistencia injustificada de un día se clasifica como:",
+      "opciones": [
+        "Falta leve.",
+        "Falta grave.",
+        "Falta muy grave.",
+        "Falta grave si el funcionario tiene horario de jornada completa."
+      ],
+      "correcta": 0,
+      "explicacion": "La falta de asistencia injustificada de un día constituye falta leve. Determinadas reiteraciones pueden encajar en una infracción grave diferente."
+    },
+    {
+      "ref": "Artículo 7.m del RD 33/1986",
+      "q": "Un funcionario comete una tercera falta injustificada de asistencia en un período de tres meses, habiendo sido sancionadas por falta leve las dos anteriores. Según el artículo 7 del RD 33/1986, constituye:",
+      "opciones": [
+        "Una falta leve, porque cada ausencia se considera independientemente.",
+        "Una falta muy grave por reincidencia.",
+        "Una falta grave.",
+        "Una falta que únicamente podrá sancionarse si ocasiona daño económico."
+      ],
+      "correcta": 2,
+      "explicacion": "La tercera falta injustificada de asistencia en tres meses constituye falta grave cuando las dos anteriores fueron sancionadas por falta leve."
+    },
+    {
+      "ref": "Artículo 7.b del RD 33/1986",
+      "q": "¿Cuál de las siguientes conductas está expresamente tipificada como falta grave en el artículo 7 del RD 33/1986?",
+      "opciones": [
+        "El acoso laboral.",
+        "El abandono del servicio.",
+        "La obstaculización del ejercicio de las libertades públicas.",
+        "El abuso de autoridad en el ejercicio del cargo."
+      ],
+      "correcta": 3,
+      "explicacion": "El abuso de autoridad en el ejercicio del cargo figura entre las faltas graves. Las otras conductas propuestas aparecen tipificadas como muy graves en el TREBEP."
+    },
+    {
+      "ref": "Artículo 95.2.l del TREBEP",
+      "q": "Según el artículo 95.2 del TREBEP, la realización de actos encaminados a coartar el libre ejercicio del derecho de huelga constituye:",
+      "opciones": [
+        "Una falta leve.",
+        "Una falta muy grave.",
+        "Una falta grave cuando no se haya impedido efectivamente la huelga.",
+        "Una infracción cuya calificación corresponde exclusivamente a los convenios colectivos."
+      ],
+      "correcta": 1,
+      "explicacion": "Los actos encaminados a coartar el libre ejercicio del derecho de huelga constituyen falta muy grave. No es necesario que se haya conseguido impedir completamente la huelga."
+    },
+    {
+      "ref": "Artículo 8.c del RD 33/1986",
+      "q": "Una conducta consistente en incorrección con el público, que no reviste mayor gravedad, aparece recogida en el artículo 8 del RD 33/1986 como:",
+      "opciones": [
+        "Falta leve.",
+        "Falta grave.",
+        "Falta muy grave.",
+        "Falta sancionable únicamente si existe denuncia del ciudadano."
+      ],
+      "correcta": 0,
+      "explicacion": "La incorrección con el público, superiores, compañeros o subordinados constituye falta leve en los términos del precepto. Debe distinguirse de las faltas graves de consideración tipificadas separadamente."
+    },
+    {
+      "ref": "Artículo 95.3 del TREBEP",
+      "q": "Conforme al artículo 95.3 del TREBEP, las faltas graves se establecerán por:",
+      "opciones": [
+        "Resolución del subsecretario competente, en todos los casos.",
+        "Instrucción administrativa o acuerdo del órgano de personal.",
+        "Reglamento ministerial exclusivamente.",
+        "Ley de las Cortes Generales o de la asamblea legislativa autonómica, o convenios colectivos para el personal laboral, atendiendo a los criterios legales."
+      ],
+      "correcta": 3,
+      "explicacion": "Las faltas graves se establecerán por ley de las Cortes Generales o de la asamblea legislativa autonómica, o mediante convenios colectivos para el personal laboral, atendiendo a los criterios previstos legalmente."
+    },
+    {
+      "ref": "Artículo 95.3.c del TREBEP",
+      "q": "¿Cuál de los siguientes elementos figura entre las circunstancias que deben considerarse para establecer las faltas graves conforme al artículo 95.3 del TREBEP?",
+      "opciones": [
+        "La antigüedad del funcionario en la Administración.",
+        "El descrédito para la imagen pública de la Administración.",
+        "El grupo de clasificación del funcionario expedientado.",
+        "El número de empleados destinados en la unidad administrativa."
+      ],
+      "correcta": 1,
+      "explicacion": "El descrédito para la imagen pública de la Administración es uno de los criterios contemplados. También se consideran la vulneración de la legalidad y la gravedad de los daños."
+    },
+    {
+      "ref": "Artículo 96.1.a del TREBEP",
+      "q": "Según el artículo 96.1 del TREBEP, la separación del servicio de los funcionarios:",
+      "opciones": [
+        "Solo puede sancionar la comisión de faltas muy graves.",
+        "Puede imponerse por faltas graves cuando exista reincidencia.",
+        "Puede imponerse por cualquier falta disciplinaria mediante resolución motivada.",
+        "Es equivalente al traslado forzoso cuando no implica cambio de residencia."
+      ],
+      "correcta": 0,
+      "explicacion": "La separación del servicio de los funcionarios únicamente puede sancionar faltas muy graves. En el caso de los funcionarios interinos comporta la revocación de su nombramiento."
+    },
+    {
+      "ref": "Artículo 96.1.c del TREBEP",
+      "q": "Conforme al artículo 96.1 del TREBEP, la suspensión firme de funciones o, en el caso del personal laboral, de empleo y sueldo, tendrá una duración máxima de:",
+      "opciones": [
+        "Tres años.",
+        "Cinco años.",
+        "Seis años.",
+        "Diez años."
+      ],
+      "correcta": 2,
+      "explicacion": "La suspensión firme de funciones, o de empleo y sueldo para el personal laboral, tiene una duración máxima de seis años."
+    },
+    {
+      "ref": "Artículo 96.1.e del TREBEP",
+      "q": "Según el artículo 96.1 del TREBEP, ¿en qué consiste la sanción de demérito?",
+      "opciones": [
+        "En la suspensión temporal del complemento de destino.",
+        "En la penalización a efectos de carrera, promoción o movilidad voluntaria.",
+        "En la prohibición definitiva de participar en concursos.",
+        "En el traslado obligatorio del funcionario a otra localidad."
+      ],
+      "correcta": 1,
+      "explicacion": "El demérito penaliza la carrera, la promoción o la movilidad voluntaria. No debe confundirse con una suspensión de funciones ni con un traslado forzoso."
+    },
+    {
+      "ref": "Artículo 96.1.b del TREBEP",
+      "q": "El despido disciplinario del personal laboral, conforme al artículo 96.1 del TREBEP:",
+      "opciones": [
+        "Puede imponerse por faltas graves y muy graves indistintamente.",
+        "Es aplicable también a los funcionarios de carrera.",
+        "No comporta restricciones para celebrar contratos posteriores con funciones similares.",
+        "Solo puede sancionar faltas muy graves y comporta la inhabilitación para ser titular de un nuevo contrato con funciones similares."
+      ],
+      "correcta": 3,
+      "explicacion": "El despido disciplinario del personal laboral se reserva a las faltas muy graves y comporta la inhabilitación para celebrar un nuevo contrato con funciones similares a las desempeñadas."
+    },
+    {
+      "ref": "Artículo 96.2 del TREBEP",
+      "q": "Si se declara improcedente el despido disciplinario de un trabajador laboral fijo acordado como consecuencia de un expediente por falta muy grave, el artículo 96.2 del TREBEP establece:",
+      "opciones": [
+        "La readmisión del personal laboral fijo.",
+        "Una indemnización obligatoria en lugar de la readmisión.",
+        "La conversión automática del contrato en temporal.",
+        "La suspensión del contrato hasta que transcurran tres años."
+      ],
+      "correcta": 0,
+      "explicacion": "Procede la readmisión del personal laboral fijo cuando se declara improcedente el despido disciplinario acordado por una falta muy grave."
+    },
+    {
+      "ref": "Artículo 96.3 del TREBEP",
+      "q": "¿Qué criterios deben tenerse en cuenta para determinar el alcance de una sanción conforme al artículo 96.3 del TREBEP?",
+      "opciones": [
+        "Exclusivamente la clasificación de la falta y la antigüedad del funcionario.",
+        "Únicamente el perjuicio económico ocasionado.",
+        "La intencionalidad, descuido o negligencia, el daño al interés público, la reiteración o reincidencia y el grado de participación.",
+        "El nivel del complemento de destino y el tipo de puesto desempeñado."
+      ],
+      "correcta": 2,
+      "explicacion": "Para determinar el alcance de la sanción se valoran la intencionalidad o negligencia, el daño al interés público, la reiteración o reincidencia y el grado de participación."
+    },
+    {
+      "ref": "Artículo 97.1 del TREBEP",
+      "q": "¿Cuándo prescriben las faltas disciplinarias muy graves, graves y leves, respectivamente, conforme al artículo 97 del TREBEP?",
+      "opciones": [
+        "A los cuatro años, dos años y un año.",
+        "A los tres años, dos años y seis meses.",
+        "A los tres años, un año y seis meses.",
+        "A los dos años, un año y tres meses."
+      ],
+      "correcta": 1,
+      "explicacion": "Las faltas muy graves prescriben a los tres años, las graves a los dos años y las leves a los seis meses. La secuencia para memorizar es: **3 años — 2 años — 6 meses**."
+    },
+    {
+      "ref": "Artículo 97.1 del TREBEP",
+      "q": "¿Cuándo prescriben las sanciones impuestas por faltas muy graves, graves y leves, respectivamente, según el artículo 97 del TREBEP?",
+      "opciones": [
+        "A los tres años, dos años y seis meses.",
+        "A los cuatro años, dos años y un año.",
+        "A los tres años, un año y seis meses.",
+        "A los tres años, dos años y un año."
+      ],
+      "correcta": 3,
+      "explicacion": "Las sanciones por faltas muy graves prescriben a los tres años, las graves a los dos y las leves al año. La diferencia respecto a las faltas se encuentra en la categoría leve."
+    },
+    {
+      "ref": "Artículo 97.2 del TREBEP",
+      "q": "En el supuesto de una falta disciplinaria continuada, el plazo de prescripción de la infracción comenzará a contarse:",
+      "opciones": [
+        "Desde que se detecte por el superior jerárquico.",
+        "Desde la incoación del expediente disciplinario.",
+        "Desde el cese de su comisión.",
+        "Desde que se notifique el pliego de cargos."
+      ],
+      "correcta": 2,
+      "explicacion": "En las faltas continuadas, el plazo de prescripción comienza cuando cesa la conducta infractora, no necesariamente cuando se inició."
+    },
+    {
+      "ref": "Artículo 97.2 del TREBEP",
+      "q": "Conforme al artículo 97 del TREBEP, el plazo de prescripción de una sanción disciplinaria empieza a contarse:",
+      "opciones": [
+        "Desde la firmeza de la resolución sancionadora.",
+        "Desde la comisión de la falta.",
+        "Desde la incoación del procedimiento disciplinario.",
+        "Desde la notificación del pliego de cargos."
+      ],
+      "correcta": 0,
+      "explicacion": "La prescripción de las sanciones comienza desde la firmeza de la resolución sancionadora. No se cuenta desde el momento en que se cometió la falta."
+    },
+    {
+      "ref": "Artículo 98.1 del TREBEP",
+      "q": "Según el artículo 98.1 del TREBEP, ¿qué procedimiento exige la imposición de una sanción por falta leve?",
+      "opciones": [
+        "El mismo procedimiento ordinario previsto para las faltas muy graves.",
+        "Un procedimiento exclusivamente verbal, sin obligación de audiencia.",
+        "La imposición directa de la sanción, sin procedimiento previo.",
+        "Un procedimiento sumario con audiencia al interesado."
+      ],
+      "correcta": 3,
+      "explicacion": "Las sanciones por faltas leves se imponen mediante procedimiento sumario con audiencia al interesado. Para las graves y muy graves se exige el procedimiento previamente establecido."
+    },
+    {
+      "ref": "Artículo 98.2 del TREBEP",
+      "q": "En el procedimiento disciplinario, el artículo 98.2 del TREBEP exige:",
+      "opciones": [
+        "Que la instrucción y la sanción correspondan necesariamente al mismo órgano.",
+        "La separación de la fase instructora y la sancionadora, encomendadas a órganos distintos.",
+        "La sustitución de la fase de instrucción por un informe del superior.",
+        "La intervención obligatoria del órgano judicial en toda sanción por falta grave."
+      ],
+      "correcta": 1,
+      "explicacion": "Debe existir separación entre la fase instructora, dedicada a investigar los hechos, y la sancionadora, encargada de adoptar la decisión, atribuyéndose a órganos distintos."
+    },
+    {
+      "ref": "Artículo 98.3 del TREBEP",
+      "q": "Durante la tramitación de un expediente disciplinario se acuerda una suspensión provisional como medida cautelar. Según el artículo 98.3 del TREBEP, su duración general no podrá exceder de:",
+      "opciones": [
+        "Seis meses, salvo paralización del procedimiento imputable al interesado y las demás circunstancias previstas legalmente.",
+        "Tres meses, sin excepciones.",
+        "Un año, aunque el procedimiento no haya finalizado.",
+        "Seis meses, incluso cuando se acuerde durante un procedimiento judicial."
+      ],
+      "correcta": 0,
+      "explicacion": "La suspensión provisional acordada como medida cautelar no puede exceder, con carácter general, de seis meses, salvo paralización imputable al interesado y los supuestos especiales previstos."
+    },
+    {
+      "ref": "Artículo 98.4 del TREBEP",
+      "q": "Según el artículo 98.4 del TREBEP, cuando la suspensión provisional no llega a convertirse en sanción firme, su duración:",
+      "opciones": [
+        "Se considera en todo caso tiempo de suspensión firme ya cumplida.",
+        "No produce ningún efecto sobre la situación administrativa.",
+        "Se computa como servicio activo, debiendo acordarse la reincorporación y el reconocimiento de los derechos correspondientes.",
+        "Obliga al funcionario a devolver todas las retribuciones percibidas durante la suspensión."
+      ],
+      "correcta": 2,
+      "explicacion": "Si la suspensión provisional no se convierte en firme, el período se computa como servicio activo y deben reconocerse los derechos económicos y administrativos correspondientes."
+    },
+    {
+      "ref": "Artículo 29 del RD 33/1986",
+      "q": "Conforme al artículo 29 del RD 33/1986, ¿quién es competente para ordenar la incoación de un expediente disciplinario respecto del funcionario destinado en su departamento?",
+      "opciones": [
+        "Exclusivamente el ministro.",
+        "El subsecretario del departamento, sin perjuicio de otros órganos competentes en sus respectivos ámbitos.",
+        "Únicamente el instructor que se designe.",
+        "El Registro Central de Personal."
+      ],
+      "correcta": 1,
+      "explicacion": "El subsecretario es competente para ordenar la incoación en su departamento, sin perjuicio de las competencias atribuidas a directores generales y otros órganos dentro de sus ámbitos."
+    },
+    {
+      "ref": "Artículo 30.1 del RD 33/1986",
+      "q": "En la resolución por la que se incoa el procedimiento disciplinario, según el artículo 30 del RD 33/1986, el instructor designado deberá:",
+      "opciones": [
+        "Tener necesariamente un grupo de clasificación superior al del inculpado.",
+        "Ser personal laboral fijo con experiencia en procedimientos disciplinarios.",
+        "Pertenecer obligatoriamente al mismo cuerpo y escala que el inculpado.",
+        "Ser funcionario público perteneciente a un cuerpo o escala de igual o superior grupo al del inculpado."
+      ],
+      "correcta": 3,
+      "explicacion": "El instructor debe ser funcionario público perteneciente a un cuerpo o escala de igual o superior grupo al del expedientado. No es obligatorio que pertenezca exactamente al mismo cuerpo."
+    },
+    {
+      "ref": "Artículo 30.2 del RD 33/1986",
+      "q": "Según el artículo 30 del RD 33/1986, ¿cuándo procede nombrar secretario en el expediente disciplinario?",
+      "opciones": [
+        "Cuando la complejidad o trascendencia de los hechos que deben investigarse lo exija.",
+        "En todos los procedimientos, sin excepción.",
+        "Únicamente cuando se proponga la separación del servicio.",
+        "Solo cuando lo solicite expresamente el funcionario expedientado."
+      ],
+      "correcta": 0,
+      "explicacion": "Se nombrará secretario cuando la complejidad o trascendencia de los hechos que deban investigarse lo exija. Su designación no es obligatoria en todos los expedientes."
+    },
+    {
+      "ref": "Artículo 31 del RD 33/1986",
+      "q": "Conforme al artículo 31 del RD 33/1986, la incoación del procedimiento y los nombramientos de instructor y secretario deben notificarse:",
+      "opciones": [
+        "Exclusivamente al instructor y al superior jerárquico.",
+        "Al funcionario expedientado, pero no a las personas designadas.",
+        "Al funcionario sujeto a expediente y a los designados para desempeñar dichos cargos.",
+        "Únicamente al Ministerio Fiscal y al órgano competente para resolver."
+      ],
+      "correcta": 2,
+      "explicacion": "La incoación del procedimiento y la designación del instructor y secretario se notifican al funcionario expedientado y a las personas nombradas para esos cargos."
+    },
+    {
+      "ref": "Artículo 32.2 del RD 33/1986",
+      "q": "Según el artículo 32 del RD 33/1986, el derecho de recusación del instructor o secretario podrá ejercitarse:",
+      "opciones": [
+        "Exclusivamente antes de acordarse la incoación.",
+        "Solo durante los tres primeros días desde el nombramiento.",
+        "Únicamente después de notificarse el pliego de cargos.",
+        "Desde el momento en que el interesado tenga conocimiento de quiénes son el instructor y el secretario."
+      ],
+      "correcta": 3,
+      "explicacion": "El derecho de recusación puede ejercitarse desde que el interesado conoce la identidad del instructor y secretario. La abstención y recusación protegen la imparcialidad del procedimiento."
+    },
+    {
+      "ref": "Artículo 35.1 del RD 33/1986",
+      "q": "Según el artículo 35 del RD 33/1986, el instructor formulará el pliego de cargos, con carácter general, en un plazo no superior a:",
+      "opciones": [
+        "Diez días desde la recepción de la denuncia.",
+        "Un mes desde la incoación del procedimiento, sin perjuicio de la ampliación por causas justificadas.",
+        "Dos meses desde la declaración inicial del inculpado.",
+        "Quince días desde la práctica de la última prueba."
+      ],
+      "correcta": 1,
+      "explicacion": "El instructor dispone, con carácter general, de un plazo no superior a un mes desde la incoación para formular el pliego de cargos, pudiendo solicitar ampliación por causas justificadas."
+    },
+    {
+      "ref": "Artículo 36 del RD 33/1986",
+      "q": "Una vez notificado el pliego de cargos al funcionario inculpado, ¿de qué plazo dispone para contestarlo y presentar alegaciones, según el artículo 36 del RD 33/1986?",
+      "opciones": [
+        "Diez días.",
+        "Cinco días.",
+        "Quince días.",
+        "Un mes."
+      ],
+      "correcta": 0,
+      "explicacion": "El funcionario dispone de diez días para contestar el pliego de cargos, formular alegaciones, aportar documentos y solicitar las pruebas que considere necesarias para su defensa."
+    },
+    {
+      "ref": "Artículo 37.1 del RD 33/1986",
+      "q": "Conforme al artículo 37 del RD 33/1986, para la práctica de las pruebas acordadas en el procedimiento disciplinario se dispondrá de un plazo de:",
+      "opciones": [
+        "Diez días.",
+        "Quince días.",
+        "Un mes.",
+        "Dos meses."
+      ],
+      "correcta": 2,
+      "explicacion": "Para practicar las pruebas acordadas se dispone de un mes. El instructor puede rechazar pruebas innecesarias, pero debe motivar su decisión."
+    },
+    {
+      "ref": "Artículo 40 del RD 33/1986",
+      "q": "Según el artículo 40 del RD 33/1986, la intervención del instructor en las pruebas practicadas:",
+      "opciones": [
+        "Es facultativa cuando haya sido nombrado secretario.",
+        "Es esencial y no puede ser suplida por la del secretario.",
+        "Puede delegarse íntegramente en cualquier empleado público.",
+        "Solo resulta obligatoria cuando las pruebas sean solicitadas por el inculpado."
+      ],
+      "correcta": 1,
+      "explicacion": "La participación del instructor en todas las pruebas practicadas es esencial y no puede sustituirse por la del secretario, aunque puedan solicitarse diligencias a otros órganos."
+    },
+    {
+      "ref": "Artículos 41, 42 y 43 del RD 33/1986",
+      "q": "Tras cumplimentarse las diligencias y darse vista del expediente al funcionario, ¿cuál de las siguientes secuencias se ajusta al procedimiento de los artículos 41 a 43 del RD 33/1986?",
+      "opciones": [
+        "Vista del expediente durante un mes, propuesta de resolución en cinco días y alegaciones durante quince días.",
+        "Vista del expediente durante quince días, propuesta de resolución en un mes y alegaciones durante cinco días.",
+        "Vista del expediente durante diez días, propuesta de resolución en un mes y alegaciones durante diez días.",
+        "Vista del expediente y alegaciones durante diez días, propuesta de resolución dentro de los diez días siguientes y nuevo plazo de diez días para alegaciones frente a ella."
+      ],
+      "correcta": 3,
+      "explicacion": "Se concede un plazo de diez días para alegaciones tras la vista del expediente; después, el instructor formula la propuesta de resolución dentro de los diez días siguientes y se abre un nuevo plazo de diez días para alegar frente a ella."
+    },
+    {
+      "ref": "Artículo 45.1 del RD 33/1986",
+      "q": "Conforme al artículo 45 del RD 33/1986, la resolución que pone fin al procedimiento disciplinario deberá adoptarse, con carácter general:",
+      "opciones": [
+        "En el plazo de un mes, sin excepciones.",
+        "En el plazo de quince días, incluida la separación del servicio.",
+        "En el plazo de diez días, salvo en caso de separación del servicio.",
+        "En el plazo de tres días hábiles desde la propuesta de resolución."
+      ],
+      "correcta": 2,
+      "explicacion": "La resolución final debe adoptarse, con carácter general, en diez días, salvo en caso de separación del servicio. Debe ser motivada y resolver las cuestiones planteadas."
+    },
+    {
+      "ref": "Artículos 61.1 y 63.1 de la Ley 40/2015",
+      "q": "Conforme al reparto de competencias destacado en el esquema de Carmen y a los artículos 61 y 63 de la Ley 40/2015, ¿qué combinación es correcta?",
+      "opciones": [
+        "Ministro: separación del servicio por falta muy grave; subsecretario: potestad disciplinaria por faltas graves o muy graves, salvo separación del servicio.",
+        "Subsecretario: separación del servicio; ministro: exclusivamente apercibimientos.",
+        "Director general: separación del servicio; subsecretario: solo faltas leves.",
+        "Delegado del Gobierno: todas las sanciones por faltas muy graves; ministro: únicamente faltas graves."
+      ],
+      "correcta": 0,
+      "explicacion": "Corresponde al ministro imponer la separación del servicio por faltas muy graves en su departamento; el subsecretario ejerce la potestad disciplinaria por faltas graves o muy graves, salvo esa sanción de separación."
+    }
+  ],
+  "fuente": "ChatGPT"
+}
